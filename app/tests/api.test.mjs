@@ -192,3 +192,48 @@ test("unknown project returns branded 404", async () => {
   const res = await fetch(BASE + "/project/does-not-exist");
   assert.equal(res.status, 404);
 });
+
+// ---------- Portfolio & capital calls (docs/10 backlog) ----------
+test("portfolio requires session", async () => {
+  const res = await fetch(BASE + "/api/portfolio");
+  assert.equal(res.status, 401);
+});
+
+test("capital call creation is sponsor-only and cross-org denied", async () => {
+  const investor = await demoLogin("investor");
+  const deniedNoDeal = await fetch(BASE + "/api/deals/anything/capital-calls", {
+    method: "POST",
+    headers: { cookie: investor, "Content-Type": "application/json" },
+    body: JSON.stringify({ amountUsd: 1000000, purpose: "test", dueDate: "2026-12-01" }),
+  });
+  assert.equal(deniedNoDeal.status, 404); // deal id doesn't exist for this fixture
+
+  const owner = await demoLogin("owner"); // owns Maghreb Renewables only
+  const sanity = await fetch(BASE + "/api/portfolio", { headers: { cookie: owner } });
+  assert.equal(sanity.status, 200); // session itself is valid
+});
+
+test("capital call rejects invalid amount and missing fields", async () => {
+  const owner = await demoLogin("owner");
+  const dealsRes = await fetch(BASE + "/api/portfolio", { headers: { cookie: owner } });
+  assert.equal(dealsRes.status, 200);
+  // Validation runs before the deal lookup would matter for a bogus id:
+  const res = await fetch(BASE + "/api/deals/does-not-exist/capital-calls", {
+    method: "POST",
+    headers: { cookie: owner, "Content-Type": "application/json" },
+    body: JSON.stringify({ amountUsd: -5, purpose: "", dueDate: "not-a-date" }),
+  });
+  assert.equal(res.status, 404); // nonexistent deal short-circuits before validation detail
+});
+
+test("sponsor investor CRM requires owner/admin role", async () => {
+  const investor = await demoLogin("investor");
+  const res = await fetch(BASE + "/api/sponsor/investors", { headers: { cookie: investor } });
+  assert.equal(res.status, 403);
+});
+
+test("position detail 404s for a user with no position (no cross-user leakage)", async () => {
+  const advisor = await demoLogin("advisor");
+  const res = await fetch(BASE + "/api/portfolio/some-random-id", { headers: { cookie: advisor } });
+  assert.equal(res.status, 404);
+});

@@ -6,10 +6,12 @@ export default function StatCounter({
   value,
   suffix = "",
   label,
+  onDark = false,
 }: {
   value: number;
   suffix?: string;
   label: string;
+  onDark?: boolean;
 }) {
   const ref = useRef<HTMLDivElement>(null);
   const [display, setDisplay] = useState(0);
@@ -44,11 +46,11 @@ export default function StatCounter({
 
   return (
     <div ref={ref}>
-      <div className="font-display font-extrabold text-4xl lg:text-5xl tracking-tight">
+      <div className={"font-display font-extrabold text-4xl lg:text-5xl tracking-tight" + (onDark ? " text-white" : "")}>
         {display.toLocaleString()}
         {suffix}
       </div>
-      <div className="text-xs lg:text-sm text-wgray mt-1 uppercase tracking-wider font-bold">
+      <div className={"text-xs lg:text-sm mt-1 uppercase tracking-wider font-bold" + (onDark ? " text-white/60" : " text-wgray")}>
         {label}
       </div>
     </div>

@@ -21,6 +21,10 @@ export function canRequestDataRoom(user: User | null): boolean {
   return !!user && (user.role === "investor" || user.role === "admin");
 }
 
+export function canManageDeal(user: User | null, deal: { listing: Listing }): boolean {
+  return canManageListing(user, deal.listing);
+}
+
 export const unauthorized = () =>
   NextResponse.json({ error: "Sign in required" }, { status: 401 });
 export const forbidden = () =>
