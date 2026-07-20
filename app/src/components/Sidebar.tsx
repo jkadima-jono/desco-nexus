@@ -12,6 +12,7 @@ const nav = [
   { href: "/deals", key: "nav.deals", icon: "▤" },
   { href: "/search", key: "nav.search", icon: "✦" },
   { href: "/messages", key: "nav.messages", icon: "✉" },
+  { href: "/pillars", key: "nav.pillars", icon: "◆" },
 ];
 
 type SidebarUser = { fullName: string; title: string | null } | null;
