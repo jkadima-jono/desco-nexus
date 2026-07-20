@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import type { Metadata } from "next";
 import { PILLARS, getPillar } from "@/lib/pillars";
+import { pillarIcon } from "@/lib/theme";
 import Reveal from "@/components/story/Reveal";
 import StatCounter from "@/components/story/StatCounter";
 import Timeline from "@/components/story/Timeline";
@@ -55,9 +56,19 @@ export default async function PillarPage({
         />
         <div className="relative max-w-5xl mx-auto px-6 lg:px-8 py-16 lg:py-24 text-white">
           <Reveal>
-            <p className="font-bold text-xs uppercase tracking-[0.2em] mb-3 text-white/80">
-              {pillar.shortName}
-            </p>
+            <div className="flex items-center gap-3 mb-4">
+              <div className="w-14 h-14 rounded-full bg-white p-1.5 shadow-[0_4px_16px_rgb(0_0_0/0.25)]">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={pillarIcon(pillar.slug)}
+                  alt=""
+                  className="w-full h-full rounded-full object-cover"
+                />
+              </div>
+              <p className="font-bold text-xs uppercase tracking-[0.2em] text-white/80">
+                {pillar.shortName}
+              </p>
+            </div>
           </Reveal>
           <Reveal delay={80}>
             <h1 className="font-display font-extrabold text-3xl lg:text-5xl tracking-tight max-w-2xl">

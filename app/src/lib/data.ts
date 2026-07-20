@@ -1,3 +1,5 @@
+import { DESCO_COLORS } from "./theme";
+
 export type Scores = {
   match: number;      // 0-100 AI match vs. current mandate
   readiness: number;  // investment readiness
@@ -33,7 +35,7 @@ export const listings: Listing[] = [
     title: "Atlas Solar Portfolio — 120MW",
     org: "Maghreb Renewables SA",
     sector: "Renewable Energy",
-    sectorColor: "#FF8C00",
+    sectorColor: DESCO_COLORS.charcoal,
     country: "Morocco",
     flag: "🇲🇦",
     raiseUsd: 90_000_000,
@@ -60,7 +62,7 @@ export const listings: Listing[] = [
     title: "Kivu Agri-Processing Expansion",
     org: "Desco Agri Holdings",
     sector: "Agriculture",
-    sectorColor: "#00A550",
+    sectorColor: DESCO_COLORS.emerald,
     country: "DR Congo",
     flag: "🇨🇩",
     raiseUsd: 8_000_000,
@@ -86,7 +88,7 @@ export const listings: Listing[] = [
     title: "Mombasa Logistics Corridor PPP",
     org: "Kenya Investment Authority",
     sector: "Infrastructure",
-    sectorColor: "#0047AB",
+    sectorColor: DESCO_COLORS.charcoal,
     country: "Kenya",
     flag: "🇰🇪",
     raiseUsd: 240_000_000,
@@ -111,7 +113,7 @@ export const listings: Listing[] = [
     title: "MediServe — Clinic Network Series B",
     org: "MediServe Health",
     sector: "Healthcare",
-    sectorColor: "#0066CC",
+    sectorColor: DESCO_COLORS.blue,
     country: "Nigeria",
     flag: "🇳🇬",
     raiseUsd: 25_000_000,
@@ -136,7 +138,7 @@ export const listings: Listing[] = [
     title: "Zambezi Clean Water Utility",
     org: "AquaVita Partners",
     sector: "Water",
-    sectorColor: "#0047AB",
+    sectorColor: DESCO_COLORS.deepblue,
     country: "Zambia",
     flag: "🇿🇲",
     raiseUsd: 45_000_000,
@@ -160,7 +162,7 @@ export const listings: Listing[] = [
     title: "Teranga Pay — Series A",
     org: "Teranga Technologies",
     sector: "Fintech",
-    sectorColor: "#B8953D",
+    sectorColor: DESCO_COLORS.gold,
     country: "Senegal",
     flag: "🇸🇳",
     raiseUsd: 12_000_000,
