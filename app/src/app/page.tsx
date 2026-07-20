@@ -1,6 +1,7 @@
 import { prisma, toListing } from "@/lib/db";
 import { fmtUsd } from "@/lib/data";
 import ProjectCard from "@/components/ProjectCard";
+import ProofBar from "@/components/story/ProofBar";
 import { getLocale } from "@/lib/i18n-server";
 import { t } from "@/lib/i18n";
 import { getSessionUser } from "@/lib/auth";
@@ -27,6 +28,8 @@ export default async function Discover({ searchParams }: { searchParams: Promise
   const totalRaise = listings.reduce((a, l) => a + l.raiseUsd, 0);
 
   return (
+    <>
+      <ProofBar />
     <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-6 lg:py-8">
       <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-3 mb-2">
         <div>
@@ -70,5 +73,6 @@ export default async function Discover({ searchParams }: { searchParams: Promise
         ))}
       </div>
     </div>
+    </>
   );
 }

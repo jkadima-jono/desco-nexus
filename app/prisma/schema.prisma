@@ -82,6 +82,9 @@ model Deal {
   id        String   @id @default(cuid())
   listingId String
   listing   Listing  @relation(fields: [listingId], references: [id])
+  capitalCalls  CapitalCall[]
+  distributions Distribution[]
+  updates       PortfolioUpdate[]
   title     String
   flag      String
   amount    String
@@ -157,4 +160,48 @@ model StandingMandate {
   frequency String   @default("weekly") // daily|weekly
   active    Boolean  @default(true)
   createdAt DateTime @default(now())
+}
+
+model CapitalCall {
+  id         String   @id @default(cuid())
+  dealId     String
+  deal       Deal     @relation(fields: [dealId], references: [id])
+  callNumber Int
+  amountUsd  Int
+  purpose    String
+  noticeDate DateTime @default(now())
+  dueDate    DateTime
+  status     String   @default("issued") // issued|paid|overdue
+  paidAt     DateTime?
+}
+
+model Distribution {
+  id          String   @id @default(cuid())
+  dealId      String
+  deal        Deal     @relation(fields: [dealId], references: [id])
+  amountUsd   Int
+  kind        String   // return-of-capital|profit|interest
+  paymentDate DateTime @default(now())
+}
+
+model PortfolioUpdate {
+  id        String   @id @default(cuid())
+  dealId    String
+  deal      Deal     @relation(fields: [dealId], references: [id])
+  authorId  String
+  title     String
+  body      String
+  period    String
+  createdAt DateTime @default(now())
+}
+
+model InvestorEngagement {
+  id           String   @id @default(cuid())
+  sponsorOrgId String
+  investorId   String
+  listingId    String
+  lastActivity DateTime @default(now())
+  stage        String   // viewed|saved|nda|room-access|messaged|committed
+
+  @@unique([sponsorOrgId, investorId, listingId])
 }

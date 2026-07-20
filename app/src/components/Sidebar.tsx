@@ -10,6 +10,7 @@ const nav = [
   { href: "/", key: "nav.discover", icon: "◈" },
   { href: "/match", key: "nav.match", icon: "⇄" },
   { href: "/deals", key: "nav.deals", icon: "▤" },
+  { href: "/portfolio", key: "nav.portfolio", icon: "◇" },
   { href: "/search", key: "nav.search", icon: "✦" },
   { href: "/messages", key: "nav.messages", icon: "✉" },
   { href: "/pillars", key: "nav.pillars", icon: "◆" },
