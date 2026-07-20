@@ -1,3 +1,5 @@
+import { DESCO_COLORS } from "./theme";
+
 export type Milestone = { year: string; label: string; done: boolean };
 export type ImpactStat = { label: string; value: number; suffix: string };
 
@@ -22,7 +24,7 @@ export const PILLARS: Pillar[] = [
     name: "Strategic Minerals",
     shortName: "Mining",
     tagline: "Formalizing frontier extraction into export-ready operations.",
-    color: "#7F8C8D",
+    color: DESCO_COLORS.brandred,
     summary:
       "We bring structure and governance to undercapitalized mining concessions and artisanal operations, converting informal activity into transparent, exportable production.",
     thesis:
@@ -53,7 +55,7 @@ export const PILLARS: Pillar[] = [
     name: "InvestDesco",
     shortName: "Strategic Capital",
     tagline: "Structuring capital partnerships aligned with real assets.",
-    color: "#B8953D",
+    color: DESCO_COLORS.gold,
     summary:
       "InvestDesco structures capital partnerships, joint ventures, and long-term investment vehicles that connect disciplined investors to development-stage real assets across our platform.",
     thesis:
@@ -83,7 +85,7 @@ export const PILLARS: Pillar[] = [
     name: "AgriDesco",
     shortName: "Agriculture",
     tagline: "Connecting productive land to markets and food security.",
-    color: "#00A550",
+    color: DESCO_COLORS.emerald,
     summary:
       "AgriDesco supports modern agricultural production and agribusiness platforms that connect farmers to markets, focused on productivity, infrastructure, and sustainable land use.",
     thesis:
@@ -112,7 +114,7 @@ export const PILLARS: Pillar[] = [
     name: "PharDesco",
     shortName: "Healthcare",
     tagline: "Delivering essential pharmaceutical access at scale.",
-    color: "#0066CC",
+    color: DESCO_COLORS.blue,
     summary:
       "PharDesco delivers essential pharmaceutical solutions to improve community health outcomes, building structured, compliant, and scalable distribution platforms.",
     thesis:
@@ -141,7 +143,7 @@ export const PILLARS: Pillar[] = [
     name: "WaterDesco",
     shortName: "Water & Sanitation",
     tagline: "Water security as the foundation for growth, not an add-on.",
-    color: "#0047AB",
+    color: DESCO_COLORS.deepblue,
     summary:
       "WaterDesco develops clean water solutions and sanitation infrastructure supporting communities and industrial operations — because water security is foundational, not incidental.",
     thesis:
@@ -170,7 +172,7 @@ export const PILLARS: Pillar[] = [
     name: "Infrastructure",
     shortName: "Infrastructure",
     tagline: "Enabling systems that reduce risk and unlock scale.",
-    color: "#0047AB",
+    color: DESCO_COLORS.charcoal,
     summary:
       "We invest in enabling infrastructure — logistics, energy, water systems, and operational platforms — that reduces execution risk and unlocks scale across every pillar.",
     thesis:
@@ -199,7 +201,7 @@ export const PILLARS: Pillar[] = [
     name: "Strategic Ports & Logistics",
     shortName: "Ports & Logistics",
     tagline: "The corridors that turn assets into export revenue.",
-    color: "#0047AB",
+    color: DESCO_COLORS.wgray,
     summary:
       "We develop strategic logistics assets — depots, corridors, and port-linked infrastructure — that convert landlocked production into exportable, bankable revenue.",
     thesis:
@@ -228,7 +230,7 @@ export const PILLARS: Pillar[] = [
     name: "Community Development",
     shortName: "Community",
     tagline: "Consent and shared value are structural, not optional.",
-    color: "#FF8C00",
+    color: DESCO_COLORS.orange,
     summary:
       "Every asset we develop is built on documented community consent and shared value — the foundation that reduces political risk and sustains long-term operations.",
     thesis:
@@ -257,7 +259,7 @@ export const PILLARS: Pillar[] = [
     name: "ESG & Sustainability",
     shortName: "ESG",
     tagline: "Measurable impact, transparent governance, long-term view.",
-    color: "#00A550",
+    color: DESCO_COLORS.emerald,
     summary:
       "ESG is embedded across every pillar — from environmental stewardship in resource extraction to governance frameworks that satisfy institutional and DFI due diligence.",
     thesis:
