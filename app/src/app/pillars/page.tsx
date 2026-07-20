@@ -8,7 +8,7 @@ import StatCounter from "@/components/story/StatCounter";
 export const metadata = {
   title: "Our Pillars — DESCO Nexus | Integrated Solutions. Sustainable Impact.",
   description:
-    "Nine integrated pillars structuring, securing, and developing real assets across Africa's high-potential regions — mining, agriculture, healthcare, water, infrastructure, and capital.",
+    "Desco Global's four integrated pillars — Agridesco, Investdesco, Phardesco, and Waterdesco — transforming the Grand Kasai region of the DRC under Vision 2035.",
 };
 
 export default function PillarsIndex() {
@@ -27,21 +27,22 @@ export default function PillarsIndex() {
         <div className="relative max-w-4xl mx-auto px-6 lg:px-8 py-20 lg:py-28 text-center">
           <Reveal>
             <p className="text-gold font-bold text-xs uppercase tracking-[0.2em] mb-4">
-              Desco Global · Investdesco Pillar
+              Desco Global · Vision 2035
             </p>
           </Reveal>
           <Reveal delay={80}>
             <h1 className="font-display font-extrabold text-4xl lg:text-6xl tracking-tight leading-[1.05]">
-              Building strategic assets.
+              Transforming Kasai.
               <br />
-              Enabling long-term growth.
+              Empowering the DRC.
             </h1>
           </Reveal>
           <Reveal delay={160}>
             <p className="text-white/70 text-base lg:text-lg mt-6 max-w-2xl mx-auto leading-relaxed">
-              We structure, secure, and develop real assets across Africa&rsquo;s
-              high-potential regions — at the intersection of community,
-              government, and capital.
+              An integrated African developer and operator unlocking the
+              potential of the Democratic Republic of Congo — a $750M Phase 1
+              investment opportunity across agriculture, infrastructure,
+              healthcare, and water.
             </p>
           </Reveal>
           <Reveal delay={240}>
@@ -70,17 +71,19 @@ export default function PillarsIndex() {
         </Reveal>
         <Reveal delay={80}>
           <h2 className="font-display font-extrabold text-2xl lg:text-3xl tracking-tight max-w-2xl mx-auto">
-            A long-term strategic partner unlocking value in frontier and
-            emerging markets.
+            An integrated African developer &amp; operator.
           </h2>
         </Reveal>
         <Reveal delay={160}>
           <p className="text-wgray mt-5 leading-relaxed max-w-2xl mx-auto">
-            For over a decade, our team has operated on the ground in the
-            Democratic Republic of Congo and across Southern Africa — building
-            trusted relationships with regional authorities, local operators,
-            and international partners. Nexus is how that trust becomes
-            accessible to global capital.
+            Founded in 2023 with its headquarters in South Africa, Desco
+            Global is a purpose-driven holding company dedicated to unlocking
+            the potential of the Democratic Republic of Congo. By integrating
+            agriculture, infrastructure, healthcare, and water, we create
+            self-reinforcing ecosystems that deliver sustainable financial
+            returns and transformative social impact — governed by an
+            independent board, international audit standards, and an
+            IFC-aligned environmental and social management system.
           </p>
         </Reveal>
       </section>
@@ -90,15 +93,19 @@ export default function PillarsIndex() {
         <div className="max-w-5xl mx-auto px-6 lg:px-8 grid gap-10 md:grid-cols-2">
           <Reveal>
             <div>
-              <p className="text-gold font-bold text-xs uppercase tracking-[0.2em] mb-3">Why Africa</p>
+              <p className="text-gold font-bold text-xs uppercase tracking-[0.2em] mb-3">Why the Grand Kasai region</p>
               <h3 className="font-display font-bold text-xl mb-3">
-                Where structure is the scarce resource, not capital.
+                Untapped potential at Africa&rsquo;s heart.
               </h3>
               <p className="text-white/70 leading-relaxed text-sm">
-                Africa holds the fastest-growing demand for infrastructure,
-                minerals, and food security on Earth. What limits investment
-                isn&rsquo;t opportunity — it&rsquo;s the absence of governed,
-                de-risked entry points. We build those entry points first.
+                Located in the geographic center of the DRC, Grand Kasai is
+                the nation&rsquo;s demographic engine and agricultural
+                reservoir — over 15 million hectares of arable land, historic
+                diamond fields and gold belts — yet remains historically
+                isolated by infrastructure gaps. Kasai River access via Port
+                de Ndomba and Lake Mweru access via Port de Kasenga turn that
+                isolation into a central logistics hub between the Atlantic
+                coast and the mineral-rich Katanga region.
               </p>
             </div>
           </Reveal>
@@ -106,14 +113,14 @@ export default function PillarsIndex() {
             <div>
               <p className="text-gold font-bold text-xs uppercase tracking-[0.2em] mb-3">Why the DRC</p>
               <h3 className="font-display font-bold text-xl mb-3">
-                A decade of relationships that cannot be shortcut.
+                The 3rd-largest population in Africa, still underserved.
               </h3>
               <p className="text-white/70 leading-relaxed text-sm">
-                The Democratic Republic of Congo holds generational mineral,
-                agricultural, and hydrological wealth. Our founding team has
-                worked directly with communities and authorities here since
-                before it was an investment thesis — that history is the
-                moat.
+                The DRC&rsquo;s 100M+ consumer base drives a $3.0B annual food
+                import bill, chronic power and clean-water shortages, and one
+                pharmacist for every 50,000 people in Kasai against a WHO
+                benchmark of 1 per 2,000. Each Desco Global pillar targets one
+                of these specific, documented gaps.
               </p>
             </div>
           </Reveal>
@@ -136,10 +143,10 @@ export default function PillarsIndex() {
       {/* Impact stats */}
       <section className="bg-mist py-16 lg:py-20">
         <div className="max-w-4xl mx-auto px-6 lg:px-8 grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
-          <Reveal><StatCounter value={9} label="Integrated pillars" /></Reveal>
-          <Reveal delay={80}><StatCounter value={10} suffix="+" label="Years on the ground" /></Reveal>
-          <Reveal delay={160}><StatCounter value={22} suffix="+" label="Communities engaged" /></Reveal>
-          <Reveal delay={240}><StatCounter value={800000} label="Residents in water programs" /></Reveal>
+          <Reveal><StatCounter value={750} suffix="M" label="Phase 1 investment target" /></Reveal>
+          <Reveal delay={80}><StatCounter value={17} suffix=".2%" label="Target Phase 1 program IRR" /></Reveal>
+          <Reveal delay={160}><StatCounter value={100000} suffix="+" label="Projected jobs by 2035" /></Reveal>
+          <Reveal delay={240}><StatCounter value={2500000} label="People targeted for clean water access" /></Reveal>
         </div>
       </section>
 
@@ -149,7 +156,7 @@ export default function PillarsIndex() {
           <div className="text-center mb-10">
             <p className="text-gold font-bold text-xs uppercase tracking-[0.2em] mb-3">Integrated pillars</p>
             <h2 className="font-display font-extrabold text-2xl lg:text-3xl tracking-tight">
-              Nine platforms. One structure.
+              Four pillars. One ecosystem.
             </h2>
           </div>
         </Reveal>
