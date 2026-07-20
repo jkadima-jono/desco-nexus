@@ -14,6 +14,8 @@ A Desco Global (Investdesco) platform. *Integrated Solutions. Sustainable Impact
 | [docs/06-gtm-growth.md](docs/06-gtm-growth.md) | GTM, marketing/sales, growth loops, viral & referral, acquisition |
 | [docs/07-roadmap-execution.md](docs/07-roadmap-execution.md) | Roadmap, sprints, launch, scaling, international, risk, AI roadmap |
 | [docs/08-product-specification.md](docs/08-product-specification.md) | Master spec: deliverable map, first-class feature specs, marketplace logic, recommendation engine, compliance framework, KPIs, invented features |
+| [docs/09-redesign-analysis.md](docs/09-redesign-analysis.md) | desco.global brand analysis, Our Pillars storytelling section strategy |
+| [docs/10-fundcentre-expansion-strategy.md](docs/10-fundcentre-expansion-strategy.md) | Intralinks FundCentre analysis, gap analysis, Portfolio/Investor-CRM/Capital-Calls expansion plan (awaiting approval) |
 | [app/](app/) | Production-grade MVP (Next.js 15 · React 19 · TypeScript · Tailwind 4) |
 
 ## Run the MVP
