@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="600" viewBox="0 0 800 600">
+  <rect width="100%" height="100%" fill="white"/>
+  <!-- Globe circle -->
+  <circle cx="400" cy="230" r="120" fill="none" stroke="#333333" stroke-width="8"/>
+  <!-- Arc 1 (upper) -->
+  <path d="M 286.0 210 A 120 72.0 0 0 1 514.0 210" fill="none" stroke="#005B96" stroke-width="10" stroke-linecap="round"/>
+  <!-- Arc 2 (lower) -->
+  <path d="M 304.0 260 A 108.0 66.0 0 0 0 496.0 260" fill="none" stroke="#3BAF4A" stroke-width="10" stroke-linecap="round"/>
+  <!-- Text -->
+  <text x="400.0" y="430" font-family="Arial, Helvetica, sans-serif" font-size="56" font-weight="700" fill="#333333" text-anchor="middle">DESCO GLOBAL</text>
+</svg>

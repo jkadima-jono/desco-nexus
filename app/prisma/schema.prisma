@@ -1,0 +1,160 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String        @id @default(cuid())
+  email        String        @unique
+  fullName     String
+  title        String?
+  role         String        @default("investor") // investor|owner|advisor|admin
+  orgId        String?
+  matchActions MatchAction[]
+  mandates     StandingMandate[]
+}
+
+model Organization {
+  id       String    @id @default(cuid())
+  name     String    @unique
+  type     String    // investor|seeker|advisor|government
+  country  String
+  listings Listing[]
+}
+
+model Listing {
+  id               String        @id // slug
+  orgId            String
+  org              Organization  @relation(fields: [orgId], references: [id])
+  title            String
+  sector           String
+  sectorColor      String
+  country          String
+  flag             String
+  raiseUsd         Int
+  instrument       String
+  stage            String
+  irr              String
+  summary          String
+  verified         Boolean       @default(false)
+  governmentBacked Boolean       @default(false)
+  govMechanism     String?       // guarantee|concession|ppa|grant|letter|first-loss|tax|other
+  matchScore       Int
+  readiness        Int
+  esg              Int
+  risk             Int
+  highlights       String        // JSON array
+  whyMatch         String
+  docs             Document[]
+  images           ListingImage[]
+  matchActions     MatchAction[]
+  deals            Deal[]
+  createdAt        DateTime      @default(now())
+}
+
+model Document {
+  id         String  @id @default(cuid())
+  listingId  String
+  listing    Listing @relation(fields: [listingId], references: [id])
+  name       String
+  size       String
+  folder     String
+  storageKey String?
+  mime       String?
+}
+
+model MatchAction {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  listingId String
+  listing   Listing  @relation(fields: [listingId], references: [id])
+  action    String   // interested|pass|saved|follow
+  matchScore Int
+  createdAt DateTime @default(now())
+}
+
+model Deal {
+  id        String   @id @default(cuid())
+  listingId String
+  listing   Listing  @relation(fields: [listingId], references: [id])
+  title     String
+  flag      String
+  amount    String
+  stage     String   // Screening|NDA|Diligence|IC Review|Term Sheet
+  parentId  String?
+  parent    Deal?    @relation("Tranches", fields: [parentId], references: [id])
+  tranches  Deal[]   @relation("Tranches")
+  kind      String   @default("opportunity") // opportunity|equity-tranche|debt-tranche|workstream
+  history   String   @default("[]")          // [{from,to,by,reason,at}]
+  probability Int?                           // override, else stage default
+  owner     String
+  nextStep  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([listingId, title])
+}
+
+model Thread {
+  id       String    @id @default(cuid())
+  name     String
+  org      String
+  messages Message[]
+}
+
+model Message {
+  id        String   @id @default(cuid())
+  threadId  String
+  thread    Thread   @relation(fields: [threadId], references: [id])
+  sender    String   // them|me|system
+  text      String
+  createdAt DateTime @default(now())
+}
+
+model Comment {
+  id        String        @id @default(cuid())
+  listingId String
+  userId    String
+  parentId  String?
+  body      String
+  createdAt DateTime      @default(now())
+  parent    Comment?      @relation("Replies", fields: [parentId], references: [id])
+  replies   Comment[]     @relation("Replies")
+  likes     CommentLike[]
+}
+
+model CommentLike {
+  commentId String
+  userId    String
+  comment   Comment @relation(fields: [commentId], references: [id])
+
+  @@id([commentId, userId])
+}
+
+model ListingImage {
+  id         String   @id @default(cuid())
+  listingId  String
+  listing    Listing  @relation(fields: [listingId], references: [id])
+  storageKey String
+  caption    String?
+  position   Int      @default(0)
+  createdAt  DateTime @default(now())
+}
+
+model StandingMandate {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  name      String
+  query     String
+  criteria  String   // JSON parsed criteria snapshot
+  threshold Int      @default(70)
+  frequency String   @default("weekly") // daily|weekly
+  active    Boolean  @default(true)
+  createdAt DateTime @default(now())
+}
