@@ -45,10 +45,10 @@ export const PILLARS: Pillar[] = [
       "Build post-harvest storage and value-add processing for maize, cassava, and soy",
     ],
     impact: [
-      { label: "Farmers integrated", value: 50000, suffix: "+" },
-      { label: "Hectares revitalized", value: 25000, suffix: "" },
-      { label: "Villages served", value: 40, suffix: "+" },
-      { label: "Income uplift for smallholders", value: 45, suffix: "%" },
+      { label: "Farmers to be integrated (target)", value: 50000, suffix: "+" },
+      { label: "Hectares to be revitalized (target)", value: 25000, suffix: "" },
+      { label: "Villages to be served (target)", value: 40, suffix: "+" },
+      { label: "Projected income uplift for smallholders", value: 45, suffix: "%" },
     ],
     milestones: [
       { year: "2026–2027", label: "Agridesco operations launch alongside Port de Ndomba Phase 1", done: false },

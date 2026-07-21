@@ -108,6 +108,7 @@ export default async function ProjectDetail({
                 <br />
                 {l.irr}
               </div>
+              <div className="text-[10px] text-white/40 mt-1.5">Sponsor-provided figures</div>
             </div>
           </div>
         </div>

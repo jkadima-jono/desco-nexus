@@ -19,12 +19,13 @@ const MESSAGES: NavItem = { href: "/messages", key: "nav.messages", icon: "✉" 
 const PILLARS: NavItem = { href: "/pillars", key: "nav.pillars", icon: "◆" };
 const INVESTOR_MATCHES: NavItem = { href: "/sponsor/investors", key: "nav.investorMatches", icon: "⇄" };
 const MANDATES: NavItem = { href: "/mandates", key: "nav.mandates", icon: "☰" };
+const CONTACT: NavItem = { href: "/contact", key: "nav.contact", icon: "✉" };
 
 // Role-appropriate subsets of real, working routes only — no links to
 // pages that don't exist yet (data-rooms/analytics land in later phases
 // and gain nav entries then, not before).
 const NAV_BY_ROLE: Record<string, NavItem[]> = {
-  signedOut: [DISCOVER, PILLARS],
+  signedOut: [DISCOVER, PILLARS, CONTACT],
   investor: [DISCOVER, MATCH, MANDATES, PIPELINE, PORTFOLIO, SEARCH, MESSAGES, PILLARS],
   owner: [PROJECTS, INVESTOR_MATCHES, MESSAGES, PILLARS],
   advisor: [DISCOVER, MANDATES, TRANSACTIONS, MESSAGES, PILLARS],

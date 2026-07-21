@@ -144,6 +144,13 @@ export default async function PillarPage({
                   <StatCounter key={s.label} value={s.value} suffix={s.suffix} label={s.label} />
                 ))}
               </div>
+              <p className="text-[11px] text-wgray mt-4 pt-4 border-t border-charcoal/10 leading-relaxed">
+                Figures above are drawn from Desco Global&rsquo;s own investor
+                deck and business plans and have not been independently
+                verified by Nexus. Figures marked &ldquo;target,&rdquo;
+                &ldquo;planned,&rdquo; or &ldquo;projected&rdquo; are forward
+                estimates, not measured results.
+              </p>
             </section>
           </Reveal>
 

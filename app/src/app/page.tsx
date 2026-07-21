@@ -29,6 +29,34 @@ export default async function Discover({ searchParams }: { searchParams: Promise
 
   return (
     <>
+      {!user && (
+        <section className="bg-ink text-white">
+          <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-10 lg:py-14">
+            <p className="text-gold font-bold text-xs uppercase tracking-[0.2em] mb-3">
+              A Desco Global platform
+            </p>
+            <h2 className="font-display font-extrabold text-2xl lg:text-3xl tracking-tight max-w-2xl">
+              Institutional investment opportunities in the Democratic Republic of Congo.
+            </h2>
+            <p className="text-white/70 text-sm lg:text-base mt-3 max-w-2xl leading-relaxed">
+              DESCO Nexus connects investors — institutional funds, family
+              offices, DFIs, and angel investors — with verified project
+              sponsors across Desco Global&rsquo;s four pillars: agriculture,
+              infrastructure, healthcare, and water. Investors discover and
+              evaluate opportunities transparently; asset owners reach
+              qualified capital.
+            </p>
+            <div className="flex flex-wrap gap-3 mt-6">
+              <Link href="/login" className="bg-gold text-ink font-display font-bold text-sm px-5 py-2.5 rounded-xl hover:brightness-110">
+                Sign in to discover opportunities
+              </Link>
+              <Link href="/pillars" className="border border-white/25 text-white font-display font-semibold text-sm px-5 py-2.5 rounded-xl hover:bg-white/10">
+                Learn about our four pillars
+              </Link>
+            </div>
+          </div>
+        </section>
+      )}
       <ProofBar />
     <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-6 lg:py-8">
       <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-3 mb-2">

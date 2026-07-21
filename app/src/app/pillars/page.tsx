@@ -126,11 +126,16 @@ export default function PillarsIndex() {
                 import bill, chronic power and clean-water shortages, and one
                 pharmacist for every 50,000 people in Kasai against a WHO
                 benchmark of 1 per 2,000. Each Desco Global pillar targets one
-                of these specific, documented gaps.
+                of these specific gaps.
               </p>
             </div>
           </Reveal>
         </div>
+        <p className="max-w-5xl mx-auto px-6 lg:px-8 text-[11px] text-white/40 mt-10 leading-relaxed">
+          Market figures above are drawn from Desco Global&rsquo;s own investor
+          and market materials; Nexus has not independently verified the
+          underlying trade, demographic, or WHO-benchmark data cited.
+        </p>
       </section>
 
       {/* Approach */}
@@ -154,6 +159,10 @@ export default function PillarsIndex() {
           <Reveal delay={160}><StatCounter value={100000} suffix="+" label="Projected jobs by 2035" /></Reveal>
           <Reveal delay={240}><StatCounter value={2500000} label="People targeted for clean water access" /></Reveal>
         </div>
+        <p className="text-center text-[11px] text-wgray/70 max-w-lg mx-auto mt-8 leading-relaxed">
+          Figures above are Desco Global&rsquo;s own investor-deck targets and
+          projections, not independently verified or measured results.
+        </p>
       </section>
 
       {/* Pillars grid */}

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Montserrat, Open_Sans, Playfair_Display } from "next/font/google";
 import "./globals.css";
 import Sidebar from "@/components/Sidebar";
+import Footer from "@/components/Footer";
 import { getSessionUser } from "@/lib/auth";
 import { getLocale } from "@/lib/i18n-server";
 import { I18nProvider } from "@/components/I18nProvider";
@@ -44,11 +45,12 @@ export default async function RootLayout({
           <Sidebar
             user={user ? { fullName: user.fullName, title: user.title, role: user.role } : null}
           />
-          <main id="main-content" tabIndex={-1} className="flex-1 min-w-0 pt-16 lg:pt-0">
+          <main id="main-content" tabIndex={-1} className="flex-1 min-w-0 pt-16 lg:pt-0 flex flex-col min-h-screen">
             <div className="bg-gold-soft border-b border-gold/30 px-4 py-2 text-center text-xs font-semibold text-charcoal">
               {t(locale, "login.demoNote")}
             </div>
-            {children}
+            <div className="flex-1">{children}</div>
+            <Footer />
           </main>
         </div>
         </I18nProvider>
