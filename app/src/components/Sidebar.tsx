@@ -6,15 +6,29 @@ import { useEffect, useRef, useState } from "react";
 import { useI18n } from "./I18nProvider";
 import LanguageSwitcher from "./LanguageSwitcher";
 
-const nav = [
-  { href: "/", key: "nav.discover", icon: "◈" },
-  { href: "/match", key: "nav.match", icon: "⇄" },
-  { href: "/deals", key: "nav.deals", icon: "▤" },
-  { href: "/portfolio", key: "nav.portfolio", icon: "◇" },
-  { href: "/search", key: "nav.search", icon: "✦" },
-  { href: "/messages", key: "nav.messages", icon: "✉" },
-  { href: "/pillars", key: "nav.pillars", icon: "◆" },
-];
+type NavItem = { href: string; key: string; icon: string };
+
+const DISCOVER: NavItem = { href: "/", key: "nav.discover", icon: "◈" };
+const MATCH: NavItem = { href: "/match", key: "nav.match", icon: "⇄" };
+const PIPELINE: NavItem = { href: "/deals", key: "nav.pipeline", icon: "▤" };
+const PROJECTS: NavItem = { href: "/deals", key: "nav.projects", icon: "▤" };
+const TRANSACTIONS: NavItem = { href: "/deals", key: "nav.transactions", icon: "▤" };
+const PORTFOLIO: NavItem = { href: "/portfolio", key: "nav.portfolio", icon: "◇" };
+const SEARCH: NavItem = { href: "/search", key: "nav.search", icon: "✦" };
+const MESSAGES: NavItem = { href: "/messages", key: "nav.messages", icon: "✉" };
+const PILLARS: NavItem = { href: "/pillars", key: "nav.pillars", icon: "◆" };
+const INVESTOR_MATCHES: NavItem = { href: "/sponsor/investors", key: "nav.investorMatches", icon: "⇄" };
+
+// Role-appropriate subsets of real, working routes only — no links to
+// pages that don't exist yet (mandates/data-rooms/analytics land in
+// later phases and gain nav entries then, not before).
+const NAV_BY_ROLE: Record<string, NavItem[]> = {
+  signedOut: [DISCOVER, PILLARS],
+  investor: [DISCOVER, MATCH, PIPELINE, PORTFOLIO, SEARCH, MESSAGES, PILLARS],
+  owner: [PROJECTS, INVESTOR_MATCHES, MESSAGES, PILLARS],
+  advisor: [DISCOVER, TRANSACTIONS, MESSAGES, PILLARS],
+  admin: [DISCOVER, MATCH, PIPELINE, PORTFOLIO, INVESTOR_MATCHES, SEARCH, MESSAGES, PILLARS],
+};
 
 type SidebarUser = { fullName: string; title: string | null; role?: string } | null;
 
@@ -46,6 +60,7 @@ export default function Sidebar({ user }: { user: SidebarUser }) {
     router.push("/login");
     router.refresh();
   };
+  const nav = NAV_BY_ROLE[user?.role ?? "signedOut"] ?? NAV_BY_ROLE.investor;
   const navigation = (
     <>
       <div className="px-6 pt-7 pb-6">
@@ -71,7 +86,7 @@ export default function Sidebar({ user }: { user: SidebarUser }) {
       {user?.role === "admin" && (
         <div className="px-3 pb-1">
           <Link href="/admin/inquiries" className={"flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-semibold transition-colors " + (pathname.startsWith("/admin") ? "bg-gold text-ink" : "text-white/70 hover:bg-white/10 hover:text-white")}>
-            <span aria-hidden="true" className="w-5 text-center">✉</span>Inquiries
+            <span aria-hidden="true" className="w-5 text-center">✉</span>{t("nav.inquiries")}
           </Link>
         </div>
       )}
