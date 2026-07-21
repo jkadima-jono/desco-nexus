@@ -30,7 +30,7 @@ const CONFIDENCE_RANK: Record<string, number> = { high: 3, medium: 2, low: 1, ex
 
 const AUDIENCE_PATHS = [
   { title: "Investors", body: "Define a mandate, review transparent matches, and request data-room access when a project fits.", href: "/mandates", cta: "Create a mandate" },
-  { title: "Project owners", body: "Present your project to qualified capital with a structured, verifiable listing.", href: "/contact", cta: "Submit a project" },
+  { title: "Project owners", body: "Present your project to qualified capital with a structured, verifiable listing.", href: "/submit-project", cta: "Submit a project" },
   { title: "Governments & agencies", body: "Promote verified regional projects and track investor engagement.", href: "/contact", cta: "Request a consultation" },
   { title: "Advisors", body: "Support clients through discovery, matching, and due diligence in one workspace.", href: "/contact", cta: "Get in touch" },
 ];
@@ -112,7 +112,7 @@ export default async function Discover({ searchParams }: { searchParams: Promise
                 <Link href="#opportunities" className="bg-gold text-ink font-display font-bold text-sm px-5 py-3 rounded-xl hover:brightness-110">
                   Explore opportunities
                 </Link>
-                <Link href="/contact" className="border border-white/25 text-white font-display font-semibold text-sm px-5 py-3 rounded-xl hover:bg-white/10">
+                <Link href="/submit-project" className="border border-white/25 text-white font-display font-semibold text-sm px-5 py-3 rounded-xl hover:bg-white/10">
                   Submit a project
                 </Link>
               </div>
@@ -283,7 +283,7 @@ export default async function Discover({ searchParams }: { searchParams: Promise
               <div>
                 <h3 className="font-display font-bold text-sm mb-2">Project owners</h3>
                 <p className="text-xs text-white/60 mb-4">Present your project to qualified capital.</p>
-                <Link href="/contact" className="inline-flex border border-white/25 text-white font-display font-semibold text-sm px-4 py-2.5 rounded-xl hover:bg-white/10">Submit a project</Link>
+                <Link href="/submit-project" className="inline-flex border border-white/25 text-white font-display font-semibold text-sm px-4 py-2.5 rounded-xl hover:bg-white/10">Submit a project</Link>
               </div>
               <div>
                 <h3 className="font-display font-bold text-sm mb-2">Institutions</h3>

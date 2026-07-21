@@ -237,3 +237,97 @@ test("position detail 404s for a user with no position (no cross-user leakage)",
   const res = await fetch(BASE + "/api/portfolio/some-random-id", { headers: { cookie: advisor } });
   assert.equal(res.status, 404);
 });
+
+// ---------- Project submissions (Phase 1: project-owner onboarding) ----------
+test("unauthenticated submission API access is rejected", async () => {
+  const get = await fetch(BASE + "/api/submissions");
+  assert.equal(get.status, 401);
+  const post = await fetch(BASE + "/api/submissions", {
+    method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ title: "x" }),
+  });
+  assert.equal(post.status, 401);
+});
+
+test("cross-user submission access returns 404, and only admin can list the review queue", async () => {
+  const a = await demoLogin("owner");
+  const created = await fetch(BASE + "/api/submissions", {
+    method: "POST", headers: { cookie: a, "Content-Type": "application/json" },
+    body: JSON.stringify({ orgName: "Test Org", title: "Test Project" }),
+  });
+  assert.equal(created.status, 200);
+  const { submission } = await created.json();
+
+  const b = await demoLogin("advisor");
+  const getAsB = await fetch(BASE + "/api/submissions/" + submission.id, { headers: { cookie: b } });
+  assert.equal(getAsB.status, 404, "another user's submission must look nonexistent");
+  const patchAsB = await fetch(BASE + "/api/submissions/" + submission.id, {
+    method: "PATCH", headers: { cookie: b, "Content-Type": "application/json" }, body: JSON.stringify({ title: "hijacked" }),
+  });
+  assert.equal(patchAsB.status, 404);
+
+  const investorQueue = await fetch(BASE + "/api/admin/submissions", { headers: { cookie: b } });
+  assert.equal(investorQueue.status, 403, "non-admin cannot see the review queue");
+
+  // cleanup
+  await fetch(BASE + "/api/submissions/" + submission.id, { method: "DELETE", headers: { cookie: a } });
+});
+
+test("submission cannot be submitted for review until required fields are complete", async () => {
+  const owner = await demoLogin("owner");
+  const created = await fetch(BASE + "/api/submissions", {
+    method: "POST", headers: { cookie: owner, "Content-Type": "application/json" },
+    body: JSON.stringify({ orgName: "Incomplete Org" }),
+  });
+  const { submission } = await created.json();
+
+  const submitAttempt = await fetch(BASE + "/api/submissions/" + submission.id, {
+    method: "PATCH", headers: { cookie: owner, "Content-Type": "application/json" }, body: JSON.stringify({ action: "submit" }),
+  });
+  assert.equal(submitAttempt.status, 400);
+  const body = await submitAttempt.json();
+  assert.ok(Array.isArray(body.missing) && body.missing.length > 0);
+
+  await fetch(BASE + "/api/submissions/" + submission.id, { method: "DELETE", headers: { cookie: owner } });
+});
+
+test("admin approval publishes a real listing; rejection requires a reason", async () => {
+  // NOTE: approval publishes a real Listing row with no admin delete-listing
+  // endpoint to retract it — this test intentionally leaves one real
+  // "Regression Test..." listing/org behind in the dev database on each
+  // run. Harmless for CI/dev, but sweep it manually before a demo:
+  //   npx tsx -e 'import {prisma} from "./src/lib/db"; prisma.listing.deleteMany({where:{title:{contains:"Regression Test"}}}).then(()=>prisma.$disconnect())'
+  const owner = await demoLogin("owner");
+  const created = await fetch(BASE + "/api/submissions", {
+    method: "POST", headers: { cookie: owner, "Content-Type": "application/json" },
+    body: JSON.stringify({
+      orgName: "Regression Test Sponsor " + Date.now(),
+      ownershipStatement: "Sole developer of this test project.",
+      title: "Regression Test Project " + Date.now(),
+      country: "DR Congo", sector: "Agriculture", stage: "Feasibility complete",
+      raiseUsd: 1_000_000, instrument: "equity",
+      useOfFunds: "Equipment and working capital.",
+      keyRisks: "Market and execution risk.",
+      managementTeam: "Test management team.",
+    }),
+  });
+  const { submission } = await created.json();
+  const submitRes = await fetch(BASE + "/api/submissions/" + submission.id, {
+    method: "PATCH", headers: { cookie: owner, "Content-Type": "application/json" }, body: JSON.stringify({ action: "submit" }),
+  });
+  assert.equal(submitRes.status, 200);
+
+  const admin = await demoLogin("admin");
+  const rejectNoReason = await fetch(BASE + "/api/admin/submissions/" + submission.id, {
+    method: "PATCH", headers: { cookie: admin, "Content-Type": "application/json" }, body: JSON.stringify({ action: "reject" }),
+  });
+  assert.equal(rejectNoReason.status, 400, "rejection without a reason must be refused");
+
+  const approve = await fetch(BASE + "/api/admin/submissions/" + submission.id, {
+    method: "PATCH", headers: { cookie: admin, "Content-Type": "application/json" }, body: JSON.stringify({ action: "approve" }),
+  });
+  assert.equal(approve.status, 200);
+  const { listingId } = await approve.json();
+  assert.ok(listingId);
+  const publicPage = await fetch(BASE + "/project/" + listingId);
+  assert.equal(publicPage.status, 200, "approved submission is publicly viewable as a real listing");
+});

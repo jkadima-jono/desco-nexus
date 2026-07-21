@@ -177,6 +177,24 @@ export default function MandateManager() {
     await load();
   };
 
+  // Completion progress across the guided-builder dimensions — purely a
+  // UI signal for the owner filling the form, not enforced server-side.
+  const completenessChecks = [
+    !!form.name.trim(),
+    !!form.investorType,
+    form.sectors.length > 0,
+    !!form.countries.trim(),
+    !!form.ticketMinM || !!form.ticketMaxM,
+    form.instruments.length > 0,
+    !!form.riskTolerance,
+    !!form.targetReturn.trim(),
+    !!form.horizonYears,
+    !!form.coInvestPreference,
+  ];
+  const mandateCompleteness = Math.round(
+    (completenessChecks.filter(Boolean).length / completenessChecks.length) * 100
+  );
+
   return (
     <div className="mt-8 space-y-6">
       {mandates === null ? (
@@ -223,7 +241,15 @@ export default function MandateManager() {
 
           {showForm && (
             <form onSubmit={submit} className="bg-white rounded-2xl p-6 shadow-[0_1px_3px_rgb(44_62_80/0.08)] space-y-4">
-              <h2 className="font-display font-bold text-lg">{editingId ? "Edit mandate" : "New mandate"}</h2>
+              <div>
+                <div className="flex items-center justify-between mb-1.5">
+                  <h2 className="font-display font-bold text-lg">{editingId ? "Edit mandate" : "New mandate"}</h2>
+                  <span className="text-xs font-bold text-wgray">{mandateCompleteness}% complete</span>
+                </div>
+                <div className="h-1.5 rounded-full bg-mist overflow-hidden">
+                  <div className="h-full bg-gold rounded-full transition-all" style={{ width: mandateCompleteness + "%" }} />
+                </div>
+              </div>
 
               <div>
                 <label htmlFor="m-name" className="block text-[11px] font-bold uppercase tracking-wider text-wgray mb-1.5">Mandate name</label>

@@ -29,7 +29,9 @@ const CONTACT: NavItem = { href: "/contact", key: "nav.contact", icon: "✉" };
 const OPPORTUNITIES: NavItem = { href: "/", key: "nav.opportunities", icon: "◈" };
 const HOW_IT_WORKS: NavItem = { href: "/#how-it-works", key: "nav.howItWorks", icon: "▤" };
 const FOR_INVESTORS: NavItem = { href: "/mandates", key: "nav.forInvestors", icon: "☰" };
-const FOR_OWNERS: NavItem = { href: "/contact", key: "nav.forOwners", icon: "▲" };
+const FOR_OWNERS: NavItem = { href: "/submit-project", key: "nav.forOwners", icon: "▲" };
+const SUBMIT_PROJECT: NavItem = { href: "/submit-project", key: "nav.submitProject", icon: "▲" };
+const REVIEW_SUBMISSIONS: NavItem = { href: "/admin/submissions", key: "nav.reviewSubmissions", icon: "▲" };
 const TRUST: NavItem = { href: "/#trust", key: "nav.trust", icon: "✓" };
 const ABOUT: NavItem = { href: "/pillars", key: "nav.about", icon: "◆" };
 
@@ -39,9 +41,9 @@ const ABOUT: NavItem = { href: "/pillars", key: "nav.about", icon: "◆" };
 const NAV_BY_ROLE: Record<string, NavItem[]> = {
   signedOut: [OPPORTUNITIES, HOW_IT_WORKS, FOR_INVESTORS, FOR_OWNERS, PILLARS, TRUST, ABOUT, CONTACT],
   investor: [DISCOVER, MATCH, MANDATES, PIPELINE, PORTFOLIO, SEARCH, MESSAGES, PILLARS],
-  owner: [PROJECTS, INVESTOR_MATCHES, MESSAGES, PILLARS],
+  owner: [PROJECTS, SUBMIT_PROJECT, INVESTOR_MATCHES, MESSAGES, PILLARS],
   advisor: [DISCOVER, MANDATES, TRANSACTIONS, MESSAGES, PILLARS],
-  admin: [DISCOVER, MATCH, MANDATES, PIPELINE, PORTFOLIO, INVESTOR_MATCHES, SEARCH, MESSAGES, PILLARS],
+  admin: [DISCOVER, MATCH, MANDATES, PIPELINE, PORTFOLIO, INVESTOR_MATCHES, REVIEW_SUBMISSIONS, SEARCH, MESSAGES, PILLARS],
 };
 
 type SidebarUser = { fullName: string; title: string | null; role?: string } | null;

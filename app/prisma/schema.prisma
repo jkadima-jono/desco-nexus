@@ -16,6 +16,7 @@ model User {
   orgId        String?
   matchActions MatchAction[]
   mandates     StandingMandate[]
+  submissions  ProjectSubmission[]
 }
 
 model Organization {
@@ -138,6 +139,49 @@ model CommentLike {
   comment   Comment @relation(fields: [commentId], references: [id])
 
   @@id([commentId, userId])
+}
+
+// Project-owner intake, separate from the public Listing table. A
+// submission is a draft under the owner's control; admin review promotes
+// it to a real Listing (copying the relevant fields) rather than
+// mutating it in place, so published listings never carry unreviewed
+// owner edits.
+model ProjectSubmission {
+  id                 String   @id @default(cuid())
+  ownerId            String
+  owner              User     @relation(fields: [ownerId], references: [id])
+  orgName            String
+  ownershipStatement String   @default("")
+  title              String   @default("")
+  country            String   @default("")
+  region             String   @default("")
+  sector             String   @default("")
+  stage              String   @default("")
+  raiseUsd           Int?
+  fundingSecuredUsd  Int?
+  sponsorContributionUsd Int?
+  instrument         String   @default("")
+  useOfFunds         String   @default("")
+  revenueModel       String   @default("")
+  financialSummary   String   @default("")
+  permitsStatus      String   @default("")
+  landRights         String   @default("")
+  governmentInvolvement String @default("")
+  governmentBacked   Boolean  @default(false)
+  esgSummary         String   @default("")
+  keyRisks           String   @default("")
+  managementTeam     String   @default("")
+  advisors           String   @default("")
+  documentsNote      String   @default("")
+  timetable          String   @default("")
+
+  status             String   @default("draft") // draft|submitted|under_review|changes_requested|approved|rejected
+  reviewedBy         String?
+  reviewNotes        String?
+  publishedListingId String?
+
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @default(now()) @updatedAt
 }
 
 model ListingImage {
