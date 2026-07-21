@@ -15,6 +15,7 @@
   --color-orange-p: #FF8C00;
   --font-display: "Montserrat", ui-sans-serif, system-ui, sans-serif;
   --font-body: "Open Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-serif: "Playfair Display", ui-serif, Georgia, serif;
 }
 
 html { background: var(--color-mist); }

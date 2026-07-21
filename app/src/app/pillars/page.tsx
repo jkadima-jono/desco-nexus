@@ -26,12 +26,18 @@ export default function PillarsIndex() {
         />
         <div className="relative max-w-4xl mx-auto px-6 lg:px-8 py-20 lg:py-28 text-center">
           <Reveal>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="/brand/desco-coin.png"
+              alt="Desco Global"
+              className="w-14 h-14 rounded-full mx-auto mb-6 shadow-[0_8px_24px_rgb(184_149_61/0.4)]"
+            />
             <p className="text-gold font-bold text-xs uppercase tracking-[0.2em] mb-4">
               Desco Global · Vision 2035
             </p>
           </Reveal>
           <Reveal delay={80}>
-            <h1 className="font-display font-extrabold text-4xl lg:text-6xl tracking-tight leading-[1.05]">
+            <h1 style={{ fontFamily: "var(--font-serif)" }} className="font-semibold text-4xl lg:text-6xl tracking-tight leading-[1.05]">
               Transforming Kasai.
               <br />
               Empowering the DRC.
