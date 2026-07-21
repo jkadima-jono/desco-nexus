@@ -16,6 +16,7 @@ export default function ProjectCard({
   return (
     <Link
       href={"/project/" + listing.id}
+      aria-label={`${listing.title}, ${fmtUsd(listing.raiseUsd)} ${listing.instrument}, ${listing.scores.match}% match`}
       className="card-rise group block bg-white rounded-2xl shadow-[0_1px_3px_rgb(44_62_80/0.08)] hover:shadow-[0_12px_32px_rgb(44_62_80/0.14)] transition-shadow overflow-hidden"
       style={{ animationDelay: index * 40 + "ms" }}
     >

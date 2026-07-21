@@ -72,6 +72,10 @@ export default function HeroVisual({
         <img
           src={photo.url}
           alt={photo.caption ?? listing.title}
+          loading="lazy"
+          decoding="async"
+          width={1200}
+          height={600}
           className="absolute inset-0 w-full h-full object-cover"
         />
         {overlay && (

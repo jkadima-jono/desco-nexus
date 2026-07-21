@@ -39,6 +39,11 @@ export default async function Discover({ searchParams }: { searchParams: Promise
           <p className="text-wgray text-sm mt-1">
             {user ? t(locale, "discover.subtitle") : "Explore current public opportunity teasers. Sign in for mandate-based ranking."}
           </p>
+          {!user && (
+            <Link href="/login" className="inline-flex mt-3 text-sm font-bold text-charcoal underline decoration-gold decoration-2 underline-offset-4 hover:text-gold">
+              Sign in to see personalized matches and request data rooms
+            </Link>
+          )}
         </div>
         <div className="text-right">
           <div className="font-display font-extrabold text-2xl text-gold">
@@ -67,10 +72,21 @@ export default async function Discover({ searchParams }: { searchParams: Promise
         )}
       </nav>
 
+      <div className="flex items-center justify-between mb-3 text-xs text-wgray" aria-live="polite">
+        <span>{listings.length} {listings.length === 1 ? "opportunity" : "opportunities"}</span>
+        <span>Sorted by match score</span>
+      </div>
       <div className="grid gap-5">
         {listings.map((l, i) => (
           <ProjectCard key={l.id} listing={l} index={i} />
         ))}
+        {listings.length === 0 && (
+          <div className="bg-white rounded-2xl p-8 text-center shadow-[0_1px_3px_rgb(44_62_80/0.08)]">
+            <h2 className="font-display font-bold text-lg">No opportunities match this filter</h2>
+            <p className="text-sm text-wgray mt-2">Try another filter or use AI Search to describe your investment mandate.</p>
+            <Link href="/search" className="inline-flex mt-4 bg-charcoal text-white font-display font-bold text-sm px-4 py-2.5 rounded-xl hover:bg-ink">Open AI Search</Link>
+          </div>
+        )}
       </div>
     </div>
     </>

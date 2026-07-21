@@ -54,7 +54,11 @@ export default function Search() {
         }}
         className="flex flex-col sm:flex-row gap-3"
       >
+        <label htmlFor="investment-search" className="sr-only">Describe your investment mandate</label>
         <input
+          id="investment-search"
+          name="q"
+          type="search"
           value={q}
           onChange={(e) => setQ(e.target.value)}
           placeholder={t("search.placeholder")}
@@ -80,10 +84,10 @@ export default function Search() {
       )}
 
       {loading && (
-        <div className="mt-6 text-sm text-wgray">{t("search.loading")}</div>
+        <div role="status" aria-live="polite" className="mt-6 text-sm text-wgray">{t("search.loading")}</div>
       )}
       {error && (
-        <div className="mt-6 bg-brandred/10 border-l-4 border-brandred rounded-xl px-4 py-3 text-sm text-brandred">{error}</div>
+        <div role="alert" className="mt-6 bg-brandred/10 border-l-4 border-brandred rounded-xl px-4 py-3 text-sm text-brandred">{error}</div>
       )}
       {out && !loading && (
         <div className="mt-6">

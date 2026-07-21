@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useI18n } from "./I18nProvider";
 import LanguageSwitcher from "./LanguageSwitcher";
 
@@ -23,6 +23,24 @@ export default function Sidebar({ user }: { user: SidebarUser }) {
   const router = useRouter();
   const { t } = useI18n();
   const [mobileOpen, setMobileOpen] = useState(false);
+  const menuButtonRef = useRef<HTMLButtonElement>(null);
+  const closeButtonRef = useRef<HTMLButtonElement>(null);
+
+  useEffect(() => {
+    if (!mobileOpen) return;
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    closeButtonRef.current?.focus();
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setMobileOpen(false);
+    };
+    document.addEventListener("keydown", handleKeyDown);
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      document.removeEventListener("keydown", handleKeyDown);
+      menuButtonRef.current?.focus();
+    };
+  }, [mobileOpen]);
   const logout = async () => {
     await fetch("/api/auth/logout", { method: "POST" });
     router.push("/login");
@@ -77,12 +95,12 @@ export default function Sidebar({ user }: { user: SidebarUser }) {
       </aside>
       <header className="lg:hidden fixed inset-x-0 top-0 z-40 h-16 bg-ink text-white flex items-center justify-between px-4 shadow-lg">
         <Link href="/" className="font-display font-extrabold">DESCO <span className="text-gold">Nexus</span></Link>
-        <button type="button" onClick={() => setMobileOpen(true)} aria-expanded={mobileOpen} aria-controls="mobile-navigation" className="min-w-11 min-h-11 rounded-xl border border-white/20 text-xl" aria-label="Open navigation">☰</button>
+        <button ref={menuButtonRef} type="button" onClick={() => setMobileOpen(true)} aria-expanded={mobileOpen} aria-controls="mobile-navigation" className="min-w-11 min-h-11 rounded-xl border border-white/20 text-xl" aria-label="Open navigation">☰</button>
       </header>
       {mobileOpen && (
         <div className="lg:hidden fixed inset-0 z-50 bg-black/50" role="presentation" onClick={() => setMobileOpen(false)}>
-          <aside id="mobile-navigation" role="dialog" aria-modal="true" aria-label="Navigation" className="w-[min(20rem,88vw)] h-full bg-ink text-white flex flex-col" onClick={(e) => e.stopPropagation()}>
-            <button type="button" onClick={() => setMobileOpen(false)} className="absolute top-3 right-[calc(12vw+0.75rem)] min-w-11 min-h-11 text-white" aria-label="Close navigation">×</button>
+          <aside id="mobile-navigation" role="dialog" aria-modal="true" aria-label="Primary navigation" className="relative w-[min(20rem,88vw)] h-full bg-ink text-white flex flex-col shadow-2xl" onClick={(e) => e.stopPropagation()}>
+            <button ref={closeButtonRef} type="button" onClick={() => setMobileOpen(false)} className="absolute z-10 top-3 right-3 min-w-11 min-h-11 rounded-xl text-2xl text-white hover:bg-white/10" aria-label="Close navigation">×</button>
             {navigation}
           </aside>
         </div>
