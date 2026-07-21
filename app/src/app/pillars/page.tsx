@@ -48,7 +48,7 @@ export default function PillarsIndex() {
           <Reveal delay={240}>
             <div className="flex flex-wrap gap-3 justify-center mt-8">
               <Link
-                href="/login"
+                href="/contact"
                 className="bg-gold text-ink font-display font-bold text-sm px-6 py-3 rounded-xl hover:brightness-110"
               >
                 Partner with us
@@ -175,7 +175,7 @@ export default function PillarsIndex() {
             foundation.
           </h2>
           <Link
-            href="/login"
+            href="/contact"
             className="inline-block mt-7 bg-gold text-ink font-display font-bold text-sm px-7 py-3.5 rounded-xl hover:brightness-110"
           >
             Partner with us
