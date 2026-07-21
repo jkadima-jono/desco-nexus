@@ -15,6 +15,7 @@ model User {
   role         String        @default("investor") // investor|owner|advisor|admin
   orgId        String?
   matchActions MatchAction[]
+  matchFeedback MatchFeedback[]
   mandates     StandingMandate[]
   submissions  ProjectSubmission[]
 }
@@ -53,6 +54,7 @@ model Listing {
   docs             Document[]
   images           ListingImage[]
   matchActions     MatchAction[]
+  matchFeedback    MatchFeedback[]
   deals            Deal[]
   createdAt        DateTime      @default(now())
   updatedAt        DateTime      @default(now()) @updatedAt
@@ -75,8 +77,22 @@ model MatchAction {
   user      User     @relation(fields: [userId], references: [id])
   listingId String
   listing   Listing  @relation(fields: [listingId], references: [id])
-  action    String   // interested|pass|saved|follow
+  action    String   // interested|pass|saved|info_requested
   matchScore Int
+  createdAt DateTime @default(now())
+}
+
+// Investor feedback on why a match was unsuitable. This influences future
+// ranking signals (Phase 2) — it never mutates the mandate itself, so the
+// investor's stated requirements stay exactly what they set.
+model MatchFeedback {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  listingId String
+  listing   Listing  @relation(fields: [listingId], references: [id])
+  mandateId String?  // loose reference, no FK — mandate may be edited/deleted later without orphaning this record
+  reason    String
   createdAt DateTime @default(now())
 }
 

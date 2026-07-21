@@ -331,3 +331,43 @@ test("admin approval publishes a real listing; rejection requires a reason", asy
   const publicPage = await fetch(BASE + "/project/" + listingId);
   assert.equal(publicPage.status, 200, "approved submission is publicly viewable as a real listing");
 });
+
+// ---------- Phase 2: transparent matching ----------
+test("unauthenticated match-feedback is rejected", async () => {
+  const res = await fetch(BASE + "/api/match/feedback", {
+    method: "POST", headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ listingId: "port-de-ndomba", reason: "too small" }),
+  });
+  assert.equal(res.status, 401);
+});
+
+test("match feedback cannot be attributed to another user's mandate", async () => {
+  const owner = await demoLogin("investor");
+  const mandateRes = await fetch(BASE + "/api/mandates", {
+    method: "POST", headers: { cookie: owner, "Content-Type": "application/json" },
+    body: JSON.stringify({ name: "Feedback test mandate", query: "" }),
+  });
+  const { mandate } = await mandateRes.json();
+
+  const other = await demoLogin("advisor");
+  const feedbackRes = await fetch(BASE + "/api/match/feedback", {
+    method: "POST", headers: { cookie: other, "Content-Type": "application/json" },
+    body: JSON.stringify({ listingId: "port-de-ndomba", mandateId: mandate.id, reason: "Ticket size too small for our fund" }),
+  });
+  assert.equal(feedbackRes.status, 200);
+  const { feedback } = await feedbackRes.json();
+  assert.equal(feedback.mandateId, null, "mandateId owned by a different user must be silently dropped, not trusted");
+
+  await fetch(BASE + "/api/mandates?id=" + mandate.id, { method: "DELETE", headers: { cookie: owner } });
+});
+
+test("info_requested is a valid match action distinct from interested/pass/saved", async () => {
+  const investor = await demoLogin("investor");
+  const res = await fetch(BASE + "/api/match", {
+    method: "POST", headers: { cookie: investor, "Content-Type": "application/json" },
+    body: JSON.stringify({ listingId: "port-de-ndomba", action: "info_requested" }),
+  });
+  assert.equal(res.status, 200);
+  const data = await res.json();
+  assert.equal(data.dealCreated, false, "info_requested must not silently open a pipeline deal the way interested does");
+});

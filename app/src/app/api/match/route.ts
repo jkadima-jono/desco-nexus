@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
 import { getSessionUser } from "@/lib/auth";
 
-const ACTIONS = new Set(["interested", "pass", "saved", "follow"]);
+const ACTIONS = new Set(["interested", "pass", "saved", "follow", "info_requested"]);
 
 export async function POST(req: Request) {
   const user = await getSessionUser();

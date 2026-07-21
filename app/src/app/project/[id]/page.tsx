@@ -16,6 +16,8 @@ import TrustBadges from "./TrustBadges";
 import ScoreInfo from "./ScoreInfo";
 import Link from "next/link";
 import { computeMatchExplanation, parseJsonArray, type MandateCriteria } from "@/lib/matching";
+import MatchFeedback from "./MatchFeedback";
+import RequestInfoButton from "./RequestInfoButton";
 import type { Metadata } from "next";
 
 export const dynamic = "force-dynamic";
@@ -207,7 +209,7 @@ export default async function ProjectDetail({
             {user ? (
               <div className="space-y-2">
                 <button className="w-full bg-gold text-ink font-display font-bold text-sm py-2.5 rounded-xl hover:brightness-110">{t(locale, "project.requestRoom")}</button>
-                <button className="w-full border border-charcoal/15 text-charcoal font-display font-semibold text-sm py-2.5 rounded-xl hover:bg-mist">Request information</button>
+                <RequestInfoButton listingId={l.id} className="w-full border border-charcoal/15 text-charcoal font-display font-semibold text-sm py-2.5 rounded-xl hover:bg-mist" label="Request information" />
                 <button className="w-full border border-charcoal/15 text-charcoal font-display font-semibold text-sm py-2.5 rounded-xl hover:bg-mist">{t(locale, "project.schedule")}</button>
                 <button className="w-full border border-charcoal/15 text-charcoal font-display font-semibold text-sm py-2.5 rounded-xl hover:bg-mist">⌁ {t(locale, "project.save")}</button>
               </div>
@@ -249,14 +251,28 @@ export default async function ProjectDetail({
                   {matchExplanation.metCriteria.map((x) => <li key={x} className="text-emerald-p">✓ {x}</li>)}
                 </ul>
               )}
+              {matchExplanation.partiallyMetCriteria.length > 0 && (
+                <ul className="text-sm space-y-1 mb-2">
+                  {matchExplanation.partiallyMetCriteria.map((x) => <li key={x} className="text-gold">◐ {x}</li>)}
+                </ul>
+              )}
               {matchExplanation.unmetCriteria.length > 0 && (
                 <ul className="text-sm space-y-1">
                   {matchExplanation.unmetCriteria.map((x) => <li key={x} className="text-wgray">✕ {x}</li>)}
                 </ul>
               )}
-              <div className="text-[10px] text-wgray mt-2">
+              {matchExplanation.missingProjectData.length > 0 && (
+                <ul className="text-sm space-y-1 mt-2">
+                  {matchExplanation.missingProjectData.map((x) => <li key={x} className="text-wgray italic">? {x}</li>)}
+                </ul>
+              )}
+              <div className="text-[10px] text-wgray mt-3 pt-2 border-t border-charcoal/10">
+                <span className="font-bold">Sources:</span> {matchExplanation.dataSources.join(" · ")}
+              </div>
+              <div className="text-[10px] text-wgray mt-1">
                 Calculated {new Date(matchExplanation.calculatedAt).toLocaleDateString()} · <Link href="/mandates" className="underline">edit this mandate</Link>
               </div>
+              <MatchFeedback listingId={l.id} mandateId={activeMandate!.id} />
             </section>
           )}
           {user && !matchExplanation && (
@@ -286,7 +302,7 @@ export default async function ProjectDetail({
         {user ? (
           <>
             <button className="flex-1 min-h-11 bg-gold text-ink font-display font-bold text-xs rounded-xl">{t(locale, "project.requestRoom")}</button>
-            <button className="flex-1 min-h-11 border border-charcoal/15 text-charcoal font-display font-semibold text-xs rounded-xl">Request info</button>
+            <RequestInfoButton listingId={l.id} className="flex-1 min-h-11 border border-charcoal/15 text-charcoal font-display font-semibold text-xs rounded-xl" label="Request info" />
             <button className="min-w-11 min-h-11 border border-charcoal/15 rounded-xl" aria-label={t(locale, "project.save")}>⌁</button>
           </>
         ) : (
