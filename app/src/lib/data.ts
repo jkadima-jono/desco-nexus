@@ -27,6 +27,10 @@ export type Listing = {
   docs: { name: string; size: string; folder: string }[];
   whyMatch: string;
   photos?: { id: string; url: string; caption: string | null }[];
+  // Optional: absent on the static seed literals below (Prisma sets it on
+  // insert via @default(now())/@updatedAt); always present once loaded
+  // through toListing() from the database.
+  updatedAt?: Date;
 };
 
 // Sourced from Desco Global's own investor deck and business plans

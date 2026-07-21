@@ -21,11 +21,23 @@ const INVESTOR_MATCHES: NavItem = { href: "/sponsor/investors", key: "nav.invest
 const MANDATES: NavItem = { href: "/mandates", key: "nav.mandates", icon: "☰" };
 const CONTACT: NavItem = { href: "/contact", key: "nav.contact", icon: "✉" };
 
+// Public nav taxonomy. Several of these route to the closest real
+// destination rather than a dedicated page (e.g. "For investors" →
+// /mandates, "About DESCO" → /pillars) — no dedicated marketing pages
+// exist yet for every concept; anchors (#how-it-works, #trust) point
+// into the homepage sections that carry that content.
+const OPPORTUNITIES: NavItem = { href: "/", key: "nav.opportunities", icon: "◈" };
+const HOW_IT_WORKS: NavItem = { href: "/#how-it-works", key: "nav.howItWorks", icon: "▤" };
+const FOR_INVESTORS: NavItem = { href: "/mandates", key: "nav.forInvestors", icon: "☰" };
+const FOR_OWNERS: NavItem = { href: "/contact", key: "nav.forOwners", icon: "▲" };
+const TRUST: NavItem = { href: "/#trust", key: "nav.trust", icon: "✓" };
+const ABOUT: NavItem = { href: "/pillars", key: "nav.about", icon: "◆" };
+
 // Role-appropriate subsets of real, working routes only — no links to
 // pages that don't exist yet (data-rooms/analytics land in later phases
 // and gain nav entries then, not before).
 const NAV_BY_ROLE: Record<string, NavItem[]> = {
-  signedOut: [DISCOVER, PILLARS, CONTACT],
+  signedOut: [OPPORTUNITIES, HOW_IT_WORKS, FOR_INVESTORS, FOR_OWNERS, PILLARS, TRUST, ABOUT, CONTACT],
   investor: [DISCOVER, MATCH, MANDATES, PIPELINE, PORTFOLIO, SEARCH, MESSAGES, PILLARS],
   owner: [PROJECTS, INVESTOR_MATCHES, MESSAGES, PILLARS],
   advisor: [DISCOVER, MANDATES, TRANSACTIONS, MESSAGES, PILLARS],
@@ -79,7 +91,7 @@ export default function Sidebar({ user }: { user: SidebarUser }) {
         {nav.map((item) => {
           const active = item.href === "/" ? pathname === "/" : pathname.startsWith(item.href);
           return (
-            <Link key={item.href} href={item.href} onClick={() => setMobileOpen(false)} aria-current={active ? "page" : undefined} className={"flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-semibold transition-colors " + (active ? "bg-gold text-ink" : "text-white/70 hover:bg-white/10 hover:text-white")}>
+            <Link key={item.key} href={item.href} onClick={() => setMobileOpen(false)} aria-current={active ? "page" : undefined} className={"flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-semibold transition-colors " + (active ? "bg-gold text-ink" : "text-white/70 hover:bg-white/10 hover:text-white")}>
               <span aria-hidden="true" className="w-5 text-center">{item.icon}</span>{t(item.key)}
             </Link>
           );
@@ -100,7 +112,12 @@ export default function Sidebar({ user }: { user: SidebarUser }) {
             <div className="min-w-0 flex-1"><div className="text-sm font-semibold truncate">{user.fullName}</div><div className="text-[11px] text-gold truncate">✓ {user.title ?? t("nav.member")}</div></div>
             <button onClick={logout} className="text-[11px] text-white/60 hover:text-white" aria-label="Sign out">⎋</button>
           </div>
-        ) : <Link href="/login" className="block text-center bg-gold text-ink font-display font-bold text-sm py-2.5 rounded-xl hover:brightness-110">{t("nav.signIn")}</Link>}
+        ) : (
+          <div className="space-y-2">
+            <Link href="/login" className="block text-center bg-gold text-ink font-display font-bold text-sm py-2.5 rounded-xl hover:brightness-110">{t("nav.signIn")}</Link>
+            <Link href="/contact" className="block text-center border border-white/20 text-white font-display font-semibold text-xs py-2 rounded-xl hover:bg-white/10">{t("nav.apply")}</Link>
+          </div>
+        )}
       </div>
     </>
   );

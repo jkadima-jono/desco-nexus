@@ -1,34 +1,57 @@
 export const metadata = {
   title: "Legal & Security — DESCO Nexus",
-  description: "Privacy, terms, and security information for the DESCO Nexus platform.",
+  description: "Terms, privacy, cookies, security, investment-risk disclosure, and verification methodology for the DESCO Nexus platform.",
+  alternates: { canonical: "/legal" },
 };
 
 const SECTIONS = [
   {
-    title: "Demonstration status",
-    body: "DESCO Nexus is currently a demonstration environment. User accounts, deals, and messages shown are fictional demo data. Opportunities reference real Desco Global projects, but nothing on this platform is a live securities offer, and no real transactions or solicitations occur here.",
+    id: "platform-status",
+    title: "Platform-status disclosure",
+    body: "DESCO Nexus is currently a demonstration environment. User accounts, deals, and messages shown are fictional demo data. Opportunities reference real Desco Global projects, but nothing on this platform is a live securities offer, and no real transactions or solicitations occur here. Opportunities shown are not automatically public securities offers, and jurisdiction-specific restrictions on investment solicitation may apply.",
   },
   {
-    title: "Privacy Policy",
+    id: "privacy",
+    title: "Privacy notice",
     body: "Full privacy notice — covering what data Nexus collects, why, retention periods, your rights (access, export, deletion), and cross-border transfer — is pending Desco Global legal review before publication. Do not rely on this page as a substitute.",
     pending: true,
   },
   {
-    title: "Terms of Service",
+    id: "cookies",
+    title: "Cookie notice",
+    body: "Nexus sets a session cookie (authentication) and a locale-preference cookie. Neither is used for third-party advertising or cross-site tracking. A full cookie inventory and consent mechanism is pending Desco Global review.",
+    pending: true,
+  },
+  {
+    id: "terms",
+    title: "Terms of use",
     body: "Binding terms governing platform use, investor and sponsor obligations, and dispute resolution are pending Desco Global legal review before publication.",
     pending: true,
   },
   {
-    title: "Security",
-    body: "Sessions use httpOnly, secure cookies; passwords are not used in this demo build (production auth is planned to use magic links and passkeys). Confidential documents and data-room access require an authenticated session — see the platform's authorization policy. A full security disclosure (infrastructure, encryption at rest/in transit, incident response) is pending Desco Global review.",
+    id: "security",
+    title: "Security overview",
+    body: "Sessions use httpOnly, secure cookies; passwords are not used in this demo build (production auth is planned to use magic links and passkeys). Confidential documents and data-room access require an authenticated session, checked on the server for every request. A full security disclosure (infrastructure, encryption at rest/in transit, incident response) is pending Desco Global review.",
   },
   {
-    title: "Verification scope",
-    body: "\"Verified\" badges on this platform indicate a specific, disclosed check (see each badge's own explanation) — never a guarantee that every claim on a listing has been independently confirmed. Financial and market figures are labeled by source (sponsor-provided, Desco Global investor materials, or platform-illustrative) wherever shown.",
+    id: "risk",
+    title: "Investment-risk disclosure",
+    body: "DESCO Nexus does not guarantee project performance, returns, or exit outcomes. Project information may include sponsor-provided material that has not been independently verified. Users must conduct their own independent due diligence before making any investment decision — nothing on this platform is investment advice.",
   },
   {
+    id: "verification",
+    title: "Verification methodology",
+    body: "\"Verified\" badges on this platform indicate a specific, disclosed check (see each badge's own explanation) — never a guarantee that every claim on a listing has been independently confirmed. Financial and market figures are labeled by source (sponsor-provided, Desco Global investor materials, or platform-illustrative) wherever shown. Verification reduces specific, disclosed risks; it does not guarantee investment performance.",
+  },
+  {
+    id: "regulatory",
     title: "Regulatory status",
     body: "DESCO Nexus does not claim compliance with securities law, AML/KYC, SOC 2, or any other regulatory or audit standard. Any such compliance work requires DESCO Global's legal and compliance teams to define and implement the underlying controls before such a claim could be made.",
+  },
+  {
+    id: "complaints",
+    title: "Complaints and reporting",
+    body: "To report suspicious or inaccurate listing information, a security concern, or a complaint about platform conduct, contact support@desco.global. Reports are reviewed by a person, not resolved automatically.",
   },
 ];
 
@@ -45,7 +68,7 @@ export default function Legal() {
       </p>
       <div className="space-y-6">
         {SECTIONS.map((s) => (
-          <section key={s.title} className="bg-white rounded-2xl p-5 shadow-[0_1px_3px_rgb(44_62_80/0.08)]">
+          <section key={s.id} id={s.id} className="bg-white rounded-2xl p-5 shadow-[0_1px_3px_rgb(44_62_80/0.08)] scroll-mt-20">
             <h2 className="font-display font-bold text-base mb-2 flex items-center gap-2">
               {s.title}
               {s.pending && (
@@ -59,7 +82,7 @@ export default function Legal() {
         ))}
       </div>
       <p className="text-sm text-wgray leading-relaxed mt-8">
-        Questions about this page or a specific claim on the platform:{" "}
+        Questions about this page, a specific claim, or a complaint:{" "}
         <a className="text-gold font-bold" href="mailto:support@desco.global">
           support@desco.global
         </a>

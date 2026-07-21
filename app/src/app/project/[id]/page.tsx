@@ -16,8 +16,28 @@ import TrustBadges from "./TrustBadges";
 import ScoreInfo from "./ScoreInfo";
 import Link from "next/link";
 import { computeMatchExplanation, parseJsonArray, type MandateCriteria } from "@/lib/matching";
+import type { Metadata } from "next";
 
 export const dynamic = "force-dynamic";
+
+// Metadata is built from public-safe fields only (title, sector, country,
+// stage, capital sought) — never docs, whyMatch, or anything confidential.
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}): Promise<Metadata> {
+  const { id } = await params;
+  const row = await prisma.listing.findUnique({ where: { id } });
+  if (!row) return {};
+  const description = `${row.sector} opportunity in ${row.country} — ${fmtUsd(row.raiseUsd)} sought via ${row.instrument}. ${row.stage} stage.`;
+  return {
+    title: row.title + " — DESCO Nexus",
+    description,
+    alternates: { canonical: "/project/" + row.id },
+    openGraph: { title: row.title, description, url: "/project/" + row.id, type: "website" },
+  };
+}
 
 export default async function ProjectDetail({
   params,
@@ -182,6 +202,20 @@ export default async function ProjectDetail({
         </div>
 
         <div className="space-y-6">
+          <section className="hidden lg:block sticky top-4 bg-white rounded-2xl p-5 shadow-[0_1px_3px_rgb(44_62_80/0.08)]">
+            <h2 className="font-display font-bold text-sm uppercase tracking-wider text-wgray mb-3">Actions</h2>
+            {user ? (
+              <div className="space-y-2">
+                <button className="w-full bg-gold text-ink font-display font-bold text-sm py-2.5 rounded-xl hover:brightness-110">{t(locale, "project.requestRoom")}</button>
+                <button className="w-full border border-charcoal/15 text-charcoal font-display font-semibold text-sm py-2.5 rounded-xl hover:bg-mist">Request information</button>
+                <button className="w-full border border-charcoal/15 text-charcoal font-display font-semibold text-sm py-2.5 rounded-xl hover:bg-mist">{t(locale, "project.schedule")}</button>
+                <button className="w-full border border-charcoal/15 text-charcoal font-display font-semibold text-sm py-2.5 rounded-xl hover:bg-mist">⌁ {t(locale, "project.save")}</button>
+              </div>
+            ) : (
+              <Link href={`/login?next=/project/${l.id}`} className="block text-center bg-gold text-ink font-display font-bold text-sm py-2.5 rounded-xl">Sign in to act on this opportunity</Link>
+            )}
+          </section>
+
           {canManageListing && <TeaserGenerator listingId={l.id} />}
           {user ? <section className="bg-white rounded-2xl p-6 shadow-[0_1px_3px_rgb(44_62_80/0.08)]">
             <div className="flex items-center gap-4 mb-4">
@@ -246,6 +280,20 @@ export default async function ProjectDetail({
           </section>
         </div>
       </div>
+
+      {/* Mobile bottom action bar */}
+      <div className="lg:hidden fixed inset-x-0 bottom-0 z-30 bg-white border-t border-charcoal/10 px-3 py-2.5 flex gap-2 pb-[calc(0.625rem+env(safe-area-inset-bottom))]">
+        {user ? (
+          <>
+            <button className="flex-1 min-h-11 bg-gold text-ink font-display font-bold text-xs rounded-xl">{t(locale, "project.requestRoom")}</button>
+            <button className="flex-1 min-h-11 border border-charcoal/15 text-charcoal font-display font-semibold text-xs rounded-xl">Request info</button>
+            <button className="min-w-11 min-h-11 border border-charcoal/15 rounded-xl" aria-label={t(locale, "project.save")}>⌁</button>
+          </>
+        ) : (
+          <Link href={`/login?next=/project/${l.id}`} className="flex-1 min-h-11 flex items-center justify-center bg-gold text-ink font-display font-bold text-xs rounded-xl">Sign in to act on this opportunity</Link>
+        )}
+      </div>
+      <div className="lg:hidden h-16" aria-hidden="true" />
     </div>
   );
 }

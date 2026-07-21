@@ -44,6 +44,7 @@ export function toListing(
       folder: d.folder,
     })),
     whyMatch: row.whyMatch,
+    updatedAt: row.updatedAt,
     photos: (row.images ?? [])
       .sort((a, b) => a.position - b.position)
       .map((i) => ({

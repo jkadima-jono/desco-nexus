@@ -94,6 +94,41 @@ export default function PillarsIndex() {
         </Reveal>
       </section>
 
+      {/* How the pieces relate */}
+      <section className="max-w-4xl mx-auto px-6 lg:px-8 py-16 lg:py-20">
+        <Reveal>
+          <p className="text-gold font-bold text-xs uppercase tracking-[0.2em] mb-3 text-center">How this fits together</p>
+        </Reveal>
+        <Reveal delay={80}>
+          <div className="grid gap-5 sm:grid-cols-2 text-sm">
+            <div className="bg-mist rounded-2xl p-5">
+              <h3 className="font-display font-bold text-sm mb-1.5">Desco Global</h3>
+              <p className="text-wgray leading-relaxed">The holding company. Owns and develops projects across four pillars in the DRC.</p>
+            </div>
+            <div className="bg-mist rounded-2xl p-5">
+              <h3 className="font-display font-bold text-sm mb-1.5">DESCO Nexus</h3>
+              <p className="text-wgray leading-relaxed">The platform you&rsquo;re using — where Desco Global and other sponsors list projects for investors to discover, evaluate, and act on.</p>
+            </div>
+            <div className="bg-mist rounded-2xl p-5">
+              <h3 className="font-display font-bold text-sm mb-1.5">The four pillars</h3>
+              <p className="text-wgray leading-relaxed">Agridesco, Investdesco, Phardesco, Waterdesco — Desco Global&rsquo;s four operating divisions, each behind a subset of the projects listed on Nexus.</p>
+            </div>
+            <div className="bg-mist rounded-2xl p-5">
+              <h3 className="font-display font-bold text-sm mb-1.5">Project sponsors</h3>
+              <p className="text-wgray leading-relaxed">Desco Global itself for pillar projects, or partner organizations (e.g. Comicordia Corporation) for co-developed ones — the party responsible for a listing&rsquo;s content.</p>
+            </div>
+            <div className="bg-mist rounded-2xl p-5">
+              <h3 className="font-display font-bold text-sm mb-1.5">Investors</h3>
+              <p className="text-wgray leading-relaxed">Register on Nexus, set a mandate, and review opportunities from any sponsor — not limited to Desco Global&rsquo;s own pillars.</p>
+            </div>
+            <div className="bg-mist rounded-2xl p-5">
+              <h3 className="font-display font-bold text-sm mb-1.5">Advisors</h3>
+              <p className="text-wgray leading-relaxed">Support investors or sponsors through discovery, matching, and due diligence on their clients&rsquo; behalf.</p>
+            </div>
+          </div>
+        </Reveal>
+      </section>
+
       {/* Why Africa / Why DRC */}
       <section className="bg-charcoal text-white py-16 lg:py-20">
         <div className="max-w-5xl mx-auto px-6 lg:px-8 grid gap-10 md:grid-cols-2">
@@ -144,7 +179,7 @@ export default function PillarsIndex() {
           <div className="text-center mb-10">
             <p className="text-gold font-bold text-xs uppercase tracking-[0.2em] mb-3">Our approach</p>
             <h2 className="font-display font-extrabold text-2xl lg:text-3xl tracking-tight">
-              We do not speculate. We structure. We secure. We execute.
+              How Desco Global develops a project, in three stages.
             </h2>
           </div>
         </Reveal>
