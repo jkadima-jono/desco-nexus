@@ -15,6 +15,7 @@ import { canManageListing as canManage } from "@/lib/authz";
 import TrustBadges from "./TrustBadges";
 import ScoreInfo from "./ScoreInfo";
 import Link from "next/link";
+import { computeMatchExplanation, parseJsonArray, type MandateCriteria } from "@/lib/matching";
 
 export const dynamic = "force-dynamic";
 
@@ -41,6 +42,29 @@ export default async function ProjectDetail({
   const docs = row.docs;
 
   const folders = [...new Set(docs.map((d) => d.folder))];
+
+  const activeMandate = user
+    ? await prisma.standingMandate.findFirst({
+        where: { userId: user.id, active: true },
+        orderBy: { createdAt: "desc" },
+      })
+    : null;
+  const matchExplanation = activeMandate
+    ? computeMatchExplanation(
+        {
+          sectors: parseJsonArray(activeMandate.sectors),
+          countries: parseJsonArray(activeMandate.countries),
+          ticketMinUsd: activeMandate.ticketMinUsd,
+          ticketMaxUsd: activeMandate.ticketMaxUsd,
+          instruments: parseJsonArray(activeMandate.instruments),
+          esgRequired: activeMandate.esgRequired,
+          govSupportRequired: activeMandate.govSupportRequired,
+          excludedSectors: parseJsonArray(activeMandate.excludedSectors),
+          excludedCountries: parseJsonArray(activeMandate.excludedCountries),
+        } satisfies MandateCriteria,
+        { sector: full.sector, country: full.country, raiseUsd: full.raiseUsd, instrument: full.instrument, governmentBacked: full.governmentBacked, scores: { esg: full.scores.esg } }
+      )
+    : null;
 
   return (
     <div>
@@ -163,25 +187,60 @@ export default async function ProjectDetail({
               <MatchRing score={l.scores.match} size={64} />
               <div>
                 <div className="font-display font-bold">{t(locale, "project.aiMatch")}</div>
-                <div className="text-[11px] text-wgray">{t(locale, "project.vsMandate")}</div>
+                <div className="text-[11px] text-wgray">Illustrative platform scores, not mandate-specific</div>
               </div>
             </div>
             <ScoreBars scores={l.scores} />
             <ScoreInfo />
           </section> : <section className="bg-white rounded-2xl p-6 text-sm text-wgray">Sign in to see mandate fit, readiness, ESG and risk analysis.</section>}
 
-          {user && <section className="bg-gold-soft border-l-4 border-gold rounded-2xl p-5">
-            <div className="text-[11px] font-bold uppercase tracking-wider text-gold mb-1.5">
-              ✦ {t(locale, "project.why")}
-            </div>
-            <p className="text-sm leading-relaxed">{whyMatch}</p>
-          </section>}
+          {user && matchExplanation && (
+            <section className={"rounded-2xl p-5 border-l-4 " + (matchExplanation.confidence === "excluded" ? "bg-brandred/5 border-brandred" : "bg-gold-soft border-gold")}>
+              <div className="flex items-center justify-between text-[11px] font-bold uppercase tracking-wider mb-2">
+                <span className={matchExplanation.confidence === "excluded" ? "text-brandred" : "text-gold"}>
+                  ✦ Match vs. &ldquo;{activeMandate!.name}&rdquo;
+                </span>
+                <span className="text-wgray normal-case font-semibold">
+                  {matchExplanation.confidence} confidence · {matchExplanation.dataCompleteness}% of your mandate evaluated
+                </span>
+              </div>
+              {matchExplanation.hardExclusions.length > 0 && (
+                <ul className="text-sm text-brandred space-y-1 mb-2">
+                  {matchExplanation.hardExclusions.map((x) => <li key={x}>⊘ {x}</li>)}
+                </ul>
+              )}
+              {matchExplanation.metCriteria.length > 0 && (
+                <ul className="text-sm space-y-1 mb-2">
+                  {matchExplanation.metCriteria.map((x) => <li key={x} className="text-emerald-p">✓ {x}</li>)}
+                </ul>
+              )}
+              {matchExplanation.unmetCriteria.length > 0 && (
+                <ul className="text-sm space-y-1">
+                  {matchExplanation.unmetCriteria.map((x) => <li key={x} className="text-wgray">✕ {x}</li>)}
+                </ul>
+              )}
+              <div className="text-[10px] text-wgray mt-2">
+                Calculated {new Date(matchExplanation.calculatedAt).toLocaleDateString()} · <Link href="/mandates" className="underline">edit this mandate</Link>
+              </div>
+            </section>
+          )}
+          {user && !matchExplanation && (
+            <section className="bg-gold-soft border-l-4 border-gold rounded-2xl p-5">
+              <div className="text-[11px] font-bold uppercase tracking-wider text-gold mb-1.5">
+                ✦ {t(locale, "project.why")}
+              </div>
+              <p className="text-sm leading-relaxed">{whyMatch}</p>
+              <div className="text-[10px] text-wgray mt-2">
+                General sponsor-provided rationale — <Link href="/mandates" className="underline">save a mandate</Link> for a criteria-by-criteria match explanation.
+              </div>
+            </section>
+          )}
 
           <section className="bg-white rounded-2xl p-6 shadow-[0_1px_3px_rgb(44_62_80/0.08)] text-sm">
             <h2 className="font-display font-bold text-lg mb-3">{t(locale, "project.sponsor")}</h2>
             <div className="font-semibold">{l.org}</div>
             {user && <div className="text-wgray text-xs mt-1">
-              Response rate 96% · median 6h · 2 completed transactions on Nexus
+              No response-time or transaction-history data collected yet on Nexus for this sponsor.
             </div>}
           </section>
         </div>

@@ -154,12 +154,30 @@ model StandingMandate {
   userId    String
   user      User     @relation(fields: [userId], references: [id])
   name      String
-  query     String
-  criteria  String   // JSON parsed criteria snapshot
+  query     String   // freeform note; also the origin text when converted from an AI Search
+  criteria  String   // JSON parsed criteria snapshot (legacy, kept for AI Search conversion)
   threshold Int      @default(70)
   frequency String   @default("weekly") // daily|weekly
   active    Boolean  @default(true)
   createdAt DateTime @default(now())
+
+  // Structured investor-mandate fields (guided onboarding).
+  investorType         String?  // institutional|family-office|pe|vc|infra-fund|bank-dfi|sovereign-pension|hnw-angel|corporate|advisor
+  sectors              String   @default("[]") // JSON string[] — Agriculture|Infrastructure|Mining|Healthcare|Water
+  countries            String   @default("[]") // JSON string[]
+  ticketMinUsd         Int?
+  ticketMaxUsd         Int?
+  instruments          String   @default("[]") // JSON string[] — equity|debt|blended|spv|other
+  stagePreference      String?  // e.g. "Structuring", "Active" — free text matching Listing.stage vocabulary
+  targetReturn         String?  // e.g. "15-20% IRR"
+  horizonYears         Int?
+  riskTolerance        String?  // low|medium|high
+  currency             String   @default("USD")
+  esgRequired          Boolean  @default(false)
+  govSupportRequired   Boolean  @default(false)
+  excludedSectors      String   @default("[]") // JSON string[]
+  excludedCountries    String   @default("[]") // JSON string[]
+  coInvestPreference   String?  // solo|co-invest|either
 }
 
 model CapitalCall {

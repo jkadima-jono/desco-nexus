@@ -18,16 +18,17 @@ const SEARCH: NavItem = { href: "/search", key: "nav.search", icon: "✦" };
 const MESSAGES: NavItem = { href: "/messages", key: "nav.messages", icon: "✉" };
 const PILLARS: NavItem = { href: "/pillars", key: "nav.pillars", icon: "◆" };
 const INVESTOR_MATCHES: NavItem = { href: "/sponsor/investors", key: "nav.investorMatches", icon: "⇄" };
+const MANDATES: NavItem = { href: "/mandates", key: "nav.mandates", icon: "☰" };
 
 // Role-appropriate subsets of real, working routes only — no links to
-// pages that don't exist yet (mandates/data-rooms/analytics land in
-// later phases and gain nav entries then, not before).
+// pages that don't exist yet (data-rooms/analytics land in later phases
+// and gain nav entries then, not before).
 const NAV_BY_ROLE: Record<string, NavItem[]> = {
   signedOut: [DISCOVER, PILLARS],
-  investor: [DISCOVER, MATCH, PIPELINE, PORTFOLIO, SEARCH, MESSAGES, PILLARS],
+  investor: [DISCOVER, MATCH, MANDATES, PIPELINE, PORTFOLIO, SEARCH, MESSAGES, PILLARS],
   owner: [PROJECTS, INVESTOR_MATCHES, MESSAGES, PILLARS],
-  advisor: [DISCOVER, TRANSACTIONS, MESSAGES, PILLARS],
-  admin: [DISCOVER, MATCH, PIPELINE, PORTFOLIO, INVESTOR_MATCHES, SEARCH, MESSAGES, PILLARS],
+  advisor: [DISCOVER, MANDATES, TRANSACTIONS, MESSAGES, PILLARS],
+  admin: [DISCOVER, MATCH, MANDATES, PIPELINE, PORTFOLIO, INVESTOR_MATCHES, SEARCH, MESSAGES, PILLARS],
 };
 
 type SidebarUser = { fullName: string; title: string | null; role?: string } | null;
