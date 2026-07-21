@@ -115,9 +115,9 @@ export default async function ProjectDetail({
               <p className="text-white/70 mt-3 max-w-xl">{l.summary}</p>
               <div className="flex flex-col sm:flex-row gap-3 mt-6">
                 {user ? <>
-                  <button className="bg-gold text-ink font-display font-bold text-sm px-5 py-2.5 rounded-xl hover:brightness-110">{t(locale, "project.requestRoom")}</button>
+                  <RequestInfoButton listingId={l.id} action="dataroom_requested" className="bg-gold text-ink font-display font-bold text-sm px-5 py-2.5 rounded-xl hover:brightness-110" label={t(locale, "project.requestRoom")} doneLabel="✓ Requested" />
                   <button className="border border-white/25 text-white font-display font-semibold text-sm px-5 py-2.5 rounded-xl hover:bg-white/10">{t(locale, "project.schedule")}</button>
-                  <button className="border border-white/25 text-white font-display font-semibold text-sm px-5 py-2.5 rounded-xl hover:bg-white/10">⌁ {t(locale, "project.save")}</button>
+                  <RequestInfoButton listingId={l.id} action="saved" className="border border-white/25 text-white font-display font-semibold text-sm px-5 py-2.5 rounded-xl hover:bg-white/10" label={"⌁ " + t(locale, "project.save")} doneLabel="✓ Saved" />
                 </> : <Link href={`/login?next=/project/${l.id}`} className="inline-flex justify-center bg-gold text-ink font-display font-bold text-sm px-5 py-2.5 rounded-xl">Sign in to request access</Link>}
               </div>
             </div>
@@ -208,10 +208,10 @@ export default async function ProjectDetail({
             <h2 className="font-display font-bold text-sm uppercase tracking-wider text-wgray mb-3">Actions</h2>
             {user ? (
               <div className="space-y-2">
-                <button className="w-full bg-gold text-ink font-display font-bold text-sm py-2.5 rounded-xl hover:brightness-110">{t(locale, "project.requestRoom")}</button>
+                <RequestInfoButton listingId={l.id} action="dataroom_requested" className="w-full bg-gold text-ink font-display font-bold text-sm py-2.5 rounded-xl hover:brightness-110" label={t(locale, "project.requestRoom")} doneLabel="✓ Requested" />
                 <RequestInfoButton listingId={l.id} className="w-full border border-charcoal/15 text-charcoal font-display font-semibold text-sm py-2.5 rounded-xl hover:bg-mist" label="Request information" />
                 <button className="w-full border border-charcoal/15 text-charcoal font-display font-semibold text-sm py-2.5 rounded-xl hover:bg-mist">{t(locale, "project.schedule")}</button>
-                <button className="w-full border border-charcoal/15 text-charcoal font-display font-semibold text-sm py-2.5 rounded-xl hover:bg-mist">⌁ {t(locale, "project.save")}</button>
+                <RequestInfoButton listingId={l.id} action="saved" className="w-full border border-charcoal/15 text-charcoal font-display font-semibold text-sm py-2.5 rounded-xl hover:bg-mist" label={"⌁ " + t(locale, "project.save")} doneLabel="✓ Saved" />
               </div>
             ) : (
               <Link href={`/login?next=/project/${l.id}`} className="block text-center bg-gold text-ink font-display font-bold text-sm py-2.5 rounded-xl">Sign in to act on this opportunity</Link>
@@ -301,9 +301,9 @@ export default async function ProjectDetail({
       <div className="lg:hidden fixed inset-x-0 bottom-0 z-30 bg-white border-t border-charcoal/10 px-3 py-2.5 flex gap-2 pb-[calc(0.625rem+env(safe-area-inset-bottom))]">
         {user ? (
           <>
-            <button className="flex-1 min-h-11 bg-gold text-ink font-display font-bold text-xs rounded-xl">{t(locale, "project.requestRoom")}</button>
+            <RequestInfoButton listingId={l.id} action="dataroom_requested" className="flex-1 min-h-11 bg-gold text-ink font-display font-bold text-xs rounded-xl" label={t(locale, "project.requestRoom")} doneLabel="✓ Requested" />
             <RequestInfoButton listingId={l.id} className="flex-1 min-h-11 border border-charcoal/15 text-charcoal font-display font-semibold text-xs rounded-xl" label="Request info" />
-            <button className="min-w-11 min-h-11 border border-charcoal/15 rounded-xl" aria-label={t(locale, "project.save")}>⌁</button>
+            <RequestInfoButton listingId={l.id} action="saved" className="min-w-11 min-h-11 border border-charcoal/15 rounded-xl" label="⌁" doneLabel="✓" ariaLabel={t(locale, "project.save")} />
           </>
         ) : (
           <Link href={`/login?next=/project/${l.id}`} className="flex-1 min-h-11 flex items-center justify-center bg-gold text-ink font-display font-bold text-xs rounded-xl">Sign in to act on this opportunity</Link>

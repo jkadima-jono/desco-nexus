@@ -4,6 +4,7 @@ import { prisma } from "@/lib/db";
 import { getSessionUser } from "@/lib/auth";
 import { STAGE_PROBABILITY, STAGE_REQUIREMENTS, amountUsd, type Stage } from "@/lib/deals";
 import StageControl from "./StageControl";
+import DealMeta from "./DealMeta";
 
 export const dynamic = "force-dynamic";
 
@@ -118,11 +119,22 @@ export default async function DealWorkspace({
             ))}
           </section>
 
+          <section className="bg-white rounded-2xl p-6 shadow-[0_1px_3px_rgb(44_62_80/0.08)]">
+            <h2 className="font-display font-bold text-lg mb-3">Due date &amp; decision notes</h2>
+            <DealMeta
+              dealId={deal.id}
+              dueDate={deal.dueDate ? deal.dueDate.toISOString() : null}
+              notes={JSON.parse(deal.decisionNotes || "[]")}
+            />
+          </section>
+
           <section className="bg-gold-soft border-l-4 border-gold rounded-2xl p-5 text-xs leading-relaxed">
             <div className="text-[11px] font-bold uppercase tracking-wider text-gold mb-1.5">Forecast method</div>
-            Weighted value = amount × stage probability. Current stage
-            probabilities: Screening 10% · NDA 25% · Diligence 45% · IC 65% ·
-            Term Sheet 85%. Deal-specific overrides require a recorded reason.
+            Weighted value = amount × stage probability. Stage probabilities
+            climb through Discovered (2%) → Saved → Interested → Information
+            Requested → Data-Room Requested/Granted → Due Diligence → IC
+            Review → Term Sheet → Negotiation (90%) → Closed (100%).
+            Deal-specific overrides require a recorded reason.
           </section>
 
           <section className="bg-white rounded-2xl p-6 shadow-[0_1px_3px_rgb(44_62_80/0.08)] text-xs leading-relaxed">

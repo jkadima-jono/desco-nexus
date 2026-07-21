@@ -106,7 +106,7 @@ model Deal {
   title     String
   flag      String
   amount    String
-  stage     String   // Screening|NDA|Diligence|IC Review|Term Sheet
+  stage     String   // see lib/deals.ts STAGES — 12-stage lifecycle
   parentId  String?
   parent    Deal?    @relation("Tranches", fields: [parentId], references: [id])
   tranches  Deal[]   @relation("Tranches")
@@ -115,8 +115,10 @@ model Deal {
   probability Int?                           // override, else stage default
   owner     String
   nextStep  String
+  dueDate   DateTime?
+  decisionNotes String @default("[]")        // [{by,note,at}]
   createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  updatedAt DateTime @default(now()) @updatedAt
 
   @@unique([listingId, title])
 }

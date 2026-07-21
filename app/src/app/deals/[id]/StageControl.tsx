@@ -18,7 +18,7 @@ export default function StageControl({
   const [error, setError] = useState<string | null>(null);
 
   const ci = STAGES.indexOf(current as (typeof STAGES)[number]);
-  const backward = target && STAGES.indexOf(target as (typeof STAGES)[number]) < ci;
+  const backward = target && (STAGES.indexOf(target as (typeof STAGES)[number]) < ci || target === "Passed or Withdrawn");
 
   const apply = async () => {
     if (!target || busy) return;

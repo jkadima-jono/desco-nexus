@@ -4,17 +4,25 @@ import { prisma } from "@/lib/db";
 import { getSessionUser } from "@/lib/auth";
 import { getLocale } from "@/lib/i18n-server";
 import { t } from "@/lib/i18n";
+import { STAGES } from "@/lib/deals";
 
 export const dynamic = "force-dynamic";
 
-const stages = ["Screening", "NDA", "Diligence", "IC Review", "Term Sheet"] as const;
+const stages = STAGES;
 
 const stageColor: Record<(typeof stages)[number], string> = {
-  Screening: "#7F8C8D",
-  NDA: "#0066CC",
-  Diligence: "#FF8C00",
+  Discovered: "#7F8C8D",
+  Saved: "#7F8C8D",
+  Interested: "#B8953D",
+  "Information Requested": "#0066CC",
+  "Data-Room Requested": "#0066CC",
+  "Data-Room Granted": "#0047AB",
+  "Due Diligence": "#FF8C00",
   "IC Review": "#0047AB",
   "Term Sheet": "#B8953D",
+  Negotiation: "#B8953D",
+  Closed: "#00A550",
+  "Passed or Withdrawn": "#C41E3A",
 };
 
 const daysIn = (since: Date) =>

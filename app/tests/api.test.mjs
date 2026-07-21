@@ -17,6 +17,14 @@ async function demoLogin(persona) {
   return cookie;
 }
 
+async function prismaDealLookup(adminCookie, listingId) {
+  const res = await fetch(BASE + "/api/deals?listingId=" + listingId, { headers: { cookie: adminCookie } });
+  assert.equal(res.status, 200);
+  const { deals } = await res.json();
+  assert.ok(deals.length > 0, "expected a deal to exist for " + listingId);
+  return deals[0];
+}
+
 // ---------- Security: unauthenticated access ----------
 test("unauthenticated API access is rejected", async () => {
   const cases = [
@@ -140,15 +148,88 @@ test("cross-user mandate access returns 404", async () => {
   await fetch(BASE + "/api/mandates?id=" + mandate.id, { method: "DELETE", headers: { cookie: a } });
 });
 
-// ---------- Deal stage governance ----------
-test("stage transitions validated; rollback requires reason; history recorded", async () => {
+// ---------- Deal stage governance (Phase 4: 12-stage lifecycle) ----------
+test("stage transitions validated against a nonexistent deal", async () => {
   const cookie = await demoLogin("admin");
   const skip = await fetch(BASE + "/api/deals/__nonexistent__", {
     method: "PATCH",
     headers: { cookie, "Content-Type": "application/json" },
-    body: JSON.stringify({ stage: "NDA" }),
+    body: JSON.stringify({ stage: "Interested" }),
   });
   assert.equal(skip.status, 404);
+});
+
+test("investor match action auto-advances a deal through the pipeline forward-only", async () => {
+  const investor = await demoLogin("investor");
+  await fetch(BASE + "/api/match", {
+    method: "POST", headers: { cookie: investor, "Content-Type": "application/json" },
+    body: JSON.stringify({ listingId: "port-de-kasenga", action: "saved" }),
+  });
+  const interested = await fetch(BASE + "/api/match", {
+    method: "POST", headers: { cookie: investor, "Content-Type": "application/json" },
+    body: JSON.stringify({ listingId: "port-de-kasenga", action: "interested" }),
+  });
+  assert.equal(interested.status, 200);
+
+  const admin = await demoLogin("admin");
+  const deals = await prismaDealLookup(admin, "port-de-kasenga");
+  assert.equal(deals.stage, "Interested", "deal should have advanced from Saved to Interested, not stayed or reset");
+
+  // Re-sending "saved" (an earlier stage) must not regress a deal that's
+  // already further along.
+  await fetch(BASE + "/api/match", {
+    method: "POST", headers: { cookie: investor, "Content-Type": "application/json" },
+    body: JSON.stringify({ listingId: "port-de-kasenga", action: "saved" }),
+  });
+  const dealsAfter = await prismaDealLookup(admin, "port-de-kasenga");
+  assert.equal(dealsAfter.stage, "Interested", "a later 'saved' action must not regress an already-Interested deal");
+});
+
+test("deal stage PATCH requires ownership authorization (not just any signed-in user)", async () => {
+  const admin = await demoLogin("admin");
+  const deal = await prismaDealLookup(admin, "port-de-kasenga");
+
+  const outsider = await demoLogin("advisor");
+  const res = await fetch(BASE + "/api/deals/" + deal.id, {
+    method: "PATCH", headers: { cookie: outsider, "Content-Type": "application/json" },
+    body: JSON.stringify({ stage: "Information Requested" }),
+  });
+  assert.equal(res.status, 403, "a user with no ownership relation to this deal's listing must be refused");
+});
+
+test("forward stage transitions advance one stage at a time; rollback and closed-lost require a reason", async () => {
+  const admin = await demoLogin("admin");
+  const deal = await prismaDealLookup(admin, "port-de-kasenga");
+
+  const skipAhead = await fetch(BASE + "/api/deals/" + deal.id, {
+    method: "PATCH", headers: { cookie: admin, "Content-Type": "application/json" },
+    body: JSON.stringify({ stage: "Term Sheet" }),
+  });
+  assert.equal(skipAhead.status, 422, "cannot skip stages forward");
+
+  const properStep = await fetch(BASE + "/api/deals/" + deal.id, {
+    method: "PATCH", headers: { cookie: admin, "Content-Type": "application/json" },
+    body: JSON.stringify({ stage: "Information Requested" }),
+  });
+  assert.equal(properStep.status, 200);
+
+  const rollbackNoReason = await fetch(BASE + "/api/deals/" + deal.id, {
+    method: "PATCH", headers: { cookie: admin, "Content-Type": "application/json" },
+    body: JSON.stringify({ stage: "Interested" }),
+  });
+  assert.equal(rollbackNoReason.status, 422, "rollback without a reason must be refused");
+
+  const droppedNoReason = await fetch(BASE + "/api/deals/" + deal.id, {
+    method: "PATCH", headers: { cookie: admin, "Content-Type": "application/json" },
+    body: JSON.stringify({ stage: "Passed or Withdrawn" }),
+  });
+  assert.equal(droppedNoReason.status, 422, "closed-lost outcome without a reason must be refused");
+
+  const dropped = await fetch(BASE + "/api/deals/" + deal.id, {
+    method: "PATCH", headers: { cookie: admin, "Content-Type": "application/json" },
+    body: JSON.stringify({ stage: "Passed or Withdrawn", reason: "Sponsor unresponsive after 30 days" }),
+  });
+  assert.equal(dropped.status, 200, "Passed or Withdrawn must be reachable directly from an early active stage, not only adjacent ones");
 });
 
 // ---------- Search parsing ----------
