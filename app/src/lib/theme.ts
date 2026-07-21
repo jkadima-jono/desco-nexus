@@ -25,15 +25,19 @@ export const PILLAR_ICON: Record<string, string> = {
 // coin — never a placeholder letter, never a mismatched borrowed icon.
 export const FALLBACK_ICON = "/brand/desco-coin.png";
 
-// Listing "sector" strings (mock data) map to the pillar they belong to,
-// so a sector always resolves to the correct brand color and icon.
+// Listing "sector" strings map to the pillar they belong to, so a sector
+// always resolves to the correct brand color and icon. Mining and
+// Infrastructure both resolve to Investdesco — per Desco Global's own
+// investor deck: "Investdesco serves as the dedicated mining investment
+// pillar of Desco Global" and "Investdesco builds and operates the
+// critical logistics and industrial infrastructure." There is no
+// separate "Mining" or "Infrastructure" pillar in the real organization.
 export const SECTOR_TO_PILLAR: Record<string, string> = {
   Agriculture: "agridesco",
   Healthcare: "phardesco",
   Water: "waterdesco",
-  Fintech: "investdesco",
-  Infrastructure: "infrastructure",
-  "Renewable Energy": "infrastructure",
+  Mining: "investdesco",
+  Infrastructure: "investdesco",
 };
 
 export function pillarIcon(pillarSlug: string): string {

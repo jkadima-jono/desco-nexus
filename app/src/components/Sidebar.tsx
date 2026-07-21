@@ -16,7 +16,7 @@ const nav = [
   { href: "/pillars", key: "nav.pillars", icon: "◆" },
 ];
 
-type SidebarUser = { fullName: string; title: string | null } | null;
+type SidebarUser = { fullName: string; title: string | null; role?: string } | null;
 
 export default function Sidebar({ user }: { user: SidebarUser }) {
   const pathname = usePathname();
@@ -50,6 +50,13 @@ export default function Sidebar({ user }: { user: SidebarUser }) {
           );
         })}
       </nav>
+      {user?.role === "admin" && (
+        <div className="px-3 pb-1">
+          <Link href="/admin/inquiries" className={"flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-semibold transition-colors " + (pathname.startsWith("/admin") ? "bg-gold text-ink" : "text-white/70 hover:bg-white/10 hover:text-white")}>
+            <span aria-hidden="true" className="w-5 text-center">✉</span>Inquiries
+          </Link>
+        </div>
+      )}
       <div className="px-4 pb-3"><LanguageSwitcher /></div>
       <div className="px-4 py-4 border-t border-white/10">
         {user ? (

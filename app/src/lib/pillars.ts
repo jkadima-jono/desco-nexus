@@ -18,269 +18,136 @@ export type Pillar = {
   milestones: Milestone[];
 };
 
+// Desco Global operates exactly four pillars — sourced verbatim from
+// Desco Global's own investor deck ("The Four Pillars" slide) and
+// pillar-specific business plans. Impact figures below are the deck's
+// own stated KPIs; nothing here is invented. Where the deck states a
+// figure as a target/projection rather than an achieved result, this is
+// preserved in the copy (e.g. "target," "by 2035").
 export const PILLARS: Pillar[] = [
   {
-    slug: "mining",
-    name: "Strategic Minerals",
-    shortName: "Mining",
-    tagline: "Formalizing frontier extraction into export-ready operations.",
-    color: DESCO_COLORS.brandred,
+    slug: "agridesco",
+    name: "Agridesco",
+    shortName: "Agriculture",
+    tagline: "Cultivating Prosperity — feeding 90M+ people, from subsistence to surplus.",
+    color: DESCO_COLORS.emerald,
     summary:
-      "We bring structure and governance to undercapitalized mining concessions and artisanal operations, converting informal activity into transparent, exportable production.",
+      "Agridesco develops large-scale farming cooperatives, processing hubs, and market access across the Grand Kasai region — organizing smallholders into outgrower networks with input credit, shared mechanization, post-harvest storage, and value-add milling.",
     thesis:
-      "Frontier mineral assets fail to attract capital not because of geology, but because of missing structure: unclear title, informal labor, and absent chain-of-custody. We de-risk by securing lawful access first, then layering governance and capital in that order — never the reverse.",
+      "The Grand Kasai region holds over 15 million hectares of arable land and 1,500mm of annual rainfall, yet the DRC spends an estimated $3.0B a year importing food it could grow domestically. Agridesco exists to close that gap by giving smallholders the processing and market-access infrastructure that converts fertile land into investable, exportable surplus.",
     marketOpportunity:
-      "Global demand for battery and industrial minerals continues to outpace formalized African supply. Concessions with clear governance and export compliance command a structural premium over informal production.",
-    geography: ["DR Congo — Kasaï & Katanga corridors", "Southern Africa expansion pipeline"],
+      "A $3.0B annual food-import bill represents immediate import-substitution potential, and the Grand Kasai region's arable land could feed over 90 million people once mechanization, processing, and market access are in place.",
+    geography: ["Grand Kasai region, DR Congo — Kasai, Kasai-Central, Kasai-Oriental, Sankuru, Lomami provinces"],
     objectives: [
-      "Secure lawful concession access with community consent",
-      "Formalize artisanal supply chains to export standard",
-      "Build logistics and processing infrastructure on-site",
-      "Introduce disciplined long-term capital partners",
+      "Organize smallholders into outgrower cooperatives for scale",
+      "Provide input credit for seeds and fertilizer, recovered at harvest",
+      "Deploy shared mechanization to reduce labor intensity",
+      "Build post-harvest storage and value-add processing for maize, cassava, and soy",
     ],
     impact: [
-      { label: "Concessions under formalization", value: 4, suffix: "" },
-      { label: "Artisanal miners in formal supply chains", value: 1200, suffix: "+" },
-      { label: "Years operating on the ground", value: 10, suffix: "+" },
+      { label: "Farmers integrated", value: 50000, suffix: "+" },
+      { label: "Hectares revitalized", value: 25000, suffix: "" },
+      { label: "Villages served", value: 40, suffix: "+" },
+      { label: "Income uplift for smallholders", value: 45, suffix: "%" },
     ],
     milestones: [
-      { year: "2016", label: "First concession access secured", done: true },
-      { year: "2019", label: "Community consent framework established", done: true },
-      { year: "2023", label: "Export-compliance formalization program launched", done: true },
-      { year: "2026", label: "Strategic capital partner onboarding", done: false },
+      { year: "2026–2027", label: "Agridesco operations launch alongside Port de Ndomba Phase 1", done: false },
+      { year: "2028", label: "Kasenga trade link opens regional export routes for agri surplus", done: false },
+      { year: "2029", label: "Full portfolio operations", done: false },
     ],
   },
   {
     slug: "investdesco",
-    name: "InvestDesco",
+    name: "Investdesco",
     shortName: "Strategic Capital",
-    tagline: "Structuring capital partnerships aligned with real assets.",
+    tagline: "Investing in Tomorrow — capital for sustainable growth.",
     color: DESCO_COLORS.gold,
     summary:
-      "InvestDesco structures capital partnerships, joint ventures, and long-term investment vehicles that connect disciplined investors to development-stage real assets across our platform.",
+      "Investdesco is Desco Global's strategic financial and infrastructure engine — structuring capital partnerships, joint ventures, and long-term investment vehicles across ports, industrial parks, renewable energy, and the group's mining-development partnerships.",
     thesis:
-      "Capital seeking African real-asset exposure needs a structured entry point with governance already in place. InvestDesco is that entry point — we absorb the on-the-ground structuring risk before capital arrives, not after.",
+      "Frontier real-asset opportunities in the Grand Kasai region fail to attract capital not for lack of resources, but for lack of structure — unclear logistics, informal production, and absent enabling infrastructure. Investdesco absorbs that structuring risk first: securing access, building the port and logistics backbone, then introducing disciplined capital aligned with long-term value creation.",
     marketOpportunity:
-      "Institutional appetite for real-asset and blended-finance exposure in frontier markets is growing faster than the pipeline of investable, de-risked opportunities.",
-    geography: ["DR Congo", "Pan-African growth corridors", "Global capital partners"],
+      "Desco Global's Phase 1 program targets a $750M raise (equity + debt) at a 17.2% risk-adjusted target IRR, 6-year payback, and 2.8–3.2x MOIC, anchored by two river-port gateways and a modernized mining-concession partnership.",
+    geography: ["DR Congo — Kasai River and Lake Mweru corridors", "Pan-African trade links to Zambia and Angola"],
     objectives: [
-      "Structure joint ventures across all operating pillars",
-      "Align investor mandates with measurable development impact",
-      "Maintain transparent reporting and governance standards",
-      "Build a repeatable structuring playbook across sectors",
+      "Develop Port de Ndomba and Port de Kasenga as the region's logistics backbone",
+      "Serve as Desco Global's dedicated mining-investment pillar",
+      "Structure joint ventures and blended-finance partnerships with DFIs",
+      "Build industrial parks and distributed renewable energy for the platform",
     ],
     impact: [
-      { label: "Sectors under active structuring", value: 6, suffix: "" },
-      { label: "Years of on-the-ground relationships", value: 10, suffix: "+" },
-      { label: "Countries in near-term pipeline", value: 3, suffix: "" },
+      { label: "Phase 1 capital raise target ($M)", value: 750, suffix: "" },
+      { label: "Target Phase 1 program IRR", value: 17, suffix: ".2%" },
+      { label: "Target MOIC", value: 3, suffix: ".0x" },
+      { label: "Projected jobs by 2035", value: 100000, suffix: "+" },
     ],
     milestones: [
-      { year: "2018", label: "First joint venture structured", done: true },
-      { year: "2022", label: "Institutional investment framework formalized", done: true },
-      { year: "2026", label: "Grand Kasaï Investment Expedition", done: false },
-    ],
-  },
-  {
-    slug: "agridesco",
-    name: "AgriDesco",
-    shortName: "Agriculture",
-    tagline: "Connecting productive land to markets and food security.",
-    color: DESCO_COLORS.emerald,
-    summary:
-      "AgriDesco supports modern agricultural production and agribusiness platforms that connect farmers to markets, focused on productivity, infrastructure, and sustainable land use.",
-    thesis:
-      "Agricultural value in the region is constrained by market access and post-harvest infrastructure, not by land or labor. Solve logistics and aggregation, and productive capacity converts directly into investable output.",
-    marketOpportunity:
-      "Regional food security mandates and rising urban demand create durable off-take for formalized agri-processing capacity.",
-    geography: ["DR Congo — Kivu & Kasaï regions"],
-    objectives: [
-      "Modernize production on partner farms",
-      "Build aggregation and processing infrastructure",
-      "Connect smallholder supply chains to formal markets",
-      "Advance sustainable land-use practices",
-    ],
-    impact: [
-      { label: "Smallholder farmers in supply chain", value: 4200, suffix: "+" },
-      { label: "Regional distributor partnerships", value: 3, suffix: "" },
-    ],
-    milestones: [
-      { year: "2020", label: "First processing facility established", done: true },
-      { year: "2024", label: "Capacity expansion program launched", done: true },
-      { year: "2026", label: "Regional market integration", done: false },
+      { year: "2026 (Q2–Q3)", label: "Financial close and Port de Ndomba groundbreaking", done: false },
+      { year: "2028 (Q2–Q4)", label: "Kasenga port start", done: false },
+      { year: "2029 (Q2)", label: "Full portfolio operations", done: false },
+      { year: "2030 (Q4)", label: "Scale and optimization", done: false },
+      { year: "2032", label: "Target exit — IPO, strategic sale, or refinancing", done: false },
     ],
   },
   {
     slug: "phardesco",
-    name: "PharDesco",
+    name: "Phardesco",
     shortName: "Healthcare",
-    tagline: "Delivering essential pharmaceutical access at scale.",
+    tagline: "Healing with Purpose — healthcare access and clinical quality.",
     color: DESCO_COLORS.blue,
     summary:
-      "PharDesco delivers essential pharmaceutical solutions to improve community health outcomes, building structured, compliant, and scalable distribution platforms.",
+      "Phardesco (Pharmacies, Développement et Santé du Congo) builds a network of solar-powered Pharmalab Hubs combining pharmaceutical retail, diagnostics, clean-water access, and health education, beginning with a first hub in Mbuji-Mayi, Grand Kasai.",
     thesis:
-      "Healthcare access gaps in frontier markets are a distribution and compliance problem as much as a supply problem. Structured, compliant platforms unlock both public-health impact and durable commercial margin.",
+      "In Kasai, one pharmacist serves more than 50,000 people against a WHO benchmark of 1 per 2,000, and over 80% of the DRC's population lacks regular access to quality medicines. Phardesco closes that gap with an integrated, self-sustaining Pharmalab model rather than a standalone pharmacy chain.",
     marketOpportunity:
-      "Underserved regional healthcare markets reward operators who can guarantee compliant, reliable last-mile distribution.",
-    geography: ["DR Congo", "Regional distribution network"],
+      "A market of 100M+ people with chronic pharmaceutical supply gaps, counterfeit-drug risk, and an overburdened public health sector — creating durable demand for a compliant, reliable, last-mile health and medicine network.",
+    geography: ["Grand Kasai region, DR Congo — first hub in Mbuji-Mayi", "National expansion planned across all DRC provinces by 2035"],
     objectives: [
-      "Build compliant pharmaceutical distribution infrastructure",
-      "Expand equitable access to essential medicines",
-      "Establish quality and regulatory standards",
-      "Scale through partnership with regional providers",
+      "Launch the first Pharmalab Hub in Mbuji-Mayi",
+      "Scale to 10+ Pharmalab Hubs medium-term (3–5 years)",
+      "Establish a GMP-compliant local generic-drug production unit",
+      "Launch Phardesco Academy to train pharmacists, technicians, and health agents",
     ],
     impact: [
-      { label: "Communities served", value: 18, suffix: "+" },
-      { label: "Distribution compliance standard", value: 100, suffix: "%" },
+      { label: "Planned hubs by 2035", value: 50, suffix: "+" },
+      { label: "Startup raise target ($M)", value: 5, suffix: "–10M" },
+      { label: "Year 5 forecast EBITDA ($M)", value: 3, suffix: ".8M" },
     ],
     milestones: [
-      { year: "2021", label: "Distribution platform established", done: true },
-      { year: "2025", label: "Regional compliance certification", done: true },
-      { year: "2026", label: "Network expansion", done: false },
+      { year: "Months 1–2", label: "Legal incorporation and licensing in the DRC", done: false },
+      { year: "Months 3–6", label: "Land acquisition in Mbuji-Mayi; construction begins", done: false },
+      { year: "Months 7–9", label: "Staff recruitment and health-authority registration", done: false },
+      { year: "Months 10–12", label: "Pilot hub launch", done: false },
+      { year: "2028 (Q2–Q4)", label: "Healthcare rollout alongside Kasenga port start", done: false },
     ],
   },
   {
     slug: "waterdesco",
-    name: "WaterDesco",
+    name: "Waterdesco",
     shortName: "Water & Sanitation",
-    tagline: "Water security as the foundation for growth, not an add-on.",
+    tagline: "Pure Life, Sustainable Future.",
     color: DESCO_COLORS.deepblue,
     summary:
-      "WaterDesco develops clean water solutions and sanitation infrastructure supporting communities and industrial operations — because water security is foundational, not incidental.",
+      "Waterdesco secures Africa's future by expanding equitable access to clean drinking water and building resilient sanitation infrastructure — treated by Desco Global as foundational to every other pillar, not an add-on.",
     thesis:
-      "Every other pillar depends on reliable water access — mining, agriculture, and community development all stall without it. WaterDesco is infrastructure investment with the widest multiplier effect on the platform.",
+      "\"Water is the foundation of dignity.\" Every other pillar — agriculture, mining, community health — depends on reliable water access. Waterdesco is the infrastructure investment with the widest multiplier effect across the platform.",
     marketOpportunity:
-      "Blended finance for water infrastructure in underserved regions attracts DFI first-loss capital, de-risking commercial co-investment.",
-    geography: ["DR Congo", "Southern Africa"],
+      "Chronic water and sanitation deficits in the Grand Kasai region drive waterborne disease and constrain industrial and agricultural productivity alike — a foundational infrastructure gap with platform-wide returns.",
+    geography: ["Grand Kasai region, DR Congo"],
     objectives: [
-      "Develop municipal and industrial water treatment capacity",
-      "Build sanitation infrastructure for underserved communities",
-      "Support blended-finance structures with DFI partners",
-      "Ensure tariff frameworks sustain long-term operations",
+      "Expand clean drinking-water networks to underserved regions",
+      "Build resilient wastewater and sanitation systems for public health",
+      "Promote eco-friendly, climate-resilient water-lifecycle practices",
+      "Build local community capacity for long-term system management",
     ],
     impact: [
-      { label: "Residents served (est.)", value: 800000, suffix: "" },
-      { label: "DFI first-loss commitments", value: 1, suffix: "" },
+      { label: "People served (target)", value: 2500000, suffix: "" },
+      { label: "Liters delivered daily (target)", value: 45000000, suffix: "" },
+      { label: "Sanitation facilities built (target)", value: 150, suffix: "+" },
+      { label: "Communities transformed (target)", value: 50, suffix: "" },
     ],
     milestones: [
-      { year: "2023", label: "Feasibility and tariff framework ratified", done: true },
-      { year: "2025", label: "DFI first-loss tranche committed", done: true },
-      { year: "2026", label: "Construction phase", done: false },
-    ],
-  },
-  {
-    slug: "infrastructure",
-    name: "Infrastructure",
-    shortName: "Infrastructure",
-    tagline: "Enabling systems that reduce risk and unlock scale.",
-    color: DESCO_COLORS.charcoal,
-    summary:
-      "We invest in enabling infrastructure — logistics, energy, water systems, and operational platforms — that reduces execution risk and unlocks scale across every pillar.",
-    thesis:
-      "Real-asset development in frontier markets fails without enabling infrastructure in place first. We treat infrastructure as prerequisite capital, not a downstream line item.",
-    marketOpportunity:
-      "Infrastructure gaps are the binding constraint on frontier-market capital deployment; closing them unlocks value across every adjacent sector.",
-    geography: ["DR Congo — national corridors", "Regional cross-border links"],
-    objectives: [
-      "Build logistics corridors connecting production to export",
-      "Expand reliable energy access for operations",
-      "Develop operational platforms shared across pillars",
-      "Reduce structural risk for downstream capital",
-    ],
-    impact: [
-      { label: "Active infrastructure programs", value: 5, suffix: "" },
-      { label: "Corridors under development", value: 2, suffix: "" },
-    ],
-    milestones: [
-      { year: "2019", label: "First logistics corridor initiated", done: true },
-      { year: "2024", label: "Energy access program launched", done: true },
-      { year: "2026", label: "Cross-border corridor expansion", done: false },
-    ],
-  },
-  {
-    slug: "ports-logistics",
-    name: "Strategic Ports & Logistics",
-    shortName: "Ports & Logistics",
-    tagline: "The corridors that turn assets into export revenue.",
-    color: DESCO_COLORS.wgray,
-    summary:
-      "We develop strategic logistics assets — depots, corridors, and port-linked infrastructure — that convert landlocked production into exportable, bankable revenue.",
-    thesis:
-      "An asset that cannot reach export markets efficiently is not fully investable. Logistics is the conversion layer between resource and revenue, and it is where frontier deals most often fail.",
-    marketOpportunity:
-      "Regional trade corridors with sovereign support and DFI co-investment interest represent some of the highest-multiplier infrastructure investments available.",
-    geography: ["DR Congo corridors", "Regional port access via East and Southern Africa"],
-    objectives: [
-      "Secure and develop corridor concessions",
-      "Build inland depot and handling capacity",
-      "Partner with DFIs on co-investment structures",
-      "Align with sovereign trade-facilitation priorities",
-    ],
-    impact: [
-      { label: "Corridor concessions in pipeline", value: 1, suffix: "" },
-      { label: "Estimated annual traffic growth", value: 8, suffix: "%" },
-    ],
-    milestones: [
-      { year: "2024", label: "Feasibility study completed", done: true },
-      { year: "2025", label: "Sovereign support package approved", done: true },
-      { year: "2026", label: "DFI co-investment discussions", done: false },
-    ],
-  },
-  {
-    slug: "community-development",
-    name: "Community Development",
-    shortName: "Community",
-    tagline: "Consent and shared value are structural, not optional.",
-    color: DESCO_COLORS.orange,
-    summary:
-      "Every asset we develop is built on documented community consent and shared value — the foundation that reduces political risk and sustains long-term operations.",
-    thesis:
-      "Frontier assets built without community alignment are structurally fragile, regardless of capital behind them. We treat community consent as a governance input, not a communications exercise.",
-    marketOpportunity:
-      "Investors increasingly price community risk explicitly; documented consent frameworks convert a soft-diligence question into hard evidence.",
-    geography: ["All operating regions"],
-    objectives: [
-      "Formalize community consent processes on every asset",
-      "Deliver shared-value programs alongside development",
-      "Maintain transparent grievance and accountability channels",
-      "Report community outcomes alongside financial outcomes",
-    ],
-    impact: [
-      { label: "Communities engaged", value: 22, suffix: "+" },
-      { label: "Formal consent frameworks in place", value: 100, suffix: "%" },
-    ],
-    milestones: [
-      { year: "2017", label: "Community consent framework designed", done: true },
-      { year: "2021", label: "Grievance mechanism formalized", done: true },
-      { year: "2026", label: "Shared-value reporting standard", done: false },
-    ],
-  },
-  {
-    slug: "esg-sustainability",
-    name: "ESG & Sustainability",
-    shortName: "ESG",
-    tagline: "Measurable impact, transparent governance, long-term view.",
-    color: DESCO_COLORS.emerald,
-    summary:
-      "ESG is embedded across every pillar — from environmental stewardship in resource extraction to governance frameworks that satisfy institutional and DFI due diligence.",
-    thesis:
-      "In frontier markets, ESG is not a reporting layer added after the fact — it is the governance infrastructure that makes an asset investable to institutional and DFI capital in the first place.",
-    marketOpportunity:
-      "Blended finance and DFI capital pools are expanding fastest where verifiable ESG governance already exists — rewarding platforms that build it in from the start.",
-    geography: ["All operating regions"],
-    objectives: [
-      "Maintain environmental standards across extraction and infrastructure",
-      "Uphold governance frameworks meeting institutional due diligence",
-      "Track and report measurable social and environmental impact",
-      "Align with DFI and blended-finance ESG requirements",
-    ],
-    impact: [
-      { label: "Pillars with active ESG frameworks", value: 9, suffix: "" },
-      { label: "Independent due-diligence engagements", value: 6, suffix: "+" },
-    ],
-    milestones: [
-      { year: "2019", label: "Governance framework established", done: true },
-      { year: "2023", label: "First DFI due-diligence engagement", done: true },
-      { year: "2026", label: "Platform-wide impact reporting", done: false },
+      { year: "2026–2030", label: "Distributed infrastructure build-out alongside Investdesco's port and industrial program", done: false },
     ],
   },
 ];

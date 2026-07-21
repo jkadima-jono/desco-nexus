@@ -20,12 +20,12 @@ async function demoLogin(persona) {
 // ---------- Security: unauthenticated access ----------
 test("unauthenticated API access is rejected", async () => {
   const cases = [
-    ["GET", "/api/comments?listingId=atlas-solar"],
-    ["POST", "/api/match", { listingId: "atlas-solar", action: "saved" }],
+    ["GET", "/api/comments?listingId=port-de-ndomba"],
+    ["POST", "/api/match", { listingId: "port-de-ndomba", action: "saved" }],
     ["POST", "/api/messages", { threadId: "t1", text: "hi" }],
     ["POST", "/api/documents"],
-    ["POST", "/api/listings/atlas-solar/photos"],
-    ["POST", "/api/ai/teaser", { listingId: "atlas-solar" }],
+    ["POST", "/api/listings/port-de-ndomba/photos"],
+    ["POST", "/api/ai/teaser", { listingId: "port-de-ndomba" }],
     ["GET", "/api/mandates"],
     ["POST", "/api/mandates", { name: "x", query: "y" }],
     ["PATCH", "/api/deals/anything", { stage: "NDA" }],
@@ -57,16 +57,16 @@ test("protected pages redirect signed-out visitors to /login", async () => {
 });
 
 test("signed-out project page hides confidential material", async () => {
-  const res = await fetch(BASE + "/project/atlas-solar");
+  const res = await fetch(BASE + "/project/port-de-ndomba");
   assert.equal(res.status, 200);
   const html = await res.text();
-  assert.ok(!html.includes("Financial Model v12"), "data-room filenames must be hidden");
+  assert.ok(!html.includes("Investdesco Confidential Investment Memorandum"), "data-room filenames must be hidden");
   assert.ok(!html.includes("/api/documents/"), "document URLs must be hidden");
   assert.ok(!html.includes("your mandate") || html.includes("Sign in"), "no personalization signed out");
 });
 
 test("signed-out search results carry no personalized whyMatch", async () => {
-  const res = await fetch(BASE + "/api/search?q=" + encodeURIComponent("renewable energy in Africa between $20M and $100M"));
+  const res = await fetch(BASE + "/api/search?q=" + encodeURIComponent("port projects in DR Congo between $20M and $100M"));
   assert.equal(res.status, 200);
   const data = await res.json();
   assert.ok(data.results.length >= 1);
@@ -78,7 +78,7 @@ test("investor cannot upload documents or photos or generate teaser (403)", asyn
   const cookie = await demoLogin("investor");
   const form = new FormData();
   form.set("file", new File(["x"], "x.pdf", { type: "application/pdf" }));
-  form.set("listingId", "atlas-solar");
+  form.set("listingId", "port-de-ndomba");
   const up = await fetch(BASE + "/api/documents", {
     method: "POST", headers: { cookie }, body: form,
   });
@@ -86,7 +86,7 @@ test("investor cannot upload documents or photos or generate teaser (403)", asyn
 
   const ph = new FormData();
   ph.set("file", new File(["x"], "x.png", { type: "image/png" }));
-  const up2 = await fetch(BASE + "/api/listings/atlas-solar/photos", {
+  const up2 = await fetch(BASE + "/api/listings/port-de-ndomba/photos", {
     method: "POST", headers: { cookie }, body: ph,
   });
   assert.equal(up2.status, 403);
@@ -94,7 +94,7 @@ test("investor cannot upload documents or photos or generate teaser (403)", asyn
   const tz = await fetch(BASE + "/api/ai/teaser", {
     method: "POST",
     headers: { cookie, "Content-Type": "application/json" },
-    body: JSON.stringify({ listingId: "atlas-solar" }),
+    body: JSON.stringify({ listingId: "port-de-ndomba" }),
   });
   assert.equal(tz.status, 403);
 });
@@ -104,7 +104,7 @@ test("owner demo can generate teaser for own org listing; flagged for review", a
   const res = await fetch(BASE + "/api/ai/teaser", {
     method: "POST",
     headers: { cookie, "Content-Type": "application/json" },
-    body: JSON.stringify({ listingId: "atlas-solar" }),
+    body: JSON.stringify({ listingId: "comicordia-mining" }),
   });
   assert.equal(res.status, 200);
   const data = await res.json();
@@ -113,11 +113,11 @@ test("owner demo can generate teaser for own org listing; flagged for review", a
 });
 
 test("owner cannot manage another org's listing (403)", async () => {
-  const cookie = await demoLogin("owner"); // owns Maghreb only
+  const cookie = await demoLogin("owner"); // Comicordia Corporation only
   const res = await fetch(BASE + "/api/ai/teaser", {
     method: "POST",
     headers: { cookie, "Content-Type": "application/json" },
-    body: JSON.stringify({ listingId: "kivu-agri" }),
+    body: JSON.stringify({ listingId: "port-de-ndomba" }), // owned by Desco Global (Investdesco)
   });
   assert.equal(res.status, 403, "cross-organization access must be rejected");
 });
@@ -172,11 +172,11 @@ test("empty query rejected", async () => {
 });
 
 test("valid NL query parses sector, ticket and region", async () => {
-  const res = await fetch(BASE + "/api/search?q=" + encodeURIComponent("renewable energy projects in Africa between $20M and $100M"));
+  const res = await fetch(BASE + "/api/search?q=" + encodeURIComponent("port projects in DR Congo between $80M and $90M"));
   const data = await res.json();
-  assert.match(data.interpretation, /Renewable Energy/);
-  assert.match(data.interpretation, /\$20M–\$100M/);
-  assert.equal(data.results.length, 1);
+  assert.match(data.interpretation, /Infrastructure/);
+  assert.match(data.interpretation, /\$80M–\$90M/);
+  assert.equal(data.results.length, 1); // Port de Ndomba ($85M) only, "port" keyword matches Infrastructure sector
 });
 
 // ---------- Localization ----------
@@ -208,7 +208,7 @@ test("capital call creation is sponsor-only and cross-org denied", async () => {
   });
   assert.equal(deniedNoDeal.status, 404); // deal id doesn't exist for this fixture
 
-  const owner = await demoLogin("owner"); // owns Maghreb Renewables only
+  const owner = await demoLogin("owner"); // Comicordia Corporation
   const sanity = await fetch(BASE + "/api/portfolio", { headers: { cookie: owner } });
   assert.equal(sanity.status, 200); // session itself is valid
 });

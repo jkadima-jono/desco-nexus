@@ -31,7 +31,7 @@ export default async function RootLayout({
         <I18nProvider locale={locale}>
         <div className="flex min-h-screen">
           <Sidebar
-            user={user ? { fullName: user.fullName, title: user.title } : null}
+            user={user ? { fullName: user.fullName, title: user.title, role: user.role } : null}
           />
           <main className="flex-1 min-w-0 pt-16 lg:pt-0">{children}</main>
         </div>

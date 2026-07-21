@@ -90,7 +90,7 @@ export default function Login() {
           <a href="/legal" className="hover:text-white/70">Privacy</a>
           <a href="/legal" className="hover:text-white/70">Terms</a>
           <a href="/legal" className="hover:text-white/70">Security</a>
-          <a href="mailto:support@desco.global" className="hover:text-white/70">Support</a>
+          <a href="/contact" className="hover:text-white/70">Contact</a>
         </div>
         <p className="text-center text-white/30 text-[11px] mt-3">
           desco.global | © 2026 Desco Global

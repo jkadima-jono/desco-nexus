@@ -19,7 +19,7 @@ const PERSONAS: Record<
     fullName: "Demo Sponsor",
     title: "Demo · Project Owner",
     role: "owner",
-    org: "Maghreb Renewables SA",
+    org: "Comicordia Corporation",
   },
   advisor: {
     email: "advisor@demo.invalid",

@@ -205,3 +205,14 @@ model InvestorEngagement {
 
   @@unique([sponsorOrgId, investorId, listingId])
 }
+
+model ContactInquiry {
+  id           String   @id @default(cuid())
+  name         String
+  email        String
+  organization String?
+  topic        String   @default("general") // general|agridesco|investdesco|phardesco|waterdesco
+  message      String
+  status       String   @default("new")     // new|read
+  createdAt    DateTime @default(now())
+}
