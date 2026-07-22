@@ -18,6 +18,8 @@ model User {
   matchFeedback MatchFeedback[]
   mandates     StandingMandate[]
   submissions  ProjectSubmission[]
+  collections  Collection[]
+  savedOpportunities SavedOpportunity[]
 }
 
 model Organization {
@@ -56,6 +58,7 @@ model Listing {
   matchActions     MatchAction[]
   matchFeedback    MatchFeedback[]
   deals            Deal[]
+  savedBy          SavedOpportunity[]
   createdAt        DateTime      @default(now())
   updatedAt        DateTime      @default(now()) @updatedAt
 }
@@ -94,6 +97,37 @@ model MatchFeedback {
   mandateId String?  // loose reference, no FK — mandate may be edited/deleted later without orphaning this record
   reason    String
   createdAt DateTime @default(now())
+}
+
+// User-defined grouping for saved opportunities (Phase 3). Reuses
+// MatchAction's existing "saved" event as the append-only save/unsave
+// log — this table is the mutable enrichment layer (which collection,
+// notes, tags), not a second "is this saved" boolean.
+model Collection {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  name      String
+  createdAt DateTime @default(now())
+  items     SavedOpportunity[]
+
+  @@unique([userId, name])
+}
+
+model SavedOpportunity {
+  id           String      @id @default(cuid())
+  userId       String
+  user         User        @relation(fields: [userId], references: [id])
+  listingId    String
+  listing      Listing     @relation(fields: [listingId], references: [id])
+  collectionId String?
+  collection   Collection? @relation(fields: [collectionId], references: [id])
+  notes        String      @default("")
+  tags         String      @default("[]") // JSON string[]
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @default(now()) @updatedAt
+
+  @@unique([userId, listingId])
 }
 
 model Deal {

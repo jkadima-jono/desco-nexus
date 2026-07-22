@@ -452,3 +452,127 @@ test("info_requested is a valid match action distinct from interested/pass/saved
   const data = await res.json();
   assert.equal(data.dealCreated, false, "info_requested must not silently open a pipeline deal the way interested does");
 });
+
+// ---------- Phase 3: saved opportunities & collections ----------
+test("unauthenticated access to saved/collections is rejected", async () => {
+  const cases = [
+    ["GET", "/api/saved"],
+    ["PATCH", "/api/saved/anything", { notes: "x" }],
+    ["DELETE", "/api/saved/anything"],
+    ["GET", "/api/collections"],
+    ["POST", "/api/collections", { name: "x" }],
+    ["DELETE", "/api/collections?id=anything"],
+  ];
+  for (const [method, path, body] of cases) {
+    const res = await fetch(BASE + path, {
+      method,
+      headers: body ? { "Content-Type": "application/json" } : undefined,
+      body: body ? JSON.stringify(body) : undefined,
+    });
+    assert.equal(res.status, 401, method + " " + path + " must require auth");
+  }
+});
+
+test("saving via /api/match upserts a SavedOpportunity, listed and editable via /api/saved", async () => {
+  const investor = await demoLogin("investor");
+  const saveRes = await fetch(BASE + "/api/match", {
+    method: "POST", headers: { cookie: investor, "Content-Type": "application/json" },
+    body: JSON.stringify({ listingId: "comicordia-agri", action: "saved" }),
+  });
+  assert.equal(saveRes.status, 200);
+
+  const listRes = await fetch(BASE + "/api/saved", { headers: { cookie: investor } });
+  assert.equal(listRes.status, 200);
+  const { saved } = await listRes.json();
+  const entry = saved.find((s) => s.listingId === "comicordia-agri");
+  assert.ok(entry, "saved opportunity must appear in GET /api/saved");
+
+  const patchRes = await fetch(BASE + "/api/saved/" + entry.id, {
+    method: "PATCH", headers: { cookie: investor, "Content-Type": "application/json" },
+    body: JSON.stringify({ notes: "Follow up next quarter", tags: ["priority", "infra"] }),
+  });
+  assert.equal(patchRes.status, 200);
+  const { saved: updated } = await patchRes.json();
+  assert.equal(updated.notes, "Follow up next quarter");
+  assert.deepEqual(JSON.parse(updated.tags), ["priority", "infra"]);
+
+  const delRes = await fetch(BASE + "/api/saved/" + entry.id, { method: "DELETE", headers: { cookie: investor } });
+  assert.equal(delRes.status, 200);
+  const listAfter = await (await fetch(BASE + "/api/saved", { headers: { cookie: investor } })).json();
+  assert.ok(!listAfter.saved.find((s) => s.listingId === "comicordia-agri"), "unsave must remove the row");
+});
+
+test("saved opportunities and collections are isolated per user (404, not leaked)", async () => {
+  const owner = await demoLogin("investor");
+  const saveRes = await fetch(BASE + "/api/match", {
+    method: "POST", headers: { cookie: owner, "Content-Type": "application/json" },
+    body: JSON.stringify({ listingId: "comicordia-agri", action: "saved" }),
+  });
+  assert.equal(saveRes.status, 200);
+  const { saved } = await (await fetch(BASE + "/api/saved", { headers: { cookie: owner } })).json();
+  const entry = saved.find((s) => s.listingId === "comicordia-agri");
+
+  const colRes = await fetch(BASE + "/api/collections", {
+    method: "POST", headers: { cookie: owner, "Content-Type": "application/json" },
+    body: JSON.stringify({ name: "Isolation test collection" }),
+  });
+  const { collection } = await colRes.json();
+
+  const outsider = await demoLogin("advisor");
+  const patchAttempt = await fetch(BASE + "/api/saved/" + entry.id, {
+    method: "PATCH", headers: { cookie: outsider, "Content-Type": "application/json" },
+    body: JSON.stringify({ notes: "hijacked" }),
+  });
+  assert.equal(patchAttempt.status, 404, "another user must not be able to PATCH someone else's saved opportunity");
+
+  const deleteAttempt = await fetch(BASE + "/api/collections?id=" + collection.id, {
+    method: "DELETE", headers: { cookie: outsider },
+  });
+  assert.equal(deleteAttempt.status, 404, "another user must not be able to delete someone else's collection");
+
+  await fetch(BASE + "/api/saved/" + entry.id, { method: "DELETE", headers: { cookie: owner } });
+  await fetch(BASE + "/api/collections?id=" + collection.id, { method: "DELETE", headers: { cookie: owner } });
+});
+
+test("creating a collection with a name that already exists returns the existing one, not a duplicate", async () => {
+  const investor = await demoLogin("investor");
+  const first = await (await fetch(BASE + "/api/collections", {
+    method: "POST", headers: { cookie: investor, "Content-Type": "application/json" },
+    body: JSON.stringify({ name: "Dedup test collection" }),
+  })).json();
+  const second = await (await fetch(BASE + "/api/collections", {
+    method: "POST", headers: { cookie: investor, "Content-Type": "application/json" },
+    body: JSON.stringify({ name: "Dedup test collection" }),
+  })).json();
+  assert.equal(first.collection.id, second.collection.id, "duplicate collection name must dedup, not create a second row");
+
+  await fetch(BASE + "/api/collections?id=" + first.collection.id, { method: "DELETE", headers: { cookie: investor } });
+});
+
+test("deleting a collection un-groups its saved items instead of deleting them", async () => {
+  const investor = await demoLogin("investor");
+  const { collection } = await (await fetch(BASE + "/api/collections", {
+    method: "POST", headers: { cookie: investor, "Content-Type": "application/json" },
+    body: JSON.stringify({ name: "Cascade test collection" }),
+  })).json();
+
+  await fetch(BASE + "/api/match", {
+    method: "POST", headers: { cookie: investor, "Content-Type": "application/json" },
+    body: JSON.stringify({ listingId: "comicordia-agri", action: "saved" }),
+  });
+  const { saved } = await (await fetch(BASE + "/api/saved", { headers: { cookie: investor } })).json();
+  const entry = saved.find((s) => s.listingId === "comicordia-agri");
+  await fetch(BASE + "/api/saved/" + entry.id, {
+    method: "PATCH", headers: { cookie: investor, "Content-Type": "application/json" },
+    body: JSON.stringify({ collectionId: collection.id }),
+  });
+
+  await fetch(BASE + "/api/collections?id=" + collection.id, { method: "DELETE", headers: { cookie: investor } });
+
+  const after = await (await fetch(BASE + "/api/saved", { headers: { cookie: investor } })).json();
+  const survivingEntry = after.saved.find((s) => s.listingId === "comicordia-agri");
+  assert.ok(survivingEntry, "the saved opportunity must survive its collection being deleted");
+  assert.equal(survivingEntry.collectionId, null, "the saved opportunity must be un-grouped, not orphaned with a dangling collectionId");
+
+  await fetch(BASE + "/api/saved/" + entry.id, { method: "DELETE", headers: { cookie: investor } });
+});

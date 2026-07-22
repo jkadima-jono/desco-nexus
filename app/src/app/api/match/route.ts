@@ -50,6 +50,17 @@ export async function POST(req: Request) {
     },
   });
 
+  // "saved" also upserts the Phase 3 enrichment record (collection/notes/
+  // tags). MatchAction above stays the append-only log; SavedOpportunity
+  // is the current-state row a user can edit or remove ("unsave").
+  if (action === "saved") {
+    await prisma.savedOpportunity.upsert({
+      where: { userId_listingId: { userId: user.id, listingId } },
+      update: {},
+      create: { userId: user.id, listingId },
+    });
+  }
+
   let dealCreated = false;
   const targetStage = ACTION_STAGE[action];
   if (targetStage) {

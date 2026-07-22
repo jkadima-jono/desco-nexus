@@ -19,6 +19,7 @@ const MESSAGES: NavItem = { href: "/messages", key: "nav.messages", icon: "✉" 
 const PILLARS: NavItem = { href: "/pillars", key: "nav.pillars", icon: "◆" };
 const INVESTOR_MATCHES: NavItem = { href: "/sponsor/investors", key: "nav.investorMatches", icon: "⇄" };
 const MANDATES: NavItem = { href: "/mandates", key: "nav.mandates", icon: "☰" };
+const SAVED: NavItem = { href: "/saved", key: "nav.saved", icon: "★" };
 const CONTACT: NavItem = { href: "/contact", key: "nav.contact", icon: "✉" };
 
 // Public nav taxonomy. Several of these route to the closest real
@@ -40,10 +41,10 @@ const ABOUT: NavItem = { href: "/pillars", key: "nav.about", icon: "◆" };
 // and gain nav entries then, not before).
 const NAV_BY_ROLE: Record<string, NavItem[]> = {
   signedOut: [OPPORTUNITIES, HOW_IT_WORKS, FOR_INVESTORS, FOR_OWNERS, PILLARS, TRUST, ABOUT, CONTACT],
-  investor: [DISCOVER, MATCH, MANDATES, PIPELINE, PORTFOLIO, SEARCH, MESSAGES, PILLARS],
+  investor: [DISCOVER, MATCH, SAVED, MANDATES, PIPELINE, PORTFOLIO, SEARCH, MESSAGES, PILLARS],
   owner: [PROJECTS, SUBMIT_PROJECT, INVESTOR_MATCHES, MESSAGES, PILLARS],
   advisor: [DISCOVER, MANDATES, TRANSACTIONS, MESSAGES, PILLARS],
-  admin: [DISCOVER, MATCH, MANDATES, PIPELINE, PORTFOLIO, INVESTOR_MATCHES, REVIEW_SUBMISSIONS, SEARCH, MESSAGES, PILLARS],
+  admin: [DISCOVER, MATCH, SAVED, MANDATES, PIPELINE, PORTFOLIO, INVESTOR_MATCHES, REVIEW_SUBMISSIONS, SEARCH, MESSAGES, PILLARS],
 };
 
 type SidebarUser = { fullName: string; title: string | null; role?: string } | null;
