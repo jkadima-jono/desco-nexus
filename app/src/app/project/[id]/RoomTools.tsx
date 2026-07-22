@@ -109,8 +109,9 @@ export function TeaserGenerator({ listingId }: { listingId: string }) {
             {teaser}
           </pre>
           <div className="text-[10px] text-wgray mt-2">
-            Source: {source === "claude" ? "Claude API" : "offline template"} ·
-            AI draft — sponsor must verify before distribution.
+            {source === "claude"
+              ? "Source: Claude API · AI draft — sponsor must verify before distribution."
+              : "Source: offline template (no AI model — Claude API key not configured) · sponsor must verify before distribution."}
           </div>
         </>
       ) : (

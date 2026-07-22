@@ -23,6 +23,7 @@ model User {
   dataRoomAccess     DataRoomAccess[]
   documentDownloads  DocumentAccessLog[]
   meetingRequests    Meeting[]
+  aiGenerations      AiGenerationLog[]
 }
 
 model Organization {
@@ -185,6 +186,21 @@ model Meeting {
   confirmedSlot DateTime?
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @default(now()) @updatedAt
+}
+
+// Audit trail for AI-assisted content (Phase 8 "controls"). Loose
+// references (listingId/threadId, no FK) — same pattern as
+// MatchFeedback.mandateId — since a log entry should outlive the thing
+// it was generated for.
+model AiGenerationLog {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  kind      String   // teaser|message_draft
+  source    String   // claude|template — which path actually produced the content
+  listingId String?
+  threadId  String?
+  createdAt DateTime @default(now())
 }
 
 model Deal {

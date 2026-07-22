@@ -904,3 +904,66 @@ test("gov-mechanism classification validates the mechanism and requires a note",
   assert.equal(cleared.governmentBacked, false);
   assert.equal(cleared.govMechanism, null);
 });
+
+// ---------- Phase 8: AI features with controls ----------
+test("unauthenticated access to AI generation endpoints is rejected", async () => {
+  const teaserRes = await fetch(BASE + "/api/ai/teaser", {
+    method: "POST", headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ listingId: "comicordia-agri" }),
+  });
+  assert.equal(teaserRes.status, 401);
+  const draftRes = await fetch(BASE + "/api/ai/message-draft", {
+    method: "POST", headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ threadId: "anything" }),
+  });
+  assert.equal(draftRes.status, 401);
+});
+
+test("teaser generation is honestly labeled and logged for admin oversight", async () => {
+  const owner = await demoLogin("owner");
+  const res = await fetch(BASE + "/api/ai/teaser", {
+    method: "POST", headers: { cookie: owner, "Content-Type": "application/json" },
+    body: JSON.stringify({ listingId: "comicordia-agri" }),
+  });
+  assert.equal(res.status, 200);
+  const data = await res.json();
+  // No ANTHROPIC_API_KEY is configured in this environment, so this must
+  // honestly report the offline-template path, not silently claim "claude".
+  assert.equal(data.source, "template");
+  assert.ok(data.teaser.includes("offline template"), "the teaser text itself must not overclaim AI authorship when none ran");
+
+  const admin = await demoLogin("admin");
+  const usagePage = await (await fetch(BASE + "/admin/ai-usage", { headers: { cookie: admin } })).text();
+  assert.ok(usagePage.includes("Investment teaser"), "the generation must be logged for admin oversight");
+  assert.ok(usagePage.includes("owner@demo.invalid"), "the log must attribute the generation to the real user, not be anonymous");
+});
+
+test("message draft generates real content per-thread, honestly labeled, and is logged", async () => {
+  const thread = await prisma.thread.create({
+    data: { name: "AI Draft Test Sponsor", org: "AI Draft Test Sponsor", messages: { create: [{ sender: "them", text: "What is the diligence timeline?" }] } },
+  });
+  try {
+    const investor = await demoLogin("investor");
+    const res = await fetch(BASE + "/api/ai/message-draft", {
+      method: "POST", headers: { cookie: investor, "Content-Type": "application/json" },
+      body: JSON.stringify({ threadId: thread.id }),
+    });
+    assert.equal(res.status, 200);
+    const data = await res.json();
+    assert.equal(data.source, "template", "no ANTHROPIC_API_KEY is configured in this environment");
+    assert.ok(data.draft.length > 0);
+
+    const admin = await demoLogin("admin");
+    const usagePage = await (await fetch(BASE + "/admin/ai-usage", { headers: { cookie: admin } })).text();
+    assert.ok(usagePage.includes("Message draft"), "the message-draft generation must be logged");
+
+    const missingThread = await fetch(BASE + "/api/ai/message-draft", {
+      method: "POST", headers: { cookie: investor, "Content-Type": "application/json" },
+      body: JSON.stringify({ threadId: "does-not-exist" }),
+    });
+    assert.equal(missingThread.status, 404);
+  } finally {
+    await prisma.message.deleteMany({ where: { threadId: thread.id } });
+    await prisma.thread.delete({ where: { id: thread.id } });
+  }
+});
