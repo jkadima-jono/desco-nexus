@@ -724,3 +724,69 @@ test("meeting request → sponsor confirm cycle, with isolation and terminal-sta
   });
   assert.equal(doubleConfirm.status, 422);
 });
+
+// ---------- Deal pipeline visibility (cross-org leak fix) ----------
+// /deals and /deals/[id] previously showed every sponsor's pipeline to
+// any signed-in user regardless of role or org (owner names, next-step
+// notes, amounts, due dates, decision notes). These tests prove that's
+// closed: an unrelated org/role no longer sees another sponsor's deals,
+// while the sponsor, the engaged investor, and admin still can.
+test("/deals only shows deals the viewer's org owns or is personally engaged with", async () => {
+  const investor = await demoLogin("investor");
+  await fetch(BASE + "/api/match", {
+    method: "POST", headers: { cookie: investor, "Content-Type": "application/json" },
+    body: JSON.stringify({ listingId: "port-de-ndomba", action: "interested" }),
+  });
+  await fetch(BASE + "/api/match", {
+    method: "POST", headers: { cookie: investor, "Content-Type": "application/json" },
+    body: JSON.stringify({ listingId: "comicordia-agri", action: "interested" }),
+  });
+
+  // Comicordia's own owner must see their own deal but not port-de-ndomba's
+  // (a different org's listing).
+  const owner = await demoLogin("owner");
+  const ownerBoard = await (await fetch(BASE + "/deals", { headers: { cookie: owner } })).text();
+  assert.ok(ownerBoard.includes("Comicordia"), "the sponsor must still see their own deal");
+  assert.ok(!ownerBoard.includes("Port de Ndomba"), "a sponsor must not see another org's deal on the pipeline board");
+
+  // An advisor with zero engagement must see neither.
+  const advisor = await demoLogin("advisor");
+  const advisorBoard = await (await fetch(BASE + "/deals", { headers: { cookie: advisor } })).text();
+  assert.ok(!advisorBoard.includes("Port de Ndomba"), "an unrelated user must not see other sponsors' deals");
+  assert.ok(!advisorBoard.includes("Comicordia"), "an unrelated user must not see other sponsors' deals");
+
+  // The investor who actually engaged sees both of their own touched deals.
+  const investorBoard = await (await fetch(BASE + "/deals", { headers: { cookie: investor } })).text();
+  assert.ok(investorBoard.includes("Port de Ndomba"), "an investor must see deals for listings they've engaged with");
+  assert.ok(investorBoard.includes("Comicordia"), "an investor must see deals for listings they've engaged with");
+
+  // Admin remains unfiltered.
+  const admin = await demoLogin("admin");
+  const adminBoard = await (await fetch(BASE + "/deals", { headers: { cookie: admin } })).text();
+  assert.ok(adminBoard.includes("Port de Ndomba") && adminBoard.includes("Comicordia"), "admin must remain unfiltered");
+});
+
+test("/deals/[id] 404s for a user with no relation to the deal (not a leaky 403)", async () => {
+  const investor = await demoLogin("investor");
+  await fetch(BASE + "/api/match", {
+    method: "POST", headers: { cookie: investor, "Content-Type": "application/json" },
+    body: JSON.stringify({ listingId: "port-de-ndomba", action: "interested" }),
+  });
+
+  const admin = await demoLogin("admin");
+  const deal = await prismaDealLookup(admin, "port-de-ndomba");
+
+  const owner = await demoLogin("owner"); // Comicordia — does not own port-de-ndomba
+  const ownerRes = await fetch(BASE + "/deals/" + deal.id, { headers: { cookie: owner } });
+  assert.equal(ownerRes.status, 404, "a sponsor from an unrelated org must get 404, not see the deal");
+
+  const advisor = await demoLogin("advisor");
+  const advisorRes = await fetch(BASE + "/deals/" + deal.id, { headers: { cookie: advisor } });
+  assert.equal(advisorRes.status, 404, "a user with zero engagement must get 404");
+
+  const investorRes = await fetch(BASE + "/deals/" + deal.id, { headers: { cookie: investor } });
+  assert.equal(investorRes.status, 200, "the investor who actually engaged with this listing must be able to view it");
+
+  const adminRes = await fetch(BASE + "/deals/" + deal.id, { headers: { cookie: admin } });
+  assert.equal(adminRes.status, 200, "admin must always be able to view a deal");
+});

@@ -2,6 +2,7 @@ import { notFound, redirect } from "next/navigation";
 import Link from "next/link";
 import { prisma } from "@/lib/db";
 import { getSessionUser } from "@/lib/auth";
+import { canManageDeal } from "@/lib/authz";
 import { STAGE_PROBABILITY, STAGE_REQUIREMENTS, amountUsd, type Stage } from "@/lib/deals";
 import StageControl from "./StageControl";
 import DealMeta from "./DealMeta";
@@ -25,6 +26,17 @@ export default async function DealWorkspace({
     },
   });
   if (!deal) notFound();
+
+  // Same trust boundary as /deals: the sponsor's own org (or admin) always
+  // has access; anyone else needs a real engagement with this listing
+  // (recorded via MatchAction — save/interest/info-request/etc). 404, not
+  // 403, so an unrelated user can't tell a deal exists at all.
+  if (!canManageDeal(user, deal)) {
+    const engaged = await prisma.matchAction.findFirst({
+      where: { userId: user.id, listingId: deal.listingId },
+    });
+    if (!engaged) notFound();
+  }
 
   const history = JSON.parse(deal.history || "[]") as {
     from: string; to: string; by: string; reason: string | null; at: string;

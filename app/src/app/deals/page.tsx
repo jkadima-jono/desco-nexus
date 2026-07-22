@@ -5,6 +5,7 @@ import { getSessionUser } from "@/lib/auth";
 import { getLocale } from "@/lib/i18n-server";
 import { t } from "@/lib/i18n";
 import { STAGES } from "@/lib/deals";
+import type { Prisma, User } from "@prisma/client";
 
 export const dynamic = "force-dynamic";
 
@@ -28,11 +29,41 @@ const stageColor: Record<(typeof stages)[number], string> = {
 const daysIn = (since: Date) =>
   Math.max(0, Math.round((Date.now() - since.getTime()) / 86400_000));
 
+// This pipeline board previously showed every sponsor's deals to any
+// signed-in user regardless of role or org — a real cross-org data leak
+// (owner names, next-step notes, amounts, due dates). Scope what each
+// role can see:
+//   admin   — everything (correct today, unchanged)
+//   owner   — only deals for listings their own org owns
+//   investor/advisor — only deals for listings they've personally engaged
+//     with (derived from MatchAction, since Deal has no investorId — it's
+//     one row per listing, the sponsor's internal pipeline entry, not a
+//     per-investor engagement record)
+// "advisor" specifically has no real data-model link to specific deals
+// anywhere in the schema; reusing the investor-engagement query is a
+// deliberate, safe-by-default interim (see none-by-default fallback
+// below) rather than a confirmed product rule — flagging for follow-up.
+async function visibleDealsWhere(user: User): Promise<Prisma.DealWhereInput> {
+  if (user.role === "admin") return {};
+  if (user.role === "owner") {
+    if (!user.orgId) return { id: "__none__" };
+    return { listing: { orgId: user.orgId } };
+  }
+  const engaged = await prisma.matchAction.findMany({
+    where: { userId: user.id },
+    select: { listingId: true },
+    distinct: ["listingId"],
+  });
+  const listingIds = engaged.map((e) => e.listingId);
+  if (listingIds.length === 0) return { id: "__none__" };
+  return { listingId: { in: listingIds } };
+}
+
 export default async function Deals() {
   const user = await getSessionUser();
   if (!user) redirect("/login?next=/deals");
   const locale = await getLocale();
-  const deals = await prisma.deal.findMany({ orderBy: { createdAt: "asc" } });
+  const deals = await prisma.deal.findMany({ where: await visibleDealsWhere(user), orderBy: { createdAt: "asc" } });
   const totalM = deals.reduce(
     (a, d) => a + (parseInt(d.amount.replace(/[^0-9]/g, ""), 10) || 0),
     0
