@@ -108,7 +108,7 @@ export default async function ProjectDetail({
             <span className="text-white/60">
               {l.flag} {l.country} · {l.stage}
             </span>
-            <TrustBadges verified={l.verified} governmentBacked={l.governmentBacked} govMechanism={row.govMechanism} sponsor={l.org} stage={l.stage} />
+            <TrustBadges verified={l.verified} verifiedBy={row.verifiedBy} verifiedAt={row.verifiedAt ? row.verifiedAt.toISOString() : null} verificationNote={row.verificationNote} governmentBacked={l.governmentBacked} govMechanism={row.govMechanism} sponsor={l.org} stage={l.stage} />
             <span className="ml-auto"><SectorBadge sector={l.sector} size={34} /></span>
           </div>
           <div className="flex flex-col lg:flex-row items-start justify-between gap-6 lg:gap-8">

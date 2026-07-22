@@ -48,6 +48,10 @@ model Listing {
   irr              String
   summary          String
   verified         Boolean       @default(false)
+  verifiedBy       String?       // admin fullName — real reviewer, not a fabricated vendor
+  verifiedAt       DateTime?
+  verificationNote String        @default("") // evidence description recorded at verify/unverify time
+  verificationHistory String     @default("[]") // [{by,action,note,governmentBacked?,govMechanism?,at}]
   governmentBacked Boolean       @default(false)
   govMechanism     String?       // guarantee|concession|ppa|grant|letter|first-loss|tax|other
   matchScore       Int

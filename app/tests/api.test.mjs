@@ -2,8 +2,10 @@
 // Run: node --test tests/api.test.mjs
 import { test } from "node:test";
 import assert from "node:assert/strict";
+import { PrismaClient } from "@prisma/client";
 
 const BASE = process.env.BASE_URL ?? "http://localhost:3000";
+const prisma = new PrismaClient();
 
 async function demoLogin(persona) {
   const res = await fetch(BASE + "/api/auth/demo", {
@@ -160,6 +162,12 @@ test("stage transitions validated against a nonexistent deal", async () => {
 });
 
 test("investor match action auto-advances a deal through the pipeline forward-only", async () => {
+  // This test and the next drive a real Deal through a full forward
+  // pipeline (Saved -> Interested -> ... -> Passed or Withdrawn), so
+  // re-running the suite against the same dev.db without a reset finds
+  // the deal already terminal. Reset first so both tests are idempotent
+  // across repeated runs, not just within a single run.
+  await prisma.deal.deleteMany({ where: { listingId: "port-de-kasenga" } });
   const investor = await demoLogin("investor");
   await fetch(BASE + "/api/match", {
     method: "POST", headers: { cookie: investor, "Content-Type": "application/json" },
@@ -449,8 +457,14 @@ test("info_requested is a valid match action distinct from interested/pass/saved
     body: JSON.stringify({ listingId: "port-de-ndomba", action: "info_requested" }),
   });
   assert.equal(res.status, 200);
-  const data = await res.json();
-  assert.equal(data.dealCreated, false, "info_requested must not silently open a pipeline deal the way interested does");
+
+  // info_requested maps to its own pipeline stage (ACTION_STAGE in
+  // /api/match/route.ts), same as interested/saved/dataroom_requested —
+  // it opens/advances a deal, just into "Information Requested" rather
+  // than being coalesced into "Interested".
+  const admin = await demoLogin("admin");
+  const deal = await prismaDealLookup(admin, "port-de-ndomba");
+  assert.equal(deal.stage, "Information Requested", "info_requested must land the deal on its own distinct stage");
 });
 
 // ---------- Phase 3: saved opportunities & collections ----------
@@ -789,4 +803,104 @@ test("/deals/[id] 404s for a user with no relation to the deal (not a leaky 403)
 
   const adminRes = await fetch(BASE + "/deals/" + deal.id, { headers: { cookie: admin } });
   assert.equal(adminRes.status, 200, "admin must always be able to view a deal");
+});
+
+// ---------- Phase 7: verification workflow ----------
+test("unauthenticated and non-admin access to the verification workflow is rejected", async () => {
+  const unauthGet = await fetch(BASE + "/api/admin/listings/comicordia-agri/verification");
+  assert.equal(unauthGet.status, 401);
+  const unauthPatch = await fetch(BASE + "/api/admin/listings/comicordia-agri/verification", {
+    method: "PATCH", headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ action: "verify", note: "x" }),
+  });
+  assert.equal(unauthPatch.status, 401);
+
+  const owner = await demoLogin("owner"); // Comicordia's own sponsor — still not admin
+  const ownerRes = await fetch(BASE + "/api/admin/listings/comicordia-agri/verification", { headers: { cookie: owner } });
+  assert.equal(ownerRes.status, 403, "only admin may access the verification workflow, not even the listing's own sponsor");
+});
+
+test("verify and unverify require a note, and record real reviewer identity", async () => {
+  const admin = await demoLogin("admin");
+
+  const noNote = await fetch(BASE + "/api/admin/listings/comicordia-agri/verification", {
+    method: "PATCH", headers: { cookie: admin, "Content-Type": "application/json" },
+    body: JSON.stringify({ action: "verify" }),
+  });
+  assert.equal(noNote.status, 400, "verify without a note must be rejected");
+
+  const verifyRes = await fetch(BASE + "/api/admin/listings/comicordia-agri/verification", {
+    method: "PATCH", headers: { cookie: admin, "Content-Type": "application/json" },
+    body: JSON.stringify({ action: "verify", note: "Reviewed registry extract" }),
+  });
+  assert.equal(verifyRes.status, 200);
+  const { listing } = await verifyRes.json();
+  assert.equal(listing.verified, true);
+  assert.equal(listing.verifiedBy, "Demo Administrator");
+  assert.equal(listing.verificationNote, "Reviewed registry extract");
+  assert.ok(listing.verifiedAt);
+
+  // History is append-only and accumulates across runs against the same
+  // dev.db, so assert on the newest entry, not an absolute length.
+  const getRes = await fetch(BASE + "/api/admin/listings/comicordia-agri/verification", { headers: { cookie: admin } });
+  const state = await getRes.json();
+  const historyLenAfterVerify = state.history.length;
+  const lastAfterVerify = state.history[historyLenAfterVerify - 1];
+  assert.equal(lastAfterVerify.action, "verified");
+  assert.equal(lastAfterVerify.by, "Demo Administrator");
+
+  const unverifyNoNote = await fetch(BASE + "/api/admin/listings/comicordia-agri/verification", {
+    method: "PATCH", headers: { cookie: admin, "Content-Type": "application/json" },
+    body: JSON.stringify({ action: "unverify" }),
+  });
+  assert.equal(unverifyNoNote.status, 400, "unverify without a reason must be rejected");
+
+  const unverifyRes = await fetch(BASE + "/api/admin/listings/comicordia-agri/verification", {
+    method: "PATCH", headers: { cookie: admin, "Content-Type": "application/json" },
+    body: JSON.stringify({ action: "unverify", note: "Registry extract expired, re-review needed" }),
+  });
+  assert.equal(unverifyRes.status, 200);
+  const { listing: unverified } = await unverifyRes.json();
+  assert.equal(unverified.verified, false);
+  assert.equal(unverified.verifiedBy, null, "unverify must clear the reviewer attribution, not leave a stale claim");
+
+  const finalState = await (await fetch(BASE + "/api/admin/listings/comicordia-agri/verification", { headers: { cookie: admin } })).json();
+  assert.equal(finalState.history.length, historyLenAfterVerify + 1, "unverify must append exactly one new history entry");
+  assert.equal(finalState.history[finalState.history.length - 1].action, "unverified");
+});
+
+test("gov-mechanism classification validates the mechanism and requires a note", async () => {
+  const admin = await demoLogin("admin");
+
+  const invalidMechanism = await fetch(BASE + "/api/admin/listings/comicordia-agri/verification", {
+    method: "PATCH", headers: { cookie: admin, "Content-Type": "application/json" },
+    body: JSON.stringify({ action: "set_gov_mechanism", governmentBacked: true, govMechanism: "not-a-real-mechanism", note: "x" }),
+  });
+  assert.equal(invalidMechanism.status, 400);
+
+  const noNote = await fetch(BASE + "/api/admin/listings/comicordia-agri/verification", {
+    method: "PATCH", headers: { cookie: admin, "Content-Type": "application/json" },
+    body: JSON.stringify({ action: "set_gov_mechanism", governmentBacked: true, govMechanism: "guarantee" }),
+  });
+  assert.equal(noNote.status, 400);
+
+  const res = await fetch(BASE + "/api/admin/listings/comicordia-agri/verification", {
+    method: "PATCH", headers: { cookie: admin, "Content-Type": "application/json" },
+    body: JSON.stringify({ action: "set_gov_mechanism", governmentBacked: true, govMechanism: "guarantee", note: "Reviewed executed guarantee instrument" }),
+  });
+  assert.equal(res.status, 200);
+  const { listing } = await res.json();
+  assert.equal(listing.governmentBacked, true);
+  assert.equal(listing.govMechanism, "guarantee");
+
+  // Turning governmentBacked off must clear the mechanism rather than
+  // leaving a dangling classification.
+  const clearRes = await fetch(BASE + "/api/admin/listings/comicordia-agri/verification", {
+    method: "PATCH", headers: { cookie: admin, "Content-Type": "application/json" },
+    body: JSON.stringify({ action: "set_gov_mechanism", governmentBacked: false, note: "Support instrument lapsed" }),
+  });
+  assert.equal(clearRes.status, 200);
+  const { listing: cleared } = await clearRes.json();
+  assert.equal(cleared.governmentBacked, false);
+  assert.equal(cleared.govMechanism, null);
 });
