@@ -103,7 +103,7 @@ export default function MatchFlow({ queue }: { queue: Listing[] }) {
               </div>
               <div className="text-[11px] text-wgray">
                 {current.irr} · {current.stage}
-                {current.governmentBacked && " · ◆ Gov-backed"}
+                {current.governmentBacked && " · ◆ Government involvement"}
               </div>
             </div>
 

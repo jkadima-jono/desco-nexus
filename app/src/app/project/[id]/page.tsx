@@ -143,7 +143,8 @@ export default async function ProjectDetail({
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-6 lg:py-8 grid gap-6 lg:grid-cols-3">
         <div className="lg:col-span-2 space-y-6">
           <section className="bg-white rounded-2xl p-6 shadow-[0_1px_3px_rgb(44_62_80/0.08)]">
-            <h2 className="font-display font-bold text-lg mb-4">{t(locale, "project.highlights")}</h2>
+            <h2 className="font-display font-bold text-lg mb-1">{t(locale, "project.highlights")}</h2>
+            <p className="text-xs text-wgray mb-4">Sponsor-provided figures, not independently verified unless stated otherwise.</p>
             <ul className="space-y-2.5">
               {l.highlights.map((h) => (
                 <li key={h} className="flex items-center gap-3 text-sm">
@@ -151,7 +152,7 @@ export default async function ProjectDetail({
                     className="w-6 h-6 rounded-full flex items-center justify-center text-white text-xs shrink-0"
                     style={{ background: l.sectorColor }}
                   >
-                    ✓
+                    ▸
                   </span>
                   {h}
                 </li>

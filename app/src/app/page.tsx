@@ -13,12 +13,12 @@ import type { Metadata } from "next";
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
-  title: "DESCO Nexus — Connecting investment capital with structured opportunities",
+  title: "DESCO Nexus — Connecting investment capital with structured project opportunities",
   description:
-    "DESCO Nexus helps investors discover investment-ready opportunities and helps project sponsors prepare, present, and manage investment processes across Desco Global's four pillars in the DRC.",
+    "DESCO Nexus helps investors review structured project opportunities and helps sponsors prepare information, manage access, and coordinate due diligence across Desco Global's four pillars in the DRC.",
   alternates: { canonical: "/" },
   openGraph: {
-    title: "DESCO Nexus — Connecting investment capital with structured opportunities",
+    title: "DESCO Nexus — Connecting investment capital with structured project opportunities",
     description: "A Desco Global platform for investors, project sponsors, and advisors.",
     url: "/",
     type: "website",
@@ -28,28 +28,33 @@ export const metadata: Metadata = {
 const FILTERS = ["for-you", "trending", "new", "gov", "esg", "close"] as const;
 const CONFIDENCE_RANK: Record<string, number> = { high: 3, medium: 2, low: 1, excluded: 0 };
 
+// Final role-specific CTA (section 7). Governments/advisors route to
+// /contact since neither has a dedicated workflow yet — that's a real,
+// disclosed limitation, not hidden behind a generic "Get in touch".
 const AUDIENCE_PATHS = [
-  { title: "Investors", body: "Define a mandate, review transparent matches, and request data-room access when a project fits.", href: "/mandates", cta: "Create a mandate" },
-  { title: "Project owners", body: "Present your project to qualified capital with a structured, verifiable listing.", href: "/submit-project", cta: "Submit a project" },
-  { title: "Governments & agencies", body: "Promote verified regional projects and track investor engagement.", href: "/contact", cta: "Request a consultation" },
-  { title: "Advisors", body: "Support clients through discovery, matching, and due diligence in one workspace.", href: "/contact", cta: "Get in touch" },
+  { title: "Investors", body: "Define a mandate, review transparent matches, and request data-room access when a project fits.", href: "/mandates", cta: "Create an investor mandate" },
+  { title: "Project owners", body: "Present your project with a structured listing sponsors and DESCO can both review.", href: "/submit-project", cta: "Submit a project" },
+  { title: "Governments & agencies", body: "Discuss listing regional projects and reviewing investor engagement with DESCO directly.", href: "/contact", cta: "Request a DESCO consultation" },
+  { title: "Advisors", body: "Discuss supporting clients through discovery, matching, and due diligence with DESCO directly.", href: "/contact", cta: "Contact DESCO" },
 ];
 
 const HOW_IT_WORKS = [
-  { step: "1", title: "Create and verify a profile", body: "Investors and sponsors register and go through identity and organization verification." },
-  { step: "2", title: "Define a mandate or submit a project", body: "Investors set sector, geography, ticket size, and risk criteria. Sponsors submit project details for review." },
-  { step: "3", title: "Review transparent matches", body: "Nexus compares mandate criteria against listings and shows exactly which criteria were met." },
-  { step: "4", title: "Request information or data-room access", body: "Investors request further detail or permissioned access to project documents." },
-  { step: "5", title: "Manage due diligence and transaction activity", body: "Track stage progress, messages, and documents through to close." },
+  { step: "1", title: "Create a profile", body: "Investors and sponsors register. This demonstration uses fictional demo accounts, not verified identities — see Trust controls below." },
+  { step: "2", title: "Define a mandate or submit a project", body: "Investors set sector, geography, ticket size, and risk criteria. Sponsors submit project details for DESCO review." },
+  { step: "3", title: "Review transparent matches", body: "Nexus compares mandate criteria against listings with a deterministic rule set and shows exactly which criteria were met." },
+  { step: "4", title: "Request information or data-room access", body: "Investors request further detail or permissioned access to project documents; sponsors grant or revoke access." },
+  { step: "5", title: "Track the process to a decision", body: "Stage progress, messages, and documents are tracked through to an investment decision. Executing the transaction itself happens off-platform." },
 ];
 
+// Every claim here is checked against what the code actually does — see
+// /legal#verification for the full methodology and each control's status.
 const TRUST_POINTS = [
-  { title: "Identity verification", body: "Individual users are identity-checked before gaining platform access." },
-  { title: "Organization verification", body: "Sponsor and investor organizations are checked against registration records." },
-  { title: "Project-information review", body: "Listings are reviewed for completeness and internal consistency before publication." },
-  { title: "Permission-controlled data rooms", body: "Confidential documents require an authenticated session and explicit access." },
-  { title: "Audit activity", body: "Material actions on a listing or deal are recorded with who, what, and when." },
-  { title: "Human review", body: "A person reviews flagged content; verification is not fully automated." },
+  { title: "Identity & organization checks", status: "Planned for production", body: "Production access is intended to include identity and organization checks. This demonstration uses fictional accounts and does not perform identity verification." },
+  { title: "Project-information review", status: "Active in this demonstration", body: "A DESCO admin reviews submitted project information for completeness before a listing is published." },
+  { title: "Listing verification badge", status: "Active in this demonstration", body: "A \"Verified\" badge means a DESCO admin recorded reviewing specific stated evidence — never an independent third-party check, since none is connected." },
+  { title: "Permission-controlled data rooms", status: "Active in this demonstration", body: "Confidential documents require an authenticated session and an explicit, revocable grant from the sponsor." },
+  { title: "Audit activity", status: "Active in this demonstration", body: "Stage changes, verification decisions, and document downloads are logged with who, what, and when." },
+  { title: "AML / KYC, securities-law, SOC 2, GDPR", status: "Requires legal, compliance & external providers", body: "This platform does not claim compliance with any of these. That work requires DESCO's legal/compliance teams and, in most cases, a third-party provider Nexus does not yet integrate." },
 ];
 
 export default async function Discover({ searchParams }: { searchParams: Promise<{ filter?: string }> }) {
@@ -94,98 +99,49 @@ export default async function Discover({ searchParams }: { searchParams: Promise
   return (
     <>
       {!user && (
-        <>
-          {/* Hero */}
-          <section className="bg-ink text-white">
-            <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-14 lg:py-20">
-              <p className="text-gold font-bold text-xs uppercase tracking-[0.2em] mb-4">A Desco Global platform</p>
-              <h1 className="font-display font-extrabold text-3xl lg:text-5xl tracking-tight max-w-3xl leading-[1.1]">
-                Connecting investment capital with structured opportunities.
-              </h1>
-              <p className="text-white/70 text-base lg:text-lg mt-5 max-w-2xl leading-relaxed">
-                DESCO Nexus helps investors discover investment-ready
-                opportunities across Desco Global&rsquo;s four pillars in the
-                DRC, and helps project sponsors prepare, present, and manage
-                their investment process — from first listing to closing.
-              </p>
-              <div className="flex flex-wrap gap-3 mt-8">
-                <Link href="#opportunities" className="bg-gold text-ink font-display font-bold text-sm px-5 py-3 rounded-xl hover:brightness-110">
-                  Explore opportunities
-                </Link>
-                <Link href="/submit-project" className="border border-white/25 text-white font-display font-semibold text-sm px-5 py-3 rounded-xl hover:bg-white/10">
-                  Submit a project
-                </Link>
-              </div>
-              <div className="flex flex-wrap gap-x-6 gap-y-2 mt-5 text-sm">
-                <Link href="/mandates" className="text-white/70 underline decoration-white/30 hover:text-gold hover:decoration-gold">
-                  Create an investor mandate
-                </Link>
-                <Link href="/contact" className="text-white/70 underline decoration-white/30 hover:text-gold hover:decoration-gold">
-                  Request a DESCO consultation
-                </Link>
-              </div>
+        /* 1. Hero — two primary journeys (Explore opportunities, Submit a
+           project), two secondary (Create a mandate, Request a consultation). */
+        <section className="bg-ink text-white">
+          <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-14 lg:py-20">
+            <p className="text-gold font-bold text-xs uppercase tracking-[0.2em] mb-4">A Desco Global platform</p>
+            <h1 className="font-display font-extrabold text-3xl lg:text-5xl tracking-tight max-w-3xl leading-[1.1]">
+              Connecting investment capital with structured project opportunities.
+            </h1>
+            <p className="text-white/70 text-base lg:text-lg mt-5 max-w-2xl leading-relaxed">
+              DESCO Nexus helps investors review structured project opportunities
+              across Desco Global&rsquo;s four pillars in the DRC, and helps
+              sponsors prepare information, manage access, and coordinate due
+              diligence.
+            </p>
+            <div className="flex flex-wrap gap-3 mt-8">
+              <Link href="#opportunities" className="bg-gold text-ink font-display font-bold text-sm px-5 py-3 rounded-xl hover:brightness-110">
+                Explore opportunities
+              </Link>
+              <Link href="/submit-project" className="border border-white/25 text-white font-display font-semibold text-sm px-5 py-3 rounded-xl hover:bg-white/10">
+                Submit a project
+              </Link>
             </div>
-          </section>
-
-          {/* Audience paths */}
-          <section className="py-14 lg:py-16">
-            <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-              <h2 className="font-display font-bold text-xl mb-6">Who Nexus is for</h2>
-              <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
-                {AUDIENCE_PATHS.map((a) => (
-                  <div key={a.title} className="border border-charcoal/10 rounded-2xl p-5">
-                    <h3 className="font-display font-bold text-sm">{a.title}</h3>
-                    <p className="text-xs text-wgray mt-2 leading-relaxed">{a.body}</p>
-                    <Link href={a.href} className="inline-flex mt-4 text-xs font-bold text-gold hover:underline">
-                      {a.cta} →
-                    </Link>
-                  </div>
-                ))}
-              </div>
+            <div className="flex flex-wrap gap-x-6 gap-y-2 mt-5 text-sm">
+              <Link href="/mandates" className="text-white/70 underline decoration-white/30 hover:text-gold hover:decoration-gold">
+                Create an investor mandate
+              </Link>
+              <Link href="/contact" className="text-white/70 underline decoration-white/30 hover:text-gold hover:decoration-gold">
+                Request a DESCO consultation
+              </Link>
             </div>
-          </section>
-
-          {/* How it works */}
-          <section id="how-it-works" className="bg-mist py-14 lg:py-16">
-            <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-              <h2 className="font-display font-bold text-xl mb-6">How it works</h2>
-              <ol className="grid gap-5 sm:grid-cols-2 lg:grid-cols-5">
-                {HOW_IT_WORKS.map((s) => (
-                  <li key={s.step}>
-                    <div className="w-8 h-8 rounded-full bg-charcoal text-white font-display font-bold text-sm flex items-center justify-center mb-3">
-                      {s.step}
-                    </div>
-                    <h3 className="font-display font-bold text-sm">{s.title}</h3>
-                    <p className="text-xs text-wgray mt-1.5 leading-relaxed">{s.body}</p>
-                  </li>
-                ))}
-              </ol>
-            </div>
-          </section>
-
-          {/* Trust section */}
-          <section id="trust" className="py-14 lg:py-16">
-            <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-              <h2 className="font-display font-bold text-xl mb-2">Trust &amp; verification</h2>
-              <p className="text-sm text-wgray max-w-2xl mb-6">
-                Verification reduces specific risks — it does not guarantee investment
-                performance. Read the full <Link href="/legal#verification" className="text-gold font-semibold hover:underline">verification methodology</Link>.
-              </p>
-              <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-                {TRUST_POINTS.map((p) => (
-                  <div key={p.title} className="border-l-2 border-gold pl-4">
-                    <h3 className="font-display font-bold text-sm">{p.title}</h3>
-                    <p className="text-xs text-wgray mt-1.5 leading-relaxed">{p.body}</p>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </section>
-        </>
+            <p className="text-white/40 text-xs mt-6 max-w-2xl leading-relaxed">
+              This is a demonstration environment. Accounts and transactions are
+              fictional. Projects may reference real DESCO initiatives, but
+              nothing shown is automatically a public securities offer.
+            </p>
+          </div>
+        </section>
       )}
 
+      {/* 2. Platform-status and evidence strip — real counts, no vanity metrics. */}
       <ProofBar />
 
+      {/* 3. Selected opportunities */}
       <div id="opportunities" className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-6 lg:py-8">
         <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-3 mb-2">
           <div>
@@ -256,10 +212,33 @@ export default async function Discover({ searchParams }: { searchParams: Promise
 
       {!user && (
         <>
-          {/* Pillars teaser */}
-          <section className="bg-mist py-14 lg:py-16">
+          {/* 4. How the process works */}
+          <section id="how-it-works" className="bg-mist py-14 lg:py-16">
             <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-              <h2 className="font-display font-bold text-xl mb-6">Desco Global&rsquo;s four pillars</h2>
+              <h2 className="font-display font-bold text-xl mb-6">How it works</h2>
+              <ol className="grid gap-5 sm:grid-cols-2 lg:grid-cols-5">
+                {HOW_IT_WORKS.map((s) => (
+                  <li key={s.step}>
+                    <div className="w-8 h-8 rounded-full bg-charcoal text-white font-display font-bold text-sm flex items-center justify-center mb-3">
+                      {s.step}
+                    </div>
+                    <h3 className="font-display font-bold text-sm">{s.title}</h3>
+                    <p className="text-xs text-wgray mt-1.5 leading-relaxed">{s.body}</p>
+                  </li>
+                ))}
+              </ol>
+            </div>
+          </section>
+
+          {/* 5. DESCO's role and operating pillars */}
+          <section className="py-14 lg:py-16">
+            <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+              <h2 className="font-display font-bold text-xl mb-2">Desco Global&rsquo;s four pillars</h2>
+              <p className="text-sm text-wgray max-w-2xl mb-6">
+                Desco Global is the operating group behind these pillars; DESCO Nexus is
+                its investment platform. Sponsors listed on Nexus operate under or
+                alongside these pillars, not as DESCO Global itself.
+              </p>
               <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
                 {PILLARS.map((p) => (
                   <Link key={p.slug} href={"/pillars/" + p.slug} className="bg-white rounded-2xl p-5 border border-charcoal/10 hover:border-gold/50 transition-colors">
@@ -272,23 +251,41 @@ export default async function Discover({ searchParams }: { searchParams: Promise
             </div>
           </section>
 
-          {/* Conversion section */}
+          {/* 6. Trust controls and their limitations */}
+          <section id="trust" className="bg-mist py-14 lg:py-16">
+            <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+              <h2 className="font-display font-bold text-xl mb-2">Trust controls</h2>
+              <p className="text-sm text-wgray max-w-2xl mb-6">
+                Each control below is labeled with what it actually does today, not what
+                a production version might eventually do. None of this guarantees
+                investment performance. Read the full <Link href="/legal#verification" className="text-gold font-semibold hover:underline">verification methodology</Link>.
+              </p>
+              <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+                {TRUST_POINTS.map((p) => (
+                  <div key={p.title} className="border-l-2 border-gold pl-4">
+                    <h3 className="font-display font-bold text-sm">{p.title}</h3>
+                    <div className="text-[10px] font-bold uppercase tracking-wider text-gold mt-1">{p.status}</div>
+                    <p className="text-xs text-wgray mt-1.5 leading-relaxed">{p.body}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </section>
+
+          {/* 7. Final role-specific action */}
           <section className="bg-ink text-white py-14 lg:py-16">
-            <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 grid gap-6 sm:grid-cols-3 text-center">
-              <div>
-                <h3 className="font-display font-bold text-sm mb-2">Investors</h3>
-                <p className="text-xs text-white/60 mb-4">Set your criteria once, get evidence-based matches.</p>
-                <Link href="/mandates" className="inline-flex bg-gold text-ink font-display font-bold text-sm px-4 py-2.5 rounded-xl hover:brightness-110">Create a mandate</Link>
-              </div>
-              <div>
-                <h3 className="font-display font-bold text-sm mb-2">Project owners</h3>
-                <p className="text-xs text-white/60 mb-4">Present your project to qualified capital.</p>
-                <Link href="/submit-project" className="inline-flex border border-white/25 text-white font-display font-semibold text-sm px-4 py-2.5 rounded-xl hover:bg-white/10">Submit a project</Link>
-              </div>
-              <div>
-                <h3 className="font-display font-bold text-sm mb-2">Institutions</h3>
-                <p className="text-xs text-white/60 mb-4">Multi-seat access, workflow approvals, reporting.</p>
-                <Link href="/contact" className="inline-flex border border-white/25 text-white font-display font-semibold text-sm px-4 py-2.5 rounded-xl hover:bg-white/10">Discuss enterprise access</Link>
+            <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+              <h2 className="font-display font-bold text-xl mb-6">Take the next step</h2>
+              <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+                {AUDIENCE_PATHS.map((a) => (
+                  <div key={a.title}>
+                    <h3 className="font-display font-bold text-sm mb-2">{a.title}</h3>
+                    <p className="text-xs text-white/60 mb-4 leading-relaxed">{a.body}</p>
+                    <Link href={a.href} className="inline-flex text-sm font-bold text-gold hover:underline">
+                      {a.cta} →
+                    </Link>
+                  </div>
+                ))}
               </div>
             </div>
           </section>

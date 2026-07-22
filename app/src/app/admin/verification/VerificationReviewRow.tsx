@@ -66,8 +66,8 @@ export default function VerificationReviewRow({ listing }: { listing: Listing })
 
       <div className="text-xs text-wgray mt-2">
         {listing.governmentBacked
-          ? "Gov-backed: " + (MECHANISM_LABELS[listing.govMechanism ?? ""] ?? listing.govMechanism)
-          : "Not marked government-backed"}
+          ? "Government involvement: " + (MECHANISM_LABELS[listing.govMechanism ?? ""] ?? listing.govMechanism)
+          : "No government involvement recorded"}
       </div>
 
       {error && <div role="alert" className="text-xs text-brandred bg-brandred/10 rounded-lg px-3 py-2 mt-3">{error}</div>}
@@ -105,7 +105,7 @@ export default function VerificationReviewRow({ listing }: { listing: Listing })
           </button>
         )}
         <button disabled={busy} onClick={() => setGovOpen((o) => !o)} className="px-3 py-1.5 rounded-lg bg-mist hover:bg-gold-soft disabled:opacity-50">
-          {govOpen ? "Hide" : "Gov-backing classification"}
+          {govOpen ? "Hide" : "Government involvement classification"}
         </button>
       </div>
 
@@ -113,7 +113,7 @@ export default function VerificationReviewRow({ listing }: { listing: Listing })
         <div className="mt-3 space-y-2 border-t border-charcoal/10 pt-3">
           <label className="flex items-center gap-2 text-xs font-semibold">
             <input type="checkbox" checked={govBacked} onChange={(e) => setGovBacked(e.target.checked)} />
-            Government-backed
+            Government involvement
           </label>
           {govBacked && (
             <select

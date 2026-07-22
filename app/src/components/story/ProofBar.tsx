@@ -1,24 +1,27 @@
 import { prisma } from "@/lib/db";
-import StatCounter from "./StatCounter";
-import Reveal from "./Reveal";
 
-// Real aggregate metrics only — never hardcoded, per docs/10 §11.
+// Real aggregate metrics only, never hardcoded. Limited to figures that
+// stay meaningful regardless of current platform usage (opportunity count,
+// capital sought) rather than user-count metrics that read as thin at
+// this stage (e.g. "1 registered investor") and would overstate traction.
 export default async function ProofBar() {
-  const [listingCount, investorCount, closedDeals, totalRaise] = await Promise.all([
+  const [listingCount, totalRaise] = await Promise.all([
     prisma.listing.count(),
-    prisma.user.count({ where: { role: "investor" } }),
-    prisma.deal.count({ where: { stage: "Term Sheet" } }),
     prisma.listing.aggregate({ _sum: { raiseUsd: true } }),
   ]);
   const totalRaiseM = Math.round((totalRaise._sum.raiseUsd ?? 0) / 1_000_000);
 
   return (
     <div className="bg-charcoal text-white py-8">
-      <div className="max-w-4xl mx-auto px-6 grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
-        <Reveal><StatCounter value={listingCount} label="Live opportunities" onDark /></Reveal>
-        <Reveal delay={80}><StatCounter value={investorCount} label="Registered investors" onDark /></Reveal>
-        <Reveal delay={160}><StatCounter value={closedDeals} label="Deals in closing" onDark /></Reveal>
-        <Reveal delay={240}><StatCounter value={totalRaiseM} suffix="M" label="Total capital sought ($)" onDark /></Reveal>
+      <div className="max-w-4xl mx-auto px-6 grid grid-cols-2 gap-6 text-center">
+        <div>
+          <div className="font-display font-extrabold text-4xl lg:text-5xl tracking-tight text-white">{listingCount}</div>
+          <div className="text-xs lg:text-sm mt-1 uppercase tracking-wider font-bold text-white/60">Live opportunities</div>
+        </div>
+        <div>
+          <div className="font-display font-extrabold text-4xl lg:text-5xl tracking-tight text-white">${totalRaiseM}M</div>
+          <div className="text-xs lg:text-sm mt-1 uppercase tracking-wider font-bold text-white/60">Total capital sought</div>
+        </div>
       </div>
     </div>
   );

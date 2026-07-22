@@ -51,9 +51,9 @@ export default function TrustBadges({
   }
   if (governmentBacked) {
     claims.push({
-      label: "◆ Gov-backed",
+      label: "◆ Government involvement",
       claim:
-        "Government support: " +
+        "Type of involvement: " +
         (MECHANISM_LABELS[govMechanism ?? ""] ?? "mechanism not specified"),
       verificationType: "Support-mechanism classification",
       source: "Sponsor-declared in listing (demo data)",
