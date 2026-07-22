@@ -18,6 +18,8 @@ import Link from "next/link";
 import { computeMatchExplanation, parseJsonArray, type MandateCriteria } from "@/lib/matching";
 import MatchFeedback from "./MatchFeedback";
 import RequestInfoButton from "./RequestInfoButton";
+import DataRoomAccessPanel from "./DataRoomAccessPanel";
+import { hasDataRoomAccess } from "@/lib/dataroom";
 import type { Metadata } from "next";
 
 export const dynamic = "force-dynamic";
@@ -62,6 +64,7 @@ export default async function ProjectDetail({
   const l = { ...full, docs: [], whyMatch: "" };
   const whyMatch = user ? full.whyMatch : "";
   const docs = row.docs;
+  const roomAccess = await hasDataRoomAccess(user, row);
 
   const folders = [...new Set(docs.map((d) => d.folder))];
 
@@ -168,7 +171,7 @@ export default async function ProjectDetail({
                 {t(locale, "project.roomBadge")}
               </span>
             </div>
-            {user ? folders.map((f) => (
+            {roomAccess ? folders.map((f) => (
               <div key={f} className="mb-3">
                 <div className="text-[11px] font-bold text-wgray uppercase tracking-wider mb-1.5">
                   {f}
@@ -192,12 +195,18 @@ export default async function ProjectDetail({
                     </a>
                   ))}
               </div>
-            )) : (
+            )) : user ? (
+              <div className="rounded-xl bg-mist p-5 text-sm text-wgray">
+                Confidential filenames and documents are hidden until the sponsor grants
+                data-room access. Use &ldquo;{t(locale, "project.requestRoom")}&rdquo; above if you haven&apos;t already.
+              </div>
+            ) : (
               <div className="rounded-xl bg-mist p-5 text-sm text-wgray">
                 Confidential filenames and documents are hidden. <Link href={`/login?next=/project/${l.id}`} className="font-bold text-gold">Sign in to request access.</Link>
               </div>
             )}
             {canManageListing && <UploadDoc listingId={l.id} />}
+            {canManageListing && <DataRoomAccessPanel listingId={l.id} />}
           </section>
 
           {user && <Comments listingId={l.id} />}

@@ -20,6 +20,8 @@ model User {
   submissions  ProjectSubmission[]
   collections  Collection[]
   savedOpportunities SavedOpportunity[]
+  dataRoomAccess     DataRoomAccess[]
+  documentDownloads  DocumentAccessLog[]
 }
 
 model Organization {
@@ -59,6 +61,7 @@ model Listing {
   matchFeedback    MatchFeedback[]
   deals            Deal[]
   savedBy          SavedOpportunity[]
+  dataRoomAccess   DataRoomAccess[]
   createdAt        DateTime      @default(now())
   updatedAt        DateTime      @default(now()) @updatedAt
 }
@@ -72,6 +75,37 @@ model Document {
   folder     String
   storageKey String?
   mime       String?
+  accessLogs DocumentAccessLog[]
+}
+
+// Explicit per-investor data-room grant (Phase 5). Deliberately separate
+// from Deal.stage: a Deal is one row per listing (the sponsor's internal
+// pipeline entry) and cannot represent per-investor authorization. This
+// table is the actual security boundary for confidential documents; the
+// "Data-Room Requested"/"Data-Room Granted" Deal stages remain a coarse
+// pipeline/forecast signal, unchanged by this table.
+model DataRoomAccess {
+  id        String    @id @default(cuid())
+  listingId String
+  listing   Listing   @relation(fields: [listingId], references: [id])
+  userId    String
+  user      User      @relation(fields: [userId], references: [id])
+  grantedBy String    // fullName of the sponsor/admin who granted access
+  createdAt DateTime  @default(now())
+  revokedAt DateTime?
+
+  @@unique([listingId, userId])
+}
+
+// Audit trail of confidential document downloads — who accessed what and
+// when, visible to the listing's sponsor/admin via the data-room panel.
+model DocumentAccessLog {
+  id         String   @id @default(cuid())
+  documentId String
+  document   Document @relation(fields: [documentId], references: [id])
+  userId     String
+  user       User     @relation(fields: [userId], references: [id])
+  createdAt  DateTime @default(now())
 }
 
 model MatchAction {

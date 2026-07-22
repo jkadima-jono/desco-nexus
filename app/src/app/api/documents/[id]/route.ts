@@ -3,6 +3,8 @@ import { readFile } from "fs/promises";
 import path from "path";
 import { prisma } from "@/lib/db";
 import { getSessionUser } from "@/lib/auth";
+import { hasDataRoomAccess } from "@/lib/dataroom";
+import { forbidden } from "@/lib/authz";
 
 const UPLOAD_DIR = path.join(process.cwd(), "uploads");
 
@@ -15,9 +17,16 @@ export async function GET(
     return NextResponse.json({ error: "Sign in required" }, { status: 401 });
   }
   const { id } = await params;
-  const doc = await prisma.document.findUnique({ where: { id } });
+  const doc = await prisma.document.findUnique({ where: { id }, include: { listing: true } });
   if (!doc) {
     return NextResponse.json({ error: "Document not found" }, { status: 404 });
+  }
+  // Being signed in is not enough — confidential documents require the
+  // listing's own org, admin, or an explicit DataRoomAccess grant. This
+  // replaces a prior gap where any authenticated user could download any
+  // listing's confidential documents.
+  if (!(await hasDataRoomAccess(user, doc.listing))) {
+    return forbidden();
   }
   if (!doc.storageKey) {
     return NextResponse.json(
@@ -32,6 +41,7 @@ export async function GET(
   }
   try {
     const data = await readFile(filePath);
+    await prisma.documentAccessLog.create({ data: { documentId: doc.id, userId: user.id } });
     return new NextResponse(data, {
       headers: {
         "Content-Type": doc.mime ?? "application/octet-stream",

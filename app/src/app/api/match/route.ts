@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
 import { getSessionUser } from "@/lib/auth";
 import { STAGES, type Stage } from "@/lib/deals";
+import { canRequestDataRoom, forbidden } from "@/lib/authz";
 
 const ACTIONS = new Set(["interested", "pass", "saved", "follow", "info_requested", "dataroom_requested"]);
 
@@ -34,6 +35,10 @@ export async function POST(req: Request) {
       { error: "listingId and action (interested|pass|saved|follow|info_requested|dataroom_requested) required" },
       { status: 400 }
     );
+  }
+
+  if (action === "dataroom_requested" && !canRequestDataRoom(user)) {
+    return forbidden();
   }
 
   const listing = await prisma.listing.findUnique({ where: { id: listingId } });

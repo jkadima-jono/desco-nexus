@@ -576,3 +576,83 @@ test("deleting a collection un-groups its saved items instead of deleting them",
 
   await fetch(BASE + "/api/saved/" + entry.id, { method: "DELETE", headers: { cookie: investor } });
 });
+
+// ---------- Phase 5: secure data rooms ----------
+test("unauthenticated access to data-room endpoints is rejected", async () => {
+  const cases = [
+    ["GET", "/api/listings/comicordia-agri/dataroom"],
+    ["POST", "/api/listings/comicordia-agri/dataroom", { userId: "x" }],
+    ["DELETE", "/api/listings/comicordia-agri/dataroom?userId=x"],
+    ["GET", "/api/listings/comicordia-agri/dataroom/log"],
+    ["GET", "/api/documents/anything"],
+  ];
+  for (const [method, path, body] of cases) {
+    const res = await fetch(BASE + path, {
+      method,
+      headers: body ? { "Content-Type": "application/json" } : undefined,
+      body: body ? JSON.stringify(body) : undefined,
+    });
+    assert.equal(res.status, 401, method + " " + path + " must require auth");
+  }
+});
+
+test("only the listing's own org (or admin) can manage its data room", async () => {
+  const outsider = await demoLogin("advisor");
+  const getRes = await fetch(BASE + "/api/listings/comicordia-agri/dataroom", { headers: { cookie: outsider } });
+  assert.equal(getRes.status, 403);
+  const postRes = await fetch(BASE + "/api/listings/comicordia-agri/dataroom", {
+    method: "POST", headers: { cookie: outsider, "Content-Type": "application/json" },
+    body: JSON.stringify({ userId: "someone" }),
+  });
+  assert.equal(postRes.status, 403);
+  const logRes = await fetch(BASE + "/api/listings/comicordia-agri/dataroom/log", { headers: { cookie: outsider } });
+  assert.equal(logRes.status, 403);
+});
+
+test("only investor/admin roles may trigger a data-room request", async () => {
+  const owner = await demoLogin("owner");
+  const res = await fetch(BASE + "/api/match", {
+    method: "POST", headers: { cookie: owner, "Content-Type": "application/json" },
+    body: JSON.stringify({ listingId: "port-de-ndomba", action: "dataroom_requested" }),
+  });
+  assert.equal(res.status, 403, "an owner-role user requesting data-room access on someone else's listing must be refused");
+});
+
+test("data-room access is request-then-grant, not automatic, and is per-investor", async () => {
+  const investor = await demoLogin("investor");
+  const requestRes = await fetch(BASE + "/api/match", {
+    method: "POST", headers: { cookie: investor, "Content-Type": "application/json" },
+    body: JSON.stringify({ listingId: "comicordia-agri", action: "dataroom_requested" }),
+  });
+  assert.equal(requestRes.status, 200);
+
+  // Requesting alone must not grant access — an anonymous document lookup
+  // would still be 403 (auth boundary), proven indirectly via the owner's
+  // requester list showing "granted: false" until an explicit grant happens.
+  const owner = await demoLogin("owner");
+  const listRes = await fetch(BASE + "/api/listings/comicordia-agri/dataroom", { headers: { cookie: owner } });
+  assert.equal(listRes.status, 200);
+  const { requesters } = await listRes.json();
+  const entry = requesters.find((r) => r.email === "investor@demo.invalid");
+  assert.ok(entry, "the requesting investor must appear in the sponsor's requester list");
+  assert.equal(entry.granted, false, "a bare request must not auto-grant access");
+
+  const grantRes = await fetch(BASE + "/api/listings/comicordia-agri/dataroom", {
+    method: "POST", headers: { cookie: owner, "Content-Type": "application/json" },
+    body: JSON.stringify({ userId: entry.userId }),
+  });
+  assert.equal(grantRes.status, 200);
+
+  const afterGrant = await (await fetch(BASE + "/api/listings/comicordia-agri/dataroom", { headers: { cookie: owner } })).json();
+  assert.equal(afterGrant.requesters.find((r) => r.userId === entry.userId).granted, true);
+
+  const revokeRes = await fetch(BASE + "/api/listings/comicordia-agri/dataroom?userId=" + entry.userId, {
+    method: "DELETE", headers: { cookie: owner },
+  });
+  assert.equal(revokeRes.status, 200);
+
+  const afterRevoke = await (await fetch(BASE + "/api/listings/comicordia-agri/dataroom", { headers: { cookie: owner } })).json();
+  const revoked = afterRevoke.requesters.find((r) => r.userId === entry.userId);
+  assert.equal(revoked.granted, false, "revoke must turn off access, not just log it");
+  assert.equal(revoked.revoked, true);
+});
