@@ -1051,3 +1051,18 @@ test("Free plan caps saved collections at 1", async () => {
 
   await fetch(BASE + "/api/collections?id=" + collection.id, { method: "DELETE", headers: { cookie: investor } });
 });
+
+// ---------- Phase 10: administration/analytics ----------
+test("/admin dashboard is admin-only and rolls up real platform data", async () => {
+  const investor = await demoLogin("investor");
+  const nonAdminRes = await fetch(BASE + "/admin", { headers: { cookie: investor }, redirect: "manual" });
+  assert.ok([301, 302, 303, 307, 308].includes(nonAdminRes.status), "non-admin must be redirected away from /admin");
+
+  const admin = await demoLogin("admin");
+  const adminRes = await fetch(BASE + "/admin", { headers: { cookie: admin } });
+  assert.equal(adminRes.status, 200);
+  const body = await adminRes.text();
+  assert.ok(body.includes("Administration"));
+  assert.ok(body.includes("Published listings"), "must roll up real listing counts, not a placeholder");
+  assert.ok(body.includes("Illustrative MRR"), "financial figures must stay honestly labeled as illustrative");
+});
