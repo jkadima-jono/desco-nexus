@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
 import { getSessionUser } from "@/lib/auth";
 import { SECTORS, INSTRUMENTS, RISK_LEVELS, INVESTOR_TYPES, CO_INVEST_PREFERENCES } from "@/lib/mandateOptions";
+import { effectivePlan } from "@/lib/plans";
 
 type MandateBody = {
   name?: string;
@@ -94,6 +95,16 @@ export async function POST(req: Request) {
   if (query.length > 500) {
     return NextResponse.json({ error: "query must be ≤500 chars" }, { status: 400 });
   }
+  const plan = await effectivePlan(user);
+  if (plan.maxActiveMandates !== null) {
+    const activeCount = await prisma.standingMandate.count({ where: { userId: user.id, active: true } });
+    if (activeCount >= plan.maxActiveMandates) {
+      return NextResponse.json(
+        { error: "Your " + plan.name + " plan allows up to " + plan.maxActiveMandates + " active mandates. Upgrade or deactivate one to add another." },
+        { status: 402 }
+      );
+    }
+  }
   const threshold = Math.min(100, Math.max(0, body.threshold ?? 70));
   const frequency = ["daily", "weekly"].includes(body.frequency ?? "") ? body.frequency! : "weekly";
   const mandate = await prisma.standingMandate.create({
@@ -171,6 +182,19 @@ export async function PATCH(req: Request) {
       },
     });
     return NextResponse.json({ ok: true, mandate: copy });
+  }
+
+  if (body.active === true && !mandate.active) {
+    const plan = await effectivePlan(user);
+    if (plan.maxActiveMandates !== null) {
+      const activeCount = await prisma.standingMandate.count({ where: { userId: user.id, active: true } });
+      if (activeCount >= plan.maxActiveMandates) {
+        return NextResponse.json(
+          { error: "Your " + plan.name + " plan allows up to " + plan.maxActiveMandates + " active mandates. Upgrade or deactivate one to reactivate this one." },
+          { status: 402 }
+        );
+      }
+    }
   }
 
   const hasStructuredEdits = [

@@ -35,6 +35,8 @@ const SUBMIT_PROJECT: NavItem = { href: "/submit-project", key: "nav.submitProje
 const REVIEW_SUBMISSIONS: NavItem = { href: "/admin/submissions", key: "nav.reviewSubmissions", icon: "▲" };
 const VERIFICATION: NavItem = { href: "/admin/verification", key: "nav.verification", icon: "✓" };
 const AI_USAGE: NavItem = { href: "/admin/ai-usage", key: "nav.aiUsage", icon: "✦" };
+const BILLING: NavItem = { href: "/admin/users", key: "nav.billing", icon: "$" };
+const PRICING: NavItem = { href: "/pricing", key: "nav.pricing", icon: "$" };
 const TRUST: NavItem = { href: "/#trust", key: "nav.trust", icon: "✓" };
 const ABOUT: NavItem = { href: "/pillars", key: "nav.about", icon: "◆" };
 
@@ -42,11 +44,11 @@ const ABOUT: NavItem = { href: "/pillars", key: "nav.about", icon: "◆" };
 // pages that don't exist yet (data-rooms/analytics land in later phases
 // and gain nav entries then, not before).
 const NAV_BY_ROLE: Record<string, NavItem[]> = {
-  signedOut: [OPPORTUNITIES, HOW_IT_WORKS, FOR_INVESTORS, FOR_OWNERS, PILLARS, TRUST, ABOUT, CONTACT],
+  signedOut: [OPPORTUNITIES, HOW_IT_WORKS, FOR_INVESTORS, FOR_OWNERS, PRICING, PILLARS, TRUST, ABOUT, CONTACT],
   investor: [DISCOVER, MATCH, SAVED, MANDATES, PIPELINE, PORTFOLIO, SEARCH, MESSAGES, PILLARS],
   owner: [PROJECTS, SUBMIT_PROJECT, INVESTOR_MATCHES, MESSAGES, PILLARS],
   advisor: [DISCOVER, MANDATES, TRANSACTIONS, MESSAGES, PILLARS],
-  admin: [DISCOVER, MATCH, SAVED, MANDATES, PIPELINE, PORTFOLIO, INVESTOR_MATCHES, REVIEW_SUBMISSIONS, VERIFICATION, AI_USAGE, SEARCH, MESSAGES, PILLARS],
+  admin: [DISCOVER, MATCH, SAVED, MANDATES, PIPELINE, PORTFOLIO, INVESTOR_MATCHES, REVIEW_SUBMISSIONS, VERIFICATION, AI_USAGE, BILLING, SEARCH, MESSAGES, PILLARS],
 };
 
 type SidebarUser = { fullName: string; title: string | null; role?: string } | null;

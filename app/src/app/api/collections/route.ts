@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
 import { getSessionUser } from "@/lib/auth";
+import { effectivePlan } from "@/lib/plans";
 
 export async function GET() {
   const user = await getSessionUser();
@@ -25,6 +26,18 @@ export async function POST(req: Request) {
   if (!name) return NextResponse.json({ error: "name required" }, { status: 400 });
   const existing = await prisma.collection.findFirst({ where: { userId: user.id, name } });
   if (existing) return NextResponse.json({ ok: true, collection: existing });
+
+  const plan = await effectivePlan(user);
+  if (plan.maxCollections !== null) {
+    const count = await prisma.collection.count({ where: { userId: user.id } });
+    if (count >= plan.maxCollections) {
+      return NextResponse.json(
+        { error: "Your " + plan.name + " plan allows up to " + plan.maxCollections + " collection(s). Upgrade to create another." },
+        { status: 402 }
+      );
+    }
+  }
+
   const collection = await prisma.collection.create({ data: { userId: user.id, name } });
   return NextResponse.json({ ok: true, collection });
 }

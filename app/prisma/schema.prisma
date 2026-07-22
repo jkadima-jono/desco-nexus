@@ -14,6 +14,8 @@ model User {
   title        String?
   role         String        @default("investor") // investor|owner|advisor|admin
   orgId        String?
+  planId       String?
+  plan         Plan?         @relation(fields: [planId], references: [id])
   matchActions MatchAction[]
   matchFeedback MatchFeedback[]
   mandates     StandingMandate[]
@@ -24,6 +26,22 @@ model User {
   documentDownloads  DocumentAccessLog[]
   meetingRequests    Meeting[]
   aiGenerations      AiGenerationLog[]
+}
+
+// Pricing tiers (Phase 9). Assigned per-user by an admin — no self-serve
+// checkout and no payment processor is connected, so this is a
+// sales-assisted plan assignment, not real billing. Plans are seeded
+// once (npx tsx scripts/seed-plans.ts), not created via UI — pricing
+// tiers are product-defined, not user-editable.
+model Plan {
+  id                String   @id @default(cuid())
+  name              String   @unique
+  priceUsdPerMonth  Int
+  maxActiveMandates Int?     // null = unlimited
+  maxCollections    Int?     // null = unlimited
+  description       String   @default("")
+  sortOrder         Int      @default(0)
+  users             User[]
 }
 
 model Organization {

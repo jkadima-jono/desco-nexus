@@ -967,3 +967,87 @@ test("message draft generates real content per-thread, honestly labeled, and is 
     await prisma.thread.delete({ where: { id: thread.id } });
   }
 });
+
+// ---------- Phase 9: pricing/revenue (plan assignment & entitlements) ----------
+test("only admin may assign plans", async () => {
+  const investor = await demoLogin("investor");
+  const unauthRes = await fetch(BASE + "/api/admin/users/anything/plan", {
+    method: "PATCH", headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ planId: null }),
+  });
+  assert.equal(unauthRes.status, 401);
+
+  const nonAdminRes = await fetch(BASE + "/api/admin/users/anything/plan", {
+    method: "PATCH", headers: { cookie: investor, "Content-Type": "application/json" },
+    body: JSON.stringify({ planId: null }),
+  });
+  assert.equal(nonAdminRes.status, 403);
+});
+
+test("/admin/users is an admin-only page", async () => {
+  const investor = await demoLogin("investor");
+  const usersRes = await fetch(BASE + "/admin/users", { headers: { cookie: investor }, redirect: "manual" });
+  assert.ok([301, 302, 303, 307, 308].includes(usersRes.status), "non-admin must be redirected away from /admin/users");
+});
+
+test("Free plan caps active mandates at 3; Professional raises the limit", async () => {
+  const investor = await demoLogin("investor");
+  const admin = await demoLogin("admin");
+
+  const investorRow = await prisma.user.findUnique({ where: { email: "investor@demo.invalid" } });
+  assert.equal(investorRow.planId, null, "test assumes investor starts on the default Free plan");
+
+  const created = [];
+  try {
+    for (let i = 0; i < 3; i++) {
+      const res = await fetch(BASE + "/api/mandates", {
+        method: "POST", headers: { cookie: investor, "Content-Type": "application/json" },
+        body: JSON.stringify({ name: "Plan limit test " + i, query: "" }),
+      });
+      assert.equal(res.status, 200, "Free plan must allow up to 3 active mandates");
+      created.push((await res.json()).mandate.id);
+    }
+    const fourth = await fetch(BASE + "/api/mandates", {
+      method: "POST", headers: { cookie: investor, "Content-Type": "application/json" },
+      body: JSON.stringify({ name: "Plan limit test 4", query: "" }),
+    });
+    assert.equal(fourth.status, 402, "a 4th active mandate must be rejected on the Free plan");
+
+    const professional = await prisma.plan.findUnique({ where: { name: "Professional" } });
+    const assignRes = await fetch(BASE + "/api/admin/users/" + investorRow.id + "/plan", {
+      method: "PATCH", headers: { cookie: admin, "Content-Type": "application/json" },
+      body: JSON.stringify({ planId: professional.id }),
+    });
+    assert.equal(assignRes.status, 200);
+
+    const fourthAfterUpgrade = await fetch(BASE + "/api/mandates", {
+      method: "POST", headers: { cookie: investor, "Content-Type": "application/json" },
+      body: JSON.stringify({ name: "Plan limit test 4b", query: "" }),
+    });
+    assert.equal(fourthAfterUpgrade.status, 200, "upgrading to Professional must raise the active-mandate cap");
+    created.push((await fourthAfterUpgrade.json()).mandate.id);
+  } finally {
+    for (const id of created) {
+      await fetch(BASE + "/api/mandates?id=" + id, { method: "DELETE", headers: { cookie: investor } });
+    }
+    await prisma.user.update({ where: { id: investorRow.id }, data: { planId: null } });
+  }
+});
+
+test("Free plan caps saved collections at 1", async () => {
+  const investor = await demoLogin("investor");
+  const first = await fetch(BASE + "/api/collections", {
+    method: "POST", headers: { cookie: investor, "Content-Type": "application/json" },
+    body: JSON.stringify({ name: "Plan limit collection 1" }),
+  });
+  assert.equal(first.status, 200);
+  const { collection } = await first.json();
+
+  const second = await fetch(BASE + "/api/collections", {
+    method: "POST", headers: { cookie: investor, "Content-Type": "application/json" },
+    body: JSON.stringify({ name: "Plan limit collection 2" }),
+  });
+  assert.equal(second.status, 402, "a 2nd collection must be rejected on the Free plan");
+
+  await fetch(BASE + "/api/collections?id=" + collection.id, { method: "DELETE", headers: { cookie: investor } });
+});
