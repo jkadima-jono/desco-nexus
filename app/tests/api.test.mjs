@@ -656,3 +656,71 @@ test("data-room access is request-then-grant, not automatic, and is per-investor
   assert.equal(revoked.granted, false, "revoke must turn off access, not just log it");
   assert.equal(revoked.revoked, true);
 });
+
+// ---------- Phase 6: meeting scheduling ----------
+test("unauthenticated access to meeting endpoints is rejected", async () => {
+  const cases = [
+    ["GET", "/api/meetings?listingId=comicordia-agri"],
+    ["POST", "/api/meetings", { listingId: "comicordia-agri", proposedSlots: ["2027-01-01T10:00:00.000Z"] }],
+    ["PATCH", "/api/meetings/anything", { status: "confirmed" }],
+  ];
+  for (const [method, path, body] of cases) {
+    const res = await fetch(BASE + path, {
+      method,
+      headers: body ? { "Content-Type": "application/json" } : undefined,
+      body: body ? JSON.stringify(body) : undefined,
+    });
+    assert.equal(res.status, 401, method + " " + path + " must require auth");
+  }
+});
+
+test("meeting request → sponsor confirm cycle, with isolation and terminal-state guards", async () => {
+  const investor = await demoLogin("investor");
+  const slot = "2027-03-15T14:00:00.000Z";
+  const createRes = await fetch(BASE + "/api/meetings", {
+    method: "POST", headers: { cookie: investor, "Content-Type": "application/json" },
+    body: JSON.stringify({ listingId: "comicordia-agri", proposedSlots: [slot, "2027-03-16T09:00:00.000Z"], note: "Kickoff call" }),
+  });
+  assert.equal(createRes.status, 200);
+  const { meeting } = await createRes.json();
+  assert.equal(meeting.status, "requested");
+
+  // An unrelated investor must not see this request in their own list.
+  const outsider = await demoLogin("advisor");
+  const outsiderList = await (await fetch(BASE + "/api/meetings?listingId=comicordia-agri", { headers: { cookie: outsider } })).json();
+  assert.ok(!outsiderList.meetings.find((m) => m.id === meeting.id), "a non-sponsor, non-requester must not see another user's meeting request");
+
+  // A non-sponsor cannot confirm it.
+  const outsiderConfirm = await fetch(BASE + "/api/meetings/" + meeting.id, {
+    method: "PATCH", headers: { cookie: outsider, "Content-Type": "application/json" },
+    body: JSON.stringify({ status: "confirmed", confirmedSlot: slot }),
+  });
+  assert.equal(outsiderConfirm.status, 403);
+
+  const owner = await demoLogin("owner");
+  const ownerList = await (await fetch(BASE + "/api/meetings?listingId=comicordia-agri", { headers: { cookie: owner } })).json();
+  assert.ok(ownerList.meetings.find((m) => m.id === meeting.id), "the sponsor must see the request");
+
+  // Confirming with a slot that wasn't proposed must be rejected.
+  const badSlot = await fetch(BASE + "/api/meetings/" + meeting.id, {
+    method: "PATCH", headers: { cookie: owner, "Content-Type": "application/json" },
+    body: JSON.stringify({ status: "confirmed", confirmedSlot: "2099-01-01T00:00:00.000Z" }),
+  });
+  assert.equal(badSlot.status, 400);
+
+  const confirmRes = await fetch(BASE + "/api/meetings/" + meeting.id, {
+    method: "PATCH", headers: { cookie: owner, "Content-Type": "application/json" },
+    body: JSON.stringify({ status: "confirmed", confirmedSlot: slot }),
+  });
+  assert.equal(confirmRes.status, 200);
+  const { meeting: confirmed } = await confirmRes.json();
+  assert.equal(confirmed.status, "confirmed");
+  assert.equal(new Date(confirmed.confirmedSlot).toISOString(), slot);
+
+  // A confirmed meeting is terminal — no further transitions.
+  const doubleConfirm = await fetch(BASE + "/api/meetings/" + meeting.id, {
+    method: "PATCH", headers: { cookie: owner, "Content-Type": "application/json" },
+    body: JSON.stringify({ status: "declined" }),
+  });
+  assert.equal(doubleConfirm.status, 422);
+});

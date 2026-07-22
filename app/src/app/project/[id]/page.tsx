@@ -19,6 +19,7 @@ import { computeMatchExplanation, parseJsonArray, type MandateCriteria } from "@
 import MatchFeedback from "./MatchFeedback";
 import RequestInfoButton from "./RequestInfoButton";
 import DataRoomAccessPanel from "./DataRoomAccessPanel";
+import MeetingsPanel from "./MeetingsPanel";
 import { hasDataRoomAccess } from "@/lib/dataroom";
 import type { Metadata } from "next";
 
@@ -119,7 +120,7 @@ export default async function ProjectDetail({
               <div className="flex flex-col sm:flex-row gap-3 mt-6">
                 {user ? <>
                   <RequestInfoButton listingId={l.id} action="dataroom_requested" className="bg-gold text-ink font-display font-bold text-sm px-5 py-2.5 rounded-xl hover:brightness-110" label={t(locale, "project.requestRoom")} doneLabel="✓ Requested" />
-                  <button className="border border-white/25 text-white font-display font-semibold text-sm px-5 py-2.5 rounded-xl hover:bg-white/10">{t(locale, "project.schedule")}</button>
+                  <a href="#meetings" className="border border-white/25 text-white font-display font-semibold text-sm px-5 py-2.5 rounded-xl hover:bg-white/10 inline-flex items-center">{t(locale, "project.schedule")}</a>
                   <RequestInfoButton listingId={l.id} action="saved" className="border border-white/25 text-white font-display font-semibold text-sm px-5 py-2.5 rounded-xl hover:bg-white/10" label={"⌁ " + t(locale, "project.save")} doneLabel="✓ Saved" />
                 </> : <Link href={`/login?next=/project/${l.id}`} className="inline-flex justify-center bg-gold text-ink font-display font-bold text-sm px-5 py-2.5 rounded-xl">Sign in to request access</Link>}
               </div>
@@ -209,6 +210,15 @@ export default async function ProjectDetail({
             {canManageListing && <DataRoomAccessPanel listingId={l.id} />}
           </section>
 
+          <section id="meetings" className="bg-white rounded-2xl p-6 shadow-[0_1px_3px_rgb(44_62_80/0.08)]">
+            <h2 className="font-display font-bold text-lg mb-2">{t(locale, "project.schedule")}</h2>
+            {user ? (
+              <MeetingsPanel listingId={l.id} canManage={canManageListing} />
+            ) : (
+              <p className="text-sm text-wgray"><Link href={`/login?next=/project/${l.id}`} className="font-bold text-gold">Sign in</Link> to request a meeting with the sponsor.</p>
+            )}
+          </section>
+
           {user && <Comments listingId={l.id} />}
         </div>
 
@@ -219,7 +229,7 @@ export default async function ProjectDetail({
               <div className="space-y-2">
                 <RequestInfoButton listingId={l.id} action="dataroom_requested" className="w-full bg-gold text-ink font-display font-bold text-sm py-2.5 rounded-xl hover:brightness-110" label={t(locale, "project.requestRoom")} doneLabel="✓ Requested" />
                 <RequestInfoButton listingId={l.id} className="w-full border border-charcoal/15 text-charcoal font-display font-semibold text-sm py-2.5 rounded-xl hover:bg-mist" label="Request information" />
-                <button className="w-full border border-charcoal/15 text-charcoal font-display font-semibold text-sm py-2.5 rounded-xl hover:bg-mist">{t(locale, "project.schedule")}</button>
+                <a href="#meetings" className="block w-full text-center border border-charcoal/15 text-charcoal font-display font-semibold text-sm py-2.5 rounded-xl hover:bg-mist">{t(locale, "project.schedule")}</a>
                 <RequestInfoButton listingId={l.id} action="saved" className="w-full border border-charcoal/15 text-charcoal font-display font-semibold text-sm py-2.5 rounded-xl hover:bg-mist" label={"⌁ " + t(locale, "project.save")} doneLabel="✓ Saved" />
               </div>
             ) : (
