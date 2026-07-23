@@ -96,6 +96,9 @@ export async function PATCH(
         risk: 50,
         highlights: "[]",
         whyMatch: "",
+        useOfFunds: submission.useOfFunds || null,
+        fundingSecuredUsd: submission.fundingSecuredUsd,
+        sponsorContributionUsd: submission.sponsorContributionUsd,
       },
     });
     const updated = await prisma.projectSubmission.update({

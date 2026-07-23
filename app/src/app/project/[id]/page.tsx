@@ -160,6 +160,33 @@ export default async function ProjectDetail({
             </ul>
           </section>
 
+          {(l.useOfFunds || l.fundingSecuredUsd != null || l.sponsorContributionUsd != null) && (
+            <section className="bg-white rounded-2xl p-6 shadow-[0_1px_3px_rgb(44_62_80/0.08)]">
+              <h2 className="font-display font-bold text-lg mb-1">Financial structure</h2>
+              <p className="text-xs text-wgray mb-4">Sponsor-provided at submission, not independently verified unless stated otherwise.</p>
+              <dl className="space-y-3 text-sm">
+                {l.useOfFunds && (
+                  <div>
+                    <dt className="text-[11px] font-bold text-wgray uppercase tracking-wider mb-1">Use of funds</dt>
+                    <dd className="leading-relaxed">{l.useOfFunds}</dd>
+                  </div>
+                )}
+                {l.fundingSecuredUsd != null && (
+                  <div>
+                    <dt className="text-[11px] font-bold text-wgray uppercase tracking-wider mb-1">Funding already secured</dt>
+                    <dd>{fmtUsd(l.fundingSecuredUsd)}</dd>
+                  </div>
+                )}
+                {l.sponsorContributionUsd != null && (
+                  <div>
+                    <dt className="text-[11px] font-bold text-wgray uppercase tracking-wider mb-1">Sponsor contribution</dt>
+                    <dd>{fmtUsd(l.sponsorContributionUsd)}</dd>
+                  </div>
+                )}
+              </dl>
+            </section>
+          )}
+
           <PhotoGallery
             listingId={l.id}
             photos={l.photos ?? []}

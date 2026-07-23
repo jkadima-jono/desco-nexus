@@ -5,6 +5,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { useI18n } from "./I18nProvider";
 import LanguageSwitcher from "./LanguageSwitcher";
+import NotificationBell from "./NotificationBell";
 
 type NavItem = { href: string; key: string; icon: string };
 
@@ -118,6 +119,7 @@ export default function Sidebar({ user }: { user: SidebarUser }) {
           <div className="flex items-center gap-3">
             <div className="w-9 h-9 rounded-full bg-gold text-ink font-display font-bold flex items-center justify-center">{user.fullName.charAt(0)}</div>
             <div className="min-w-0 flex-1"><div className="text-sm font-semibold truncate">{user.fullName}</div><div className="text-[11px] text-gold truncate">✓ {user.title ?? t("nav.member")}</div></div>
+            <NotificationBell />
             <button onClick={logout} className="text-[11px] text-white/60 hover:text-white" aria-label="Sign out">⎋</button>
           </div>
         ) : (

@@ -3,6 +3,7 @@ import { prisma } from "@/lib/db";
 import { getSessionUser } from "@/lib/auth";
 import { STAGES, isValidTransition, requiresReason, type Stage } from "@/lib/deals";
 import { canManageDeal } from "@/lib/authz";
+import { notify } from "@/lib/notifications";
 
 export async function PATCH(
   req: Request,
@@ -69,5 +70,23 @@ export async function PATCH(
   }
 
   const updated = await prisma.deal.update({ where: { id }, data });
+
+  if (data.stage) {
+    const engaged = await prisma.matchAction.findMany({
+      where: { listingId: deal.listingId, userId: { not: user.id } },
+      distinct: ["userId"],
+      select: { userId: true },
+    });
+    for (const { userId } of engaged) {
+      await notify(
+        userId,
+        "deal_stage",
+        "Stage updated",
+        "\"" + deal.title + "\" moved to \"" + data.stage + "\".",
+        "/project/" + deal.listingId
+      );
+    }
+  }
+
   return NextResponse.json({ ok: true, deal: { id: updated.id, stage: updated.stage } });
 }

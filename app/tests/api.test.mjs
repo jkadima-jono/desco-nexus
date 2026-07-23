@@ -380,11 +380,11 @@ test("submission cannot be submitted for review until required fields are comple
 });
 
 test("admin approval publishes a real listing; rejection requires a reason", async () => {
-  // NOTE: approval publishes a real Listing row with no admin delete-listing
-  // endpoint to retract it — this test intentionally leaves one real
-  // "Regression Test..." listing/org behind in the dev database on each
-  // run. Harmless for CI/dev, but sweep it manually before a demo:
-  //   npx tsx -e 'import {prisma} from "./src/lib/db"; prisma.listing.deleteMany({where:{title:{contains:"Regression Test"}}}).then(()=>prisma.$disconnect())'
+  // Approval publishes a real Listing row with no admin delete-listing
+  // endpoint to retract it. This test writes to whatever DATABASE_URL the
+  // server is running against, which may be the same shared database as a
+  // live deployment — so it must clean up its own Listing/Organization
+  // rows via Prisma directly rather than leaving them behind.
   const owner = await demoLogin("owner");
   const created = await fetch(BASE + "/api/submissions", {
     method: "POST", headers: { cookie: owner, "Content-Type": "application/json" },
@@ -419,6 +419,10 @@ test("admin approval publishes a real listing; rejection requires a reason", asy
   assert.ok(listingId);
   const publicPage = await fetch(BASE + "/project/" + listingId);
   assert.equal(publicPage.status, 200, "approved submission is publicly viewable as a real listing");
+
+  const publishedListing = await prisma.listing.findUnique({ where: { id: listingId } });
+  await prisma.listing.delete({ where: { id: listingId } });
+  await prisma.organization.delete({ where: { id: publishedListing.orgId } });
 });
 
 // ---------- Phase 2: transparent matching ----------

@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
 import { getSessionUser } from "@/lib/auth";
 import { canManageListing, unauthorized, forbidden } from "@/lib/authz";
+import { notify, notifyOrg } from "@/lib/notifications";
 
 // Sponsor/admin confirm a proposed slot (or decline); the requester may
 // cancel their own request while it's still pending.
@@ -51,5 +52,15 @@ export async function PATCH(
       confirmedSlot: body.status === "confirmed" ? new Date(body.confirmedSlot!) : null,
     },
   });
+
+  const link = "/project/" + meeting.listingId + "#meetings";
+  if (body.status === "confirmed") {
+    await notify(meeting.requesterId, "meeting_confirmed", "Meeting confirmed", "Your meeting request for \"" + meeting.listing.title + "\" was confirmed.", link);
+  } else if (body.status === "declined") {
+    await notify(meeting.requesterId, "meeting_declined", "Meeting declined", "Your meeting request for \"" + meeting.listing.title + "\" was declined.", link);
+  } else if (body.status === "cancelled") {
+    await notifyOrg(meeting.listing.orgId, user.id, "meeting_cancelled", "Meeting request cancelled", meeting.listing.title + ": the requester cancelled their meeting request.", link);
+  }
+
   return NextResponse.json({ ok: true, meeting: updated });
 }

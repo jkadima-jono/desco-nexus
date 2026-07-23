@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
 import { getSessionUser } from "@/lib/auth";
 import { canManageListing, unauthorized, forbidden } from "@/lib/authz";
+import { notify } from "@/lib/notifications";
 
 // Sponsor/admin view of a listing's data room: who requested access (via
 // the existing "dataroom_requested" MatchAction) cross-referenced with who
@@ -65,6 +66,13 @@ export async function POST(req: Request, { params }: { params: Promise<{ id: str
     update: { revokedAt: null, grantedBy: user.fullName },
     create: { listingId: id, userId: body.userId, grantedBy: user.fullName },
   });
+  await notify(
+    body.userId,
+    "dataroom_granted",
+    "Data-room access granted",
+    "You've been granted data-room access for \"" + listing.title + "\".",
+    "/project/" + id
+  );
   return NextResponse.json({ ok: true, grant });
 }
 

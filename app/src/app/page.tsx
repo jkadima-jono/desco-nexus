@@ -25,7 +25,7 @@ export const metadata: Metadata = {
   },
 };
 
-const FILTERS = ["for-you", "trending", "new", "gov", "esg", "close"] as const;
+const FILTERS = ["for-you", "new", "gov", "esg", "close"] as const;
 const CONFIDENCE_RANK: Record<string, number> = { high: 3, medium: 2, low: 1, excluded: 0 };
 
 // Final role-specific CTA (section 7). Governments/advisors route to
@@ -34,8 +34,8 @@ const CONFIDENCE_RANK: Record<string, number> = { high: 3, medium: 2, low: 1, ex
 const AUDIENCE_PATHS = [
   { title: "Investors", body: "Define a mandate, review transparent matches, and request data-room access when a project fits.", href: "/mandates", cta: "Create an investor mandate" },
   { title: "Project owners", body: "Present your project with a structured listing sponsors and DESCO can both review.", href: "/submit-project", cta: "Submit a project" },
-  { title: "Governments & agencies", body: "Discuss listing regional projects and reviewing investor engagement with DESCO directly.", href: "/contact", cta: "Request a DESCO consultation" },
-  { title: "Advisors", body: "Discuss supporting clients through discovery, matching, and due diligence with DESCO directly.", href: "/contact", cta: "Contact DESCO" },
+  { title: "Governments & agencies", body: "No self-serve workflow exists for this yet. Start a conversation with DESCO's team about listing regional projects or reviewing investor engagement.", href: "/contact", cta: "Start a conversation with DESCO" },
+  { title: "Advisors", body: "No dedicated advisor workflow exists on the platform yet. Start a conversation with DESCO's team about supporting clients through discovery, matching, and due diligence.", href: "/contact", cta: "Start a conversation with DESCO" },
 ];
 
 const HOW_IT_WORKS = [
@@ -101,8 +101,18 @@ export default async function Discover({ searchParams }: { searchParams: Promise
       {!user && (
         /* 1. Hero — two primary journeys (Explore opportunities, Submit a
            project), two secondary (Create a mandate, Request a consultation). */
-        <section className="bg-ink text-white">
-          <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-14 lg:py-20">
+        <section className="relative overflow-hidden text-white" style={{ background: "linear-gradient(160deg, var(--color-ink) 0%, var(--color-navy) 55%, var(--color-ink) 100%)" }}>
+          <div
+            aria-hidden="true"
+            className="absolute -top-24 -right-24 w-[520px] h-[520px] rounded-full blur-[110px] opacity-30"
+            style={{ background: "radial-gradient(circle, var(--color-teal) 0%, transparent 70%)" }}
+          />
+          <div
+            aria-hidden="true"
+            className="absolute -bottom-32 -left-16 w-[420px] h-[420px] rounded-full blur-[100px] opacity-20"
+            style={{ background: "radial-gradient(circle, var(--color-navy) 0%, transparent 70%)" }}
+          />
+          <div className="relative max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-14 lg:py-20">
             <p className="text-gold font-bold text-xs uppercase tracking-[0.2em] mb-4">A Desco Global platform</p>
             <h1 className="font-display font-extrabold text-3xl lg:text-5xl tracking-tight max-w-3xl leading-[1.1]">
               Connecting investment capital with structured project opportunities.
@@ -145,8 +155,9 @@ export default async function Discover({ searchParams }: { searchParams: Promise
       <div id="opportunities" className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-6 lg:py-8">
         <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-3 mb-2">
           <div>
-            <h2 className="font-display font-extrabold text-3xl tracking-tight">
-              {t(locale, "discover.title")}
+            <h2 className="font-display text-3xl tracking-tight leading-tight">
+              <span className="font-extrabold">{t(locale, "discover.title")}</span>{" "}
+              <span className="font-normal text-wgray">{t(locale, "discover.titleSuffix")}</span>
             </h2>
             <p className="text-wgray text-sm mt-1">
               {user
@@ -169,28 +180,31 @@ export default async function Discover({ searchParams }: { searchParams: Promise
           </div>
         </div>
 
-        <nav aria-label="Opportunity filters" className="flex items-center gap-2 my-5 text-xs font-bold overflow-x-auto pb-1">
-          {["for-you-label", "chips.trending", "chips.new", "chips.gov", "chips.esg", "chips.close"].map(
-            (key, i) => {
-              const value = FILTERS[i];
-              const selected = activeFilter === value;
-              const label = key === "for-you-label" ? (activeMandate ? t(locale, "chips.recommended") : t(locale, "chips.allOpportunities")) : t(locale, key);
-              return <Link
-                key={key}
-                href={value === "for-you" ? "/" : `/?filter=${value}`}
-                aria-current={selected ? "page" : undefined}
-                className={"shrink-0 px-3 py-1.5 rounded-full focus-visible:ring-2 focus-visible:ring-gold focus-visible:ring-offset-2 " + (selected ? "bg-charcoal text-white" : "bg-white text-charcoal border border-charcoal/10")}
-              >
-                {label}
-              </Link>;
-            }
-          )}
-          {activeFilter !== "for-you" && (
-            <Link href="/" className="shrink-0 px-3 py-1.5 rounded-full text-wgray hover:text-charcoal">
-              Reset filters ×
-            </Link>
-          )}
-        </nav>
+        <div className="bg-white rounded-2xl border border-charcoal/10 shadow-[0_1px_3px_rgb(44_62_80/0.06)] px-4 py-3 my-5">
+          <nav aria-label="Opportunity filters" className="flex items-center gap-2 text-xs font-bold overflow-x-auto">
+            <span className="shrink-0 text-[11px] font-bold uppercase tracking-wider text-wgray pr-1">Filter</span>
+            {["for-you-label", "chips.new", "chips.gov", "chips.esg", "chips.close"].map(
+              (key, i) => {
+                const value = FILTERS[i];
+                const selected = activeFilter === value;
+                const label = key === "for-you-label" ? (activeMandate ? t(locale, "chips.recommended") : t(locale, "chips.allOpportunities")) : t(locale, key);
+                return <Link
+                  key={key}
+                  href={value === "for-you" ? "/" : `/?filter=${value}`}
+                  aria-current={selected ? "page" : undefined}
+                  className={"shrink-0 px-3 py-1.5 rounded-full focus-visible:ring-2 focus-visible:ring-gold focus-visible:ring-offset-2 " + (selected ? "bg-charcoal text-white" : "bg-mist text-charcoal border border-charcoal/10 hover:border-charcoal/25")}
+                >
+                  {label}
+                </Link>;
+              }
+            )}
+            {activeFilter !== "for-you" && (
+              <Link href="/" className="shrink-0 px-3 py-1.5 rounded-full text-wgray hover:text-charcoal ml-auto">
+                Reset filters ×
+              </Link>
+            )}
+          </nav>
+        </div>
 
         <div className="flex items-center justify-between mb-3 text-xs text-wgray" aria-live="polite">
           <span>{listings.length} {listings.length === 1 ? "opportunity" : "opportunities"}</span>
@@ -203,8 +217,8 @@ export default async function Discover({ searchParams }: { searchParams: Promise
           {listings.length === 0 && (
             <div className="bg-white rounded-2xl p-8 text-center border border-charcoal/10">
               <h3 className="font-display font-bold text-lg">No opportunities match this filter</h3>
-              <p className="text-sm text-wgray mt-2">Try another filter or use AI Search to describe your investment mandate.</p>
-              <Link href="/search" className="inline-flex mt-4 bg-charcoal text-white font-display font-bold text-sm px-4 py-2.5 rounded-xl hover:bg-ink">Open AI Search</Link>
+              <p className="text-sm text-wgray mt-2">Try another filter or use Search to describe your investment mandate.</p>
+              <Link href="/search" className="inline-flex mt-4 bg-charcoal text-white font-display font-bold text-sm px-4 py-2.5 rounded-xl hover:bg-ink">Open Search</Link>
             </div>
           )}
         </div>

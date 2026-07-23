@@ -27,6 +27,35 @@ model User {
   documentDownloads  DocumentAccessLog[]
   meetingRequests    Meeting[]
   aiGenerations      AiGenerationLog[]
+  notifications      Notification[]
+  sessions           Session[]
+}
+
+// Server-side session record so a stolen or old cookie can actually be
+// invalidated — the JWT alone is valid until natural expiry with no way
+// to revoke it early. The JWT's `jti` claim is this row's id; every
+// request re-checks revokedAt here in addition to verifying the signature.
+model Session {
+  id        String    @id @default(cuid())
+  userId    String
+  user      User      @relation(fields: [userId], references: [id])
+  createdAt DateTime  @default(now())
+  revokedAt DateTime?
+}
+
+// In-app notifications for events a user would otherwise only discover by
+// re-visiting a page: data-room grants, meeting status changes, deal-stage
+// changes. No email/push provider is connected — this is in-app only.
+model Notification {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  type      String   // dataroom_granted|meeting_requested|meeting_confirmed|meeting_declined|meeting_cancelled|deal_stage
+  title     String
+  body      String
+  link      String?
+  read      Boolean  @default(false)
+  createdAt DateTime @default(now())
 }
 
 // Pricing tiers (Phase 9). Assigned per-user by an admin — no self-serve
@@ -67,6 +96,9 @@ model Listing {
   stage            String
   irr              String
   summary          String
+  useOfFunds             String? // carried from ProjectSubmission at publish time
+  fundingSecuredUsd      Int?    // carried from ProjectSubmission at publish time
+  sponsorContributionUsd Int?    // carried from ProjectSubmission at publish time
   verified         Boolean       @default(false)
   verifiedBy       String?       // admin fullName — real reviewer, not a fabricated vendor
   verifiedAt       DateTime?

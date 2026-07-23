@@ -1,5 +1,8 @@
+import Link from "next/link";
 import { redirect } from "next/navigation";
 import { getSessionUser } from "@/lib/auth";
+import { prisma } from "@/lib/db";
+import { effectivePlan } from "@/lib/plans";
 import SavedManager from "./SavedManager";
 
 export const dynamic = "force-dynamic";
@@ -13,6 +16,12 @@ export default async function SavedPage() {
   const user = await getSessionUser();
   if (!user) redirect("/login?next=/saved");
 
+  const [plan, count] = await Promise.all([
+    effectivePlan(user),
+    prisma.collection.count({ where: { userId: user.id } }),
+  ]);
+  const atLimit = plan.maxCollections !== null && count >= plan.maxCollections;
+
   return (
     <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 lg:py-10">
       <h1 className="font-display font-extrabold text-2xl tracking-tight">Saved Opportunities</h1>
@@ -21,6 +30,14 @@ export default async function SavedPage() {
         select any to compare side by side. Saving here does not imply Nexus
         recommends an investment.
       </p>
+      <div className={"mt-4 rounded-xl px-4 py-2.5 text-xs font-semibold flex items-center justify-between gap-3 " + (atLimit ? "bg-brandred/10 text-brandred" : "bg-mist text-wgray")}>
+        <span>
+          {plan.maxCollections === null
+            ? plan.name + " plan — unlimited collections"
+            : count + " of " + plan.maxCollections + " collection(s) used (" + plan.name + " plan)"}
+        </span>
+        {atLimit && <Link href="/pricing" className="underline shrink-0">Upgrade</Link>}
+      </div>
       <SavedManager />
     </div>
   );

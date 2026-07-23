@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
 import { getSessionUser } from "@/lib/auth";
 import { canManageListing, unauthorized } from "@/lib/authz";
+import { notifyOrg } from "@/lib/notifications";
 
 const MAX_SLOTS = 5;
 
@@ -65,5 +66,15 @@ export async function POST(req: Request) {
       note: (body.note ?? "").trim().slice(0, 500),
     },
   });
+  if (listing.orgId) {
+    await notifyOrg(
+      listing.orgId,
+      user.id,
+      "meeting_requested",
+      "New meeting request",
+      user.fullName + " requested a meeting for \"" + listing.title + "\".",
+      "/project/" + listingId + "#meetings"
+    );
+  }
   return NextResponse.json({ ok: true, meeting });
 }

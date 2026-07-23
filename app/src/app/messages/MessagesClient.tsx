@@ -76,6 +76,10 @@ export default function MessagesClient({ threads }: { threads: UiThread[] }) {
             {t("messages.title")}
           </h1>
           <p className="text-[11px] text-wgray mt-1">{t("messages.subtitle")}</p>
+          <p className="text-[11px] text-brandred/80 mt-2 leading-relaxed">
+            Demonstration data: these threads are a shared mockup visible to every signed-in
+            demo account, not private per-account correspondence.
+          </p>
         </div>
         {threads.map((t) => (
           <button
