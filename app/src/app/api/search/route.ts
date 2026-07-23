@@ -3,13 +3,19 @@ import { prisma, toListing } from "@/lib/db";
 import { getSessionUser } from "@/lib/auth";
 import type { Listing } from "@/lib/data";
 
+// Matches Desco Global's real four pillars only (see lib/theme.ts
+// SECTOR_TO_PILLAR) — no invented sectors like "Renewable Energy" or
+// "Fintech" that no real listing carries.
 const SECTOR_MAP: [string, string][] = [
-  ["renewable", "Renewable Energy"], ["solar", "Renewable Energy"],
-  ["energy", "Renewable Energy"], ["agri", "Agriculture"],
-  ["farm", "Agriculture"], ["infra", "Infrastructure"],
-  ["port", "Infrastructure"], ["ppp", "Infrastructure"],
-  ["health", "Healthcare"], ["clinic", "Healthcare"],
-  ["water", "Water"], ["fintech", "Fintech"], ["payment", "Fintech"],
+  ["agri", "Agriculture"], ["farm", "Agriculture"], ["cassava", "Agriculture"],
+  ["crop", "Agriculture"], ["food", "Agriculture"],
+  ["infra", "Infrastructure"], ["port", "Infrastructure"], ["logistics", "Infrastructure"],
+  ["gateway", "Infrastructure"], ["road", "Infrastructure"],
+  ["mining", "Mining"], ["mine", "Mining"], ["gold", "Mining"],
+  ["diamond", "Mining"], ["concession", "Mining"], ["cobalt", "Mining"], ["copper", "Mining"],
+  ["health", "Healthcare"], ["clinic", "Healthcare"], ["pharma", "Healthcare"],
+  ["hospital", "Healthcare"], ["medicine", "Healthcare"],
+  ["water", "Water"], ["sanitation", "Water"],
 ];
 
 const containsTerm = (query: string, term: string) => {
@@ -58,9 +64,9 @@ export async function GET(req: Request) {
     results = results.filter((l) => l.verified);
     parts.push("verified only");
   }
-  if (containsTerm(q, "west africa")) {
-    results = results.filter((l) => ["Nigeria", "Senegal"].includes(l.country));
-    parts.push("region: West Africa");
+  if (["drc", "congo", "kasai"].some((term) => containsTerm(q, term))) {
+    results = results.filter((l) => l.country === "DR Congo");
+    parts.push("region: DR Congo");
   } else if (containsTerm(q, "africa")) {
     parts.push("region: Africa");
   }

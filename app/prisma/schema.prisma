@@ -3,8 +3,9 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
 }
 
 model User {
@@ -14,8 +15,63 @@ model User {
   title        String?
   role         String        @default("investor") // investor|owner|advisor|admin
   orgId        String?
+  planId       String?
+  plan         Plan?         @relation(fields: [planId], references: [id])
   matchActions MatchAction[]
+  matchFeedback MatchFeedback[]
   mandates     StandingMandate[]
+  submissions  ProjectSubmission[]
+  collections  Collection[]
+  savedOpportunities SavedOpportunity[]
+  dataRoomAccess     DataRoomAccess[]
+  documentDownloads  DocumentAccessLog[]
+  meetingRequests    Meeting[]
+  aiGenerations      AiGenerationLog[]
+  notifications      Notification[]
+  sessions           Session[]
+}
+
+// Server-side session record so a stolen or old cookie can actually be
+// invalidated — the JWT alone is valid until natural expiry with no way
+// to revoke it early. The JWT's `jti` claim is this row's id; every
+// request re-checks revokedAt here in addition to verifying the signature.
+model Session {
+  id        String    @id @default(cuid())
+  userId    String
+  user      User      @relation(fields: [userId], references: [id])
+  createdAt DateTime  @default(now())
+  revokedAt DateTime?
+}
+
+// In-app notifications for events a user would otherwise only discover by
+// re-visiting a page: data-room grants, meeting status changes, deal-stage
+// changes. No email/push provider is connected — this is in-app only.
+model Notification {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  type      String   // dataroom_granted|meeting_requested|meeting_confirmed|meeting_declined|meeting_cancelled|deal_stage
+  title     String
+  body      String
+  link      String?
+  read      Boolean  @default(false)
+  createdAt DateTime @default(now())
+}
+
+// Pricing tiers (Phase 9). Assigned per-user by an admin — no self-serve
+// checkout and no payment processor is connected, so this is a
+// sales-assisted plan assignment, not real billing. Plans are seeded
+// once (npx tsx scripts/seed-plans.ts), not created via UI — pricing
+// tiers are product-defined, not user-editable.
+model Plan {
+  id                String   @id @default(cuid())
+  name              String   @unique
+  priceUsdPerMonth  Int
+  maxActiveMandates Int?     // null = unlimited
+  maxCollections    Int?     // null = unlimited
+  description       String   @default("")
+  sortOrder         Int      @default(0)
+  users             User[]
 }
 
 model Organization {
@@ -40,7 +96,14 @@ model Listing {
   stage            String
   irr              String
   summary          String
+  useOfFunds             String? // carried from ProjectSubmission at publish time
+  fundingSecuredUsd      Int?    // carried from ProjectSubmission at publish time
+  sponsorContributionUsd Int?    // carried from ProjectSubmission at publish time
   verified         Boolean       @default(false)
+  verifiedBy       String?       // admin fullName — real reviewer, not a fabricated vendor
+  verifiedAt       DateTime?
+  verificationNote String        @default("") // evidence description recorded at verify/unverify time
+  verificationHistory String     @default("[]") // [{by,action,note,governmentBacked?,govMechanism?,at}]
   governmentBacked Boolean       @default(false)
   govMechanism     String?       // guarantee|concession|ppa|grant|letter|first-loss|tax|other
   matchScore       Int
@@ -52,8 +115,13 @@ model Listing {
   docs             Document[]
   images           ListingImage[]
   matchActions     MatchAction[]
+  matchFeedback    MatchFeedback[]
   deals            Deal[]
+  savedBy          SavedOpportunity[]
+  dataRoomAccess   DataRoomAccess[]
+  meetings         Meeting[]
   createdAt        DateTime      @default(now())
+  updatedAt        DateTime      @default(now()) @updatedAt
 }
 
 model Document {
@@ -65,6 +133,37 @@ model Document {
   folder     String
   storageKey String?
   mime       String?
+  accessLogs DocumentAccessLog[]
+}
+
+// Explicit per-investor data-room grant (Phase 5). Deliberately separate
+// from Deal.stage: a Deal is one row per listing (the sponsor's internal
+// pipeline entry) and cannot represent per-investor authorization. This
+// table is the actual security boundary for confidential documents; the
+// "Data-Room Requested"/"Data-Room Granted" Deal stages remain a coarse
+// pipeline/forecast signal, unchanged by this table.
+model DataRoomAccess {
+  id        String    @id @default(cuid())
+  listingId String
+  listing   Listing   @relation(fields: [listingId], references: [id])
+  userId    String
+  user      User      @relation(fields: [userId], references: [id])
+  grantedBy String    // fullName of the sponsor/admin who granted access
+  createdAt DateTime  @default(now())
+  revokedAt DateTime?
+
+  @@unique([listingId, userId])
+}
+
+// Audit trail of confidential document downloads — who accessed what and
+// when, visible to the listing's sponsor/admin via the data-room panel.
+model DocumentAccessLog {
+  id         String   @id @default(cuid())
+  documentId String
+  document   Document @relation(fields: [documentId], references: [id])
+  userId     String
+  user       User     @relation(fields: [userId], references: [id])
+  createdAt  DateTime @default(now())
 }
 
 model MatchAction {
@@ -73,8 +172,85 @@ model MatchAction {
   user      User     @relation(fields: [userId], references: [id])
   listingId String
   listing   Listing  @relation(fields: [listingId], references: [id])
-  action    String   // interested|pass|saved|follow
+  action    String   // interested|pass|saved|info_requested
   matchScore Int
+  createdAt DateTime @default(now())
+}
+
+// Investor feedback on why a match was unsuitable. This influences future
+// ranking signals (Phase 2) — it never mutates the mandate itself, so the
+// investor's stated requirements stay exactly what they set.
+model MatchFeedback {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  listingId String
+  listing   Listing  @relation(fields: [listingId], references: [id])
+  mandateId String?  // loose reference, no FK — mandate may be edited/deleted later without orphaning this record
+  reason    String
+  createdAt DateTime @default(now())
+}
+
+// User-defined grouping for saved opportunities (Phase 3). Reuses
+// MatchAction's existing "saved" event as the append-only save/unsave
+// log — this table is the mutable enrichment layer (which collection,
+// notes, tags), not a second "is this saved" boolean.
+model Collection {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  name      String
+  createdAt DateTime @default(now())
+  items     SavedOpportunity[]
+
+  @@unique([userId, name])
+}
+
+model SavedOpportunity {
+  id           String      @id @default(cuid())
+  userId       String
+  user         User        @relation(fields: [userId], references: [id])
+  listingId    String
+  listing      Listing     @relation(fields: [listingId], references: [id])
+  collectionId String?
+  collection   Collection? @relation(fields: [collectionId], references: [id])
+  notes        String      @default("")
+  tags         String      @default("[]") // JSON string[]
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @default(now()) @updatedAt
+
+  @@unique([userId, listingId])
+}
+
+// Real meeting-request workflow behind the previously-dead "Schedule
+// Meeting" button (Phase 6). No calendar integration exists, so this is
+// self-contained request/confirm scheduling, not a Google/Outlook sync.
+model Meeting {
+  id            String    @id @default(cuid())
+  listingId     String
+  listing       Listing   @relation(fields: [listingId], references: [id])
+  requesterId   String
+  requester     User      @relation(fields: [requesterId], references: [id])
+  proposedSlots String    // JSON array of ISO datetime strings, investor-proposed
+  note          String    @default("")
+  status        String    @default("requested") // requested|confirmed|declined|cancelled
+  confirmedSlot DateTime?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @default(now()) @updatedAt
+}
+
+// Audit trail for AI-assisted content (Phase 8 "controls"). Loose
+// references (listingId/threadId, no FK) — same pattern as
+// MatchFeedback.mandateId — since a log entry should outlive the thing
+// it was generated for.
+model AiGenerationLog {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  kind      String   // teaser|message_draft
+  source    String   // claude|template — which path actually produced the content
+  listingId String?
+  threadId  String?
   createdAt DateTime @default(now())
 }
 
@@ -88,7 +264,7 @@ model Deal {
   title     String
   flag      String
   amount    String
-  stage     String   // Screening|NDA|Diligence|IC Review|Term Sheet
+  stage     String   // see lib/deals.ts STAGES — 12-stage lifecycle
   parentId  String?
   parent    Deal?    @relation("Tranches", fields: [parentId], references: [id])
   tranches  Deal[]   @relation("Tranches")
@@ -97,8 +273,10 @@ model Deal {
   probability Int?                           // override, else stage default
   owner     String
   nextStep  String
+  dueDate   DateTime?
+  decisionNotes String @default("[]")        // [{by,note,at}]
   createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  updatedAt DateTime @default(now()) @updatedAt
 
   @@unique([listingId, title])
 }
@@ -139,6 +317,49 @@ model CommentLike {
   @@id([commentId, userId])
 }
 
+// Project-owner intake, separate from the public Listing table. A
+// submission is a draft under the owner's control; admin review promotes
+// it to a real Listing (copying the relevant fields) rather than
+// mutating it in place, so published listings never carry unreviewed
+// owner edits.
+model ProjectSubmission {
+  id                 String   @id @default(cuid())
+  ownerId            String
+  owner              User     @relation(fields: [ownerId], references: [id])
+  orgName            String
+  ownershipStatement String   @default("")
+  title              String   @default("")
+  country            String   @default("")
+  region             String   @default("")
+  sector             String   @default("")
+  stage              String   @default("")
+  raiseUsd           Int?
+  fundingSecuredUsd  Int?
+  sponsorContributionUsd Int?
+  instrument         String   @default("")
+  useOfFunds         String   @default("")
+  revenueModel       String   @default("")
+  financialSummary   String   @default("")
+  permitsStatus      String   @default("")
+  landRights         String   @default("")
+  governmentInvolvement String @default("")
+  governmentBacked   Boolean  @default(false)
+  esgSummary         String   @default("")
+  keyRisks           String   @default("")
+  managementTeam     String   @default("")
+  advisors           String   @default("")
+  documentsNote      String   @default("")
+  timetable          String   @default("")
+
+  status             String   @default("draft") // draft|submitted|under_review|changes_requested|approved|rejected
+  reviewedBy         String?
+  reviewNotes        String?
+  publishedListingId String?
+
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @default(now()) @updatedAt
+}
+
 model ListingImage {
   id         String   @id @default(cuid())
   listingId  String
@@ -154,12 +375,30 @@ model StandingMandate {
   userId    String
   user      User     @relation(fields: [userId], references: [id])
   name      String
-  query     String
-  criteria  String   // JSON parsed criteria snapshot
+  query     String   // freeform note; also the origin text when converted from an AI Search
+  criteria  String   // JSON parsed criteria snapshot (legacy, kept for AI Search conversion)
   threshold Int      @default(70)
   frequency String   @default("weekly") // daily|weekly
   active    Boolean  @default(true)
   createdAt DateTime @default(now())
+
+  // Structured investor-mandate fields (guided onboarding).
+  investorType         String?  // institutional|family-office|pe|vc|infra-fund|bank-dfi|sovereign-pension|hnw-angel|corporate|advisor
+  sectors              String   @default("[]") // JSON string[] — Agriculture|Infrastructure|Mining|Healthcare|Water
+  countries            String   @default("[]") // JSON string[]
+  ticketMinUsd         Int?
+  ticketMaxUsd         Int?
+  instruments          String   @default("[]") // JSON string[] — equity|debt|blended|spv|other
+  stagePreference      String?  // e.g. "Structuring", "Active" — free text matching Listing.stage vocabulary
+  targetReturn         String?  // e.g. "15-20% IRR"
+  horizonYears         Int?
+  riskTolerance        String?  // low|medium|high
+  currency             String   @default("USD")
+  esgRequired          Boolean  @default(false)
+  govSupportRequired   Boolean  @default(false)
+  excludedSectors      String   @default("[]") // JSON string[]
+  excludedCountries    String   @default("[]") // JSON string[]
+  coInvestPreference   String?  // solo|co-invest|either
 }
 
 model CapitalCall {

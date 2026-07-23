@@ -27,6 +27,17 @@ export type Listing = {
   docs: { name: string; size: string; folder: string }[];
   whyMatch: string;
   photos?: { id: string; url: string; caption: string | null }[];
+  // Sponsor-provided financial detail carried from the intake submission.
+  // Absent on the static seed literals below; optional on published
+  // listings too, since older listings were published before these fields
+  // existed.
+  useOfFunds?: string | null;
+  fundingSecuredUsd?: number | null;
+  sponsorContributionUsd?: number | null;
+  // Optional: absent on the static seed literals below (Prisma sets it on
+  // insert via @default(now())/@updatedAt); always present once loaded
+  // through toListing() from the database.
+  updatedAt?: Date;
 };
 
 // Sourced from Desco Global's own investor deck and business plans
@@ -236,4 +247,8 @@ export const threads: Thread[] = [];
 export const fmtUsd = (n: number) =>
   n >= 1_000_000_000
     ? "$" + (n / 1_000_000_000).toFixed(1) + "B"
-    : "$" + Math.round(n / 1_000_000) + "M";
+    : n >= 1_000_000
+    ? "$" + Math.round(n / 1_000_000) + "M"
+    : n >= 1_000
+    ? "$" + Math.round(n / 1_000) + "K"
+    : "$" + n;

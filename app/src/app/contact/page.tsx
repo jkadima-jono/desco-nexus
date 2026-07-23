@@ -16,7 +16,7 @@ export default function ContactPage() {
             alt="Desco Global"
             className="w-16 h-16 rounded-full mx-auto mb-5 shadow-[0_8px_24px_rgb(184_149_61/0.4)]"
           />
-          <h1 className="font-display font-extrabold text-3xl lg:text-4xl tracking-tight">
+          <h1 style={{ fontFamily: "var(--font-serif)" }} className="font-semibold text-3xl lg:text-4xl tracking-tight">
             Get in touch
           </h1>
           <p className="text-white/70 mt-3 max-w-md mx-auto leading-relaxed">

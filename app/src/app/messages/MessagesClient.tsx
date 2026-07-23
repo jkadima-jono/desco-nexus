@@ -19,6 +19,8 @@ export default function MessagesClient({ threads }: { threads: UiThread[] }) {
   const [sending, setSending] = useState(false);
   const [mobileThreadOpen, setMobileThreadOpen] = useState(false);
   const [aiOpen, setAiOpen] = useState(false);
+  const [aiDraft, setAiDraft] = useState<{ text: string; source: "claude" | "template" } | null>(null);
+  const [aiBusy, setAiBusy] = useState(false);
 
   const active = threads.find((t) => t.id === activeId);
   const sent = extra[activeId] ?? [];
@@ -74,6 +76,10 @@ export default function MessagesClient({ threads }: { threads: UiThread[] }) {
             {t("messages.title")}
           </h1>
           <p className="text-[11px] text-wgray mt-1">{t("messages.subtitle")}</p>
+          <p className="text-[11px] text-brandred/80 mt-2 leading-relaxed">
+            Demonstration data: these threads are a shared mockup visible to every signed-in
+            demo account, not private per-account correspondence.
+          </p>
         </div>
         {threads.map((t) => (
           <button
@@ -150,15 +156,57 @@ export default function MessagesClient({ threads }: { threads: UiThread[] }) {
         {aiOpen && (
           <div className="mx-3 sm:mx-4 mb-2 rounded-xl border border-gold/40 bg-gold-soft p-3 text-sm">
             <div className="font-display font-bold mb-1">AI draft for {active.name}</div>
-            <p className="text-xs text-wgray mb-3">Review every figure, date and commitment before sending. AI never sends automatically.</p>
+            {aiBusy ? (
+              <p className="text-xs text-wgray">Generating…</p>
+            ) : aiDraft ? (
+              <>
+                <p className="text-xs whitespace-pre-wrap bg-white rounded-lg p-2 mb-2">{aiDraft.text}</p>
+                <p className="text-[11px] text-wgray mb-3">
+                  {aiDraft.source === "claude"
+                    ? "Source: Claude API. Review every figure, date and commitment before sending. AI never sends automatically."
+                    : "Source: offline template (no AI model — Claude API key not configured). Review before sending."}
+                </p>
+              </>
+            ) : (
+              <p className="text-xs text-wgray mb-3">Review every figure, date and commitment before sending. AI never sends automatically.</p>
+            )}
             <div className="flex gap-2">
-              <button type="button" onClick={() => { setDrafts((d) => ({...d, [activeId]: `Hello ${active.name}, thank you for the update. Could you confirm the next diligence milestone and any action required from our team?`})); setAiOpen(false); }} className="bg-charcoal text-white px-3 py-2 rounded-lg text-xs font-bold">Insert draft</button>
-              <button type="button" onClick={() => setAiOpen(false)} className="px-3 py-2 rounded-lg text-xs font-bold">Cancel</button>
+              <button
+                type="button"
+                disabled={aiBusy || !aiDraft}
+                onClick={() => { if (aiDraft) { setDrafts((d) => ({ ...d, [activeId]: aiDraft.text })); setAiOpen(false); setAiDraft(null); } }}
+                className="bg-charcoal text-white px-3 py-2 rounded-lg text-xs font-bold disabled:opacity-50"
+              >
+                Insert draft
+              </button>
+              <button type="button" onClick={() => { setAiOpen(false); setAiDraft(null); }} className="px-3 py-2 rounded-lg text-xs font-bold">Cancel</button>
             </div>
           </div>
         )}
         <div className="p-3 sm:p-4 bg-white border-t border-charcoal/10 flex items-end gap-2 sm:gap-3">
-          <button type="button" onClick={() => setAiOpen(true)} className="min-w-11 min-h-11 rounded-xl border border-charcoal/10 text-gold font-bold" aria-label="Draft with AI">✦</button>
+          <button
+            type="button"
+            onClick={async () => {
+              setAiOpen(true);
+              setAiDraft(null);
+              setAiBusy(true);
+              try {
+                const res = await fetch("/api/ai/message-draft", {
+                  method: "POST",
+                  headers: { "Content-Type": "application/json" },
+                  body: JSON.stringify({ threadId: activeId }),
+                });
+                const data = await res.json();
+                if (res.ok) setAiDraft({ text: data.draft, source: data.source });
+              } finally {
+                setAiBusy(false);
+              }
+            }}
+            className="min-w-11 min-h-11 rounded-xl border border-charcoal/10 text-gold font-bold"
+            aria-label="Draft with AI"
+          >
+            ✦
+          </button>
           <textarea
             value={draft}
             rows={1}

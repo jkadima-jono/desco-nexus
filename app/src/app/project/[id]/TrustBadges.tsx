@@ -1,17 +1,7 @@
 "use client";
 
 import { useState } from "react";
-
-const MECHANISM_LABELS: Record<string, string> = {
-  guarantee: "Sovereign guarantee",
-  concession: "PPP concession agreement",
-  ppa: "Power purchase agreement (sovereign offtake)",
-  grant: "Government grant",
-  letter: "Letter of support",
-  "first-loss": "DFI first-loss capital tranche",
-  tax: "Tax incentive",
-  other: "Other defined mechanism",
-};
+import { MECHANISM_LABELS } from "@/lib/verification";
 
 type Claim = {
   label: string;
@@ -25,12 +15,18 @@ type Claim = {
 
 export default function TrustBadges({
   verified,
+  verifiedBy,
+  verifiedAt,
+  verificationNote,
   governmentBacked,
   govMechanism,
   sponsor,
   stage,
 }: {
   verified: boolean;
+  verifiedBy?: string | null;
+  verifiedAt?: string | null;
+  verificationNote?: string;
   governmentBacked: boolean;
   govMechanism: string | null;
   sponsor: string;
@@ -42,20 +38,22 @@ export default function TrustBadges({
   if (verified) {
     claims.push({
       label: "✓ Verified",
-      claim: "Sponsor identity and company registration reviewed",
+      claim: verificationNote || "Sponsor identity and company registration reviewed",
       verificationType: "Identity & company verification",
-      source: "Demo seed fixture — no verification vendor connected in this build",
-      verifiedBy: "Not independently verified",
-      checked: "Self-reported (demo data)",
+      source: verifiedBy
+        ? "Reviewed by Nexus admin — no external eKYC/registry vendor connected in this build"
+        : "Demo seed fixture — no verification vendor connected in this build",
+      verifiedBy: verifiedBy ? verifiedBy + (verifiedAt ? " on " + new Date(verifiedAt).toLocaleDateString() : "") : "Not independently verified",
+      checked: verifiedBy ? "Reviewed by admin" : "Self-reported (demo data)",
       limitations:
-        "This is a demonstration listing. Production verification uses eKYC + registry lookup with an auditable case record; no such record exists here.",
+        "This platform has no connected eKYC/registry vendor. \"Verified\" means a Nexus admin recorded reviewing the stated evidence, not an independent third-party check.",
     });
   }
   if (governmentBacked) {
     claims.push({
-      label: "◆ Gov-backed",
+      label: "◆ Government involvement",
       claim:
-        "Government support: " +
+        "Type of involvement: " +
         (MECHANISM_LABELS[govMechanism ?? ""] ?? "mechanism not specified"),
       verificationType: "Support-mechanism classification",
       source: "Sponsor-declared in listing (demo data)",

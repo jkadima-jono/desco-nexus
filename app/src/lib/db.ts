@@ -44,11 +44,15 @@ export function toListing(
       folder: d.folder,
     })),
     whyMatch: row.whyMatch,
+    updatedAt: row.updatedAt,
+    useOfFunds: row.useOfFunds,
+    fundingSecuredUsd: row.fundingSecuredUsd,
+    sponsorContributionUsd: row.sponsorContributionUsd,
     photos: (row.images ?? [])
       .sort((a, b) => a.position - b.position)
       .map((i) => ({
         id: i.id,
-        url: "/api/photos/" + i.id,
+        url: i.storageKey,
         caption: i.caption,
       })),
   };

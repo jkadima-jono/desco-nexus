@@ -72,6 +72,10 @@ export default function HeroVisual({
         <img
           src={photo.url}
           alt={photo.caption ?? listing.title}
+          loading="lazy"
+          decoding="async"
+          width={1200}
+          height={600}
           className="absolute inset-0 w-full h-full object-cover"
         />
         {overlay && (
@@ -92,7 +96,8 @@ export default function HeroVisual({
         <defs>
           <linearGradient id={"g-" + listing.id} x1="0" y1="0" x2="1" y2="1">
             <stop offset="0%" stopColor={listing.sectorColor} />
-            <stop offset="100%" stopColor="#10161D" />
+            {/* matches --color-navy in globals.css */}
+            <stop offset="100%" stopColor="#18334A" />
           </linearGradient>
         </defs>
         <rect width="400" height="200" fill={"url(#g-" + listing.id + ")"} />
