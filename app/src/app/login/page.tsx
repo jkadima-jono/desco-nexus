@@ -1,8 +1,9 @@
 "use client";
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { Suspense, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useI18n } from "@/components/I18nProvider";
+import { sanitizeNextPath } from "@/lib/nextParam";
 
 const PERSONAS = [
   { id: "investor", labelKey: "login.demoInvestor", icon: "◈" },
@@ -11,9 +12,20 @@ const PERSONAS = [
   { id: "admin", labelKey: "login.demoAdmin", icon: "⚙" },
 ];
 
+// useSearchParams() requires a Suspense boundary or `next build` fails
+// static generation for this page.
 export default function Login() {
+  return (
+    <Suspense fallback={null}>
+      <LoginForm />
+    </Suspense>
+  );
+}
+
+function LoginForm() {
   const { t } = useI18n();
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [busy, setBusy] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 
@@ -31,7 +43,7 @@ export default function Login() {
         setError(data.error ?? "Sign-in failed");
         return;
       }
-      router.push("/");
+      router.push(sanitizeNextPath(searchParams.get("next")));
       router.refresh();
     } catch {
       setError("Network error — retry.");
