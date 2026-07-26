@@ -9,11 +9,27 @@ jobs:
   build-and-test:
     runs-on: ubuntu-latest
     timeout-minutes: 15
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: desco_nexus_test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres -d desco_nexus_test"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
     defaults:
       run:
         working-directory: app
     env:
-      DATABASE_URL: "file:./dev.db"
+      DATABASE_URL: "postgresql://postgres:postgres@localhost:5432/desco_nexus_test?schema=public"
+      DIRECT_URL: "postgresql://postgres:postgres@localhost:5432/desco_nexus_test?schema=public"
+      SESSION_SECRET: "ci-only-session-secret"
     steps:
       - uses: actions/checkout@v4
 
@@ -31,8 +47,6 @@ jobs:
           npx prisma generate
           npx prisma db push
           npx tsx prisma/seed.ts
-          npx tsx prisma/seed-comments.ts
-          npx tsx prisma/seed-roles.ts
 
       - name: Type check
         run: npx tsc --noEmit
@@ -42,11 +56,24 @@ jobs:
 
       - name: Start server and run integration tests
         run: |
-          npm run dev > server.log 2>&1 &
+          set -euo pipefail
+          npm run start > server.log 2>&1 &
           SERVER_PID=$!
+          trap 'kill "$SERVER_PID" 2>/dev/null || true' EXIT
+          READY=false
           for i in $(seq 1 60); do
-            if curl -sf http://localhost:3000/ > /dev/null; then break; fi
+            if curl -sf http://localhost:3000/ > /dev/null; then
+              READY=true
+              break
+            fi
+            if ! kill -0 "$SERVER_PID" 2>/dev/null; then
+              cat server.log
+              exit 1
+            fi
             sleep 2
           done
+          if [ "$READY" != true ]; then
+            cat server.log
+            exit 1
+          fi
           node --test tests/api.test.mjs
-          kill $SERVER_PID
