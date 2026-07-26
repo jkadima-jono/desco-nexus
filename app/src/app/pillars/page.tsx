@@ -26,12 +26,18 @@ export default function PillarsIndex() {
         />
         <div className="relative max-w-4xl mx-auto px-6 lg:px-8 py-20 lg:py-28 text-center">
           <Reveal>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="/brand/desco-coin.png"
+              alt="Desco Global"
+              className="w-14 h-14 rounded-full mx-auto mb-6 shadow-[0_8px_24px_rgb(184_149_61/0.4)]"
+            />
             <p className="text-gold font-bold text-xs uppercase tracking-[0.2em] mb-4">
               Desco Global · Vision 2035
             </p>
           </Reveal>
           <Reveal delay={80}>
-            <h1 className="font-display font-extrabold text-4xl lg:text-6xl tracking-tight leading-[1.05]">
+            <h1 style={{ fontFamily: "var(--font-serif)" }} className="font-semibold text-4xl lg:text-6xl tracking-tight leading-[1.05]">
               Transforming Kasai.
               <br />
               Empowering the DRC.
@@ -48,7 +54,7 @@ export default function PillarsIndex() {
           <Reveal delay={240}>
             <div className="flex flex-wrap gap-3 justify-center mt-8">
               <Link
-                href="/login"
+                href="/contact"
                 className="bg-gold text-ink font-display font-bold text-sm px-6 py-3 rounded-xl hover:brightness-110"
               >
                 Partner with us
@@ -88,6 +94,41 @@ export default function PillarsIndex() {
         </Reveal>
       </section>
 
+      {/* How the pieces relate */}
+      <section className="max-w-4xl mx-auto px-6 lg:px-8 py-16 lg:py-20">
+        <Reveal>
+          <p className="text-gold font-bold text-xs uppercase tracking-[0.2em] mb-3 text-center">How this fits together</p>
+        </Reveal>
+        <Reveal delay={80}>
+          <div className="grid gap-5 sm:grid-cols-2 text-sm">
+            <div className="bg-mist rounded-2xl p-5">
+              <h3 className="font-display font-bold text-sm mb-1.5">Desco Global</h3>
+              <p className="text-wgray leading-relaxed">The holding company. Owns and develops projects across four pillars in the DRC.</p>
+            </div>
+            <div className="bg-mist rounded-2xl p-5">
+              <h3 className="font-display font-bold text-sm mb-1.5">DESCO Nexus</h3>
+              <p className="text-wgray leading-relaxed">The platform you&rsquo;re using — where Desco Global and other sponsors list projects for investors to discover, evaluate, and act on.</p>
+            </div>
+            <div className="bg-mist rounded-2xl p-5">
+              <h3 className="font-display font-bold text-sm mb-1.5">The four pillars</h3>
+              <p className="text-wgray leading-relaxed">Agridesco, Investdesco, Phardesco, Waterdesco — Desco Global&rsquo;s four operating divisions, each behind a subset of the projects listed on Nexus.</p>
+            </div>
+            <div className="bg-mist rounded-2xl p-5">
+              <h3 className="font-display font-bold text-sm mb-1.5">Project sponsors</h3>
+              <p className="text-wgray leading-relaxed">Desco Global itself for pillar projects, or partner organizations (e.g. Comicordia Corporation) for co-developed ones — the party responsible for a listing&rsquo;s content.</p>
+            </div>
+            <div className="bg-mist rounded-2xl p-5">
+              <h3 className="font-display font-bold text-sm mb-1.5">Investors</h3>
+              <p className="text-wgray leading-relaxed">Register on Nexus, set a mandate, and review opportunities from any sponsor — not limited to Desco Global&rsquo;s own pillars.</p>
+            </div>
+            <div className="bg-mist rounded-2xl p-5">
+              <h3 className="font-display font-bold text-sm mb-1.5">Advisors</h3>
+              <p className="text-wgray leading-relaxed">Support investors or sponsors through discovery, matching, and due diligence on their clients&rsquo; behalf.</p>
+            </div>
+          </div>
+        </Reveal>
+      </section>
+
       {/* Why Africa / Why DRC */}
       <section className="bg-charcoal text-white py-16 lg:py-20">
         <div className="max-w-5xl mx-auto px-6 lg:px-8 grid gap-10 md:grid-cols-2">
@@ -120,11 +161,16 @@ export default function PillarsIndex() {
                 import bill, chronic power and clean-water shortages, and one
                 pharmacist for every 50,000 people in Kasai against a WHO
                 benchmark of 1 per 2,000. Each Desco Global pillar targets one
-                of these specific, documented gaps.
+                of these specific gaps.
               </p>
             </div>
           </Reveal>
         </div>
+        <p className="max-w-5xl mx-auto px-6 lg:px-8 text-[11px] text-white/40 mt-10 leading-relaxed">
+          Market figures above are drawn from Desco Global&rsquo;s own investor
+          and market materials; Nexus has not independently verified the
+          underlying trade, demographic, or WHO-benchmark data cited.
+        </p>
       </section>
 
       {/* Approach */}
@@ -133,7 +179,7 @@ export default function PillarsIndex() {
           <div className="text-center mb-10">
             <p className="text-gold font-bold text-xs uppercase tracking-[0.2em] mb-3">Our approach</p>
             <h2 className="font-display font-extrabold text-2xl lg:text-3xl tracking-tight">
-              We do not speculate. We structure. We secure. We execute.
+              How Desco Global develops a project, in three stages.
             </h2>
           </div>
         </Reveal>
@@ -148,6 +194,10 @@ export default function PillarsIndex() {
           <Reveal delay={160}><StatCounter value={100000} suffix="+" label="Projected jobs by 2035" /></Reveal>
           <Reveal delay={240}><StatCounter value={2500000} label="People targeted for clean water access" /></Reveal>
         </div>
+        <p className="text-center text-[11px] text-wgray/70 max-w-lg mx-auto mt-8 leading-relaxed">
+          Figures above are Desco Global&rsquo;s own investor-deck targets and
+          projections, not independently verified or measured results.
+        </p>
       </section>
 
       {/* Pillars grid */}
@@ -175,7 +225,7 @@ export default function PillarsIndex() {
             foundation.
           </h2>
           <Link
-            href="/login"
+            href="/contact"
             className="inline-block mt-7 bg-gold text-ink font-display font-bold text-sm px-7 py-3.5 rounded-xl hover:brightness-110"
           >
             Partner with us

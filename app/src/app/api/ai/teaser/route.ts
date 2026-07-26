@@ -29,6 +29,9 @@ export async function POST(req: Request) {
     return forbidden();
   }
   const { teaser, source } = await generateTeaser(toListing(row));
+  await prisma.aiGenerationLog.create({
+    data: { userId: user.id, kind: "teaser", source, listingId: row.id },
+  });
   return NextResponse.json({
     ok: true,
     teaser,

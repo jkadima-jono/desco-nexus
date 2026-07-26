@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { mkdir, writeFile } from "fs/promises";
+import { put } from "@vercel/blob";
 import path from "path";
 import crypto from "crypto";
 import { prisma } from "@/lib/db";
@@ -8,7 +8,6 @@ import { canManageListing, forbidden } from "@/lib/authz";
 
 const MAX_BYTES = 10 * 1024 * 1024;
 const ALLOWED = new Set([".jpg", ".jpeg", ".png", ".webp"]);
-const PHOTO_DIR = path.join(process.cwd(), "uploads", "photos");
 
 export async function POST(
   req: Request,
@@ -42,15 +41,11 @@ export async function POST(
     );
   }
   const caption = String(form?.get("caption") ?? "").slice(0, 200) || null;
-  const storageKey = crypto.randomUUID() + ext;
-  await mkdir(PHOTO_DIR, { recursive: true });
-  await writeFile(
-    path.join(PHOTO_DIR, storageKey),
-    Buffer.from(await file.arrayBuffer())
-  );
+  const pathname = "listings/" + id + "/" + crypto.randomUUID() + ext;
+  const blob = await put(pathname, file, { access: "public" });
   const count = await prisma.listingImage.count({ where: { listingId: id } });
   const image = await prisma.listingImage.create({
-    data: { listingId: id, storageKey, caption, position: count },
+    data: { listingId: id, storageKey: blob.url, caption, position: count },
   });
   return NextResponse.json({ ok: true, image });
 }

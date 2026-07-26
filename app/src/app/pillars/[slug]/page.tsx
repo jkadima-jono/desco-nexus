@@ -108,7 +108,8 @@ export default async function PillarPage({
 
           <Reveal>
             <section>
-              <h2 className="font-display font-bold text-xl mb-3">Strategic objectives</h2>
+              <h2 className="font-display font-bold text-xl mb-1">Strategic objectives</h2>
+              <p className="text-xs text-wgray mb-3">Planned goals — not yet completed or independently verified.</p>
               <ul className="space-y-2.5">
                 {pillar.objectives.map((o) => (
                   <li key={o} className="flex items-start gap-3 text-sm">
@@ -116,7 +117,7 @@ export default async function PillarPage({
                       className="w-6 h-6 rounded-full flex items-center justify-center text-white text-xs shrink-0 mt-0.5"
                       style={{ background: pillar.color }}
                     >
-                      ✓
+                      ◦
                     </span>
                     {o}
                   </li>
@@ -144,6 +145,13 @@ export default async function PillarPage({
                   <StatCounter key={s.label} value={s.value} suffix={s.suffix} label={s.label} />
                 ))}
               </div>
+              <p className="text-[11px] text-wgray mt-4 pt-4 border-t border-charcoal/10 leading-relaxed">
+                Figures above are drawn from Desco Global&rsquo;s own investor
+                deck and business plans and have not been independently
+                verified by Nexus. Figures marked &ldquo;target,&rdquo;
+                &ldquo;planned,&rdquo; or &ldquo;projected&rdquo; are forward
+                estimates, not measured results.
+              </p>
             </section>
           </Reveal>
 

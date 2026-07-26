@@ -46,6 +46,46 @@ export default function PhotoGallery({
     }
   };
 
+  const removePhoto = async (photoId: string) => {
+    setBusy(true);
+    setMsg(null);
+    try {
+      const res = await fetch("/api/listings/" + listingId + "/photos/" + photoId, { method: "DELETE" });
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}));
+        setMsg(data.error ?? "Remove failed");
+      } else {
+        router.refresh();
+      }
+    } catch {
+      setMsg("Network error — retry.");
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  const setCover = async (photoId: string) => {
+    setBusy(true);
+    setMsg(null);
+    try {
+      const res = await fetch("/api/listings/" + listingId + "/photos/" + photoId, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ action: "set_cover" }),
+      });
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}));
+        setMsg(data.error ?? "Update failed");
+      } else {
+        router.refresh();
+      }
+    } catch {
+      setMsg("Network error — retry.");
+    } finally {
+      setBusy(false);
+    }
+  };
+
   return (
     <section className="bg-white rounded-2xl p-6 shadow-[0_1px_3px_rgb(44_62_80/0.08)]">
       <div className="flex items-center justify-between mb-4">
@@ -73,19 +113,46 @@ export default function PhotoGallery({
         <p className="text-sm text-wgray">{t("photos.empty")}</p>
       ) : (
         <div className="grid grid-cols-3 gap-3">
-          {photos.map((p) => (
-            <button
-              key={p.id}
-              onClick={() => setLightbox(p)}
-              className="relative aspect-[4/3] rounded-xl overflow-hidden group"
-            >
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src={p.url}
-                alt={p.caption ?? ""}
-                className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-              />
-            </button>
+          {photos.map((p, i) => (
+            <div key={p.id} className="relative aspect-[4/3] rounded-xl overflow-hidden group">
+              <button
+                onClick={() => setLightbox(p)}
+                className="absolute inset-0 w-full h-full"
+              >
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={p.url}
+                  alt={p.caption ?? ""}
+                  className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                />
+              </button>
+              {i === 0 && (
+                <span className="absolute top-1.5 left-1.5 text-[9px] font-bold uppercase tracking-wider bg-ink/80 text-white px-2 py-0.5 rounded-full pointer-events-none">
+                  {t("photos.cover")}
+                </span>
+              )}
+              {canUpload && (
+                <div className="absolute inset-x-0 bottom-0 p-1.5 flex justify-between opacity-0 group-hover:opacity-100 transition-opacity bg-gradient-to-t from-ink/70 to-transparent">
+                  {i !== 0 ? (
+                    <button
+                      disabled={busy}
+                      onClick={() => setCover(p.id)}
+                      className="text-[10px] font-bold text-white hover:text-gold disabled:opacity-50"
+                    >
+                      {t("photos.setCover")}
+                    </button>
+                  ) : <span />}
+                  <button
+                    disabled={busy}
+                    onClick={() => removePhoto(p.id)}
+                    aria-label={t("photos.remove") + " " + (p.caption ?? "photo")}
+                    className="text-[10px] font-bold text-white hover:text-brandred disabled:opacity-50"
+                  >
+                    {t("photos.remove")}
+                  </button>
+                </div>
+              )}
+            </div>
           ))}
         </div>
       )}

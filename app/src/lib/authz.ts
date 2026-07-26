@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import type { User, Listing } from "@prisma/client";
+import type { User, Listing, ProjectSubmission } from "@prisma/client";
 import { getSessionUser } from "./auth";
 
 export type Role = "investor" | "owner" | "advisor" | "admin";
@@ -23,6 +23,16 @@ export function canRequestDataRoom(user: User | null): boolean {
 
 export function canManageDeal(user: User | null, deal: { listing: Listing }): boolean {
   return canManageListing(user, deal.listing);
+}
+
+export function canManageSubmission(user: User | null, submission: ProjectSubmission): boolean {
+  if (!user) return false;
+  if (user.role === "admin") return true;
+  return user.id === submission.ownerId;
+}
+
+export function canReviewSubmissions(user: User | null): boolean {
+  return !!user && user.role === "admin";
 }
 
 export const unauthorized = () =>
