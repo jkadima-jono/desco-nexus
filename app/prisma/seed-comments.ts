@@ -3,39 +3,56 @@ import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
 async function main() {
-  // Get sample users and listings for comment seeding
+  // Seeds sample comments for testing
   const users = await prisma.user.findMany({ take: 5 });
   const listings = await prisma.listing.findMany({ take: 5 });
 
   if (users.length === 0 || listings.length === 0) {
-    console.log("Skipping comment seeding: insufficient users or listings");
+    console.log(
+      "Skipping comment seeding: insufficient users or listings available"
+    );
     return;
   }
 
-  // Sample comments to seed
-  const sampleComments = [
-    "Great opportunity! Interested in learning more about the investment terms.",
-    "This looks promising. Can you provide more details on the management team?",
-    "Impressive financials. What's the timeline for deployment?",
-    "Very interested in this sector. Would like to schedule a call.",
-    "Strong fundamentals. How mature is the current product?",
-  ];
+  // Clear existing comments
+  await prisma.commentLike.deleteMany();
+  await prisma.comment.deleteMany();
 
+  // Create sample comments
   for (let i = 0; i < Math.min(users.length, listings.length); i++) {
-    const user = users[i];
-    const listing = listings[i];
-
-    await prisma.comment.create({
+    const comment = await prisma.comment.create({
       data: {
-        userId: user.id,
-        listingId: listing.id,
-        content: sampleComments[i % sampleComments.length],
-        createdAt: new Date(),
+        listingId: listings[i].id,
+        userId: users[i].id,
+        body: `Sample comment ${i + 1} on this listing`,
       },
     });
+
+    // Add a reply to some comments
+    if (i % 2 === 0 && users.length > i + 1) {
+      await prisma.comment.create({
+        data: {
+          listingId: listings[i].id,
+          userId: users[(i + 1) % users.length].id,
+          parentId: comment.id,
+          body: `Reply to comment ${i + 1}`,
+        },
+      });
+    }
+
+    // Add a like to some comments
+    if (i % 3 === 0 && users.length > i + 1) {
+      await prisma.commentLike.create({
+        data: {
+          commentId: comment.id,
+          userId: users[(i + 1) % users.length].id,
+        },
+      });
+    }
   }
 
-  console.log("Seeded comments for development");
+  const commentCount = await prisma.comment.count();
+  console.log("Seeded", commentCount, "comments");
 }
 
 main().finally(() => prisma.$disconnect());
