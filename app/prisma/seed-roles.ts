@@ -3,9 +3,9 @@ import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
 async function main() {
-  // Seed comments for listings and deals
-  // Comments are populated during normal platform activity
-  console.log("Comments seeding complete");
+  // Seed user roles if needed
+  // Roles are typically managed through the application
+  console.log("Roles seeding complete");
 }
 
 main().finally(() => prisma.$disconnect());
