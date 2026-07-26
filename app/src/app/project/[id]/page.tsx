@@ -113,6 +113,9 @@ export default async function ProjectDetail({
           </div>
           <div className="flex flex-col lg:flex-row items-start justify-between gap-6 lg:gap-8">
             <div>
+              <div className="mb-3 text-[10px] font-bold uppercase tracking-[0.18em] text-gold">
+                Public opportunity briefing
+              </div>
               <h1 className="font-display font-extrabold text-3xl tracking-tight max-w-xl">
                 {l.title}
               </h1>
@@ -137,12 +140,21 @@ export default async function ProjectDetail({
               <div className="text-[10px] text-white/40 mt-1.5">Sponsor-provided figures</div>
             </div>
           </div>
+          <div className="mt-6 flex flex-wrap gap-x-5 gap-y-2 border-t border-white/15 pt-4 text-[11px] text-white/60">
+            <span>Last updated {new Date(row.updatedAt).toLocaleDateString(locale, { year: "numeric", month: "short", day: "numeric" })}</span>
+            <span>Sponsor: {l.org}</span>
+            <span>Public disclosure · confidential documents restricted</span>
+          </div>
         </div>
       </div>
 
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-6 lg:py-8 grid gap-6 lg:grid-cols-3">
         <div className="lg:col-span-2 space-y-6">
           <section className="bg-white rounded-2xl p-6 shadow-[0_1px_3px_rgb(44_62_80/0.08)]">
+            <div className="mb-5 border-l-2 border-gold pl-4">
+              <div className="text-[10px] font-bold uppercase tracking-[0.16em] text-gold">Investment thesis</div>
+              <p className="mt-2 text-sm leading-6 text-charcoal">{l.summary}</p>
+            </div>
             <h2 className="font-display font-bold text-lg mb-1">{t(locale, "project.highlights")}</h2>
             <p className="text-xs text-wgray mb-4">Sponsor-provided figures, not independently verified unless stated otherwise.</p>
             <ul className="space-y-2.5">
@@ -228,10 +240,20 @@ export default async function ProjectDetail({
               <div className="rounded-xl bg-mist p-5 text-sm text-wgray">
                 Confidential filenames and documents are hidden until the sponsor grants
                 data-room access. Use &ldquo;{t(locale, "project.requestRoom")}&rdquo; above if you haven&apos;t already.
+                <ul className="mt-3 space-y-1 text-xs">
+                  <li>• Sponsor-approved diligence documents</li>
+                  <li>• Financial, legal, technical and impact evidence where supplied</li>
+                  <li>• Access that the sponsor can grant or revoke</li>
+                </ul>
               </div>
             ) : (
               <div className="rounded-xl bg-mist p-5 text-sm text-wgray">
                 Confidential filenames and documents are hidden. <Link href={`/login?next=/project/${l.id}`} className="font-bold text-gold">Sign in to request access.</Link>
+                <ul className="mt-3 space-y-1 text-xs">
+                  <li>• Sponsor-approved diligence documents</li>
+                  <li>• Financial, legal, technical and impact evidence where supplied</li>
+                  <li>• Access that the sponsor can grant or revoke</li>
+                </ul>
               </div>
             )}
             {canManageListing && <UploadDoc listingId={l.id} />}

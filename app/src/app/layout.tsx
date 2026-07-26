@@ -6,7 +6,6 @@ import Footer from "@/components/Footer";
 import { getSessionUser } from "@/lib/auth";
 import { getLocale } from "@/lib/i18n-server";
 import { I18nProvider } from "@/components/I18nProvider";
-import { t } from "@/lib/i18n";
 
 const montserrat = Montserrat({
   subsets: ["latin"],
@@ -25,9 +24,9 @@ const playfair = Playfair_Display({
 });
 
 export const metadata: Metadata = {
-  title: "DESCO Nexus — Where Capital Meets Opportunity",
+  title: "DESCO Nexus — Structured African investment opportunities",
   description:
-    "The operating system for global investment opportunities. A Desco Global platform. Integrated Solutions. Sustainable Impact.",
+    "Review structured African investment opportunities with clear disclosure, sponsor-controlled diligence, and mandate-based screening.",
   icons: { icon: "/brand/desco-coin.png" },
 };
 
@@ -46,8 +45,8 @@ export default async function RootLayout({
             user={user ? { fullName: user.fullName, title: user.title, role: user.role } : null}
           />
           <main id="main-content" tabIndex={-1} className="flex-1 min-w-0 pt-16 lg:pt-0 flex flex-col min-h-screen">
-            <div className="bg-gold-soft border-b border-gold/30 px-4 py-2 text-center text-xs font-semibold text-charcoal">
-              {t(locale, "login.demoNote")}
+            <div className="border-b border-gold/25 bg-[#171f27] px-4 py-2 text-center text-[11px] leading-5 text-white/72">
+              Demonstration environment. Opportunities and accounts may contain illustrative information. Nothing on this platform constitutes a securities offer or investment recommendation.
             </div>
             <div className="flex-1">{children}</div>
             <Footer />

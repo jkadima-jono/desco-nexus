@@ -23,30 +23,24 @@ const MANDATES: NavItem = { href: "/mandates", key: "nav.mandates", icon: "☰" 
 const SAVED: NavItem = { href: "/saved", key: "nav.saved", icon: "★" };
 const CONTACT: NavItem = { href: "/contact", key: "nav.contact", icon: "✉" };
 
-// Public nav taxonomy. Several of these route to the closest real
-// destination rather than a dedicated page (e.g. "For investors" →
-// /mandates, "About DESCO" → /pillars) — no dedicated marketing pages
-// exist yet for every concept; anchors (#how-it-works, #trust) point
-// into the homepage sections that carry that content.
-const OPPORTUNITIES: NavItem = { href: "/", key: "nav.opportunities", icon: "◈" };
-const HOW_IT_WORKS: NavItem = { href: "/#how-it-works", key: "nav.howItWorks", icon: "▤" };
-const FOR_INVESTORS: NavItem = { href: "/mandates", key: "nav.forInvestors", icon: "☰" };
-const FOR_OWNERS: NavItem = { href: "/submit-project", key: "nav.forOwners", icon: "▲" };
+const OPPORTUNITIES: NavItem = { href: "/opportunities", key: "nav.opportunities", icon: "◈" };
+const HOW_IT_WORKS: NavItem = { href: "/diligence", key: "nav.howItWorks", icon: "▤" };
+const FOR_INVESTORS: NavItem = { href: "/investors", key: "nav.forInvestors", icon: "☰" };
+const FOR_OWNERS: NavItem = { href: "/sponsors", key: "nav.forOwners", icon: "▲" };
 const SUBMIT_PROJECT: NavItem = { href: "/submit-project", key: "nav.submitProject", icon: "▲" };
 const ADMIN_HOME: NavItem = { href: "/admin", key: "nav.adminHome", icon: "▦" };
 const REVIEW_SUBMISSIONS: NavItem = { href: "/admin/submissions", key: "nav.reviewSubmissions", icon: "▲" };
 const VERIFICATION: NavItem = { href: "/admin/verification", key: "nav.verification", icon: "✓" };
 const AI_USAGE: NavItem = { href: "/admin/ai-usage", key: "nav.aiUsage", icon: "✦" };
 const BILLING: NavItem = { href: "/admin/users", key: "nav.billing", icon: "$" };
-const PRICING: NavItem = { href: "/pricing", key: "nav.pricing", icon: "$" };
-const TRUST: NavItem = { href: "/#trust", key: "nav.trust", icon: "✓" };
-const ABOUT: NavItem = { href: "/pillars", key: "nav.about", icon: "◆" };
+const TRUST: NavItem = { href: "/trust", key: "nav.trust", icon: "✓" };
+const ABOUT: NavItem = { href: "/about", key: "nav.about", icon: "◆" };
 
 // Role-appropriate subsets of real, working routes only — no links to
 // pages that don't exist yet (data-rooms/analytics land in later phases
 // and gain nav entries then, not before).
 const NAV_BY_ROLE: Record<string, NavItem[]> = {
-  signedOut: [OPPORTUNITIES, HOW_IT_WORKS, FOR_INVESTORS, FOR_OWNERS, PRICING, PILLARS, TRUST, ABOUT, CONTACT],
+  signedOut: [OPPORTUNITIES, FOR_INVESTORS, FOR_OWNERS, HOW_IT_WORKS, PILLARS, TRUST, ABOUT, CONTACT],
   investor: [DISCOVER, MATCH, SAVED, MANDATES, PIPELINE, PORTFOLIO, SEARCH, MESSAGES, PILLARS],
   owner: [PROJECTS, SUBMIT_PROJECT, INVESTOR_MATCHES, MESSAGES, PILLARS],
   advisor: [DISCOVER, MANDATES, TRANSACTIONS, MESSAGES, PILLARS],

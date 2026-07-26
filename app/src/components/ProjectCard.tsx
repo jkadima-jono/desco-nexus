@@ -20,8 +20,8 @@ export default function ProjectCard({
   showMatchScore?: boolean;
 }) {
   const verificationScope = listing.verified
-    ? "Identity & registration reviewed"
-    : "Not yet verified";
+    ? "DESCO evidence review recorded"
+    : "Sponsor-provided · review pending";
   const accessibleName = [
     listing.title,
     `${listing.country}`,
@@ -34,7 +34,7 @@ export default function ProjectCard({
     <Link
       href={"/project/" + listing.id}
       aria-label={accessibleName}
-      className="card-rise group block bg-white rounded-2xl border border-charcoal/10 hover:border-gold/50 shadow-[0_1px_3px_rgb(44_62_80/0.06)] hover:shadow-[0_8px_24px_rgb(44_62_80/0.10)] transition-all overflow-hidden"
+      className="card-rise group block overflow-hidden rounded-xl border border-charcoal/10 bg-white shadow-[0_1px_3px_rgb(44_62_80/0.06)] transition-all hover:border-gold/50 hover:shadow-[0_8px_24px_rgb(44_62_80/0.10)]"
       style={{ animationDelay: index * 40 + "ms" }}
     >
       <HeroVisual listing={listing} className="h-40" />
@@ -85,8 +85,13 @@ export default function ProjectCard({
           <span>Updated {formatUpdated(listing.updatedAt)}</span>
         </div>
 
-        <div className="mt-3 flex items-center gap-1.5 text-sm font-bold text-charcoal group-hover:text-gold">
-          View opportunity <span aria-hidden="true">→</span>
+        <div className="mt-3 flex items-center justify-between gap-3">
+          <span className="rounded-full border border-charcoal/15 bg-mist px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.12em] text-slate">
+            Data room · access required
+          </span>
+          <span className="flex items-center gap-1.5 text-sm font-bold text-charcoal group-hover:text-gold">
+            Review <span aria-hidden="true">→</span>
+          </span>
         </div>
       </div>
     </Link>

@@ -37,7 +37,7 @@ export default function TrustBadges({
   const claims: Claim[] = [];
   if (verified) {
     claims.push({
-      label: "✓ Verified",
+      label: "✓ Evidence reviewed",
       claim: verificationNote || "Sponsor identity and company registration reviewed",
       verificationType: "Identity & company verification",
       source: verifiedBy

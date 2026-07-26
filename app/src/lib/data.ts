@@ -59,7 +59,7 @@ export const listings: Listing[] = [
     flag: "🇨🇩",
     raiseUsd: 85_000_000,
     instrument: "Project SPV — Desco majority ownership",
-    stage: "Feasibility complete",
+    stage: "Feasibility reported by sponsor",
     irr: "Part of Desco Global's 17.2% target Phase 1 program IRR",
     summary:
       "Strategic river gateway on the Kasai River — the central logistics hub connecting the Grand Kasai region to Kinshasa and export markets. Phase 1 (2026–2028): quay wall, dredging, multi-purpose berths, warehousing and silos, fuel & bunkering, customs/compliance, digital smart gate. Phase 2 (2028–2030): adjacent industrial park and agro-processing integration.",
@@ -67,7 +67,7 @@ export const listings: Listing[] = [
     governmentBacked: false,
     scores: { match: 91, readiness: 78, esg: 74, risk: 46 },
     highlights: [
-      "Feasibility study complete",
+      "Sponsor reports a completed feasibility study",
       "1,200 construction jobs + 450 permanent operational roles",
       "IFC Performance Standards, biodiversity plan, community compact",
     ],
@@ -137,7 +137,7 @@ export const listings: Listing[] = [
     flag: "🇨🇩",
     raiseUsd: 225_000_000,
     instrument: "Agridesco pillar capital allocation (30% of Desco Global's $750M Phase 1 program)",
-    stage: "Active",
+    stage: "Operating information supplied",
     irr: "Part of Desco Global's 17.2% target Phase 1 program IRR",
     summary:
       "Desco Global's flagship agricultural impact platform in central DRC, organizing smallholders into outgrower networks with input credit, shared mechanization, post-harvest storage, and value-add milling for maize, cassava, and soy — connecting farmers to guaranteed offtake at transparent prices.",
