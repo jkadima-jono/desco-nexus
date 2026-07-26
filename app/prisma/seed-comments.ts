@@ -3,12 +3,18 @@ import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
 async function main() {
-  // Get existing listings and users for seeding comments
-  const listings = await prisma.listing.findMany({ take: 3 });
-  const users = await prisma.user.findMany({ take: 2 });
+  // Get some listings to add comments to
+  const listings = await prisma.listing.findMany({
+    take: 3,
+  });
+
+  // Get some users to use as commenters
+  const users = await prisma.user.findMany({
+    take: 2,
+  });
 
   if (listings.length === 0 || users.length === 0) {
-    console.log("Not enough listings or users to seed comments");
+    console.log("No listings or users found. Skipping comment seeding.");
     return;
   }
 
@@ -16,28 +22,30 @@ async function main() {
   await prisma.commentLike.deleteMany();
   await prisma.comment.deleteMany();
 
-  // Create sample comments
-  for (let i = 0; i < listings.length; i++) {
-    const listing = listings[i];
-    const user = users[i % users.length];
+  // Seed comments
+  for (const listing of listings) {
+    for (let i = 0; i < 2; i++) {
+      const comment = await prisma.comment.create({
+        data: {
+          listingId: listing.id,
+          userId: users[i % users.length].id,
+          body: `This is a seeded comment on ${listing.title}. Great opportunity!`,
+        },
+      });
 
-    await prisma.comment.create({
-      data: {
-        listingId: listing.id,
-        userId: user.id,
-        body: `This is a sample comment on ${listing.title}. Great opportunity!`,
-      },
-    });
+      // Add a reply to the comment
+      await prisma.comment.create({
+        data: {
+          listingId: listing.id,
+          userId: users[(i + 1) % users.length].id,
+          parentId: comment.id,
+          body: "Thanks for the insight! I agree.",
+        },
+      });
+    }
   }
 
-  console.log("Seeded comments successfully");
+  console.log("Seeded comments for", listings.length, "listings");
 }
 
-main()
-  .catch((e) => {
-    console.error(e);
-    process.exit(1);
-  })
-  .finally(async () => {
-    await prisma.$disconnect();
-  });
+main().finally(() => prisma.$disconnect());
