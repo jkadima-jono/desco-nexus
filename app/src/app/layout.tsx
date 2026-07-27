@@ -7,6 +7,7 @@ import Footer from "@/components/Footer";
 import { getSessionUser } from "@/lib/auth";
 import { getLocale } from "@/lib/i18n-server";
 import { I18nProvider } from "@/components/I18nProvider";
+import { t } from "@/lib/i18n";
 
 const montserrat = Montserrat({
   subsets: ["latin"],
@@ -49,7 +50,7 @@ export default async function RootLayout({
           )}
           <main id="main-content" tabIndex={-1} className={`min-w-0 flex-1 flex min-h-screen flex-col ${user ? "pt-16 lg:pt-0" : ""}`}>
             <div className="border-b border-gold/25 bg-[#171f27] px-4 py-2 text-center text-xs leading-5 text-white/75">
-              Demo environment · Illustrative accounts and project information · Not an offer or investment recommendation
+              {t(locale, "system.demoBanner")}
             </div>
             <div className="flex-1">{children}</div>
             <Footer />

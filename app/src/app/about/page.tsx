@@ -1,21 +1,24 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { InstitutionalCard, PageHero, QuietNotice, SectionHeading } from "@/components/public/PublicPrimitives";
+import { getLocale } from "@/lib/i18n-server";
+import { getPublicHero } from "@/lib/public-copy";
 
 export const metadata: Metadata = {
   title: "About DESCO Global — DESCO Nexus",
   description: "DESCO Global's role in connecting structured projects, capital providers and strategic partners.",
 };
 
-export default function AboutPage() {
+export default async function AboutPage() {
+  const hero = getPublicHero(await getLocale(), "about");
   return (
     <>
       <PageHero
-        eyebrow="About DESCO Global"
-        title="Connecting structured projects, capital and strategic partners."
-        body="DESCO Global operates DESCO Nexus as an investment opportunity and diligence platform focused initially on the Democratic Republic of Congo, with the capacity to support selected African markets."
-        primary={{ href: "/contact?topic=institutional-partnership", label: "Contact DESCO Global" }}
-        secondary={{ href: "/pillars", label: "Review investment pillars" }}
+        eyebrow={hero.eyebrow}
+        title={hero.title}
+        body={hero.body}
+        primary={{ href: "/contact?topic=institutional-partnership", label: hero.primary }}
+        secondary={{ href: "/pillars", label: hero.secondary }}
         aside={<QuietNotice>This page does not claim an investment track record, client list, transaction history, office network or regulatory status that has not been supplied and approved by DESCO Global.</QuietNotice>}
       />
       <section className="bg-ivory py-14 lg:py-18">

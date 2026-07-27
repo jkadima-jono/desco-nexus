@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { InstitutionalCard, PageHero, QuietNotice, SectionHeading } from "@/components/public/PublicPrimitives";
+import { getLocale } from "@/lib/i18n-server";
+import { getPublicHero } from "@/lib/public-copy";
 
 export const metadata: Metadata = {
   title: "Partners and advisors — DESCO Nexus",
@@ -14,15 +16,16 @@ const PARTNERS = [
   ["Government and development institutions", "Support public-sector coordination, policy context and development alignment."],
 ];
 
-export default function PartnersPage() {
+export default async function PartnersPage() {
+  const hero = getPublicHero(await getLocale(), "partners");
   return (
     <>
       <PageHero
-        eyebrow="Partners and advisors"
-        title="Professional support around structured project preparation and review."
-        body="DESCO Nexus can coordinate authorised advisors and institutions around project information, diligence and investor engagement without implying endorsement or partnership where none has been formally approved."
-        primary={{ href: "/contact?topic=institutional-partnership", label: "Route a partnership inquiry" }}
-        secondary={{ href: "/diligence", label: "Review the diligence model" }}
+        eyebrow={hero.eyebrow}
+        title={hero.title}
+        body={hero.body}
+        primary={{ href: "/contact?topic=institutional-partnership", label: hero.primary }}
+        secondary={{ href: "/diligence", label: hero.secondary }}
       />
       <section className="bg-ivory py-14 lg:py-18">
         <div className="public-container">

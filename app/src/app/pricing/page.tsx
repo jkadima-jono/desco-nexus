@@ -6,6 +6,8 @@ import {
   QuietNotice,
   SectionHeading,
 } from "@/components/public/PublicPrimitives";
+import { getLocale } from "@/lib/i18n-server";
+import { getPublicHero } from "@/lib/public-copy";
 
 export const metadata = {
   title: "Commercial model — DESCO Nexus",
@@ -55,15 +57,16 @@ const PRINCIPLES = [
   ["Success fees require legal approval", "No transaction, placement or success fee should be offered until the activity, jurisdiction, permissions and conflicts framework have been approved."],
 ];
 
-export default function PricingPage() {
+export default async function PricingPage() {
+  const hero = getPublicHero(await getLocale(), "pricing");
   return (
     <>
       <PageHero
-        eyebrow="Commercial model"
-        title="Institutional access should be scoped, contracted and evidence-led."
-        body="DESCO Nexus does not currently process payments, issue invoices or offer self-serve subscriptions. The pathways below describe a proposed sales-assisted model for discussion, not binding prices or an offer."
-        primary={{ href: "/contact?topic=commercial-model", label: "Discuss commercial scope" }}
-        secondary={{ href: "/investors", label: "Review the investor pathway" }}
+        eyebrow={hero.eyebrow}
+        title={hero.title}
+        body={hero.body}
+        primary={{ href: "/contact?topic=commercial-model", label: hero.primary }}
+        secondary={{ href: "/investors", label: hero.secondary }}
         aside={
           <QuietNotice>
             No payment processor is connected. No displayed workspace configuration is billed, collected revenue or an approved commercial quotation.

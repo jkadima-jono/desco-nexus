@@ -8,6 +8,8 @@ import {
   QuietNotice,
   SectionHeading,
 } from "@/components/public/PublicPrimitives";
+import { getLocale } from "@/lib/i18n-server";
+import { getPublicHero } from "@/lib/public-copy";
 
 export const metadata: Metadata = {
   title: "For project sponsors — DESCO Nexus",
@@ -28,15 +30,16 @@ const PROCESS = [
   { title: "Coordinate engagement", body: "Manage meetings, documents, messages and next steps through the workspace." },
 ];
 
-export default function SponsorsPage() {
+export default async function SponsorsPage() {
+  const hero = getPublicHero(await getLocale(), "sponsors");
   return (
     <>
       <PageHero
-        eyebrow="Sponsor pathway"
-        title="Prepare your project for serious investor review."
-        body="Move from fragmented project information to a structured institutional listing, a clear public teaser and permission-controlled diligence."
-        primary={{ href: "/submit-project", label: "Assess project readiness" }}
-        secondary={{ href: "/contact?topic=project-submission", label: "Discuss sponsor support" }}
+        eyebrow={hero.eyebrow}
+        title={hero.title}
+        body={hero.body}
+        primary={{ href: "/submit-project", label: hero.primary }}
+        secondary={{ href: "/contact?topic=project-submission", label: hero.secondary }}
         aside={
           <div className="briefing-card">
             <div className="flex items-center justify-between">

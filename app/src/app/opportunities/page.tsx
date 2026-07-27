@@ -4,6 +4,8 @@ import ProjectCard from "@/components/ProjectCard";
 import { PageHero, QuietNotice, SectionHeading } from "@/components/public/PublicPrimitives";
 import { prisma, toListing } from "@/lib/db";
 import { listings as sourceListings } from "@/lib/data";
+import { getLocale } from "@/lib/i18n-server";
+import { getPublicHero } from "@/lib/public-copy";
 
 export const dynamic = "force-dynamic";
 
@@ -61,6 +63,7 @@ function matchesUpdated(value: Date | undefined, band: string) {
 
 export default async function Opportunities({ searchParams }: { searchParams: Promise<Params> }) {
   const params = await searchParams;
+  const hero = getPublicHero(await getLocale(), "opportunities");
   const {
     sector = "All",
     country = "All",
@@ -110,11 +113,11 @@ export default async function Opportunities({ searchParams }: { searchParams: Pr
   return (
     <>
       <PageHero
-        eyebrow="Opportunity desk"
-        title="Structured opportunities for disciplined screening."
-        body="Compare public project teasers before deciding whether restricted diligence is justified."
-        primary={{ href: "/contact?topic=investor-access", label: "Apply for investor access" }}
-        secondary={{ href: "/diligence", label: "How access works" }}
+        eyebrow={hero.eyebrow}
+        title={hero.title}
+        body={hero.body}
+        primary={{ href: "/contact?topic=investor-access", label: hero.primary }}
+        secondary={{ href: "/diligence", label: hero.secondary }}
         aside={
           <div className="analytical-panel p-6 text-ink">
             <p className="eyebrow text-teal">Screening principle</p>

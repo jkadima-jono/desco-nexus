@@ -7,6 +7,8 @@ import {
   QuietNotice,
   SectionHeading,
 } from "@/components/public/PublicPrimitives";
+import { getLocale } from "@/lib/i18n-server";
+import { getPublicHero } from "@/lib/public-copy";
 
 export const metadata: Metadata = {
   title: "For investors — DESCO Nexus",
@@ -27,15 +29,16 @@ const MANDATE_FIELDS = [
   "Project stage", "Impact requirements", "Risk tolerance", "Control preference",
 ];
 
-export default function InvestorsPage() {
+export default async function InvestorsPage() {
+  const hero = getPublicHero(await getLocale(), "investors");
   return (
     <>
       <PageHero
-        eyebrow="Investor pathway"
-        title="Find mandate fit before committing to full diligence."
-        body="DESCO Nexus helps institutional investors, funds, family offices, lenders and strategic capital providers screen structured opportunities and control the transition into deeper review."
-        primary={{ href: "/contact?topic=investor-access", label: "Apply for investor access" }}
-        secondary={{ href: "/opportunities", label: "Review opportunities" }}
+        eyebrow={hero.eyebrow}
+        title={hero.title}
+        body={hero.body}
+        primary={{ href: "/contact?topic=investor-access", label: hero.primary }}
+        secondary={{ href: "/opportunities", label: hero.secondary }}
         aside={
           <div className="briefing-card">
             <p className="eyebrow text-gold">Mandate builder preview</p>

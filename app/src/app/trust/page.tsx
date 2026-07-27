@@ -6,6 +6,8 @@ import {
   QuietNotice,
   SectionHeading,
 } from "@/components/public/PublicPrimitives";
+import { getLocale } from "@/lib/i18n-server";
+import { getPublicHero } from "@/lib/public-copy";
 
 export const metadata: Metadata = {
   title: "Trust and disclosures — DESCO Nexus",
@@ -21,15 +23,16 @@ const STATUSES = [
   ["Approved for public teaser", "An administrator has approved publication; this is not investment endorsement.", "public"],
 ] as const;
 
-export default function TrustPage() {
+export default async function TrustPage() {
+  const hero = getPublicHero(await getLocale(), "trust");
   return (
     <>
       <PageHero
-        eyebrow="Trust and disclosure architecture"
-        title="Clear status. Defined scope. No implied endorsement."
-        body="DESCO Nexus describes project information and access controls by what has actually occurred, who supplied the information and what evidence supports the status."
-        primary={{ href: "/legal#verification", label: "Read the legal methodology" }}
-        secondary={{ href: "/diligence", label: "How controlled access works" }}
+        eyebrow={hero.eyebrow}
+        title={hero.title}
+        body={hero.body}
+        primary={{ href: "/legal#verification", label: hero.primary }}
+        secondary={{ href: "/diligence", label: hero.secondary }}
         aside={<QuietNotice>Nothing on DESCO Nexus constitutes a securities offer, investment recommendation, financial guarantee or legal approval.</QuietNotice>}
       />
       <section className="bg-ivory py-14 lg:py-18">

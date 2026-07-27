@@ -4,17 +4,19 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import LanguageSwitcher from "./LanguageSwitcher";
+import { useI18n } from "./I18nProvider";
 
 const LINKS = [
-  ["/opportunities", "Opportunities"],
-  ["/investors", "Investors"],
-  ["/sponsors", "Project sponsors"],
-  ["/diligence", "Diligence"],
-  ["/trust", "Trust"],
-  ["/about", "About"],
+  ["/opportunities", "nav.opportunities"],
+  ["/investors", "nav.forInvestors"],
+  ["/sponsors", "nav.forOwners"],
+  ["/diligence", "nav.howItWorks"],
+  ["/trust", "nav.trust"],
+  ["/about", "nav.about"],
 ] as const;
 
 export default function PublicHeader() {
+  const { t } = useI18n();
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
   const menuButton = useRef<HTMLButtonElement>(null);
@@ -38,7 +40,7 @@ export default function PublicHeader() {
 
   const nav = (
     <nav aria-label="Public navigation" className="flex flex-col gap-1 lg:flex-row lg:items-center lg:gap-1">
-      {LINKS.map(([href, label]) => {
+      {LINKS.map(([href, labelKey]) => {
         const active = pathname.startsWith(href);
         return (
           <Link
@@ -50,7 +52,7 @@ export default function PublicHeader() {
               active ? "bg-gold-soft text-ink" : "text-white/75 hover:bg-white/8 hover:text-white"
             }`}
           >
-            {label}
+            {t(labelKey)}
           </Link>
         );
       })}
@@ -71,7 +73,7 @@ export default function PublicHeader() {
           <div className="hidden items-center gap-3 lg:flex">
             {nav}
             <div className="w-32"><LanguageSwitcher /></div>
-            <Link href="/login" className="button-on-dark">Enter workspace</Link>
+            <Link href="/login" className="button-on-dark">{t("nav.enterWorkspace")}</Link>
           </div>
           <button
             ref={menuButton}
@@ -80,7 +82,7 @@ export default function PublicHeader() {
             aria-expanded={open}
             aria-controls="public-mobile-navigation"
             className="grid min-h-11 min-w-11 place-items-center rounded-lg border border-white/20 text-xl lg:hidden"
-            aria-label="Open navigation"
+            aria-label={t("nav.open")}
           >
             ☰
           </button>
@@ -92,7 +94,7 @@ export default function PublicHeader() {
             id="public-mobile-navigation"
             role="dialog"
             aria-modal="true"
-            aria-label="Public navigation"
+            aria-label={t("nav.public")}
             className="ml-auto flex h-full w-[min(21rem,90vw)] flex-col overflow-y-auto bg-ink p-5 text-white"
             onClick={(event) => event.stopPropagation()}
           >
@@ -103,7 +105,7 @@ export default function PublicHeader() {
                 type="button"
                 onClick={() => setOpen(false)}
                 className="min-h-11 min-w-11 rounded-lg text-2xl hover:bg-white/10"
-                aria-label="Close navigation"
+                aria-label={t("nav.close")}
               >
                 ×
               </button>
@@ -111,8 +113,8 @@ export default function PublicHeader() {
             {nav}
             <div className="mt-auto space-y-3 border-t border-white/10 pt-5">
               <LanguageSwitcher />
-              <Link href="/login" onClick={() => setOpen(false)} className="button-primary w-full">Enter workspace</Link>
-              <Link href="/contact?topic=investor-access" onClick={() => setOpen(false)} className="button-on-dark w-full">Apply for access</Link>
+              <Link href="/login" onClick={() => setOpen(false)} className="button-primary w-full">{t("nav.enterWorkspace")}</Link>
+              <Link href="/contact?topic=investor-access" onClick={() => setOpen(false)} className="button-on-dark w-full">{t("nav.apply")}</Link>
             </div>
           </aside>
         </div>

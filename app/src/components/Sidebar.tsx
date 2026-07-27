@@ -8,7 +8,7 @@ import LanguageSwitcher from "./LanguageSwitcher";
 import NotificationBell from "./NotificationBell";
 
 type NavItem = { href: string; key: string; icon: string };
-type NavGroup = { label: string; items: NavItem[] };
+type NavGroup = { labelKey: string; items: NavItem[] };
 
 const DISCOVER: NavItem = { href: "/", key: "nav.discover", icon: "◈" };
 const MATCH: NavItem = { href: "/match", key: "nav.match", icon: "⇄" };
@@ -50,11 +50,11 @@ const NAV_BY_ROLE: Record<string, NavItem[]> = {
 };
 
 const ADMIN_GROUPS: NavGroup[] = [
-  { label: "Overview", items: [ADMIN_HOME] },
-  { label: "Investment workspace", items: [DISCOVER, MATCH, SAVED, MANDATES, PIPELINE, PORTFOLIO] },
-  { label: "Origination and control", items: [INVESTOR_MATCHES, REVIEW_SUBMISSIONS, VERIFICATION, INQUIRIES] },
-  { label: "Operations", items: [AI_USAGE, BILLING] },
-  { label: "Tools and reference", items: [SEARCH, MESSAGES, PILLARS] },
+  { labelKey: "navGroup.overview", items: [ADMIN_HOME] },
+  { labelKey: "navGroup.investment", items: [DISCOVER, MATCH, SAVED, MANDATES, PIPELINE, PORTFOLIO] },
+  { labelKey: "navGroup.control", items: [INVESTOR_MATCHES, REVIEW_SUBMISSIONS, VERIFICATION, INQUIRIES] },
+  { labelKey: "navGroup.operations", items: [AI_USAGE, BILLING] },
+  { labelKey: "navGroup.tools", items: [SEARCH, MESSAGES, PILLARS] },
 ];
 
 function isActiveRoute(pathname: string, href: string) {
@@ -95,7 +95,7 @@ export default function Sidebar({ user }: { user: SidebarUser }) {
   const nav = NAV_BY_ROLE[user?.role ?? "signedOut"] ?? NAV_BY_ROLE.investor;
   const navGroups: NavGroup[] = user?.role === "admin"
     ? ADMIN_GROUPS
-    : [{ label: "Workspace", items: nav }];
+    : [{ labelKey: "navGroup.workspace", items: nav }];
   const navigation = (
     <>
       <div className="px-6 pt-7 pb-6">
@@ -110,9 +110,9 @@ export default function Sidebar({ user }: { user: SidebarUser }) {
       </div>
       <nav aria-label="Workspace navigation" className="min-h-0 flex-1 overflow-y-auto px-3 pb-3">
         {navGroups.map((group, groupIndex) => (
-          <div key={group.label} className={groupIndex > 0 ? "mt-5 border-t border-white/8 pt-4" : ""}>
+          <div key={group.labelKey} className={groupIndex > 0 ? "mt-5 border-t border-white/8 pt-4" : ""}>
             <p className="mb-1 px-3 text-[9px] font-bold uppercase tracking-[0.16em] text-white/38">
-              {group.label}
+              {t(group.labelKey)}
             </p>
             <div className="space-y-1">
               {group.items.map((item) => {

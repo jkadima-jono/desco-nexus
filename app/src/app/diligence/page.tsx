@@ -7,6 +7,8 @@ import {
   QuietNotice,
   SectionHeading,
 } from "@/components/public/PublicPrimitives";
+import { getLocale } from "@/lib/i18n-server";
+import { getPublicHero } from "@/lib/public-copy";
 
 export const metadata: Metadata = {
   title: "How diligence works — DESCO Nexus",
@@ -28,15 +30,16 @@ const FOLDERS = [
   "Risk and insurance", "Transaction documents",
 ];
 
-export default function DiligencePage() {
+export default async function DiligencePage() {
+  const hero = getPublicHero(await getLocale(), "diligence");
   return (
     <>
       <PageHero
-        eyebrow="Controlled diligence"
-        title="Information access should follow a justified screening decision."
-        body="DESCO Nexus separates public screening information from permission-controlled financial, technical, legal and transaction material."
-        primary={{ href: "/opportunities", label: "Review public opportunities" }}
-        secondary={{ href: "/trust", label: "Read disclosure standards" }}
+        eyebrow={hero.eyebrow}
+        title={hero.title}
+        body={hero.body}
+        primary={{ href: "/opportunities", label: hero.primary }}
+        secondary={{ href: "/trust", label: hero.secondary }}
         aside={
           <div className="briefing-card">
             <p className="eyebrow text-gold">Access state</p>

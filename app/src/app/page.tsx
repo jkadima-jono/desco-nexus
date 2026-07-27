@@ -4,6 +4,8 @@ import ProjectCard from "@/components/ProjectCard";
 import { prisma, toListing } from "@/lib/db";
 import { fmtUsd, listings as sourceListings, type Listing } from "@/lib/data";
 import { getSessionUser } from "@/lib/auth";
+import { getLocale } from "@/lib/i18n-server";
+import { t } from "@/lib/i18n";
 import {
   DisclosureChip,
   InstitutionalCard,
@@ -103,6 +105,7 @@ function FeaturedBrief({ listing }: { listing: Listing }) {
 
 export default async function Home() {
   const user = await getSessionUser();
+  const locale = await getLocale();
   const rows = await prisma.listing.findMany({
     include: { org: true, images: true },
     orderBy: { updatedAt: "desc" },
@@ -119,19 +122,19 @@ export default async function Home() {
           <section className="institutional-hero text-white">
             <div className="public-container grid gap-12 py-14 lg:grid-cols-[minmax(0,1.08fr)_minmax(22rem,.92fr)] lg:items-center lg:py-20">
               <div>
-                <p className="eyebrow text-gold">A DESCO Global investment platform</p>
+                <p className="eyebrow text-gold">{t(locale, "home.platform")}</p>
                 <h1 className="editorial-display mt-5 max-w-3xl text-4xl sm:text-5xl lg:text-6xl">
-                  Structured African opportunities. Clearer investment decisions.
+                  {t(locale, "home.heroTitle")}
                 </h1>
                 <p className="mt-6 max-w-2xl text-base leading-7 text-white/70 lg:text-lg">
-                  Review structured opportunities, compare them against investment mandates and unlock controlled diligence. Project sponsors can prepare institutional-quality listings and manage access from public teaser to deeper review.
+                  {t(locale, "home.heroBody")}
                 </p>
                 <div className="mt-8 flex flex-wrap gap-3">
-                  <Link href="/opportunities" className="button-primary">Review opportunities</Link>
-                  <Link href="/submit-project" className="button-on-dark">Submit a project</Link>
+                  <Link href="/opportunities" className="button-primary">{t(locale, "home.review")}</Link>
+                  <Link href="/submit-project" className="button-on-dark">{t(locale, "nav.submitProject")}</Link>
                 </div>
                 <Link href="/diligence" className="mt-4 inline-flex min-h-11 items-center text-sm font-semibold text-white/70 underline decoration-white/25 underline-offset-4 hover:text-gold">
-                  How diligence works
+                  {t(locale, "home.diligence")}
                 </Link>
               </div>
               <FeaturedBrief listing={featured[0]} />
@@ -142,24 +145,24 @@ export default async function Home() {
             <div className="public-container">
               <div className="grid gap-5 lg:grid-cols-2">
                 <article className="group border-t-2 border-ink bg-white p-7 shadow-[0_8px_30px_rgb(13_21_28/0.045)]">
-                  <p className="eyebrow text-teal">For investors</p>
-                  <h2 className="editorial-heading mt-4 text-3xl text-ink">Screen before committing diligence resources.</h2>
+                  <p className="eyebrow text-teal">{t(locale, "nav.forInvestors")}</p>
+                  <h2 className="editorial-heading mt-4 text-3xl text-ink">{t(locale, "home.investorTitle")}</h2>
                   <ul className="mt-5 space-y-2 text-sm text-slate">
                     <li>Review structured public opportunities</li>
                     <li>Match opportunities against your mandate</li>
                     <li>Unlock deeper diligence only when justified</li>
                   </ul>
-                  <Link href="/investors" className="button-secondary mt-7">Explore the investor pathway</Link>
+                  <Link href="/investors" className="button-secondary mt-7">{t(locale, "home.investorCta")}</Link>
                 </article>
                 <article className="group border-t-2 border-gold bg-white p-7 shadow-[0_8px_30px_rgb(13_21_28/0.045)]">
-                  <p className="eyebrow text-gold">For project sponsors</p>
-                  <h2 className="editorial-heading mt-4 text-3xl text-ink">Prepare your project for serious investor review.</h2>
+                  <p className="eyebrow text-gold">{t(locale, "nav.forOwners")}</p>
+                  <h2 className="editorial-heading mt-4 text-3xl text-ink">{t(locale, "home.sponsorTitle")}</h2>
                   <ul className="mt-5 space-y-2 text-sm text-slate">
                     <li>Prepare a sponsor-ready listing</li>
                     <li>Control confidential information access</li>
                     <li>Coordinate qualified investor engagement</li>
                   </ul>
-                  <Link href="/sponsors" className="button-secondary mt-7">Explore the sponsor pathway</Link>
+                  <Link href="/sponsors" className="button-secondary mt-7">{t(locale, "home.sponsorCta")}</Link>
                 </article>
               </div>
             </div>
@@ -170,12 +173,12 @@ export default async function Home() {
       {user && (
         <section className="bg-ivory">
           <div className="public-container py-9">
-            <p className="eyebrow text-teal">Workspace overview</p>
+            <p className="eyebrow text-teal">{t(locale, "home.workspace")}</p>
             <h1 className="editorial-heading mt-3 text-3xl text-ink sm:text-4xl">
-              Review current opportunities.
+              {t(locale, "home.workspaceTitle")}
             </h1>
             <p className="mt-3 max-w-2xl text-sm leading-6 text-slate">
-              Screen public information first, then request restricted material only when the opportunity fits your mandate.
+              {t(locale, "home.workspaceBody")}
             </p>
           </div>
         </section>
@@ -185,9 +188,9 @@ export default async function Home() {
         <div className="public-container">
           <div className="flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
             <SectionHeading
-              eyebrow="Current opportunity teasers"
-              title="Review the public case before requesting access."
-              body="Comparison-ready opportunity briefs show capital requirement, stage, sponsor, instrument and disclosure status before any restricted material is shared."
+              eyebrow={t(locale, "home.opportunitiesEyebrow")}
+              title={t(locale, "home.opportunitiesTitle")}
+              body={t(locale, "home.opportunitiesBody")}
             />
             <div className="shrink-0 border-l border-gold pl-5">
               <p className="font-display text-2xl font-extrabold text-ink">{fmtUsd(totalCapital)}</p>
@@ -203,7 +206,7 @@ export default async function Home() {
           </div>
 
           <div className="mt-8 flex justify-center">
-            <Link href="/opportunities" className="button-secondary">Open the opportunities desk</Link>
+            <Link href="/opportunities" className="button-secondary">{t(locale, "home.opportunitiesCta")}</Link>
           </div>
         </div>
       </section>

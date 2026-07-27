@@ -1,5 +1,6 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
+import LocalizedHomeLink from "./LocalizedHomeLink";
 
 export function PageHero({
   eyebrow,
@@ -21,7 +22,7 @@ export function PageHero({
       <div className="public-container grid gap-10 py-14 lg:grid-cols-[minmax(0,1.15fr)_minmax(19rem,.85fr)] lg:items-center lg:py-20">
         <div>
           <nav aria-label="Breadcrumb" className="mb-7 flex items-center gap-2 text-[11px] font-semibold text-white/48">
-            <Link href="/" className="min-h-11 content-center hover:text-white">Home</Link>
+            <LocalizedHomeLink />
             <span aria-hidden="true">/</span>
             <span aria-current="page" className="text-white/72">{eyebrow}</span>
           </nav>
