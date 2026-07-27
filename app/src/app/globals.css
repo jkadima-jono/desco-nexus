@@ -10,7 +10,7 @@
   --color-navy: #183246;
   --color-teal: #3C716B;
   --color-mist: #F3F1EB;
-  --color-wgray: #728089;
+  --color-wgray: #5D6B74;
   --color-ivory: #F7F4EC;
   --color-stone: #E4E0D7;
   --color-slate: #5D6B74;
@@ -21,6 +21,15 @@
   --font-display: var(--font-montserrat), ui-sans-serif, system-ui, sans-serif;
   --font-body: var(--font-open-sans), ui-sans-serif, system-ui, sans-serif;
   --font-serif: var(--font-playfair), ui-serif, Georgia, serif;
+}
+
+.bg-white .text-gold,
+.bg-ivory .text-gold,
+.bg-mist .text-gold,
+.bg-white.text-gold,
+.bg-ivory.text-gold,
+.bg-mist.text-gold {
+  color: #76591f;
 }
 
 html { background: var(--color-mist); }

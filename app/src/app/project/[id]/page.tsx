@@ -122,13 +122,6 @@ export default async function ProjectDetail({
                 {l.title}
               </h1>
               <p className="text-white/70 mt-3 max-w-xl">{l.summary}</p>
-              <div className="flex flex-col sm:flex-row gap-3 mt-6">
-                {user ? <>
-                  <RequestInfoButton listingId={l.id} action="dataroom_requested" className="bg-gold text-ink font-display font-bold text-sm px-5 py-2.5 rounded-xl hover:brightness-110" label={t(locale, "project.requestRoom")} doneLabel="✓ Requested" />
-                  <a href="#meetings" className="border border-white/25 text-white font-display font-semibold text-sm px-5 py-2.5 rounded-xl hover:bg-white/10 inline-flex items-center">{t(locale, "project.schedule")}</a>
-                  <RequestInfoButton listingId={l.id} action="saved" className="border border-white/25 text-white font-display font-semibold text-sm px-5 py-2.5 rounded-xl hover:bg-white/10" label={"⌁ " + t(locale, "project.save")} doneLabel="✓ Saved" />
-                </> : <Link href={`/contact?topic=investor-access&project=${l.id}`} className="inline-flex justify-center bg-gold text-ink font-display font-bold text-sm px-5 py-2.5 rounded-xl">Apply for investor access</Link>}
-              </div>
             </div>
             <div className="text-left lg:text-right shrink-0">
               <div className="font-display font-extrabold text-4xl text-gold">

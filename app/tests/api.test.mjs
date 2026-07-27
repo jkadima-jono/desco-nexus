@@ -28,6 +28,16 @@ async function prismaDealLookup(adminCookie, listingId) {
 }
 
 // ---------- Security: unauthenticated access ----------
+test("unverified email login is disabled", async () => {
+  const res = await fetch(BASE + "/api/auth/login", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email: "victim@example.com", fullName: "Impersonator" }),
+  });
+  assert.equal(res.status, 410);
+  assert.equal(res.headers.get("set-cookie"), null);
+});
+
 test("unauthenticated API access is rejected", async () => {
   const cases = [
     ["GET", "/api/comments?listingId=port-de-ndomba"],

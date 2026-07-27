@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { prisma } from "@/lib/db";
 import {
   DisclosureChip,
   InstitutionalCard,
@@ -7,8 +6,6 @@ import {
   QuietNotice,
   SectionHeading,
 } from "@/components/public/PublicPrimitives";
-
-export const dynamic = "force-dynamic";
 
 export const metadata = {
   title: "Commercial model — DESCO Nexus",
@@ -58,12 +55,7 @@ const PRINCIPLES = [
   ["Success fees require legal approval", "No transaction, placement or success fee should be offered until the activity, jurisdiction, permissions and conflicts framework have been approved."],
 ];
 
-const limitLabel = (n: number | null, unit: string) =>
-  n === null ? `Unlimited ${unit}s in the demo scenario` : `${n} ${unit}${n === 1 ? "" : "s"} in the demo scenario`;
-
-export default async function PricingPage() {
-  const plans = await prisma.plan.findMany({ orderBy: { sortOrder: "asc" } });
-
+export default function PricingPage() {
   return (
     <>
       <PageHero
@@ -121,30 +113,18 @@ export default async function PricingPage() {
       <section className="bg-mist py-14">
         <div className="public-container">
           <SectionHeading
-            eyebrow="Demonstration entitlements"
-            title="Internal configurations used to test product limits."
-            body="These configurations are retained for workflow testing. Their database price values are scenario inputs only and are deliberately not presented as public quotations."
+            eyebrow="Before contracting"
+            title="Commercial terms require an approved scope."
+            body="DESCO must confirm the contracting entity, services, user roles, support, data handling, procurement requirements and any jurisdiction-specific restrictions before issuing a quotation."
           />
-          <div className="mt-8 grid gap-4 md:grid-cols-3">
-            {plans.map((plan) => (
-              <div key={plan.id} className="rounded-xl border border-charcoal/10 bg-white p-5">
-                <div className="flex items-start justify-between gap-3">
-                  <h3 className="font-display font-bold text-ink">{plan.name}</h3>
-                  <DisclosureChip tone="pending">Demo configuration</DisclosureChip>
-                </div>
-                <p className="mt-3 text-sm leading-6 text-slate">{plan.description}</p>
-                <ul className="mt-4 space-y-2 text-xs text-slate">
-                  <li>{limitLabel(plan.maxActiveMandates, "active mandate")}</li>
-                  <li>{limitLabel(plan.maxCollections, "saved collection")}</li>
-                </ul>
-              </div>
-            ))}
-          </div>
-          <div className="mt-8">
+          <div className="mt-8 max-w-3xl">
             <QuietNotice>
-              Before launch, DESCO must approve contracting entity, currency, taxes, invoicing, renewal, cancellation, service levels, support, data retention, refunds, procurement requirements and any regulated transaction-based compensation.
+              Public pricing will remain unpublished until currency, taxes, invoicing, renewal, cancellation, service levels, data retention and regulated compensation have been reviewed and approved.
             </QuietNotice>
           </div>
+          <Link href="/contact?topic=commercial-model" className="button-primary mt-6">
+            Discuss commercial scope
+          </Link>
         </div>
       </section>
     </>

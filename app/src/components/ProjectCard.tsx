@@ -24,10 +24,8 @@ export default function ProjectCard({
     : "Sponsor-provided · review pending";
   const accessibleName = [
     listing.title,
-    `${listing.country}`,
-    `${listing.sector}, ${listing.stage}`,
-    `${fmtUsd(listing.raiseUsd)} sought via ${listing.instrument}`,
-    showMatchScore ? `${listing.scores.match}% mandate match` : null,
+    listing.country,
+    `${fmtUsd(listing.raiseUsd)} capital sought`,
   ].filter(Boolean).join(", ");
 
   return (
@@ -37,8 +35,8 @@ export default function ProjectCard({
       className="card-rise group block overflow-hidden rounded-xl border border-charcoal/10 bg-white shadow-[0_1px_3px_rgb(44_62_80/0.06)] transition-all hover:border-gold/50 hover:shadow-[0_8px_24px_rgb(44_62_80/0.10)]"
       style={{ animationDelay: index * 40 + "ms" }}
     >
-      <HeroVisual listing={listing} className="h-40" />
-      <div className="relative h-40 -mt-40 pointer-events-none">
+      <HeroVisual listing={listing} className="h-32 sm:h-40" />
+      <div className="relative h-32 -mt-32 sm:h-40 sm:-mt-40 pointer-events-none">
         <div className="absolute inset-x-0 top-0 p-4 flex items-start justify-between">
           <div className="flex items-center gap-2 text-[11px] font-bold uppercase tracking-wider">
             <span className="px-2 py-0.5 rounded-full text-white shadow-[0_1px_4px_rgb(16_22_29/0.3)]" style={{ background: listing.sectorColor }}>
@@ -55,7 +53,7 @@ export default function ProjectCard({
         </div>
       </div>
 
-      <div className="p-5 pt-4">
+      <div className="p-4 sm:p-5 sm:pt-4">
         <div className="flex items-center gap-2 text-[11px] font-bold uppercase tracking-wider text-wgray mb-2">
           <span>{listing.stage}</span>
           {showMatchScore && (
@@ -63,14 +61,14 @@ export default function ProjectCard({
           )}
         </div>
 
-        <p className="text-sm text-wgray line-clamp-2 leading-relaxed">{listing.summary}</p>
+        <p className="hidden text-sm text-wgray line-clamp-2 leading-relaxed sm:block">{listing.summary}</p>
 
         <div className="mt-4 flex items-end justify-between gap-4">
           <div>
             <div className="font-display font-extrabold text-2xl leading-none">
               {fmtUsd(listing.raiseUsd)}
             </div>
-            <div className="text-[11px] text-wgray mt-1">{listing.instrument}</div>
+            <div className="mt-1 line-clamp-1 text-[11px] text-wgray">{listing.instrument}</div>
           </div>
           <div className="text-right text-[11px] text-wgray">
             <div className="font-semibold text-charcoal">{listing.org}</div>
@@ -79,14 +77,14 @@ export default function ProjectCard({
         </div>
 
         <div className="mt-4 pt-3 border-t border-charcoal/10 flex items-center justify-between text-[11px] text-wgray">
-          <span className={listing.verified ? "text-gold font-semibold" : ""}>
+          <span className={`line-clamp-1 ${listing.verified ? "text-gold font-semibold" : ""}`}>
             {listing.verified && "✓ "}{verificationScope}
           </span>
           <span>Updated {formatUpdated(listing.updatedAt)}</span>
         </div>
 
         <div className="mt-3 flex items-center justify-between gap-3">
-          <span className="rounded-full border border-charcoal/15 bg-mist px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.12em] text-slate">
+          <span className="line-clamp-1 rounded-full border border-charcoal/15 bg-mist px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.12em] text-slate">
             {listing.docs.length > 0 ? "Documents recorded · restricted" : "Data-room readiness not public"}
           </span>
           <span className="flex items-center gap-1.5 text-sm font-bold text-charcoal group-hover:text-gold">

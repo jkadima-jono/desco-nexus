@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { MECHANISM_LABELS } from "@/lib/verification";
 
 type Claim = {
@@ -33,6 +33,41 @@ export default function TrustBadges({
   stage: string;
 }) {
   const [open, setOpen] = useState<Claim | null>(null);
+  const dialogRef = useRef<HTMLDivElement>(null);
+  const closeRef = useRef<HTMLButtonElement>(null);
+  const triggerRef = useRef<HTMLButtonElement | null>(null);
+
+  useEffect(() => {
+    if (!open) return;
+    closeRef.current?.focus();
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setOpen(null);
+        return;
+      }
+      if (event.key !== "Tab" || !dialogRef.current) return;
+      const focusable = Array.from(
+        dialogRef.current.querySelectorAll<HTMLElement>(
+          'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+        )
+      );
+      if (!focusable.length) return;
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first.focus();
+      }
+    };
+    document.addEventListener("keydown", handleKeyDown);
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+      triggerRef.current?.focus();
+    };
+  }, [open]);
 
   const claims: Claim[] = [];
   if (verified) {
@@ -78,7 +113,10 @@ export default function TrustBadges({
       {claims.map((c) => (
         <button
           key={c.label}
-          onClick={() => setOpen(c)}
+          onClick={(event) => {
+            triggerRef.current = event.currentTarget;
+            setOpen(c);
+          }}
           className="text-gold underline decoration-dotted underline-offset-2 hover:text-white focus-visible:ring-2 focus-visible:ring-gold rounded"
           aria-haspopup="dialog"
           title="View verification evidence"
@@ -95,12 +133,13 @@ export default function TrustBadges({
           onClick={() => setOpen(null)}
         >
           <div
+            ref={dialogRef}
             className="bg-white text-charcoal rounded-2xl p-6 max-w-md w-full shadow-2xl"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex items-start justify-between mb-3">
               <h2 className="font-display font-bold text-lg">{open.label}</h2>
-              <button onClick={() => setOpen(null)} aria-label="Close" className="text-wgray hover:text-charcoal text-xl leading-none">×</button>
+              <button ref={closeRef} onClick={() => setOpen(null)} aria-label="Close verification details" className="min-h-11 min-w-11 rounded-full text-wgray hover:bg-mist hover:text-charcoal text-xl leading-none">×</button>
             </div>
             <dl className="space-y-2 text-sm font-normal normal-case">
               {[

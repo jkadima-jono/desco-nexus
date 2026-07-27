@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useI18n } from "@/components/I18nProvider";
 
@@ -21,7 +21,27 @@ export default function PhotoGallery({
   const [busy, setBusy] = useState(false);
   const [msg, setMsg] = useState<string | null>(null);
   const [lightbox, setLightbox] = useState<Photo | null>(null);
+  const dialogRef = useRef<HTMLDivElement>(null);
+  const closeRef = useRef<HTMLButtonElement>(null);
+  const triggerRef = useRef<HTMLButtonElement | null>(null);
   const [caption, setCaption] = useState("");
+
+  useEffect(() => {
+    if (!lightbox) return;
+    closeRef.current?.focus();
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setLightbox(null);
+      if (event.key === "Tab") {
+        event.preventDefault();
+        closeRef.current?.focus();
+      }
+    };
+    document.addEventListener("keydown", handleKeyDown);
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+      triggerRef.current?.focus();
+    };
+  }, [lightbox]);
 
   const upload = async (file: File) => {
     setBusy(true);
@@ -135,12 +155,15 @@ export default function PhotoGallery({
           {canUpload ? t("photos.empty") : "No approved public project imagery is available."}
         </p>
       ) : (
-        <div className="grid grid-cols-3 gap-3">
+        <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
           {photos.map((p, i) => (
             <figure key={p.id} className="relative overflow-hidden rounded-xl border border-charcoal/10">
               <div className="relative aspect-[4/3] overflow-hidden group">
               <button
-                onClick={() => setLightbox(p)}
+                onClick={(event) => {
+                  triggerRef.current = event.currentTarget;
+                  setLightbox(p);
+                }}
                 aria-label={"Preview " + (p.caption || "project image")}
                 className="absolute inset-0 w-full h-full"
               >
@@ -162,12 +185,12 @@ export default function PhotoGallery({
                 </span>
               )}
               {canUpload && !p.isExample && (
-                <div className="absolute inset-x-0 bottom-0 p-1.5 flex justify-between opacity-0 group-hover:opacity-100 transition-opacity bg-gradient-to-t from-ink/70 to-transparent">
+                <div className="absolute inset-x-0 bottom-0 flex justify-between bg-gradient-to-t from-ink/80 to-transparent p-1.5 opacity-100 transition-opacity sm:opacity-0 sm:group-hover:opacity-100 sm:group-focus-within:opacity-100">
                   {i !== 0 ? (
                     <button
                       disabled={busy}
                       onClick={() => setCover(p.id)}
-                      className="text-[10px] font-bold text-white hover:text-gold disabled:opacity-50"
+                      className="min-h-11 px-1 text-[10px] font-bold text-white hover:text-gold disabled:opacity-50"
                     >
                       {t("photos.setCover")}
                     </button>
@@ -176,7 +199,7 @@ export default function PhotoGallery({
                     disabled={busy}
                     onClick={() => removePhoto(p.id)}
                     aria-label={t("photos.remove") + " " + (p.caption ?? "photo")}
-                    className="text-[10px] font-bold text-white hover:text-brandred disabled:opacity-50"
+                    className="min-h-11 px-1 text-[10px] font-bold text-white hover:text-brandred disabled:opacity-50"
                   >
                     {t("photos.remove")}
                   </button>
@@ -192,6 +215,7 @@ export default function PhotoGallery({
       )}
       {lightbox && (
         <div
+          ref={dialogRef}
           role="dialog"
           aria-modal="true"
           aria-label="Project image preview"
@@ -199,6 +223,7 @@ export default function PhotoGallery({
           onClick={() => setLightbox(null)}
         >
           <button
+            ref={closeRef}
             onClick={() => setLightbox(null)}
             className="absolute right-4 top-4 min-h-11 min-w-11 rounded-full bg-white text-ink text-xl"
             aria-label="Close image preview"

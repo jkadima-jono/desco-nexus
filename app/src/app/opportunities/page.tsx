@@ -20,6 +20,8 @@ type Params = {
   capital?: string;
   disclosure?: string;
   dataroom?: string;
+  sponsor?: string;
+  updated?: string;
   sort?: string;
 };
 
@@ -35,6 +37,28 @@ function matchesCapital(value: number, band: string) {
   return true;
 }
 
+function instrumentCategory(value: string) {
+  const normalized = value.toLowerCase();
+  if (normalized.includes("equipment")) return "Equipment finance";
+  if (normalized.includes("dfi") || normalized.includes("impact")) return "DFI / impact capital";
+  if (normalized.includes("programme") || normalized.includes("pillar")) return "Programme allocation";
+  if (normalized.includes("spv")) return "Project SPV equity";
+  if (normalized.includes("development") || normalized.includes("mining")) return "Project development capital";
+  if (normalized.includes("equity")) return "Equity";
+  if (normalized.includes("debt") || normalized.includes("loan")) return "Debt";
+  return "Other";
+}
+
+function matchesUpdated(value: Date | undefined, band: string) {
+  if (band === "All") return true;
+  if (!value) return false;
+  const ageDays = (Date.now() - new Date(value).getTime()) / 86_400_000;
+  if (band === "30") return ageDays <= 30;
+  if (band === "90") return ageDays <= 90;
+  if (band === "older") return ageDays > 90;
+  return true;
+}
+
 export default async function Opportunities({ searchParams }: { searchParams: Promise<Params> }) {
   const params = await searchParams;
   const {
@@ -45,6 +69,8 @@ export default async function Opportunities({ searchParams }: { searchParams: Pr
     capital = "All",
     disclosure = "All",
     dataroom = "All",
+    sponsor = "All",
+    updated = "All",
     sort = "latest",
   } = params;
 
@@ -56,13 +82,16 @@ export default async function Opportunities({ searchParams }: { searchParams: Pr
   const sectors = optionValues(allListings.map((item) => item.sector));
   const countries = optionValues(allListings.map((item) => item.country));
   const stages = optionValues(allListings.map((item) => item.stage));
-  const instruments = optionValues(allListings.map((item) => item.instrument));
+  const instruments = optionValues(allListings.map((item) => instrumentCategory(item.instrument)));
+  const sponsors = optionValues(allListings.map((item) => item.org));
 
   let listings = allListings.filter((item) => {
     if (sector !== "All" && item.sector !== sector) return false;
     if (country !== "All" && item.country !== country) return false;
     if (stage !== "All" && item.stage !== stage) return false;
-    if (instrument !== "All" && item.instrument !== instrument) return false;
+    if (instrument !== "All" && instrumentCategory(item.instrument) !== instrument) return false;
+    if (sponsor !== "All" && item.org !== sponsor) return false;
+    if (!matchesUpdated(item.updatedAt, updated)) return false;
     if (!matchesCapital(item.raiseUsd, capital)) return false;
     if (disclosure === "reviewed" && !item.verified) return false;
     if (disclosure === "pending" && item.verified) return false;
@@ -110,6 +139,7 @@ export default async function Opportunities({ searchParams }: { searchParams: Pr
                 ["country", "Geography", country, countries],
                 ["stage", "Project stage", stage, stages],
                 ["instrument", "Instrument", instrument, instruments],
+                ["sponsor", "Sponsor", sponsor, sponsors],
               ].map(([name, label, value, options]) => (
                 <label key={name as string}>
                   <span className={labelClass}>{label as string}</span>
@@ -142,6 +172,15 @@ export default async function Opportunities({ searchParams }: { searchParams: Pr
                   <option value="All">All statuses</option>
                   <option value="prepared">Documents recorded</option>
                   <option value="not-publicly-confirmed">Not publicly confirmed</option>
+                </select>
+              </label>
+              <label>
+                <span className={labelClass}>Last updated</span>
+                <select name="updated" defaultValue={updated} className={selectClass}>
+                  <option value="All">Any date</option>
+                  <option value="30">Past 30 days</option>
+                  <option value="90">Past 90 days</option>
+                  <option value="older">More than 90 days ago</option>
                 </select>
               </label>
               <label>

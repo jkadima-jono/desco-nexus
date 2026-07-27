@@ -167,6 +167,20 @@ export default async function Home() {
         </>
       )}
 
+      {user && (
+        <section className="bg-ivory">
+          <div className="public-container py-9">
+            <p className="eyebrow text-teal">Workspace overview</p>
+            <h1 className="editorial-heading mt-3 text-3xl text-ink sm:text-4xl">
+              Review current opportunities.
+            </h1>
+            <p className="mt-3 max-w-2xl text-sm leading-6 text-slate">
+              Screen public information first, then request restricted material only when the opportunity fits your mandate.
+            </p>
+          </div>
+        </section>
+      )}
+
       <section className="bg-white py-14 lg:py-18" id="opportunities">
         <div className="public-container">
           <div className="flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
