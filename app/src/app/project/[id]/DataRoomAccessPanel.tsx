@@ -17,14 +17,24 @@ export default function DataRoomAccessPanel({ listingId }: { listingId: string }
   const [requesters, setRequesters] = useState<Requester[] | null>(null);
   const [logs, setLogs] = useState<LogEntry[] | null>(null);
   const [open, setOpen] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const load = async () => {
-    const [reqRes, logRes] = await Promise.all([
-      fetch("/api/listings/" + listingId + "/dataroom"),
-      fetch("/api/listings/" + listingId + "/dataroom/log"),
-    ]);
-    if (reqRes.ok) setRequesters((await reqRes.json()).requesters);
-    if (logRes.ok) setLogs((await logRes.json()).logs);
+    setError(null);
+    try {
+      const [reqRes, logRes] = await Promise.all([
+        fetch("/api/listings/" + listingId + "/dataroom"),
+        fetch("/api/listings/" + listingId + "/dataroom/log"),
+      ]);
+      if (!reqRes.ok || !logRes.ok) {
+        setError("Data-room activity could not be loaded.");
+        return;
+      }
+      setRequesters((await reqRes.json()).requesters);
+      setLogs((await logRes.json()).logs);
+    } catch {
+      setError("Data-room activity could not be loaded.");
+    }
   };
 
   useEffect(() => {
@@ -51,6 +61,12 @@ export default function DataRoomAccessPanel({ listingId }: { listingId: string }
       </button>
       {open && (
         <div className="mt-3 space-y-4">
+          {error && (
+            <div role="alert" className="flex items-center justify-between gap-3 rounded-lg bg-brandred/10 px-3 py-2 text-xs text-brandred">
+              <span>{error}</span>
+              <button type="button" onClick={load} className="min-h-11 font-bold underline">Retry</button>
+            </div>
+          )}
           <div>
             <h3 className="text-[11px] font-bold uppercase tracking-wider text-wgray mb-1.5">Access requests</h3>
             {requesters === null ? (

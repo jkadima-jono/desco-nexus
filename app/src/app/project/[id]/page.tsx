@@ -8,12 +8,9 @@ import HeroVisual from "@/components/HeroVisual";
 import SectorBadge from "@/components/SectorBadge";
 import { getLocale } from "@/lib/i18n-server";
 import { t } from "@/lib/i18n";
-import MatchRing from "@/components/MatchRing";
-import ScoreBars from "@/components/ScoreBars";
 import { getSessionUser } from "@/lib/auth";
 import { canManageListing as canManage } from "@/lib/authz";
 import TrustBadges from "./TrustBadges";
-import ScoreInfo from "./ScoreInfo";
 import Link from "next/link";
 import { computeMatchExplanation, parseJsonArray, type MandateCriteria } from "@/lib/matching";
 import MatchFeedback from "./MatchFeedback";
@@ -64,7 +61,6 @@ export default async function ProjectDetail({
   // client-component props regardless of session (rendered server-side only).
   const full = toListing(row);
   const l = { ...full, docs: [], whyMatch: "" };
-  const whyMatch = user ? full.whyMatch : "";
   const docs = row.docs;
   const roomAccess = await hasDataRoomAccess(user, row);
   const evidence = getInvestmentEvidence(l);
@@ -110,7 +106,7 @@ export default async function ProjectDetail({
             <span className="text-white/60">
               {l.flag} {l.country} · {l.stage}
             </span>
-            <TrustBadges verified={l.verified} verifiedBy={row.verifiedBy} verifiedAt={row.verifiedAt ? row.verifiedAt.toISOString() : null} verificationNote={row.verificationNote} governmentBacked={l.governmentBacked} govMechanism={row.govMechanism} sponsor={l.org} stage={l.stage} />
+            <TrustBadges verified={l.verified} verifiedBy={row.verifiedBy} verifiedAt={row.verifiedAt ? row.verifiedAt.toISOString() : null} verificationNote={row.verificationNote} governmentBacked={l.governmentBacked} govMechanism={row.govMechanism} sponsor={l.org} />
             <span className="ml-auto"><SectorBadge sector={l.sector} size={34} /></span>
           </div>
           <div className="flex flex-col lg:flex-row items-start justify-between gap-6 lg:gap-8">
@@ -145,7 +141,7 @@ export default async function ProjectDetail({
 
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-6 lg:py-8 grid gap-6 lg:grid-cols-3">
         <div className="lg:col-span-2 space-y-6">
-          <section className="bg-white rounded-2xl p-6 shadow-[0_1px_3px_rgb(44_62_80/0.08)]">
+          <section id="investment-evidence" className="scroll-mt-6 bg-white rounded-2xl p-6 shadow-[0_1px_3px_rgb(44_62_80/0.08)]">
             <div className="mb-5 border-l-2 border-gold pl-4">
               <div className="text-[10px] font-bold uppercase tracking-[0.16em] text-gold">Investment thesis</div>
               <p className="mt-2 text-sm leading-6 text-charcoal">{evidence.thesis}</p>
@@ -227,13 +223,11 @@ export default async function ProjectDetail({
             </section>
           )}
 
-          <PhotoGallery
-            listingId={l.id}
-            photos={l.photos ?? []}
-            canUpload={canManageListing}
-          />
+          <div id="project-photos" className="scroll-mt-6">
+            <PhotoGallery listingId={l.id} photos={l.photos ?? []} canUpload={canManageListing} />
+          </div>
 
-          <section className="bg-white rounded-2xl p-6 shadow-[0_1px_3px_rgb(44_62_80/0.08)]">
+          <section id="data-room" className="scroll-mt-6 bg-white rounded-2xl p-6 shadow-[0_1px_3px_rgb(44_62_80/0.08)]">
             <div className="flex items-center justify-between mb-4">
               <h2 className="font-display font-bold text-lg">{t(locale, "project.dataRoom")}</h2>
               <span className="text-[11px] font-bold text-wgray uppercase tracking-wider">
@@ -301,13 +295,19 @@ export default async function ProjectDetail({
             )}
           </section>
 
-          {user && <Comments listingId={l.id} />}
+          {user && <Comments listingId={l.id} initialViewer={{ id: user.id, fullName: user.fullName }} />}
         </div>
 
         <div className="space-y-6">
           <section className="hidden lg:block sticky top-4 bg-white rounded-2xl p-5 shadow-[0_1px_3px_rgb(44_62_80/0.08)]">
             <h2 className="font-display font-bold text-sm uppercase tracking-wider text-wgray mb-3">Actions</h2>
-            {user ? (
+            {canManageListing ? (
+              <div className="space-y-2">
+                <a href="#investment-evidence" className="block w-full rounded-xl bg-gold py-2.5 text-center font-display text-sm font-bold text-ink hover:brightness-110">Review project evidence</a>
+                <a href="#data-room" className="block w-full rounded-xl border border-charcoal/15 py-2.5 text-center font-display text-sm font-semibold text-charcoal hover:bg-mist">Manage project room</a>
+                <a href="#meetings" className="block w-full rounded-xl border border-charcoal/15 py-2.5 text-center font-display text-sm font-semibold text-charcoal hover:bg-mist">Review meeting requests</a>
+              </div>
+            ) : user ? (
               <div className="space-y-2">
                 <RequestInfoButton listingId={l.id} action="dataroom_requested" className="w-full bg-gold text-ink font-display font-bold text-sm py-2.5 rounded-xl hover:brightness-110" label={t(locale, "project.requestRoom")} doneLabel="✓ Requested" />
                 <RequestInfoButton listingId={l.id} className="w-full border border-charcoal/15 text-charcoal font-display font-semibold text-sm py-2.5 rounded-xl hover:bg-mist" label="Request information" />
@@ -323,18 +323,6 @@ export default async function ProjectDetail({
           </section>
 
           {canManageListing && <TeaserGenerator listingId={l.id} />}
-          {user ? <section className="bg-white rounded-2xl p-6 shadow-[0_1px_3px_rgb(44_62_80/0.08)]">
-            <div className="flex items-center gap-4 mb-4">
-              <MatchRing score={l.scores.match} size={64} />
-              <div>
-                <div className="font-display font-bold">{t(locale, "project.aiMatch")}</div>
-                <div className="text-[11px] text-wgray">Illustrative platform scores, not mandate-specific</div>
-              </div>
-            </div>
-            <ScoreBars scores={l.scores} />
-            <ScoreInfo />
-          </section> : <section className="bg-white rounded-2xl p-6 text-sm text-wgray">Sign in to see mandate fit, readiness, ESG and risk analysis.</section>}
-
           {user && matchExplanation && (
             <section className={"rounded-2xl p-5 border-l-4 " + (matchExplanation.confidence === "excluded" ? "bg-brandred/5 border-brandred" : "bg-gold-soft border-gold")}>
               <div className="flex items-center justify-between text-[11px] font-bold uppercase tracking-wider mb-2">
@@ -380,14 +368,10 @@ export default async function ProjectDetail({
             </section>
           )}
           {user && !matchExplanation && (
-            <section className="bg-gold-soft border-l-4 border-gold rounded-2xl p-5">
-              <div className="text-[11px] font-bold uppercase tracking-wider text-gold mb-1.5">
-                ✦ {t(locale, "project.why")}
-              </div>
-              <p className="text-sm leading-relaxed">{whyMatch}</p>
-              <div className="text-[10px] text-wgray mt-2">
-                General sponsor-provided rationale — <Link href="/mandates" className="underline">save a mandate</Link> for a criteria-by-criteria match explanation.
-              </div>
+            <section className="rounded-2xl border-l-4 border-gold bg-gold-soft p-5">
+              <div className="text-[11px] font-bold uppercase tracking-wider text-gold">Mandate fit not calculated</div>
+              <p className="mt-2 text-sm leading-relaxed">Create an investment mandate to evaluate sector, geography, ticket size, instrument and stated ESG criteria against this opportunity.</p>
+              <Link href="/mandates" className="button-secondary mt-4">Create or select a mandate</Link>
             </section>
           )}
 
@@ -413,7 +397,13 @@ export default async function ProjectDetail({
 
       {/* Mobile bottom action bar */}
       <div className="lg:hidden fixed inset-x-0 bottom-0 z-30 bg-white border-t border-charcoal/10 px-3 py-2.5 flex gap-2 pb-[calc(0.625rem+env(safe-area-inset-bottom))]">
-        {user ? (
+        {canManageListing ? (
+          <>
+            <a href="#investment-evidence" className="flex min-h-11 flex-1 items-center justify-center rounded-xl bg-gold px-2 text-center font-display text-xs font-bold text-ink">Review evidence</a>
+            <a href="#data-room" className="flex min-h-11 flex-1 items-center justify-center rounded-xl border border-charcoal/15 px-2 text-center font-display text-xs font-semibold text-charcoal">Manage room</a>
+            <a href="#meetings" className="flex min-h-11 min-w-11 items-center justify-center rounded-xl border border-charcoal/15 px-2 text-center font-display text-xs font-semibold text-charcoal">Meetings</a>
+          </>
+        ) : user ? (
           <>
             <RequestInfoButton listingId={l.id} action="dataroom_requested" className="flex-1 min-h-11 bg-gold text-ink font-display font-bold text-xs rounded-xl" label={t(locale, "project.requestRoom")} doneLabel="✓ Requested" />
             <RequestInfoButton listingId={l.id} className="flex-1 min-h-11 border border-charcoal/15 text-charcoal font-display font-semibold text-xs rounded-xl" label="Request info" />

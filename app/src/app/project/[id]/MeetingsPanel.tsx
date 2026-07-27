@@ -20,10 +20,20 @@ export default function MeetingsPanel({ listingId, canManage }: { listingId: str
   const [slots, setSlots] = useState(["", "", ""]);
   const [note, setNote] = useState("");
   const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const load = async () => {
-    const res = await fetch("/api/meetings?listingId=" + listingId);
-    if (res.ok) setMeetings((await res.json()).meetings);
+    setError(null);
+    try {
+      const res = await fetch("/api/meetings?listingId=" + listingId);
+      if (!res.ok) {
+        setError("Meeting requests could not be loaded.");
+        return;
+      }
+      setMeetings((await res.json()).meetings);
+    } catch {
+      setError("Meeting requests could not be loaded.");
+    }
   };
 
   useEffect(() => { load(); }, []);
@@ -41,22 +51,41 @@ export default function MeetingsPanel({ listingId, canManage }: { listingId: str
         setSlots(["", "", ""]);
         setNote("");
         await load();
+      } else {
+        setError("The meeting request could not be sent.");
       }
+    } catch {
+      setError("The meeting request could not be sent.");
     } finally {
       setSubmitting(false);
     }
   };
 
   const respond = async (id: string, status: "confirmed" | "declined" | "cancelled", confirmedSlot?: string) => {
-    await fetch("/api/meetings/" + id, {
-      method: "PATCH", headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ status, confirmedSlot }),
-    });
-    await load();
+    setError(null);
+    try {
+      const res = await fetch("/api/meetings/" + id, {
+        method: "PATCH", headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ status, confirmedSlot }),
+      });
+      if (!res.ok) {
+        setError("The meeting response could not be saved.");
+        return;
+      }
+      await load();
+    } catch {
+      setError("The meeting response could not be saved.");
+    }
   };
 
   return (
     <div className="space-y-4">
+          {error && (
+            <div role="alert" className="flex items-center justify-between gap-3 rounded-lg bg-brandred/10 px-3 py-2 text-xs text-brandred">
+              <span>{error}</span>
+              <button type="button" onClick={load} className="min-h-11 font-bold underline">Retry</button>
+            </div>
+          )}
           {!canManage && (
             <div className="space-y-2">
               <h3 className="text-[11px] font-bold uppercase tracking-wider text-wgray">Propose times</h3>

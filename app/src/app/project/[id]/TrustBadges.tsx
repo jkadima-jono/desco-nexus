@@ -21,7 +21,6 @@ export default function TrustBadges({
   governmentBacked,
   govMechanism,
   sponsor,
-  stage,
 }: {
   verified: boolean;
   verifiedBy?: string | null;
@@ -30,7 +29,6 @@ export default function TrustBadges({
   governmentBacked: boolean;
   govMechanism: string | null;
   sponsor: string;
-  stage: string;
 }) {
   const [open, setOpen] = useState<Claim | null>(null);
   const dialogRef = useRef<HTMLDivElement>(null);
@@ -98,16 +96,6 @@ export default function TrustBadges({
         "Production requires the executed support instrument in the data room before this badge displays.",
     });
   }
-  claims.push({
-    label: stage,
-    claim: "Development stage: " + stage,
-    verificationType: "Stage self-assessment",
-    source: "Sponsor-declared in listing (demo data)",
-    verifiedBy: "Not independently verified",
-    checked: "Self-reported (demo data)",
-    limitations: "Stage claims are sponsor statements until evidenced by permits and contracts in the data room.",
-  });
-
   return (
     <>
       {claims.map((c) => (
