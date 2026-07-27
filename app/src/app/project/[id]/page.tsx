@@ -22,7 +22,7 @@ import DataRoomAccessPanel from "./DataRoomAccessPanel";
 import MeetingsPanel from "./MeetingsPanel";
 import { hasDataRoomAccess } from "@/lib/dataroom";
 import type { Metadata } from "next";
-import { getInvestmentEvidence } from "@/lib/investment-evidence";
+import { getInvestmentEvidence, normalizeStage } from "@/lib/investment-evidence";
 
 export const dynamic = "force-dynamic";
 
@@ -36,7 +36,7 @@ export async function generateMetadata({
   const { id } = await params;
   const row = await prisma.listing.findUnique({ where: { id } });
   if (!row) return {};
-  const description = `${row.sector} opportunity in ${row.country} — ${fmtUsd(row.raiseUsd)} sought via ${row.instrument}. ${row.stage} stage.`;
+  const description = `${row.sector} opportunity in ${row.country} — ${fmtUsd(row.raiseUsd)} sought via ${row.instrument}. ${normalizeStage(row.stage)}.`;
   return {
     title: row.title + " — DESCO Nexus",
     description,
