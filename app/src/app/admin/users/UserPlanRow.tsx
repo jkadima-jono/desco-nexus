@@ -32,11 +32,11 @@ export default function UserPlanRow({ userRow, plans }: { userRow: UserRow; plan
         disabled={busy}
         onChange={(e) => assign(e.target.value)}
         className="bg-mist rounded-lg px-2.5 py-1.5 text-xs outline-none focus:ring-2 focus:ring-gold disabled:opacity-50"
-        aria-label={"Plan for " + userRow.fullName}
+        aria-label={"Demo entitlement configuration for " + userRow.fullName}
       >
-        <option value="">Free (no plan)</option>
+        <option value="">Free demo configuration</option>
         {plans.map((p) => (
-          <option key={p.id} value={p.id}>{p.name} — ${p.priceUsdPerMonth}/mo</option>
+          <option key={p.id} value={p.id}>{p.name} — scenario ${p.priceUsdPerMonth}/month</option>
         ))}
       </select>
     </div>

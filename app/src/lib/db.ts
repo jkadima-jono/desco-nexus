@@ -1,6 +1,7 @@
 import { PrismaClient, type Listing as DbListing, type Document, type ListingImage } from "@prisma/client";
 import type { Listing } from "./data";
 import { normalizeHighlights, normalizeStage, normalizeSummary } from "./investment-evidence";
+import { exampleProjectImages } from "./example-project-images";
 
 const globalForPrisma = globalThis as unknown as { prisma?: PrismaClient };
 
@@ -49,12 +50,15 @@ export function toListing(
     useOfFunds: row.useOfFunds,
     fundingSecuredUsd: row.fundingSecuredUsd,
     sponsorContributionUsd: row.sponsorContributionUsd,
-    photos: (row.images ?? [])
-      .sort((a, b) => a.position - b.position)
-      .map((i) => ({
-        id: i.id,
-        url: i.storageKey,
-        caption: i.caption,
-      })),
+    photos: row.images && row.images.length > 0
+      ? row.images
+          .sort((a, b) => a.position - b.position)
+          .map((i) => ({
+            id: i.id,
+            url: i.storageKey,
+            caption: i.caption || "Sponsor-provided project image",
+            isExample: false,
+          }))
+      : exampleProjectImages(row.id),
   };
 }

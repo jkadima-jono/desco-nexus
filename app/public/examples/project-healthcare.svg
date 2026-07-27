@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 600" role="img" aria-labelledby="title desc">
+  <title id="title">Concept illustration of a community health hub</title>
+  <desc id="desc">A replaceable editorial illustration, not a photograph or evidence of a specific project.</desc>
+  <rect width="1200" height="600" fill="#e5efeb"/>
+  <circle cx="1020" cy="110" r="62" fill="#b9964a" opacity=".85"/>
+  <path d="M0 430 C260 370 450 465 680 410 C880 362 1055 420 1200 378 V600 H0Z" fill="#3c716b"/>
+  <rect x="315" y="180" width="560" height="300" rx="10" fill="#f7f4ec" stroke="#263540" stroke-width="12"/>
+  <rect x="390" y="300" width="120" height="180" fill="#183246"/><rect x="680" y="300" width="120" height="180" fill="#183246"/>
+  <rect x="535" y="210" width="120" height="36" fill="#c41e3a"/><rect x="577" y="168" width="36" height="120" fill="#c41e3a"/>
+  <g fill="#b9964a"><circle cx="438" cy="245" r="28"/><circle cx="758" cy="245" r="28"/></g>
+  <text x="52" y="548" fill="#fff" font-family="Arial,sans-serif" font-size="22" font-weight="700" letter-spacing="2">REPLACEABLE CONCEPT VISUAL · NOT PROJECT EVIDENCE</text>
+</svg>

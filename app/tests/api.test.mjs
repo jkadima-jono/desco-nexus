@@ -1068,5 +1068,5 @@ test("/admin dashboard is admin-only and rolls up real platform data", async () 
   const body = await adminRes.text();
   assert.ok(body.includes("Administration"));
   assert.ok(body.includes("Published listings"), "must roll up real listing counts, not a placeholder");
-  assert.ok(body.includes("Illustrative MRR"), "financial figures must stay honestly labeled as illustrative");
+  assert.ok(body.includes("Assigned monthly scenario value"), "financial figures must stay honestly labeled as scenario-only");
 });

@@ -26,7 +26,7 @@ export type Listing = {
   highlights: string[];
   docs: { name: string; size: string; folder: string }[];
   whyMatch: string;
-  photos?: { id: string; url: string; caption: string | null }[];
+  photos?: { id: string; url: string; caption: string | null; isExample?: boolean }[];
   // Sponsor-provided financial detail carried from the intake submission.
   // Absent on the static seed literals below; optional on published
   // listings too, since older listings were published before these fields

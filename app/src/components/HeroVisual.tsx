@@ -1,4 +1,5 @@
 import type { Listing } from "@/lib/data";
+import { exampleProjectImages } from "@/lib/example-project-images";
 
 // Deterministic pattern pick per listing (brand: African-inspired geometric
 // library — circular unity, connected nodes, radial burst).
@@ -64,7 +65,7 @@ export default function HeroVisual({
   className?: string;
   overlay?: boolean;
 }) {
-  const photo = listing.photos?.[0];
+  const photo = listing.photos?.[0] ?? exampleProjectImages(listing.id)[0];
   if (photo) {
     return (
       <div className={"relative overflow-hidden " + className}>
@@ -80,6 +81,11 @@ export default function HeroVisual({
         />
         {overlay && (
           <div className="absolute inset-0 bg-gradient-to-t from-ink/70 via-ink/10 to-transparent" />
+        )}
+        {photo.isExample && (
+          <span className="absolute right-3 top-3 rounded-full bg-ink/85 px-2.5 py-1 text-[9px] font-bold uppercase tracking-[0.12em] text-white">
+            Example visual · replaceable
+          </span>
         )}
       </div>
     );

@@ -8,6 +8,7 @@ const TOPICS = [
   { value: "project-submission", label: "Submit a project" },
   { value: "data-room", label: "Data-room access question" },
   { value: "institutional-partnership", label: "Institutional partnership" },
+  { value: "commercial-model", label: "Commercial scope and workspace model" },
   { value: "government-dfi", label: "Government or DFI collaboration" },
   { value: "inaccurate-information", label: "Report inaccurate project information" },
   { value: "technical-support", label: "Technical support" },

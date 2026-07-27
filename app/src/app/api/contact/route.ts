@@ -9,6 +9,7 @@ const TOPICS = new Set([
   "project-submission",
   "data-room",
   "institutional-partnership",
+  "commercial-model",
   "government-dfi",
   "inaccurate-information",
   "technical-support",

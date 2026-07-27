@@ -102,12 +102,12 @@ export default async function AdminDashboard() {
         <Tile value={aiTotal + " (" + aiClaude + " via Claude)"} label="Recorded AI generations" href="/admin/ai-usage" />
       </div>
 
-      <h2 className="text-[11px] font-bold uppercase tracking-wider text-wgray mb-2">Demo workspace and commercial simulation</h2>
-      <p className="mb-3 text-xs text-wgray">The following values describe demo identities and assigned plan scenarios; they are not collected revenue.</p>
+      <h2 className="text-[11px] font-bold uppercase tracking-wider text-wgray mb-2">Demo entitlement and commercial scenarios</h2>
+      <p className="mb-3 text-xs text-wgray">The following values describe demo identities and internal entitlement assignments. They are not contracts, invoices, MRR, ARR or collected revenue.</p>
       <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 mb-6">
         <Tile value={users.length} label="Demo workspace identities" href="/admin/users" />
         <Tile value={paidUserCount} label="Plan assignments" href="/admin/users" />
-        <Tile value={"$" + mrr.toLocaleString()} label="Simulated monthly plan value" href="/admin/users" />
+        <Tile value={"$" + mrr.toLocaleString()} label="Assigned monthly scenario value" href="/admin/users" />
       </div>
 
       <div className="bg-white rounded-2xl p-5 shadow-[0_1px_3px_rgb(44_62_80/0.08)]">

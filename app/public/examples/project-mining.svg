@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 600" role="img" aria-labelledby="title desc">
+  <title id="title">Concept illustration of a mining project</title>
+  <desc id="desc">A replaceable editorial illustration, not a photograph or evidence of a specific project.</desc>
+  <rect width="1200" height="600" fill="#e8eaeb"/>
+  <path d="M0 350 L185 205 L330 310 L515 135 L705 322 L875 188 L1200 355 V600 H0Z" fill="#263540"/>
+  <path d="M0 420 L260 300 L430 390 L620 250 L835 405 L1020 300 L1200 380 V600 H0Z" fill="#183246"/>
+  <path d="M175 490 L370 380 L560 490Z" fill="#b9964a" opacity=".7"/>
+  <g stroke="#f7f4ec" stroke-width="12" fill="none"><path d="M710 140 V408"/><path d="M710 160 L865 245"/><path d="M710 225 L585 300"/></g>
+  <circle cx="710" cy="140" r="18" fill="#b9964a"/>
+  <text x="52" y="548" fill="#fff" font-family="Arial,sans-serif" font-size="22" font-weight="700" letter-spacing="2">REPLACEABLE CONCEPT VISUAL · NOT PROJECT EVIDENCE</text>
+</svg>
