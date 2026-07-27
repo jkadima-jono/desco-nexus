@@ -39,7 +39,7 @@ export default function PublicHeader() {
   }, [open]);
 
   const nav = (
-    <nav aria-label="Public navigation" className="flex flex-col gap-1 lg:flex-row lg:items-center lg:gap-1">
+    <nav aria-label="Public navigation" className="flex flex-col gap-1 xl:flex-row xl:items-center xl:gap-1">
       {LINKS.map(([href, labelKey]) => {
         const active = pathname.startsWith(href);
         return (
@@ -48,7 +48,7 @@ export default function PublicHeader() {
             href={href}
             onClick={() => setOpen(false)}
             aria-current={active ? "page" : undefined}
-            className={`min-h-11 rounded-md px-3 py-3 text-sm font-semibold lg:min-h-0 lg:py-2 ${
+            className={`min-h-11 rounded-md px-3 py-3 text-sm font-semibold xl:min-h-0 xl:py-2 ${
               active ? "bg-gold-soft text-ink" : "text-white/75 hover:bg-white/8 hover:text-white"
             }`}
           >
@@ -70,7 +70,7 @@ export default function PublicHeader() {
               DESCO <span className="text-gold">Nexus</span>
             </span>
           </Link>
-          <div className="hidden items-center gap-3 lg:flex">
+          <div className="hidden items-center gap-3 xl:flex">
             {nav}
             <div className="w-32"><LanguageSwitcher /></div>
             <Link href="/login" className="button-on-dark">{t("nav.enterWorkspace")}</Link>
@@ -81,7 +81,7 @@ export default function PublicHeader() {
             onClick={() => setOpen(true)}
             aria-expanded={open}
             aria-controls="public-mobile-navigation"
-            className="grid min-h-11 min-w-11 place-items-center rounded-lg border border-white/20 text-xl lg:hidden"
+            className="grid min-h-11 min-w-11 place-items-center rounded-lg border border-white/20 text-xl xl:hidden"
             aria-label={t("nav.open")}
           >
             ☰
@@ -89,13 +89,13 @@ export default function PublicHeader() {
         </div>
       </header>
       {open && (
-        <div className="fixed inset-0 z-50 bg-black/55 lg:hidden" onClick={() => setOpen(false)}>
+        <div className="fixed inset-0 z-50 bg-black/55 xl:hidden" onClick={() => setOpen(false)}>
           <aside
             id="public-mobile-navigation"
             role="dialog"
             aria-modal="true"
             aria-label={t("nav.public")}
-            className="ml-auto flex h-full w-[min(21rem,90vw)] flex-col overflow-y-auto bg-ink p-5 text-white"
+            className="ml-auto flex h-full w-full flex-col overflow-y-auto bg-ink p-5 text-white sm:w-[22rem]"
             onClick={(event) => event.stopPropagation()}
           >
             <div className="mb-8 flex items-center justify-between">

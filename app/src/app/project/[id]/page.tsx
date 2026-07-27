@@ -157,7 +157,7 @@ export default async function ProjectDetail({
       </section>
 
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-6 lg:py-8 grid gap-6 lg:grid-cols-3">
-        <div className="lg:col-span-2 space-y-6">
+        <div className="min-w-0 space-y-6 lg:col-span-2">
           <section id="investment-evidence" className="scroll-mt-6 bg-white rounded-2xl p-6 shadow-[0_1px_3px_rgb(44_62_80/0.08)]">
             <div className="mb-5 border-l-2 border-gold pl-4">
               <div className="text-[10px] font-bold uppercase tracking-[0.16em] text-gold">Investment thesis</div>
@@ -315,7 +315,7 @@ export default async function ProjectDetail({
           {user && <Comments listingId={l.id} initialViewer={{ id: user.id, fullName: user.fullName }} />}
         </div>
 
-        <div className="space-y-6">
+        <div className="min-w-0 space-y-6">
           <section className="hidden lg:block sticky top-4 bg-white rounded-2xl p-5 shadow-[0_1px_3px_rgb(44_62_80/0.08)]">
             <h2 className="font-display font-bold text-sm uppercase tracking-wider text-wgray mb-3">Actions</h2>
             {canManageListing ? (

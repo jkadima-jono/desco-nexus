@@ -157,7 +157,7 @@ export default function Sidebar({ user }: { user: SidebarUser }) {
       </header>
       {mobileOpen && (
         <div className="lg:hidden fixed inset-0 z-50 bg-black/50" role="presentation" onClick={() => setMobileOpen(false)}>
-          <aside id="mobile-navigation" role="dialog" aria-modal="true" aria-label="Workspace navigation" className="relative w-[min(20rem,88vw)] h-full overflow-hidden bg-ink text-white flex flex-col shadow-2xl" onClick={(e) => e.stopPropagation()}>
+          <aside id="mobile-navigation" role="dialog" aria-modal="true" aria-label="Workspace navigation" className="relative h-full w-full overflow-hidden bg-ink text-white flex flex-col shadow-2xl sm:w-80" onClick={(e) => e.stopPropagation()}>
             <button ref={closeButtonRef} type="button" onClick={() => setMobileOpen(false)} className="absolute z-10 top-3 right-3 min-w-11 min-h-11 rounded-xl text-2xl text-white hover:bg-white/10" aria-label="Close navigation">×</button>
             {navigation}
           </aside>
