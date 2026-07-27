@@ -51,6 +51,16 @@ const copy: Record<Locale, Record<PublicPage, HeroCopy>> = {
     partners: { eyebrow: "Parceiros e consultores", title: "Apoio profissional à preparação e análise de projetos.", body: "A DESCO Nexus pode coordenar consultores e instituições autorizados em torno de informações, diligência e contacto com investidores, sem sugerir afiliações não aprovadas.", primary: "Enviar um pedido de parceria", secondary: "Analisar o modelo de diligência" },
     pricing: { eyebrow: "Modelo comercial", title: "O acesso institucional deve ser definido, contratado e baseado em evidência.", body: "A DESCO Nexus não processa atualmente pagamentos, não emite faturas nem oferece subscrições self-service. Estes percursos descrevem um modelo assistido proposto para discussão.", primary: "Discutir o âmbito comercial", secondary: "Analisar o percurso do investidor" },
   },
+  zh: {
+    opportunities: { eyebrow: "投资机会工作台", title: "为初步审查而结构化的公开投资机会。", body: "在申请受限信息前，可按行业、地区、项目阶段、投资工具、融资需求和披露状态筛选当前项目简介。", primary: "申请投资者权限", secondary: "了解尽职调查流程" },
+    investors: { eyebrow: "投资者路径", title: "在开展全面尽调前，先判断项目是否符合投资授权。", body: "DESCO Nexus 帮助机构投资者、基金、家族办公室、贷款机构和战略资本筛选结构化机会，并控制进入深入审查的过程。", primary: "申请投资者权限", secondary: "查看投资机会" },
+    sponsors: { eyebrow: "项目发起方路径", title: "为严谨的投资者审查做好项目准备。", body: "将分散的项目信息整理为结构化机构资料、清晰的公开简介和基于权限的尽职调查流程。", primary: "评估项目准备度", secondary: "讨论项目支持方案" },
+    diligence: { eyebrow: "受控尽职调查", title: "信息访问应建立在有依据的筛选决定之上。", body: "DESCO Nexus 将公开筛选信息与需要权限的财务、技术、法律和交易资料分开管理。", primary: "查看公开投资机会", secondary: "阅读披露标准" },
+    trust: { eyebrow: "信任与披露架构", title: "状态清晰，范围明确，不暗示认可。", body: "DESCO Nexus 根据实际完成的工作、信息提供方和支持该状态的证据，说明项目信息和访问控制。", primary: "阅读法律方法说明", secondary: "了解受控访问" },
+    about: { eyebrow: "关于 DESCO Global", title: "连接结构化项目、资本与战略合作伙伴。", body: "DESCO Global 运营 DESCO Nexus 投资机会与尽职调查平台，初期重点覆盖刚果民主共和国，并可支持部分非洲市场。", primary: "联系 DESCO Global", secondary: "查看投资业务支柱" },
+    partners: { eyebrow: "合作伙伴与顾问", title: "为结构化项目准备和审查提供专业支持。", body: "DESCO Nexus 可围绕项目信息、尽职调查和投资者沟通协调经授权的顾问与机构，但不会暗示未经正式批准的认可或合作关系。", primary: "提交合作咨询", secondary: "查看尽职调查模式" },
+    pricing: { eyebrow: "商业模式", title: "机构访问应明确范围、签订合同并以证据为基础。", body: "DESCO Nexus 目前不处理付款、不出具发票，也不提供自助订阅。以下路径仅说明拟议的销售支持模式，不构成约束性报价或要约。", primary: "讨论商业合作范围", secondary: "查看投资者路径" },
+  },
 };
 
 export function getPublicHero(locale: Locale, page: PublicPage) {
