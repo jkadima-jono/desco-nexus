@@ -8,6 +8,7 @@ import LanguageSwitcher from "./LanguageSwitcher";
 import NotificationBell from "./NotificationBell";
 
 type NavItem = { href: string; key: string; icon: string };
+type NavGroup = { label: string; items: NavItem[] };
 
 const DISCOVER: NavItem = { href: "/", key: "nav.discover", icon: "◈" };
 const MATCH: NavItem = { href: "/match", key: "nav.match", icon: "⇄" };
@@ -35,6 +36,7 @@ const AI_USAGE: NavItem = { href: "/admin/ai-usage", key: "nav.aiUsage", icon: "
 const BILLING: NavItem = { href: "/admin/users", key: "nav.billing", icon: "$" };
 const TRUST: NavItem = { href: "/trust", key: "nav.trust", icon: "✓" };
 const ABOUT: NavItem = { href: "/about", key: "nav.about", icon: "◆" };
+const INQUIRIES: NavItem = { href: "/admin/inquiries", key: "nav.inquiries", icon: "✉" };
 
 // Role-appropriate subsets of real, working routes only — no links to
 // pages that don't exist yet (data-rooms/analytics land in later phases
@@ -46,6 +48,19 @@ const NAV_BY_ROLE: Record<string, NavItem[]> = {
   advisor: [DISCOVER, MANDATES, TRANSACTIONS, MESSAGES, PILLARS],
   admin: [ADMIN_HOME, DISCOVER, MATCH, SAVED, MANDATES, PIPELINE, PORTFOLIO, INVESTOR_MATCHES, REVIEW_SUBMISSIONS, VERIFICATION, AI_USAGE, BILLING, SEARCH, MESSAGES, PILLARS],
 };
+
+const ADMIN_GROUPS: NavGroup[] = [
+  { label: "Overview", items: [ADMIN_HOME] },
+  { label: "Investment workspace", items: [DISCOVER, MATCH, SAVED, MANDATES, PIPELINE, PORTFOLIO] },
+  { label: "Origination and control", items: [INVESTOR_MATCHES, REVIEW_SUBMISSIONS, VERIFICATION, INQUIRIES] },
+  { label: "Operations", items: [AI_USAGE, BILLING] },
+  { label: "Tools and reference", items: [SEARCH, MESSAGES, PILLARS] },
+];
+
+function isActiveRoute(pathname: string, href: string) {
+  if (href === "/" || href === "/admin") return pathname === href;
+  return pathname === href || pathname.startsWith(`${href}/`);
+}
 
 type SidebarUser = { fullName: string; title: string | null; role?: string } | null;
 
@@ -78,6 +93,9 @@ export default function Sidebar({ user }: { user: SidebarUser }) {
     router.refresh();
   };
   const nav = NAV_BY_ROLE[user?.role ?? "signedOut"] ?? NAV_BY_ROLE.investor;
+  const navGroups: NavGroup[] = user?.role === "admin"
+    ? ADMIN_GROUPS
+    : [{ label: "Workspace", items: nav }];
   const navigation = (
     <>
       <div className="px-6 pt-7 pb-6">
@@ -90,23 +108,25 @@ export default function Sidebar({ user }: { user: SidebarUser }) {
           </div>
         </div>
       </div>
-      <nav aria-label="Workspace navigation" className="min-h-0 flex-1 space-y-1 overflow-y-auto px-3 pb-3">
-        {nav.map((item) => {
-          const active = item.href === "/" ? pathname === "/" : pathname.startsWith(item.href);
-          return (
-            <Link key={item.key} href={item.href} onClick={() => setMobileOpen(false)} aria-current={active ? "page" : undefined} className={"flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-semibold transition-colors " + (active ? "bg-gold text-ink" : "text-white/70 hover:bg-white/10 hover:text-white")}>
-              <span aria-hidden="true" className="w-5 text-center">{item.icon}</span>{t(item.key)}
-            </Link>
-          );
-        })}
+      <nav aria-label="Workspace navigation" className="min-h-0 flex-1 overflow-y-auto px-3 pb-3">
+        {navGroups.map((group, groupIndex) => (
+          <div key={group.label} className={groupIndex > 0 ? "mt-5 border-t border-white/8 pt-4" : ""}>
+            <p className="mb-1 px-3 text-[9px] font-bold uppercase tracking-[0.16em] text-white/38">
+              {group.label}
+            </p>
+            <div className="space-y-1">
+              {group.items.map((item) => {
+                const active = isActiveRoute(pathname, item.href);
+                return (
+                  <Link key={item.key} href={item.href} onClick={() => setMobileOpen(false)} aria-current={active ? "page" : undefined} className={"flex items-center gap-3 rounded-lg border-l-2 px-3 py-2 text-sm font-semibold transition-colors " + (active ? "border-gold bg-gold/14 text-white" : "border-transparent text-white/68 hover:bg-white/8 hover:text-white")}>
+                    <span aria-hidden="true" className={active ? "w-5 text-center text-gold" : "w-5 text-center"}>{item.icon}</span>{t(item.key)}
+                  </Link>
+                );
+              })}
+            </div>
+          </div>
+        ))}
       </nav>
-      {user?.role === "admin" && (
-        <div className="px-3 pb-1">
-          <Link href="/admin/inquiries" className={"flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-semibold transition-colors " + (pathname.startsWith("/admin") ? "bg-gold text-ink" : "text-white/70 hover:bg-white/10 hover:text-white")}>
-            <span aria-hidden="true" className="w-5 text-center">✉</span>{t("nav.inquiries")}
-          </Link>
-        </div>
-      )}
       <div className="px-4 pb-3"><LanguageSwitcher /></div>
       <div className="px-4 py-4 border-t border-white/10">
         {user ? (
