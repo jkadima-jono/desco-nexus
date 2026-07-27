@@ -22,6 +22,7 @@ import DataRoomAccessPanel from "./DataRoomAccessPanel";
 import MeetingsPanel from "./MeetingsPanel";
 import { hasDataRoomAccess } from "@/lib/dataroom";
 import type { Metadata } from "next";
+import { getInvestmentEvidence } from "@/lib/investment-evidence";
 
 export const dynamic = "force-dynamic";
 
@@ -66,6 +67,7 @@ export default async function ProjectDetail({
   const whyMatch = user ? full.whyMatch : "";
   const docs = row.docs;
   const roomAccess = await hasDataRoomAccess(user, row);
+  const evidence = getInvestmentEvidence(l);
 
   const folders = [...new Set(docs.map((d) => d.folder))];
 
@@ -125,7 +127,7 @@ export default async function ProjectDetail({
                   <RequestInfoButton listingId={l.id} action="dataroom_requested" className="bg-gold text-ink font-display font-bold text-sm px-5 py-2.5 rounded-xl hover:brightness-110" label={t(locale, "project.requestRoom")} doneLabel="✓ Requested" />
                   <a href="#meetings" className="border border-white/25 text-white font-display font-semibold text-sm px-5 py-2.5 rounded-xl hover:bg-white/10 inline-flex items-center">{t(locale, "project.schedule")}</a>
                   <RequestInfoButton listingId={l.id} action="saved" className="border border-white/25 text-white font-display font-semibold text-sm px-5 py-2.5 rounded-xl hover:bg-white/10" label={"⌁ " + t(locale, "project.save")} doneLabel="✓ Saved" />
-                </> : <Link href={`/login?next=/project/${l.id}`} className="inline-flex justify-center bg-gold text-ink font-display font-bold text-sm px-5 py-2.5 rounded-xl">Sign in to request access</Link>}
+                </> : <Link href={`/contact?topic=investor-access&project=${l.id}`} className="inline-flex justify-center bg-gold text-ink font-display font-bold text-sm px-5 py-2.5 rounded-xl">Apply for investor access</Link>}
               </div>
             </div>
             <div className="text-left lg:text-right shrink-0">
@@ -135,7 +137,7 @@ export default async function ProjectDetail({
               <div className="text-xs text-white/60 mt-1">
                 {l.instrument}
                 <br />
-                {l.irr}
+                Sponsor target: {l.irr}
               </div>
               <div className="text-[10px] text-white/40 mt-1.5">Sponsor-provided figures</div>
             </div>
@@ -153,7 +155,7 @@ export default async function ProjectDetail({
           <section className="bg-white rounded-2xl p-6 shadow-[0_1px_3px_rgb(44_62_80/0.08)]">
             <div className="mb-5 border-l-2 border-gold pl-4">
               <div className="text-[10px] font-bold uppercase tracking-[0.16em] text-gold">Investment thesis</div>
-              <p className="mt-2 text-sm leading-6 text-charcoal">{l.summary}</p>
+              <p className="mt-2 text-sm leading-6 text-charcoal">{evidence.thesis}</p>
             </div>
             <h2 className="font-display font-bold text-lg mb-1">{t(locale, "project.highlights")}</h2>
             <p className="text-xs text-wgray mb-4">Sponsor-provided figures, not independently verified unless stated otherwise.</p>
@@ -170,6 +172,39 @@ export default async function ProjectDetail({
                 </li>
               ))}
             </ul>
+          </section>
+
+          <section className="bg-white rounded-2xl p-6 shadow-[0_1px_3px_rgb(44_62_80/0.08)]">
+            <h2 className="font-display font-bold text-lg">Public investment evidence</h2>
+            <p className="mt-1 text-xs leading-5 text-wgray">
+              Missing fields remain visible so absent disclosure is not mistaken for a negative finding.
+            </p>
+            <dl className="mt-5 divide-y divide-charcoal/10">
+              {evidence.fields.map((field) => (
+                <div key={field.label} className="grid gap-1 py-3 sm:grid-cols-[12rem_1fr] sm:gap-5">
+                  <dt className="text-[11px] font-bold uppercase tracking-wider text-wgray">{field.label}</dt>
+                  <dd>
+                    <div className={field.status === "not-disclosed" ? "text-sm italic text-wgray" : "text-sm text-charcoal"}>{field.value}</div>
+                    {field.source && <div className="mt-1 text-[10px] text-wgray">Source: {field.source}</div>}
+                  </dd>
+                </div>
+              ))}
+            </dl>
+          </section>
+
+          <section className="bg-white rounded-2xl p-6 shadow-[0_1px_3px_rgb(44_62_80/0.08)]">
+            <h2 className="font-display font-bold text-lg">Principal risk disclosure</h2>
+            <p className="mt-1 text-xs leading-5 text-wgray">
+              These are required disclosure categories. “Not publicly disclosed” means the public record does not yet support an assessment.
+            </p>
+            <dl className="mt-5 grid gap-3 sm:grid-cols-2">
+              {evidence.risks.map((risk) => (
+                <div key={risk.label} className="rounded-lg border border-charcoal/10 bg-mist p-4">
+                  <dt className="text-[11px] font-bold uppercase tracking-wider text-charcoal">{risk.label}</dt>
+                  <dd className="mt-2 text-sm italic text-wgray">{risk.value}</dd>
+                </div>
+              ))}
+            </dl>
           </section>
 
           {(l.useOfFunds || l.fundingSecuredUsd != null || l.sponsorContributionUsd != null) && (
@@ -212,7 +247,7 @@ export default async function ProjectDetail({
                 {t(locale, "project.roomBadge")}
               </span>
             </div>
-            {roomAccess ? folders.map((f) => (
+            {roomAccess && folders.length > 0 ? folders.map((f) => (
               <div key={f} className="mb-3">
                 <div className="text-[11px] font-bold text-wgray uppercase tracking-wider mb-1.5">
                   {f}
@@ -236,7 +271,11 @@ export default async function ProjectDetail({
                     </a>
                   ))}
               </div>
-            )) : user ? (
+            )) : roomAccess ? (
+              <div className="rounded-xl bg-mist p-5 text-sm text-wgray">
+                Access is recorded, but the sponsor has not uploaded any documents to this project room.
+              </div>
+            ) : user ? (
               <div className="rounded-xl bg-mist p-5 text-sm text-wgray">
                 Confidential filenames and documents are hidden until the sponsor grants
                 data-room access. Use &ldquo;{t(locale, "project.requestRoom")}&rdquo; above if you haven&apos;t already.
@@ -248,7 +287,7 @@ export default async function ProjectDetail({
               </div>
             ) : (
               <div className="rounded-xl bg-mist p-5 text-sm text-wgray">
-                Confidential filenames and documents are hidden. <Link href={`/login?next=/project/${l.id}`} className="font-bold text-gold">Sign in to request access.</Link>
+                Confidential filenames and documents are hidden until workspace and project-specific access have been approved.
                 <ul className="mt-3 space-y-1 text-xs">
                   <li>• Sponsor-approved diligence documents</li>
                   <li>• Financial, legal, technical and impact evidence where supplied</li>
@@ -265,7 +304,7 @@ export default async function ProjectDetail({
             {user ? (
               <MeetingsPanel listingId={l.id} canManage={canManageListing} />
             ) : (
-              <p className="text-sm text-wgray"><Link href={`/login?next=/project/${l.id}`} className="font-bold text-gold">Sign in</Link> to request a meeting with the sponsor.</p>
+              <p className="text-sm text-wgray">Meeting requests become available after investor workspace access is approved.</p>
             )}
           </section>
 
@@ -283,7 +322,10 @@ export default async function ProjectDetail({
                 <RequestInfoButton listingId={l.id} action="saved" className="w-full border border-charcoal/15 text-charcoal font-display font-semibold text-sm py-2.5 rounded-xl hover:bg-mist" label={"⌁ " + t(locale, "project.save")} doneLabel="✓ Saved" />
               </div>
             ) : (
-              <Link href={`/login?next=/project/${l.id}`} className="block text-center bg-gold text-ink font-display font-bold text-sm py-2.5 rounded-xl">Sign in to act on this opportunity</Link>
+              <div className="space-y-3">
+                <p className="text-sm leading-6 text-wgray">An approved investor workspace unlocks mandate matching, project-specific access requests and sponsor meetings.</p>
+                <Link href={`/contact?topic=investor-access&project=${l.id}`} className="block text-center bg-gold text-ink font-display font-bold text-sm py-2.5 rounded-xl">Apply for investor access</Link>
+              </div>
             )}
           </section>
 
@@ -363,6 +405,16 @@ export default async function ProjectDetail({
               No response-time or transaction-history data collected yet on Nexus for this sponsor.
             </div>}
           </section>
+
+          <section className="bg-white rounded-2xl p-6 shadow-[0_1px_3px_rgb(44_62_80/0.08)] text-sm">
+            <h2 className="font-display font-bold text-lg mb-3">Evidence provenance</h2>
+            <dl className="space-y-3 text-xs">
+              <div><dt className="font-bold uppercase tracking-wider text-wgray">Classification</dt><dd className="mt-1">{evidence.provenance.classification}</dd></div>
+              <div><dt className="font-bold uppercase tracking-wider text-wgray">Source</dt><dd className="mt-1">{evidence.provenance.source}</dd></div>
+              <div><dt className="font-bold uppercase tracking-wider text-wgray">Source date</dt><dd className="mt-1 italic text-wgray">{evidence.provenance.sourceDate}</dd></div>
+              <div><dt className="font-bold uppercase tracking-wider text-wgray">Review status</dt><dd className="mt-1">{evidence.provenance.reviewStatus}</dd></div>
+            </dl>
+          </section>
         </div>
       </div>
 
@@ -375,7 +427,7 @@ export default async function ProjectDetail({
             <RequestInfoButton listingId={l.id} action="saved" className="min-w-11 min-h-11 border border-charcoal/15 rounded-xl" label="⌁" doneLabel="✓" ariaLabel={t(locale, "project.save")} />
           </>
         ) : (
-          <Link href={`/login?next=/project/${l.id}`} className="flex-1 min-h-11 flex items-center justify-center bg-gold text-ink font-display font-bold text-xs rounded-xl">Sign in to act on this opportunity</Link>
+          <Link href={`/contact?topic=investor-access&project=${l.id}`} className="flex-1 min-h-11 flex items-center justify-center bg-gold text-ink font-display font-bold text-xs rounded-xl">Apply for investor access</Link>
         )}
       </div>
       <div className="lg:hidden h-16" aria-hidden="true" />

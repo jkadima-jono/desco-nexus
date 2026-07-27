@@ -450,7 +450,7 @@ model ContactInquiry {
   name         String
   email        String
   organization String?
-  topic        String   @default("general") // general|agridesco|investdesco|phardesco|waterdesco
+  topic        String   @default("general") // general|investor-access|project-submission|data-room|institutional-partnership|government-dfi|inaccurate-information|technical-support
   message      String
   status       String   @default("new")     // new|read
   createdAt    DateTime @default(now())

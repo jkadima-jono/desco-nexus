@@ -36,7 +36,7 @@ export default function SponsorsPage() {
         title="Prepare your project for serious investor review."
         body="Move from fragmented project information to a structured institutional listing, a clear public teaser and permission-controlled diligence."
         primary={{ href: "/submit-project", label: "Assess project readiness" }}
-        secondary={{ href: "/contact?intent=sponsor", label: "Discuss sponsor support" }}
+        secondary={{ href: "/contact?topic=project-submission", label: "Discuss sponsor support" }}
         aside={
           <div className="briefing-card">
             <div className="flex items-center justify-between">
@@ -44,10 +44,11 @@ export default function SponsorsPage() {
               <DisclosureChip tone="pending">Under review</DisclosureChip>
             </div>
             <div className="mt-5 space-y-3">
-              {READINESS.slice(0, 6).map((item, index) => (
-                <div key={item}>
-                  <div className="flex justify-between text-[11px]"><span>{item}</span><span className="text-slate">{index < 3 ? "Information supplied" : "Evidence pending"}</span></div>
-                  <div className="mt-1 h-1.5 overflow-hidden rounded-full bg-stone"><div className="h-full bg-teal" style={{ width: `${index < 3 ? 78 : 36}%` }} /></div>
+              {READINESS.slice(0, 6).map((item) => (
+                <div key={item} className="flex items-center gap-3 border-b border-ink/8 pb-3 text-sm">
+                  <span aria-hidden="true" className="grid h-5 w-5 place-items-center rounded-full border border-teal/35 text-[10px] text-teal">✓</span>
+                  <span>{item}</span>
+                  <span className="ml-auto text-[10px] uppercase tracking-wider text-slate">Required</span>
                 </div>
               ))}
             </div>

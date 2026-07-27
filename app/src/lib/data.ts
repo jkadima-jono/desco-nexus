@@ -68,8 +68,8 @@ export const listings: Listing[] = [
     scores: { match: 91, readiness: 78, esg: 74, risk: 46 },
     highlights: [
       "Sponsor reports a completed feasibility study",
-      "1,200 construction jobs + 450 permanent operational roles",
-      "IFC Performance Standards, biodiversity plan, community compact",
+      "Sponsor target: 1,200 construction roles and 450 permanent operational roles",
+      "Sponsor-stated framework: IFC Performance Standards, biodiversity plan and community compact; evidence not public",
     ],
     docs: [],
     whyMatch:
@@ -114,14 +114,14 @@ export const listings: Listing[] = [
     stage: "Concession modernization",
     irr: "15–25% targeted annual ROI (Investdesco mining tier guidance)",
     summary:
-      "Investdesco has secured exclusive development rights with Comicordia Corporation to modernize artisanal gold and diamond concessions across 924+ sq km in the Luiza-Mwefu territory, converting manual operations into semi-mechanized production hubs under an OECD-aligned, mercury-free responsible-sourcing framework.",
+      "Investdesco states that it has secured exclusive development rights with Comicordia Corporation to modernize artisanal gold and diamond concessions across 924+ sq km in the Luiza-Mwefu territory, converting manual operations into semi-mechanized production hubs under a proposed responsible-sourcing framework described by the sponsor as OECD-aligned and mercury-free.",
     verified: false,
     governmentBacked: false,
     scores: { match: 76, readiness: 55, esg: 58, risk: 68 },
     highlights: [
-      "924+ sq km concession area",
+      "Sponsor-reported concession area: 924+ sq km; title evidence not public",
       "Gold purity 22–24K; strategic interest in copper and cobalt",
-      "OECD Due Diligence Guidance alignment; mercury-free processing",
+      "Sponsor-stated OECD guidance alignment and mercury-free processing; evidence not public",
     ],
     docs: [],
     whyMatch:
@@ -140,14 +140,14 @@ export const listings: Listing[] = [
     stage: "Operating information supplied",
     irr: "Part of Desco Global's 17.2% target Phase 1 program IRR",
     summary:
-      "Desco Global's flagship agricultural impact platform in central DRC, organizing smallholders into outgrower networks with input credit, shared mechanization, post-harvest storage, and value-add milling for maize, cassava, and soy — connecting farmers to guaranteed offtake at transparent prices.",
+      "Desco Global's proposed agricultural impact platform in central DRC, organizing smallholders into outgrower networks with input credit, shared mechanization, post-harvest storage, and value-add milling for maize, cassava, and soy — intended to connect farmers with proposed offtake arrangements at transparent prices.",
     verified: false,
     governmentBacked: false,
     scores: { match: 82, readiness: 69, esg: 89, risk: 44 },
     highlights: [
-      "50,000+ farmers reached; 25,000 hectares revitalized",
-      "40+ villages served; 45% income uplift for smallholders",
-      "10,000 women in direct employment",
+      "Sponsor-reported: 50,000+ farmers and 25,000 hectares; measurement evidence and reporting date not public",
+      "Sponsor-reported: 40+ villages and 45% income uplift; methodology and reporting date not public",
+      "Sponsor-reported employment figure: 10,000 women; measurement evidence not public",
     ],
     docs: [],
     whyMatch:
@@ -192,7 +192,7 @@ export const listings: Listing[] = [
     stage: "Pre-launch",
     irr: "5-yr forecast: EBITDA breakeven Year 2, +$3.8M EBITDA by Year 5",
     summary:
-      "Phardesco's first Pharmalab Hub — a solar-powered, one-stop facility combining pharmaceutical retail, diagnostics, clean-water access, and health education for the Grand Kasai region, where current provision is roughly one pharmacist per 50,000 people against a WHO benchmark of 1 per 2,000.",
+      "Phardesco's proposed first Pharmalab Hub — a solar-powered, one-stop facility combining pharmaceutical retail, diagnostics, clean-water access, and health education for the Grand Kasai region, where sponsor materials state that current provision is roughly one pharmacist per 50,000 people against a WHO benchmark of 1 per 2,000.",
     verified: false,
     governmentBacked: false,
     scores: { match: 73, readiness: 51, esg: 86, risk: 57 },

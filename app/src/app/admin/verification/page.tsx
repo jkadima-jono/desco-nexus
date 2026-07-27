@@ -17,11 +17,10 @@ export default async function AdminVerification() {
 
   return (
     <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-6 lg:py-8">
-      <h1 className="font-display font-extrabold text-3xl tracking-tight">Verification</h1>
+      <h1 className="font-display font-extrabold text-3xl tracking-tight">Evidence review</h1>
       <p className="text-wgray text-sm mt-1 mb-6">
-        {listings.filter((l) => !l.verified).length} unverified of {listings.length} listings.
-        Verification here means: this reviewer checked the stated evidence — there is no
-        connected eKYC/registry vendor in this build, so record what was actually reviewed.
+        {listings.filter((l) => !l.verified).length} listings without a recorded review out of {listings.length}.
+        A recorded review means the administrator documented a scope-specific evidence check. There is no connected eKYC, registry or independent verification vendor.
       </p>
 
       {listings.length === 0 ? (

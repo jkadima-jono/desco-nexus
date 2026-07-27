@@ -66,17 +66,23 @@ export default async function AdminDashboard() {
     <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-6 lg:py-8">
       <h1 className="font-display font-extrabold text-3xl tracking-tight">Administration</h1>
       <p className="text-wgray text-sm mt-1 mb-6">
-        Platform-wide roll-up of real data already recorded across Nexus — no separate analytics
-        vendor is connected. Financial figures (raise totals, forecast, MRR) are sponsor-provided
-        or illustrative aggregates, not audited or collected.
+        Operational records, sponsor-reported project aggregates and commercial-model simulations are separated below. No external analytics or audit provider is connected.
       </p>
 
-      <h2 className="text-[11px] font-bold uppercase tracking-wider text-wgray mb-2">Listings &amp; deals</h2>
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">
+      <h2 className="text-[11px] font-bold uppercase tracking-wider text-wgray mb-2">Sponsor-reported portfolio</h2>
+      <p className="mb-3 text-xs text-wgray">Project totals and capital requirements are supplied through listing records and are not audited aggregates.</p>
+      <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 mb-6">
         <Tile value={listingCount} label="Published listings" href="/" />
-        <Tile value={verifiedCount + " / " + listingCount} label="Verified" href="/admin/verification" />
-        <Tile value={"$" + totalRaiseM + "M"} label="Total capital sought" />
-        <Tile value={"$" + weightedForecastM + "M"} label="Weighted deal forecast" href="/deals" />
+        <Tile value={verifiedCount + " / " + listingCount} label="Evidence reviews recorded" href="/admin/verification" />
+        <Tile value={"$" + totalRaiseM + "M"} label="Sponsor-reported capital sought" />
+      </div>
+
+      <h2 className="text-[11px] font-bold uppercase tracking-wider text-wgray mb-2">Operational workflow</h2>
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">
+        <Tile value={"$" + weightedForecastM + "M"} label="Stage-weighted deal amount" href="/deals" />
+        <Tile value={pendingSubmissions} label="Submissions awaiting review" href="/admin/submissions" />
+        <Tile value={activeGrants} label="Active data-room grants" />
+        <Tile value={meetingsPending + " pending / " + meetingsConfirmed + " confirmed"} label="Meeting records" />
       </div>
 
       {dealsByStage.length > 0 && (
@@ -90,20 +96,18 @@ export default async function AdminDashboard() {
         </div>
       )}
 
-      <h2 className="text-[11px] font-bold uppercase tracking-wider text-wgray mb-2">Review queues</h2>
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">
-        <Tile value={pendingSubmissions} label="Submissions awaiting review" href="/admin/submissions" />
+      <h2 className="text-[11px] font-bold uppercase tracking-wider text-wgray mb-2">Review and support queues</h2>
+      <div className="grid grid-cols-2 sm:grid-cols-2 gap-3 mb-6">
         <Tile value={newInquiries} label="New contact inquiries" href="/admin/inquiries" />
-        <Tile value={activeGrants} label="Active data-room grants" />
-        <Tile value={meetingsPending + " pending / " + meetingsConfirmed + " confirmed"} label="Meetings" />
+        <Tile value={aiTotal + " (" + aiClaude + " via Claude)"} label="Recorded AI generations" href="/admin/ai-usage" />
       </div>
 
-      <h2 className="text-[11px] font-bold uppercase tracking-wider text-wgray mb-2">Users &amp; billing</h2>
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">
-        <Tile value={users.length} label="Total users" href="/admin/users" />
-        <Tile value={paidUserCount} label="On a paid plan" href="/admin/users" />
-        <Tile value={"$" + mrr.toLocaleString()} label="Illustrative MRR" href="/admin/users" />
-        <Tile value={aiTotal + " (" + aiClaude + " via Claude)"} label="AI generations" href="/admin/ai-usage" />
+      <h2 className="text-[11px] font-bold uppercase tracking-wider text-wgray mb-2">Demo workspace and commercial simulation</h2>
+      <p className="mb-3 text-xs text-wgray">The following values describe demo identities and assigned plan scenarios; they are not collected revenue.</p>
+      <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 mb-6">
+        <Tile value={users.length} label="Demo workspace identities" href="/admin/users" />
+        <Tile value={paidUserCount} label="Plan assignments" href="/admin/users" />
+        <Tile value={"$" + mrr.toLocaleString()} label="Simulated monthly plan value" href="/admin/users" />
       </div>
 
       <div className="bg-white rounded-2xl p-5 shadow-[0_1px_3px_rgb(44_62_80/0.08)]">

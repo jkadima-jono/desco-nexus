@@ -34,7 +34,7 @@ export default function InvestorsPage() {
         eyebrow="Investor pathway"
         title="Find mandate fit before committing to full diligence."
         body="DESCO Nexus helps institutional investors, funds, family offices, lenders and strategic capital providers screen structured opportunities and control the transition into deeper review."
-        primary={{ href: "/mandates", label: "Create an investor mandate" }}
+        primary={{ href: "/contact?topic=investor-access", label: "Apply for investor access" }}
         secondary={{ href: "/opportunities", label: "Review opportunities" }}
         aside={
           <div className="briefing-card">
@@ -56,7 +56,7 @@ export default function InvestorsPage() {
           </div>
           <div className="mt-10"><NumberedProcess items={STEPS} /></div>
           <div className="mt-8"><QuietNotice>Investors remain responsible for legal, financial, tax, technical, ESG and commercial due diligence. A platform status is not investment approval.</QuietNotice></div>
-          <Link href="/mandates" className="button-primary mt-8">Create an investor profile</Link>
+          <Link href="/contact?topic=investor-access" className="button-primary mt-8">Apply for an investor workspace</Link>
         </div>
       </section>
     </>

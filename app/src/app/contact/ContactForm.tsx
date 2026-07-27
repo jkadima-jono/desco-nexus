@@ -4,17 +4,20 @@ import { useState } from "react";
 
 const TOPICS = [
   { value: "general", label: "General inquiry" },
-  { value: "investdesco", label: "Investdesco — strategic capital" },
-  { value: "agridesco", label: "Agridesco — agriculture" },
-  { value: "phardesco", label: "Phardesco — healthcare" },
-  { value: "waterdesco", label: "Waterdesco — water & sanitation" },
+  { value: "investor-access", label: "Investor workspace access" },
+  { value: "project-submission", label: "Submit a project" },
+  { value: "data-room", label: "Data-room access question" },
+  { value: "institutional-partnership", label: "Institutional partnership" },
+  { value: "government-dfi", label: "Government or DFI collaboration" },
+  { value: "inaccurate-information", label: "Report inaccurate project information" },
+  { value: "technical-support", label: "Technical support" },
 ];
 
-export default function ContactForm() {
+export default function ContactForm({ initialTopic = "general", projectId }: { initialTopic?: string; projectId?: string }) {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [organization, setOrganization] = useState("");
-  const [topic, setTopic] = useState("general");
+  const [topic, setTopic] = useState(TOPICS.some((item) => item.value === initialTopic) ? initialTopic : "general");
   const [message, setMessage] = useState("");
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -28,7 +31,7 @@ export default function ContactForm() {
       const res = await fetch("/api/contact", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, email, organization, topic, message }),
+        body: JSON.stringify({ name, email, organization, topic, message: projectId ? `[Project: ${projectId}]\n${message}` : message }),
       });
       const data = await res.json();
       if (!res.ok) {
@@ -51,7 +54,7 @@ export default function ContactForm() {
         </div>
         <h2 className="font-display font-bold text-xl text-charcoal">Message received</h2>
         <p className="text-wgray text-sm mt-2">
-          Thank you — we typically respond within two business days.
+          Thank you. A DESCO team member will review the inquiry and respond using the details supplied.
         </p>
       </div>
     );

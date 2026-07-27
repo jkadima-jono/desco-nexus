@@ -1,5 +1,6 @@
 import { PrismaClient, type Listing as DbListing, type Document, type ListingImage } from "@prisma/client";
 import type { Listing } from "./data";
+import { normalizeHighlights, normalizeStage, normalizeSummary } from "./investment-evidence";
 
 const globalForPrisma = globalThis as unknown as { prisma?: PrismaClient };
 
@@ -26,9 +27,9 @@ export function toListing(
     flag: row.flag,
     raiseUsd: row.raiseUsd,
     instrument: row.instrument,
-    stage: row.stage,
+    stage: normalizeStage(row.stage),
     irr: row.irr,
-    summary: row.summary,
+    summary: normalizeSummary(row.id, row.summary),
     verified: row.verified,
     governmentBacked: row.governmentBacked,
     scores: {
@@ -37,7 +38,7 @@ export function toListing(
       esg: row.esg,
       risk: row.risk,
     },
-    highlights: JSON.parse(row.highlights) as string[],
+    highlights: normalizeHighlights(JSON.parse(row.highlights) as string[]),
     docs: (row.docs ?? []).map((d) => ({
       name: d.name,
       size: d.size,

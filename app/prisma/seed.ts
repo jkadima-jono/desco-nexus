@@ -1,5 +1,6 @@
 import { PrismaClient } from "@prisma/client";
 import { listings } from "../src/lib/data";
+import { normalizeHighlights, normalizeStage, normalizeSummary } from "../src/lib/investment-evidence";
 
 const prisma = new PrismaClient();
 
@@ -44,16 +45,16 @@ async function main() {
         flag: l.flag,
         raiseUsd: l.raiseUsd,
         instrument: l.instrument,
-        stage: l.stage,
+        stage: normalizeStage(l.stage),
         irr: l.irr,
-        summary: l.summary,
+        summary: normalizeSummary(l.id, l.summary),
         verified: l.verified,
         governmentBacked: l.governmentBacked,
         matchScore: l.scores.match,
         readiness: l.scores.readiness,
         esg: l.scores.esg,
         risk: l.scores.risk,
-        highlights: JSON.stringify(l.highlights),
+        highlights: JSON.stringify(normalizeHighlights(l.highlights)),
         whyMatch: l.whyMatch,
       },
     });

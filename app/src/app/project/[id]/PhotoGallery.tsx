@@ -110,7 +110,9 @@ export default function PhotoGallery({
       />}
       {msg && <div className="text-xs text-brandred mb-3">{msg}</div>}
       {photos.length === 0 ? (
-        <p className="text-sm text-wgray">{t("photos.empty")}</p>
+        <p className="text-sm text-wgray">
+          {canUpload ? t("photos.empty") : "No approved public project imagery is available."}
+        </p>
       ) : (
         <div className="grid grid-cols-3 gap-3">
           {photos.map((p, i) => (

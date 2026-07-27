@@ -9,12 +9,12 @@ export default function Footer() {
           <img src="/brand/desco-coin.png" alt="" className="w-5 h-5 rounded-full" />
           <span>© {new Date().getFullYear()} Desco Global. DESCO Nexus is a demonstration environment.</span>
         </div>
-        <nav aria-label="Footer" className="flex gap-5 font-semibold">
-          <Link href="/legal" className="hover:text-charcoal">Privacy</Link>
-          <Link href="/legal" className="hover:text-charcoal">Terms</Link>
-          <Link href="/legal" className="hover:text-charcoal">Security</Link>
-          <Link href="/contact" className="hover:text-charcoal">Contact</Link>
-          <Link href="/pillars" className="hover:text-charcoal">Our Pillars</Link>
+        <nav aria-label="Footer" className="flex flex-wrap justify-center gap-x-5 font-semibold">
+          <Link href="/legal#privacy" className="inline-flex min-h-11 items-center hover:text-charcoal">Privacy</Link>
+          <Link href="/legal#terms" className="inline-flex min-h-11 items-center hover:text-charcoal">Terms</Link>
+          <Link href="/legal#security" className="inline-flex min-h-11 items-center hover:text-charcoal">Security</Link>
+          <Link href="/contact" className="inline-flex min-h-11 items-center hover:text-charcoal">Contact</Link>
+          <Link href="/pillars" className="inline-flex min-h-11 items-center hover:text-charcoal">Our Pillars</Link>
         </nav>
       </div>
     </footer>

@@ -87,7 +87,7 @@ export default function ProjectCard({
 
         <div className="mt-3 flex items-center justify-between gap-3">
           <span className="rounded-full border border-charcoal/15 bg-mist px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.12em] text-slate">
-            Data room · access required
+            {listing.docs.length > 0 ? "Documents recorded · restricted" : "Data-room readiness not public"}
           </span>
           <span className="flex items-center gap-1.5 text-sm font-bold text-charcoal group-hover:text-gold">
             Review <span aria-hidden="true">→</span>

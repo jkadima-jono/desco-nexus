@@ -90,7 +90,7 @@ export default function Sidebar({ user }: { user: SidebarUser }) {
           </div>
         </div>
       </div>
-      <nav aria-label="Primary navigation" className="px-3 space-y-1 flex-1">
+      <nav aria-label="Workspace navigation" className="min-h-0 flex-1 space-y-1 overflow-y-auto px-3 pb-3">
         {nav.map((item) => {
           const active = item.href === "/" ? pathname === "/" : pathname.startsWith(item.href);
           return (
@@ -128,7 +128,7 @@ export default function Sidebar({ user }: { user: SidebarUser }) {
 
   return (
     <>
-      <aside className="hidden lg:flex w-60 shrink-0 bg-ink text-white flex-col min-h-screen sticky top-0 h-screen">
+      <aside className="hidden lg:flex w-60 shrink-0 bg-ink text-white flex-col min-h-screen sticky top-0 h-screen overflow-hidden">
         {navigation}
       </aside>
       <header className="lg:hidden fixed inset-x-0 top-0 z-40 h-16 bg-ink text-white flex items-center justify-between px-4 shadow-lg">
@@ -137,7 +137,7 @@ export default function Sidebar({ user }: { user: SidebarUser }) {
       </header>
       {mobileOpen && (
         <div className="lg:hidden fixed inset-0 z-50 bg-black/50" role="presentation" onClick={() => setMobileOpen(false)}>
-          <aside id="mobile-navigation" role="dialog" aria-modal="true" aria-label="Primary navigation" className="relative w-[min(20rem,88vw)] h-full bg-ink text-white flex flex-col shadow-2xl" onClick={(e) => e.stopPropagation()}>
+          <aside id="mobile-navigation" role="dialog" aria-modal="true" aria-label="Workspace navigation" className="relative w-[min(20rem,88vw)] h-full overflow-hidden bg-ink text-white flex flex-col shadow-2xl" onClick={(e) => e.stopPropagation()}>
             <button ref={closeButtonRef} type="button" onClick={() => setMobileOpen(false)} className="absolute z-10 top-3 right-3 min-w-11 min-h-11 rounded-xl text-2xl text-white hover:bg-white/10" aria-label="Close navigation">×</button>
             {navigation}
           </aside>

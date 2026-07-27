@@ -21,7 +21,7 @@ export default function PartnersPage() {
         eyebrow="Partners and advisors"
         title="Professional support around structured project preparation and review."
         body="DESCO Nexus can coordinate authorised advisors and institutions around project information, diligence and investor engagement without implying endorsement or partnership where none has been formally approved."
-        primary={{ href: "/contact?intent=partner", label: "Route a partnership inquiry" }}
+        primary={{ href: "/contact?topic=institutional-partnership", label: "Route a partnership inquiry" }}
         secondary={{ href: "/diligence", label: "Review the diligence model" }}
       />
       <section className="bg-ivory py-14 lg:py-18">
@@ -31,7 +31,7 @@ export default function PartnersPage() {
             {PARTNERS.map(([title, body]) => <InstitutionalCard key={title} title={title} body={body} />)}
           </div>
           <div className="mt-8"><QuietNotice>No advisor, government body, development institution or commercial partner should be displayed as affiliated with DESCO Nexus without approved source evidence.</QuietNotice></div>
-          <Link href="/contact?intent=partner" className="button-primary mt-8">Start a partnership inquiry</Link>
+          <Link href="/contact?topic=institutional-partnership" className="button-primary mt-8">Start a partnership inquiry</Link>
         </div>
       </section>
     </>

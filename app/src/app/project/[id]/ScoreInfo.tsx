@@ -3,10 +3,10 @@
 import { useState } from "react";
 
 const ROWS = [
-  ["AI Match", "Fit between this listing and the signed-in mandate profile.", "Higher = better fit"],
+  ["Mandate fit", "Deterministic comparison between disclosed listing fields and the signed-in mandate profile.", "Higher = more stated criteria matched"],
   ["Readiness", "Completeness of materials: financials, legal, permits, governance.", "Higher = more complete"],
-  ["ESG", "Environmental and social profile from declared indicators.", "Higher = stronger profile"],
-  ["Risk", "Combined financial, political, currency and execution risk.", "Higher number = HIGHER risk"],
+  ["ESG indicators", "Illustrative score derived from sponsor-declared indicators; not an independent ESG assessment.", "Higher = more declared indicators"],
+  ["Risk indicators", "Illustrative rule-based signal using available financial, political, currency and execution fields.", "Higher number = higher indicated risk"],
 ];
 
 export default function ScoreInfo() {

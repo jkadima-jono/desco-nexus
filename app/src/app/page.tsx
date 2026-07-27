@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import ProjectCard from "@/components/ProjectCard";
-import HeroVisual from "@/components/HeroVisual";
 import { prisma, toListing } from "@/lib/db";
 import { fmtUsd, listings as sourceListings, type Listing } from "@/lib/data";
 import { getSessionUser } from "@/lib/auth";
@@ -57,13 +56,13 @@ const TRUST_CONTROLS = [
 function FeaturedBrief({ listing }: { listing: Listing }) {
   return (
     <div className="overflow-hidden rounded-xl border border-white/14 bg-white text-ink shadow-2xl shadow-black/25">
-      <div className="relative h-40 overflow-hidden">
-        <HeroVisual listing={listing} className="absolute inset-0" />
-        <div className="absolute inset-0 bg-gradient-to-t from-ink/90 via-ink/20 to-transparent" />
-        <div className="absolute inset-x-0 bottom-0 p-5">
+      <div className="bg-gradient-to-br from-ink to-navy p-5 text-white">
+        <div className="flex flex-wrap items-center justify-between gap-3">
           <p className="eyebrow text-gold">Featured opportunity briefing</p>
-          <h2 className="mt-2 font-display text-lg font-bold leading-snug text-white">{listing.title}</h2>
+          <span className="text-xs font-semibold text-white/70">{listing.flag} {listing.country}</span>
         </div>
+        <h2 className="mt-5 max-w-md font-display text-xl font-bold leading-snug text-white">{listing.title}</h2>
+        <p className="mt-3 text-xs leading-5 text-white/65">{listing.sector} · Public teaser</p>
       </div>
       <div className="grid grid-cols-2 border-b border-ink/10">
         <div className="border-r border-ink/10 p-4">
@@ -90,11 +89,11 @@ function FeaturedBrief({ listing }: { listing: Listing }) {
         </div>
         <div>
           <p className="text-slate">Data room</p>
-          <div className="mt-1"><DisclosureChip tone="restricted">Access required</DisclosureChip></div>
+          <div className="mt-1"><DisclosureChip tone="restricted">Readiness not public</DisclosureChip></div>
         </div>
       </div>
       <div className="border-t border-ink/10 px-4 py-3">
-        <Link href={`/project/${listing.id}`} className="text-xs font-bold text-ink hover:text-gold">
+        <Link href={`/project/${listing.id}`} className="inline-flex min-h-11 items-center text-xs font-bold text-ink hover:text-gold">
           Review opportunity →
         </Link>
       </div>
@@ -131,7 +130,7 @@ export default async function Home() {
                   <Link href="/opportunities" className="button-primary">Review opportunities</Link>
                   <Link href="/submit-project" className="button-on-dark">Submit a project</Link>
                 </div>
-                <Link href="/diligence" className="mt-5 inline-flex text-sm font-semibold text-white/65 underline decoration-white/25 underline-offset-4 hover:text-gold">
+                <Link href="/diligence" className="mt-4 inline-flex min-h-11 items-center text-sm font-semibold text-white/70 underline decoration-white/25 underline-offset-4 hover:text-gold">
                   How diligence works
                 </Link>
               </div>

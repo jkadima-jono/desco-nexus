@@ -14,7 +14,7 @@ export default function AboutPage() {
         eyebrow="About DESCO Global"
         title="Connecting structured projects, capital and strategic partners."
         body="DESCO Global operates DESCO Nexus as an investment opportunity and diligence platform focused initially on the Democratic Republic of Congo, with the capacity to support selected African markets."
-        primary={{ href: "/contact?intent=partner", label: "Contact DESCO Global" }}
+        primary={{ href: "/contact?topic=institutional-partnership", label: "Contact DESCO Global" }}
         secondary={{ href: "/pillars", label: "Review investment pillars" }}
         aside={<QuietNotice>This page does not claim an investment track record, client list, transaction history, office network or regulatory status that has not been supplied and approved by DESCO Global.</QuietNotice>}
       />
@@ -29,7 +29,7 @@ export default function AboutPage() {
           </div>
           <div className="mt-10 flex flex-wrap gap-3">
             <Link href="/partners" className="button-secondary">Partners and advisors</Link>
-            <Link href="/contact" className="button-primary">Route an inquiry</Link>
+            <Link href="/contact?topic=institutional-partnership" className="button-primary">Route an inquiry</Link>
           </div>
         </div>
       </section>

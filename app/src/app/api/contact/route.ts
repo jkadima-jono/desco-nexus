@@ -3,7 +3,16 @@ import { prisma } from "@/lib/db";
 import { getSessionUser } from "@/lib/auth";
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-const TOPICS = new Set(["general", "agridesco", "investdesco", "phardesco", "waterdesco"]);
+const TOPICS = new Set([
+  "general",
+  "investor-access",
+  "project-submission",
+  "data-room",
+  "institutional-partnership",
+  "government-dfi",
+  "inaccurate-information",
+  "technical-support",
+]);
 
 export async function POST(req: Request) {
   let body: { name?: string; email?: string; organization?: string; topic?: string; message?: string };

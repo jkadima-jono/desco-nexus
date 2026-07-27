@@ -2,6 +2,7 @@ import Link from "next/link";
 import { prisma } from "@/lib/db";
 import { fmtUsd } from "@/lib/data";
 import CompareExportButton from "./CompareExportButton";
+import { getInvestmentEvidence, normalizeStage } from "@/lib/investment-evidence";
 
 export const dynamic = "force-dynamic";
 
@@ -30,23 +31,26 @@ const ROWS: Row[] = [
   { label: "Capital required", value: (l) => fmtUsd(l.raiseUsd) },
   { label: "Instrument", value: (l) => l.instrument },
   { label: "Geography", value: (l) => l.flag + " " + l.country },
-  { label: "Stage", value: (l) => l.stage },
+  { label: "Stage", value: (l) => normalizeStage(l.stage) },
   { label: "Revenue model", value: () => NOT_DISCLOSED },
-  { label: "Sponsor contribution", value: () => NOT_DISCLOSED },
+  { label: "Use of funds", value: (l) => l.useOfFunds || NOT_DISCLOSED },
+  { label: "Sponsor contribution", value: (l) => l.sponsorContributionUsd != null ? fmtUsd(l.sponsorContributionUsd) : NOT_DISCLOSED },
+  { label: "Funding secured", value: (l) => l.fundingSecuredUsd != null ? fmtUsd(l.fundingSecuredUsd) : NOT_DISCLOSED },
   { label: "Return information", value: (l) => l.irr || NOT_DISCLOSED },
   { label: "Timetable", value: () => NOT_DISCLOSED },
-  { label: "Verification", value: (l) => (l.verified ? "Verified" : "Not yet verified") },
-  { label: "Risks", value: (l) => (l.risk ? "Risk score " + l.risk + "/100" : NOT_DISCLOSED) },
-  { label: "ESG information", value: (l) => (l.esg ? "ESG score " + l.esg + "/100" : NOT_DISCLOSED) },
+  { label: "Evidence review", value: (l) => (l.verified ? "DESCO evidence review recorded — inspect scope" : "Independent verification not recorded") },
+  { label: "Principal risks", value: (l) => getInvestmentEvidence(l).risks.every((risk) => risk.status === "not-disclosed") ? NOT_DISCLOSED : "See public project disclosure" },
+  { label: "Evidence source date", value: (l) => getInvestmentEvidence(l).provenance.sourceDate },
 ];
 
 export default async function ComparePage({
   searchParams,
 }: {
-  searchParams: Promise<{ ids?: string }>;
+  searchParams: Promise<{ ids?: string | string[] }>;
 }) {
   const { ids: idsParam } = await searchParams;
-  const ids = (idsParam || "").split(",").map((s) => s.trim()).filter(Boolean);
+  const rawIds = Array.isArray(idsParam) ? idsParam : (idsParam || "").split(",");
+  const ids = rawIds.map((s) => s.trim()).filter(Boolean).slice(0, 4);
   const listings = await getListings(ids);
 
   return (

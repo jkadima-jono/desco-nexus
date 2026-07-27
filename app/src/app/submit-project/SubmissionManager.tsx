@@ -171,7 +171,7 @@ export default function SubmissionManager() {
                 </div>
               </div>
               <div className="grid sm:grid-cols-2 gap-4">
-                <div><label className={label}>Development stage</label><input className={input} value={form.stage} onChange={(e) => setForm({ ...form, stage: e.target.value })} placeholder="e.g. Feasibility complete" /></div>
+                <div><label className={label}>Development stage</label><input className={input} value={form.stage} onChange={(e) => setForm({ ...form, stage: e.target.value })} placeholder="e.g. Feasibility documentation available; evidence pending" /></div>
                 <div>
                   <label className={label}>Instrument</label>
                   <select className={input} value={form.instrument} onChange={(e) => setForm({ ...form, instrument: e.target.value })}>
