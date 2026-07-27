@@ -19,6 +19,15 @@ export type InvestmentEvidence = {
   };
 };
 
+export function summarizeEvidence(evidence: InvestmentEvidence) {
+  return {
+    disclosed: evidence.fields.filter((field) => field.status !== "not-disclosed").length,
+    total: evidence.fields.length,
+    risksDisclosed: evidence.risks.filter((risk) => risk.status !== "not-disclosed").length,
+    risksTotal: evidence.risks.length,
+  };
+}
+
 const NOT_DISCLOSED = "Not publicly disclosed";
 
 const COMMON_FIELDS: EvidenceField[] = [

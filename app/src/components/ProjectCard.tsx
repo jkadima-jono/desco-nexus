@@ -3,6 +3,7 @@ import type { Listing } from "@/lib/data";
 import { fmtUsd } from "@/lib/data";
 import HeroVisual from "./HeroVisual";
 import SectorBadge from "./SectorBadge";
+import { getInvestmentEvidence, summarizeEvidence } from "@/lib/investment-evidence";
 
 function formatUpdated(date: Date | undefined): string {
   if (!date) return "—";
@@ -12,12 +13,9 @@ function formatUpdated(date: Date | undefined): string {
 export default function ProjectCard({
   listing,
   index = 0,
-  showMatchScore = false,
 }: {
   listing: Listing;
   index?: number;
-  /** Only pass true when the viewer is signed in with a saved, active mandate. */
-  showMatchScore?: boolean;
 }) {
   const verificationScope = listing.verified
     ? "DESCO evidence review recorded"
@@ -27,6 +25,7 @@ export default function ProjectCard({
     listing.country,
     `${fmtUsd(listing.raiseUsd)} capital sought`,
   ].filter(Boolean).join(", ");
+  const evidence = summarizeEvidence(getInvestmentEvidence(listing));
 
   return (
     <Link
@@ -56,9 +55,6 @@ export default function ProjectCard({
       <div className="p-4 sm:p-5 sm:pt-4">
         <div className="flex items-center gap-2 text-[11px] font-bold uppercase tracking-wider text-wgray mb-2">
           <span>{listing.stage}</span>
-          {showMatchScore && (
-            <span className="ml-auto text-gold">{listing.scores.match}% mandate match</span>
-          )}
         </div>
 
         <p className="hidden text-sm text-wgray line-clamp-2 leading-relaxed sm:block">{listing.summary}</p>
@@ -85,7 +81,7 @@ export default function ProjectCard({
 
         <div className="mt-3 flex items-center justify-between gap-3">
           <span className="line-clamp-1 rounded-full border border-charcoal/15 bg-mist px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.12em] text-slate">
-            {listing.docs.length > 0 ? "Documents recorded · restricted" : "Data-room readiness not public"}
+            Evidence {evidence.disclosed}/{evidence.total} · Risks {evidence.risksDisclosed}/{evidence.risksTotal}
           </span>
           <span className="flex items-center gap-1.5 text-sm font-bold text-charcoal group-hover:text-gold">
             Review <span aria-hidden="true">→</span>

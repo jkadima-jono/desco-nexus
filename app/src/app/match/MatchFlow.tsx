@@ -2,10 +2,10 @@
 
 import { useState } from "react";
 import { fmtUsd, type Listing } from "@/lib/data";
-import MatchRing from "@/components/MatchRing";
 import { useI18n } from "@/components/I18nProvider";
 import HeroVisual from "@/components/HeroVisual";
 import SectorBadge from "@/components/SectorBadge";
+import { getInvestmentEvidence, summarizeEvidence } from "@/lib/investment-evidence";
 
 type Verdict = "interested" | "pass" | "saved";
 
@@ -17,6 +17,7 @@ export default function MatchFlow({ queue }: { queue: Listing[] }) {
   const [error, setError] = useState<string | null>(null);
 
   const current = queue[idx];
+  const evidence = current ? summarizeEvidence(getInvestmentEvidence(current)) : null;
 
   const act = async (verdict: Verdict) => {
     if (!current || leaving) return;
@@ -88,11 +89,14 @@ export default function MatchFlow({ queue }: { queue: Listing[] }) {
             </div>
           </div>
           <div className="p-6">
-            <div className="flex items-start justify-between gap-6">
-              <p className="text-sm text-charcoal/80 leading-relaxed">
-                {current.summary}
-              </p>
-              <MatchRing score={current.scores.match} size={64} />
+            <p className="text-sm text-charcoal/80 leading-relaxed">{current.summary}</p>
+            <div className="mt-4 flex flex-wrap gap-2 text-[10px] font-bold uppercase tracking-wider text-slate">
+              <span className="rounded-full border border-charcoal/15 bg-mist px-2.5 py-1">
+                Public evidence {evidence!.disclosed}/{evidence!.total}
+              </span>
+              <span className="rounded-full border border-charcoal/15 bg-mist px-2.5 py-1">
+                Risks disclosed {evidence!.risksDisclosed}/{evidence!.risksTotal}
+              </span>
             </div>
             <div className="flex items-center gap-6 mt-5">
               <div>

@@ -45,9 +45,8 @@ export type Listing = {
 // Manioc-Project business plan) — no invented projects, figures, or
 // sponsors. Where the source deck gives only a pillar-level allocation
 // (Comicordia entries), that is stated explicitly rather than presented
-// as a project-specific ask. Scores remain the platform's disclosed
-// illustrative demo ruleset (see ScoreInfo component) — not claims about
-// the real projects' actual performance.
+// as a project-specific ask. Legacy score fields remain only for schema
+// compatibility and are not used for public ranking or disclosure.
 export const listings: Listing[] = [
   {
     id: "port-de-ndomba",

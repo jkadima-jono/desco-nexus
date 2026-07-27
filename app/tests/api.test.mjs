@@ -265,6 +265,16 @@ test("legitimate water query still matches Water sector", async () => {
   assert.match(data.interpretation, /Water/);
 });
 
+test("ESG search does not rank projects using illustrative seed scores", async () => {
+  const res = await fetch(
+    BASE + "/api/search?q=" + encodeURIComponent("high ESG agriculture"),
+  );
+  assert.equal(res.status, 200);
+  const data = await res.json();
+  assert.equal(data.results.length, 0);
+  assert.match(data.interpretation, /structured public evidence unavailable/i);
+});
+
 test("empty query rejected", async () => {
   const res = await fetch(BASE + "/api/search?q=");
   assert.equal(res.status, 400);

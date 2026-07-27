@@ -19,7 +19,7 @@ import DataRoomAccessPanel from "./DataRoomAccessPanel";
 import MeetingsPanel from "./MeetingsPanel";
 import { hasDataRoomAccess } from "@/lib/dataroom";
 import type { Metadata } from "next";
-import { getInvestmentEvidence, normalizeStage } from "@/lib/investment-evidence";
+import { getInvestmentEvidence, normalizeStage, summarizeEvidence } from "@/lib/investment-evidence";
 
 export const dynamic = "force-dynamic";
 
@@ -64,6 +64,7 @@ export default async function ProjectDetail({
   const docs = row.docs;
   const roomAccess = await hasDataRoomAccess(user, row);
   const evidence = getInvestmentEvidence(l);
+  const evidenceSummary = summarizeEvidence(evidence);
 
   const folders = [...new Set(docs.map((d) => d.folder))];
 
@@ -86,7 +87,7 @@ export default async function ProjectDetail({
           excludedSectors: parseJsonArray(activeMandate.excludedSectors),
           excludedCountries: parseJsonArray(activeMandate.excludedCountries),
         } satisfies MandateCriteria,
-        { sector: full.sector, country: full.country, raiseUsd: full.raiseUsd, instrument: full.instrument, governmentBacked: full.governmentBacked, scores: { esg: full.scores.esg } }
+        { sector: full.sector, country: full.country, raiseUsd: full.raiseUsd, instrument: full.instrument, governmentBacked: full.governmentBacked, esgEvidenceAvailable: false }
       )
     : null;
 
@@ -138,6 +139,22 @@ export default async function ProjectDetail({
           </div>
         </div>
       </div>
+
+      <section aria-label="Public disclosure status" className="border-b border-charcoal/10 bg-white">
+        <div className="mx-auto grid max-w-5xl grid-cols-2 gap-px bg-charcoal/10 sm:grid-cols-4">
+          {[
+            ["Public evidence", `${evidenceSummary.disclosed}/${evidenceSummary.total} fields disclosed`],
+            ["Principal risks", `${evidenceSummary.risksDisclosed}/${evidenceSummary.risksTotal} categories disclosed`],
+            ["Evidence date", evidence.provenance.sourceDate],
+            ["Project room", docs.length > 0 ? "Documents recorded · restricted" : "Readiness not public"],
+          ].map(([label, value]) => (
+            <div key={label} className="bg-white px-4 py-4">
+              <p className="text-[10px] font-bold uppercase tracking-wider text-wgray">{label}</p>
+              <p className="mt-1 text-xs font-semibold leading-5 text-charcoal">{value}</p>
+            </div>
+          ))}
+        </div>
+      </section>
 
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-6 lg:py-8 grid gap-6 lg:grid-cols-3">
         <div className="lg:col-span-2 space-y-6">
@@ -330,7 +347,7 @@ export default async function ProjectDetail({
                   ✦ Match vs. &ldquo;{activeMandate!.name}&rdquo;
                 </span>
                 <span className="text-wgray normal-case font-semibold">
-                  {matchExplanation.confidence} confidence · {matchExplanation.dataCompleteness}% of your mandate evaluated
+                  {matchExplanation.confidence} confidence · {matchExplanation.dataCompleteness}% of mandate dimensions configured
                 </span>
               </div>
               {matchExplanation.hardExclusions.length > 0 && (
