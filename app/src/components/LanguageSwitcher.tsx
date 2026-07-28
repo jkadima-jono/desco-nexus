@@ -2,13 +2,19 @@
 
 import { LOCALES, LOCALE_LABELS, LOCALE_COOKIE } from "@/lib/i18n";
 import { useI18n } from "./I18nProvider";
+import { useState } from "react";
 
 export default function LanguageSwitcher() {
-  const { locale } = useI18n();
+  const { locale, t } = useI18n();
+  const [pending, setPending] = useState(false);
 
   const change = (next: string) => {
+    setPending(true);
     document.cookie =
-      LOCALE_COOKIE + "=" + next + "; path=/; max-age=" + 60 * 60 * 24 * 365;
+      LOCALE_COOKIE + "=" + encodeURIComponent(next) + "; path=/; max-age=" +
+      60 * 60 * 24 * 365 + "; samesite=lax";
+    // A document reload guarantees that the root server layout, page content,
+    // metadata and client translation context all receive the same locale.
     window.location.reload();
   };
 
@@ -16,7 +22,9 @@ export default function LanguageSwitcher() {
     <select
       value={locale}
       onChange={(e) => change(e.target.value)}
-      aria-label="Language"
+      aria-label={t("common.language")}
+      disabled={pending}
+      aria-busy={pending}
       className="w-full bg-white/10 text-white/80 text-xs rounded-lg px-2.5 py-2 outline-none cursor-pointer hover:bg-white/15 [&>option]:text-charcoal"
     >
       {LOCALES.map((l) => (

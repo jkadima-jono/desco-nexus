@@ -1,11 +1,26 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
 import { getSessionUser } from "@/lib/auth";
+import { applyRateLimit, rejectUntrustedOrigin } from "@/lib/request-security";
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-const TOPICS = new Set(["general", "agridesco", "investdesco", "phardesco", "waterdesco"]);
+const TOPICS = new Set([
+  "general",
+  "investor-access",
+  "project-submission",
+  "data-room",
+  "institutional-partnership",
+  "commercial-model",
+  "government-dfi",
+  "inaccurate-information",
+  "technical-support",
+]);
 
 export async function POST(req: Request) {
+  const originError = rejectUntrustedOrigin(req);
+  if (originError) return originError;
+  const limited = applyRateLimit(req, "contact", 8, 15 * 60_000);
+  if (limited) return limited;
   let body: { name?: string; email?: string; organization?: string; topic?: string; message?: string };
   try {
     body = await req.json();

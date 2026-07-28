@@ -31,7 +31,7 @@ const SECTIONS = [
   {
     id: "security",
     title: "Security overview",
-    body: "Sessions use httpOnly, secure cookies; passwords are not used in this demo build (production auth is planned to use magic links and passkeys). Confidential documents and data-room access require an authenticated session, checked on the server for every request. A full security disclosure (infrastructure, encryption at rest/in transit, incident response) is pending Desco Global review.",
+    body: "This demonstration uses fictional workspace identities. Production authentication has not been implemented or approved. In this build, confidential document and data-room requests are checked on the server for an authenticated and authorized session. A full security disclosure covering infrastructure, encryption, access controls and incident response is pending Desco Global review.",
   },
   {
     id: "risk",
@@ -41,7 +41,7 @@ const SECTIONS = [
   {
     id: "verification",
     title: "Verification methodology",
-    body: "\"Verified\" badges on this platform indicate a specific, disclosed check (see each badge's own explanation) — never a guarantee that every claim on a listing has been independently confirmed. Financial and market figures are labeled by source (sponsor-provided, Desco Global investor materials, or platform-illustrative) wherever shown. Verification reduces specific, disclosed risks; it does not guarantee investment performance.",
+    body: "\"Evidence reviewed\" labels indicate only the specific check explained beside the label. They do not mean that every listing claim has been independently confirmed. Financial and market figures are labeled by source (sponsor-provided, Desco Global investor materials, or platform-illustrative) wherever shown. Evidence review does not guarantee investment performance.",
   },
   {
     id: "regulatory",

@@ -3,8 +3,13 @@ import { prisma, toListing } from "@/lib/db";
 import { getSessionUser } from "@/lib/auth";
 import { generateTeaser } from "@/lib/ai";
 import { canManageListing, forbidden } from "@/lib/authz";
+import { applyRateLimit, rejectUntrustedOrigin } from "@/lib/request-security";
 
 export async function POST(req: Request) {
+  const originError = rejectUntrustedOrigin(req);
+  if (originError) return originError;
+  const limited = applyRateLimit(req, "ai-teaser", 10, 60_000);
+  if (limited) return limited;
   const user = await getSessionUser();
   if (!user) {
     return NextResponse.json({ error: "Sign in required" }, { status: 401 });

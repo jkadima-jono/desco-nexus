@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 600" role="img" aria-labelledby="title desc">
+  <title id="title">Concept illustration of a river port</title>
+  <desc id="desc">A replaceable editorial illustration, not a photograph or evidence of a specific project.</desc>
+  <defs><linearGradient id="sky" x2="0" y2="1"><stop stop-color="#dfe9e7"/><stop offset="1" stop-color="#f7f4ec"/></linearGradient><linearGradient id="water" x2="1"><stop stop-color="#183246"/><stop offset="1" stop-color="#3c716b"/></linearGradient></defs>
+  <rect width="1200" height="600" fill="url(#sky)"/>
+  <path d="M0 390 C240 330 430 450 690 385 C900 332 1040 380 1200 342 V600 H0Z" fill="url(#water)"/>
+  <path d="M0 380 L340 290 L620 330 L780 265 L1200 305 V400 C970 382 860 420 690 420 C420 420 260 350 0 420Z" fill="#263540" opacity=".2"/>
+  <rect x="610" y="235" width="430" height="35" rx="4" fill="#263540"/>
+  <rect x="690" y="270" width="22" height="150" fill="#263540"/><rect x="925" y="270" width="22" height="120" fill="#263540"/>
+  <rect x="760" y="185" width="12" height="85" fill="#b9964a"/><path d="M766 190 L875 246 H766Z" fill="#b9964a"/>
+  <rect x="1010" y="210" width="12" height="60" fill="#b9964a"/><path d="M1016 214 L1090 252 H1016Z" fill="#b9964a"/>
+  <g fill="#f7f4ec"><rect x="665" y="295" width="105" height="38"/><rect x="780" y="295" width="105" height="38"/><rect x="895" y="295" width="105" height="38"/></g>
+  <circle cx="104" cy="112" r="38" fill="#b9964a" opacity=".8"/>
+  <text x="52" y="535" fill="#fff" font-family="Arial,sans-serif" font-size="22" font-weight="700" letter-spacing="2">REPLACEABLE CONCEPT VISUAL · NOT PROJECT EVIDENCE</text>
+</svg>

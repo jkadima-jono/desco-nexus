@@ -53,7 +53,7 @@ export default function VerificationReviewRow({ listing }: { listing: Listing })
           <div className="text-xs text-wgray mt-1">{listing.orgName}</div>
         </div>
         <span className={"text-[11px] font-bold uppercase tracking-wider px-2 py-1 rounded-full shrink-0 " + (listing.verified ? "bg-emerald-p/10 text-emerald-p" : "bg-mist text-wgray")}>
-          {listing.verified ? "Verified" : "Not verified"}
+          {listing.verified ? "Review recorded" : "Review not recorded"}
         </span>
       </div>
 
@@ -75,7 +75,7 @@ export default function VerificationReviewRow({ listing }: { listing: Listing })
       {pendingAction && (
         <div className="mt-3">
           <label className="block text-[11px] font-bold uppercase tracking-wider text-wgray mb-1.5">
-            {pendingAction === "verify" ? "Evidence reviewed (required)" : "Reason for unverifying (required)"}
+            {pendingAction === "verify" ? "Evidence reviewed and scope (required)" : "Reason for removing the review record (required)"}
           </label>
           <textarea
             rows={2}
@@ -93,7 +93,7 @@ export default function VerificationReviewRow({ listing }: { listing: Listing })
             onClick={() => (pendingAction === "verify" ? patch({ action: "verify", note: noteDraft }) : setPendingAction("verify"))}
             className="px-3 py-1.5 rounded-lg bg-gold text-ink disabled:opacity-50"
           >
-            {pendingAction === "verify" ? "Confirm verify" : "Verify"}
+            {pendingAction === "verify" ? "Record evidence review" : "Review evidence"}
           </button>
         ) : (
           <button
@@ -101,7 +101,7 @@ export default function VerificationReviewRow({ listing }: { listing: Listing })
             onClick={() => (pendingAction === "unverify" ? patch({ action: "unverify", note: noteDraft }) : setPendingAction("unverify"))}
             className="px-3 py-1.5 rounded-lg bg-brandred/10 text-brandred hover:bg-brandred/20 disabled:opacity-50"
           >
-            {pendingAction === "unverify" ? "Confirm unverify" : "Unverify"}
+            {pendingAction === "unverify" ? "Remove review record" : "Remove review"}
           </button>
         )}
         <button disabled={busy} onClick={() => setGovOpen((o) => !o)} className="px-3 py-1.5 rounded-lg bg-mist hover:bg-gold-soft disabled:opacity-50">

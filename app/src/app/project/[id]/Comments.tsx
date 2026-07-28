@@ -29,10 +29,16 @@ function Avatar({ name }: { name: string }) {
   );
 }
 
-export default function Comments({ listingId }: { listingId: string }) {
+export default function Comments({
+  listingId,
+  initialViewer,
+}: {
+  listingId: string;
+  initialViewer: { id: string; fullName: string };
+}) {
   const { t } = useI18n();
   const [comments, setComments] = useState<CommentNode[]>([]);
-  const [viewer, setViewer] = useState<{ id: string; fullName: string } | null>(null);
+  const [viewer, setViewer] = useState(initialViewer);
   const [draft, setDraft] = useState("");
   const [replyTo, setReplyTo] = useState<string | null>(null);
   const [replyDraft, setReplyDraft] = useState("");
@@ -42,7 +48,10 @@ export default function Comments({ listingId }: { listingId: string }) {
   const load = useCallback(async () => {
     try {
       const res = await fetch("/api/comments?listingId=" + listingId);
-      if (!res.ok) return;
+      if (!res.ok) {
+        setError("Discussion could not be refreshed. Retry in a moment.");
+        return;
+      }
       const data = await res.json();
       setComments(data.comments);
       setViewer(data.viewer);

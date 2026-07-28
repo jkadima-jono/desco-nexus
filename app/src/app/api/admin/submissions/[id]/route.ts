@@ -87,9 +87,8 @@ export async function PATCH(
         summary: submission.ownershipStatement || submission.useOfFunds,
         verified: false,
         governmentBacked: submission.governmentBacked,
-        // Neutral illustrative placeholders, not a scoring claim — see
-        // ScoreInfo disclosure on the project page. Admin/analyst scoring
-        // review happens after publication, out of scope for this pass.
+        // Legacy schema placeholders. Public ranking and disclosure do not use
+        // these values; replace them when the database fields are migrated.
         matchScore: 50,
         readiness: 50,
         esg: 50,

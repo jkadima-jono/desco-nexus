@@ -21,16 +21,16 @@ export default async function AdminUsers() {
 
   return (
     <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-6 lg:py-8">
-      <h1 className="font-display font-extrabold text-3xl tracking-tight">Billing &amp; Plans</h1>
+      <h1 className="font-display font-extrabold text-3xl tracking-tight">Commercial model simulation</h1>
       <p className="text-wgray text-sm mt-1 mb-2">
-        No payment processor is connected — this is a sales-assisted plan assignment, not real billing.
-        MRR below is an illustrative aggregate of assigned plan prices, not collected revenue.
+        No payment processor, invoice ledger or contract record is connected. These assignments test entitlement limits only.
+        The value below is an internal scenario aggregate, not MRR, ARR, contracted value, invoiced value or collected revenue.
       </p>
 
       <div className="bg-white rounded-2xl p-5 shadow-[0_1px_3px_rgb(44_62_80/0.08)] mb-6 flex flex-wrap gap-6">
         <div>
           <div className="font-display font-extrabold text-2xl text-gold">${mrr.toLocaleString()}</div>
-          <div className="text-[11px] text-wgray uppercase tracking-wider font-bold">Illustrative MRR</div>
+          <div className="text-[11px] text-wgray uppercase tracking-wider font-bold">Assigned monthly scenario value</div>
         </div>
         {byPlan.map(({ plan, count }) => (
           <div key={plan.id}>
@@ -40,7 +40,7 @@ export default async function AdminUsers() {
         ))}
         <div>
           <div className="font-display font-extrabold text-2xl">{freeCount}</div>
-          <div className="text-[11px] text-wgray uppercase tracking-wider font-bold">No plan (Free)</div>
+          <div className="text-[11px] text-wgray uppercase tracking-wider font-bold">Free demo configuration</div>
         </div>
       </div>
 

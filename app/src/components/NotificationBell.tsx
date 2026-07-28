@@ -39,8 +39,15 @@ export default function NotificationBell() {
     const onClick = (e: MouseEvent) => {
       if (containerRef.current && !containerRef.current.contains(e.target as Node)) setOpen(false);
     };
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setOpen(false);
+    };
     document.addEventListener("mousedown", onClick);
-    return () => document.removeEventListener("mousedown", onClick);
+    document.addEventListener("keydown", onKeyDown);
+    return () => {
+      document.removeEventListener("mousedown", onClick);
+      document.removeEventListener("keydown", onKeyDown);
+    };
   }, [open]);
 
   const toggle = async () => {
@@ -69,7 +76,11 @@ export default function NotificationBell() {
         )}
       </button>
       {open && (
-        <div className="absolute bottom-full left-0 mb-2 w-80 max-h-96 overflow-y-auto bg-white text-charcoal rounded-2xl shadow-2xl border border-charcoal/10 z-50">
+        <div
+          role="dialog"
+          aria-label="Notifications"
+          className="fixed inset-x-4 bottom-20 z-[60] max-h-[60vh] overflow-y-auto rounded-2xl border border-charcoal/10 bg-white text-charcoal shadow-2xl lg:absolute lg:inset-x-auto lg:bottom-full lg:right-0 lg:mb-2 lg:w-80 lg:max-h-96"
+        >
           <div className="px-4 py-3 border-b border-charcoal/10 text-xs font-bold uppercase tracking-wider text-wgray">
             Notifications
           </div>

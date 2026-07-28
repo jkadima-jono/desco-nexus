@@ -70,9 +70,9 @@ export async function generateTeaser(l: Listing): Promise<{
       " · Target return " + l.irr + " · Stage: " + l.stage + ".",
     "",
     "**Sponsor.** " + l.org + " (" + l.flag + " " + l.country + ")" +
-      (l.verified ? " — verified on DESCO Nexus." : "."),
+      (l.verified ? " — a DESCO evidence review is recorded; inspect its scope and limitations." : "."),
     "",
-    "*Full information memorandum and data room available to verified investors on DESCO Nexus.*",
+    "*Restricted project materials, where available, require project-specific approval.*",
   ].join("\n");
   return { teaser, source: "template" };
 }

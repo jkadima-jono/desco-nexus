@@ -9,6 +9,7 @@ export default async function Messages() {
   const user = await getSessionUser();
   if (!user) redirect("/login?next=/messages");
   const rows = await prisma.thread.findMany({
+    where: { ownerId: user.id },
     include: { messages: { orderBy: { createdAt: "asc" } } },
   });
   const threads: UiThread[] = rows.map((t) => ({

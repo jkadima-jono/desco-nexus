@@ -3,11 +3,8 @@
 // as exactly that. Every claim in a MatchExplanation traces to a specific
 // mandate field and a specific listing field; nothing here is fabricated.
 //
-// Mandate compatibility (this file) is kept deliberately separate from
-// investment readiness (Listing.readiness), verification (Listing.verified
-// + TrustBadges), ESG assessment (Listing.scores.esg), and risk assessment
-// (Listing.scores.risk) — those are independent dimensions rendered by
-// separate UI blocks, never folded into one combined score.
+// Mandate compatibility is limited to disclosed listing facts. The platform
+// does not infer readiness, ESG quality, or risk from seed-generated scores.
 
 export type MandateCriteria = {
   sectors: string[];
@@ -27,7 +24,7 @@ export type MatchableListing = {
   raiseUsd: number;
   instrument: string;
   governmentBacked: boolean;
-  scores: { esg: number };
+  esgEvidenceAvailable: boolean;
 };
 
 export type MatchExplanation = {
@@ -42,8 +39,6 @@ export type MatchExplanation = {
   calculatedAt: string; // ISO timestamp — this is a point-in-time evaluation, not a live score
 };
 
-const ESG_QUALIFYING_THRESHOLD = 80;
-const ESG_PARTIAL_MARGIN = 10; // within 10 points of threshold counts as "partially" met
 const TICKET_PARTIAL_MARGIN = 0.15; // within 15% of range counts as "partially" met
 
 export function computeMatchExplanation(
@@ -129,13 +124,11 @@ export function computeMatchExplanation(
 
   if (mandate.esgRequired) {
     dimensionsSet++;
-    dataSources.add("Listing ESG score (platform-illustrative, see ESG disclosure)");
-    if (listing.scores.esg >= ESG_QUALIFYING_THRESHOLD) {
-      metCriteria.push(`ESG score (${listing.scores.esg}) meets your ESG requirement`);
-    } else if (listing.scores.esg >= ESG_QUALIFYING_THRESHOLD - ESG_PARTIAL_MARGIN) {
-      partiallyMetCriteria.push(`ESG score (${listing.scores.esg}) is close to, but below, the ${ESG_QUALIFYING_THRESHOLD} threshold your mandate requires`);
+    if (listing.esgEvidenceAvailable) {
+      partiallyMetCriteria.push("ESG information is disclosed, but requires investor review against your mandate");
+      dataSources.add("Listing ESG disclosure (sponsor-provided)");
     } else {
-      unmetCriteria.push(`ESG score (${listing.scores.esg}) is below the ${ESG_QUALIFYING_THRESHOLD} threshold your mandate requires`);
+      missingProjectData.push("No structured ESG evidence is publicly available to evaluate your ESG requirement");
     }
   }
 

@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 600" role="img" aria-labelledby="title desc">
+  <title id="title">Concept illustration of an agricultural project</title>
+  <desc id="desc">A replaceable editorial illustration, not a photograph or evidence of a specific project.</desc>
+  <rect width="1200" height="600" fill="#f3ecdd"/>
+  <circle cx="1035" cy="105" r="58" fill="#b9964a"/>
+  <path d="M0 275 C260 195 430 330 680 245 C880 178 1030 245 1200 195 V600 H0Z" fill="#3c716b"/>
+  <path d="M0 350 C250 265 410 415 690 320 C875 258 1030 330 1200 270 V600 H0Z" fill="#285e58"/>
+  <g fill="none" stroke="#f7f4ec" stroke-width="10" opacity=".7">
+    <path d="M-40 455 C230 340 400 505 700 390 C900 315 1050 390 1260 320"/>
+    <path d="M-40 525 C240 410 430 575 730 455 C940 370 1080 445 1260 390"/>
+  </g>
+  <path d="M495 230 H710 L755 335 H445Z" fill="#263540"/><rect x="525" y="185" width="155" height="55" fill="#263540"/>
+  <rect x="545" y="205" width="38" height="35" fill="#f7f4ec"/><rect x="620" y="205" width="38" height="35" fill="#f7f4ec"/>
+  <text x="52" y="548" fill="#fff" font-family="Arial,sans-serif" font-size="22" font-weight="700" letter-spacing="2">REPLACEABLE CONCEPT VISUAL · NOT PROJECT EVIDENCE</text>
+</svg>

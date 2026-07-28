@@ -5,7 +5,12 @@ export const metadata = {
   description: "Get in touch with Desco Global about investment opportunities, partnerships, or platform access.",
 };
 
-export default function ContactPage() {
+export default async function ContactPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ topic?: string; project?: string }>;
+}) {
+  const { topic, project } = await searchParams;
   return (
     <div className="min-h-screen bg-ink text-white">
       <div className="max-w-2xl mx-auto px-6 lg:px-8 py-16 lg:py-20">
@@ -20,12 +25,13 @@ export default function ContactPage() {
             Get in touch
           </h1>
           <p className="text-white/70 mt-3 max-w-md mx-auto leading-relaxed">
-            Investor inquiries, partnership discussions, or platform access —
-            tell us what you&rsquo;re looking for and the right person at
-            Desco Global will follow up.
+            Select the purpose of your inquiry so it can be reviewed through the appropriate investor, sponsor, partnership or support workflow.
           </p>
         </div>
-        <ContactForm />
+        <ContactForm initialTopic={topic} projectId={project} />
+        <div className="mt-6 rounded-xl border border-white/15 p-5 text-xs leading-6 text-white/65">
+          Workspace approval and project-specific data-room access are separate decisions. Submitting this form does not grant access or constitute investor qualification.
+        </div>
       </div>
     </div>
   );

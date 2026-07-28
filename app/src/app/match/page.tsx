@@ -16,7 +16,7 @@ export default async function Match() {
   const rows = await prisma.listing.findMany({
     where: actedIds.length ? { id: { notIn: actedIds } } : undefined,
     include: { org: true, images: true },
-    orderBy: { matchScore: "desc" },
+    orderBy: { updatedAt: "desc" },
   });
   return <MatchFlow queue={rows.map(toListing)} />;
 }

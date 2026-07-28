@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { trackProductEvent } from "@/components/ProductAnalytics";
 import {
   SECTORS, INSTRUMENTS, RISK_LEVELS, INVESTOR_TYPES, INVESTOR_TYPE_LABELS,
 } from "@/lib/mandateOptions";
@@ -153,6 +154,7 @@ export default function MandateManager() {
         setError(data.error ?? "Could not save mandate.");
         return;
       }
+      if (!editingId) trackProductEvent("mandate_created", { investorType: form.investorType || "unspecified" });
       cancelEdit();
       await load();
     } catch {

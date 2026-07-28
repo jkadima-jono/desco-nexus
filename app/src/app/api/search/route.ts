@@ -57,8 +57,8 @@ export async function GET(req: Request) {
     parts.push("government-backed only");
   }
   if (["esg", "impact"].some((term) => containsTerm(q, term))) {
-    results = results.filter((l) => l.scores.esg >= 85);
-    parts.push("ESG ≥ 85");
+    results = [];
+    parts.push("ESG evidence: structured public evidence unavailable");
   }
   if (containsTerm(q, "verified")) {
     results = results.filter((l) => l.verified);
@@ -79,13 +79,13 @@ export async function GET(req: Request) {
     return NextResponse.json({
       results: [],
       interpretation:
-        "No recognized investment criteria (sector, geography, ticket size, backing, ESG). Try e.g. \"renewable energy in Africa between $20M and $100M\".",
+        "No recognized investment criteria (sector, geography, ticket size, backing, ESG). Try e.g. \"infrastructure in DR Congo between $20M and $100M\".",
       unrecognized: true,
       originalQuery: q,
     });
   }
 
-  results.sort((a, b) => b.scores.match - a.scores.match);
+  results.sort((a, b) => Number(b.updatedAt ?? 0) - Number(a.updatedAt ?? 0) || a.title.localeCompare(b.title));
   return NextResponse.json({
     results,
     interpretation: parts.length

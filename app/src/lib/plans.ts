@@ -12,10 +12,26 @@ export const PLAN_SEED = [
     description: "Unlimited mandates and collections for institutional teams." },
 ] as const;
 
-// A user with no assigned plan is on Free — this keeps User.planId
-// nullable (no plan-assignment step required at signup) while every
-// entitlement check has a concrete plan to consult.
-export async function effectivePlan(user: Pick<User, "planId">): Promise<Plan> {
+// Organization contracts are authoritative. Per-user plan assignment remains
+// only as a backwards-compatible demo configuration until existing test and
+// preview data has been migrated.
+export async function effectivePlan(user: Pick<User, "planId" | "orgId">): Promise<Plan> {
+  if (user.orgId) {
+    const now = new Date();
+    const contract = await prisma.commercialContract.findFirst({
+      where: {
+        orgId: user.orgId,
+        status: "active",
+        AND: [
+          { OR: [{ startsAt: null }, { startsAt: { lte: now } }] },
+          { OR: [{ endsAt: null }, { endsAt: { gt: now } }] },
+        ],
+      },
+      include: { plan: true },
+      orderBy: { createdAt: "desc" },
+    });
+    if (contract) return contract.plan;
+  }
   if (user.planId) {
     const plan = await prisma.plan.findUnique({ where: { id: user.planId } });
     if (plan) return plan;

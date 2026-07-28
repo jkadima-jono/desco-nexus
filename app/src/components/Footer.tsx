@@ -1,20 +1,30 @@
+"use client";
+
 import Link from "next/link";
+import { useI18n } from "./I18nProvider";
 
 export default function Footer() {
+  const { t } = useI18n();
   return (
-    <footer className="border-t border-charcoal/10 bg-white mt-auto">
-      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-wgray">
-        <div className="flex items-center gap-2">
+    <footer className="mt-auto border-t border-charcoal/10 bg-white">
+      <div className="public-container grid gap-8 py-9 text-xs text-wgray lg:grid-cols-[1fr_auto_auto] lg:items-start lg:gap-12">
+        <div className="flex max-w-sm items-start gap-3">
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/brand/desco-coin.png" alt="" className="w-5 h-5 rounded-full" />
-          <span>© {new Date().getFullYear()} Desco Global. DESCO Nexus is a demonstration environment.</span>
+          <img src="/brand/desco-coin.png" alt="" className="mt-0.5 h-6 w-6 rounded-full" />
+          <span className="leading-5">© {new Date().getFullYear()} Desco Global. {t("footer.demo")}</span>
         </div>
-        <nav aria-label="Footer" className="flex gap-5 font-semibold">
-          <Link href="/legal" className="hover:text-charcoal">Privacy</Link>
-          <Link href="/legal" className="hover:text-charcoal">Terms</Link>
-          <Link href="/legal" className="hover:text-charcoal">Security</Link>
-          <Link href="/contact" className="hover:text-charcoal">Contact</Link>
-          <Link href="/pillars" className="hover:text-charcoal">Our Pillars</Link>
+        <nav aria-label="Explore" className="grid grid-cols-2 gap-x-8 font-semibold sm:grid-cols-4 lg:grid-cols-2">
+          <Link href="/opportunities" className="inline-flex min-h-11 items-center hover:text-charcoal">{t("nav.opportunities")}</Link>
+          <Link href="/investors" className="inline-flex min-h-11 items-center hover:text-charcoal">{t("nav.forInvestors")}</Link>
+          <Link href="/sponsors" className="inline-flex min-h-11 items-center hover:text-charcoal">{t("nav.forOwners")}</Link>
+          <Link href="/diligence" className="inline-flex min-h-11 items-center hover:text-charcoal">{t("nav.howItWorks")}</Link>
+          <Link href="/pricing" className="inline-flex min-h-11 items-center hover:text-charcoal">{t("nav.billing")}</Link>
+          <Link href="/partners" className="inline-flex min-h-11 items-center hover:text-charcoal">{t("nav.partners")}</Link>
+        </nav>
+        <nav aria-label="Company and legal" className="grid grid-cols-2 gap-x-8 font-semibold lg:grid-cols-1">
+          <Link href="/about" className="inline-flex min-h-11 items-center hover:text-charcoal">{t("nav.about")}</Link>
+          <Link href="/contact" className="inline-flex min-h-11 items-center hover:text-charcoal">{t("nav.contact")}</Link>
+          <Link href="/legal" className="inline-flex min-h-11 items-center hover:text-charcoal">{t("nav.legal")}</Link>
         </nav>
       </div>
     </footer>

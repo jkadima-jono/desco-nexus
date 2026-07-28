@@ -6,10 +6,10 @@ import ProjectCard from "@/components/ProjectCard";
 import { useI18n } from "@/components/I18nProvider";
 
 const SUGGESTIONS = [
-  "Renewable energy projects in Africa between $20M and $100M",
-  "Government-backed infrastructure with DFI co-investment",
-  "High-ESG agriculture deals under $10M",
-  "Healthcare growth equity in West Africa",
+  "Infrastructure in DR Congo between $20M and $100M",
+  "Agriculture in DR Congo under $10M",
+  "Mining opportunities in DR Congo",
+  "Healthcare in DR Congo under $20M",
 ];
 
 export default function Search() {
