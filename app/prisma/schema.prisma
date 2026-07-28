@@ -31,6 +31,26 @@ model User {
   notifications      Notification[]
   sessions           Session[]
   threads            Thread[]
+  // Null until the address is proven by consuming a login link. Never set
+  // by registration alone — see lib/loginToken.ts.
+  emailVerifiedAt    DateTime?
+}
+
+// Single-use, short-lived email sign-in link. Keyed by email rather than
+// userId so the same flow serves both first-time and returning addresses
+// without revealing whether an account exists. The raw token is never
+// stored: only its SHA-256 hash, so database read access alone cannot be
+// replayed into a session.
+model LoginToken {
+  id         String    @id @default(cuid())
+  email      String
+  tokenHash  String    @unique
+  expiresAt  DateTime
+  consumedAt DateTime?
+  requestIp  String?
+  createdAt  DateTime  @default(now())
+
+  @@index([email])
 }
 
 // Server-side session record so a stolen or old cookie can actually be
