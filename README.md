@@ -1,36 +1,131 @@
-# DESCO Nexus — The Operating System for Global Investment Opportunities
+# DESCO Nexus
 
-A Desco Global (Investdesco) platform. *Integrated Solutions. Sustainable Impact.*
+A Desco Global platform connecting investors with structured project
+opportunities in the Democratic Republic of Congo, and helping project sponsors
+prepare information and coordinate diligence.
 
-## Contents
+**This is a demonstration environment.** Accounts and transactions are
+fictional. Projects reference real Desco Global initiatives, but nothing shown
+is a securities offer. See `/trust` and `/legal` in the running app for the full
+disclosure position.
 
-| Path | What |
+## Status
+
+| Area | State |
 |---|---|
-| [docs/01-vision-strategy.md](docs/01-vision-strategy.md) | Executive vision, product strategy, market & competitive analysis, UVP |
-| [docs/02-product.md](docs/02-product.md) | Personas, journeys, IA, screens, features, permissions, gamification |
-| [docs/03-architecture.md](docs/03-architecture.md) | Stack, backend/AI/security/cloud architecture, DB schema + ER, API, auth |
-| [docs/04-design-system.md](docs/04-design-system.md) | Tokens, typography, components, motion, accessibility |
-| [docs/05-business-model.md](docs/05-business-model.md) | Business model canvas, pricing, 5-year forecast, unit economics |
-| [docs/06-gtm-growth.md](docs/06-gtm-growth.md) | GTM, marketing/sales, growth loops, viral & referral, acquisition |
-| [docs/07-roadmap-execution.md](docs/07-roadmap-execution.md) | Roadmap, sprints, launch, scaling, international, risk, AI roadmap |
-| [docs/08-product-specification.md](docs/08-product-specification.md) | Master spec: deliverable map, first-class feature specs, marketplace logic, recommendation engine, compliance framework, KPIs, invented features |
-| [app/](app/) | Production-grade MVP (Next.js 15 · React 19 · TypeScript · Tailwind 4) |
+| Public site | Working — opportunities, project pages, pricing, trust, sponsors, investors |
+| Sign-in | **Not functional in production** — see [Authentication](#authentication) |
+| Database | PostgreSQL via Prisma 6 |
+| Project images | Vercel Blob |
+| Payments / invoicing | Not implemented; the commercial model is sales-assisted and described as a proposal |
 
-## Run the MVP
+## Stack
+
+Next.js 15 (App Router) · React 19 · TypeScript · Prisma 6 · PostgreSQL ·
+Tailwind CSS 4 · custom session auth (`jose`) · deployed on Vercel.
+
+## Run locally
+
+Requires Node 22+ and a PostgreSQL database. SQLite will not work: the schema
+targets PostgreSQL, and serverless deployment has no persistent filesystem.
 
 ```bash
 cd app
 npm install
-npx prisma generate && npx prisma db push   # SQLite schema (app/prisma/dev.db)
-npx tsx prisma/seed.ts                      # seed demo data
-npm run dev     # http://localhost:3000
-npm run build   # production build (standalone output)
+cp .env.example .env          # then fill in DATABASE_URL, DIRECT_URL, SESSION_SECRET
+npx prisma generate
+npx prisma db push            # create tables
+npx tsx prisma/seed.ts        # seed demo projects
+npm run dev                   # http://localhost:3000
 ```
 
-MVP screens: Discover feed · Project detail + data room · Flow Mode (swipe matching) · Deal pipeline · AI natural-language search · Secure messages.
+`.env.example` documents every variable and which are required. Set
+`DEMO_AUTH_ENABLED="true"` locally to get the demo persona buttons on `/login`;
+they are refused in production by design.
 
-**Auth, uploads, AI (sprint 3 slice):** Signed-cookie sessions (jose HS256, httpOnly, 7-day) with `/login` — demo passwordless: email identifies or creates the account; production swaps in magic-link/passkey delivery (docs/03 §7). Set `SESSION_SECRET` in production. Mutating APIs require a session (401 otherwise). Data rooms: `POST /api/documents` (multipart, 20MB cap, extension whitelist, server-generated storage keys under `app/uploads/`) and `GET /api/documents/:id` (authed download, traversal-guarded). AI: `POST /api/ai/teaser` calls Claude (`claude-sonnet-5`) when `ANTHROPIC_API_KEY` is set, deterministic labeled draft otherwise — button on every project page.
+## Checks
 
-**Backend (sprint 1–2 slice):** Prisma + SQLite persistence (`app/prisma/schema.prisma`), seeded from `app/src/lib/data.ts`. API routes: `POST /api/match` (persists swipe; "interested" auto-opens a pipeline deal at Screening), `POST /api/messages` (persists messages), `GET /api/search?q=` (NL mandate parsing over the DB). Pages server-render from the database. Swap SQLite for Postgres by changing the Prisma datasource.
+```bash
+npm run typecheck   # tsc --noEmit
+npm run test:unit   # sign-in token rules; no database needed
+npm run build       # production build
+npm run test:api    # integration tests; needs a running server and database
+npm audit --omit=dev --audit-level=high
+```
+
+CI (`.github/workflows/ci.yml`) runs these against a throwaway PostgreSQL
+service, plus smoke checks for the CSP header, robots, sitemap and cross-site
+mutation rejection.
+
+Do not run `npm audit fix --force` — it proposes downgrading Next.js to 9.3.3.
+Transitive advisories are pinned with `overrides` in `app/package.json`.
+
+## Deploy
+
+The Vercel project's **Root Directory is `app`**, so deploy from the repository
+root, not from inside `app/`:
+
+```bash
+npx vercel --prod          # from the repository root
+```
+
+Running it from `app/` resolves to `app/app` and fails. The project is not
+connected to GitHub, so pushing to `main` does not deploy — deploys are manual.
+
+Set `DATABASE_URL`, `DIRECT_URL`, `SESSION_SECRET` and `BLOB_READ_WRITE_TOKEN`
+in the Vercel project's environment variables before the first deploy.
+
+## Authentication
+
+There is no working sign-in path in production, deliberately.
+
+- `/api/auth/demo` refuses whenever `VERCEL_ENV` is `production`, so demo
+  personas can never be reached on a live deployment.
+- `/api/auth/login` returns 410: this build does not verify email ownership.
+
+The security-critical half of real email sign-in is implemented and unit-tested
+(`app/src/lib/loginToken.ts`): 32-byte CSPRNG tokens, SHA-256 hashed at rest,
+15-minute expiry, single-use via an atomic claim. `app/src/lib/mailer.ts` fails
+closed — it never reports a send it did not perform.
+
+To finish it, in order:
+
+1. An email provider account (Resend, Postmark or AWS SES) and its API key.
+2. A sending domain verified by SPF/DKIM DNS records.
+3. A decision on who may sign in: open signup, or invite/allowlist only.
+4. `sendViaProvider()` implemented in `mailer.ts`, then the
+   `/api/auth/request-link` and `/api/auth/verify` routes and the `/login` UI.
+
+Until then every authenticated area — mandates, deals, messages, data rooms,
+admin — is unreachable in production.
+
+## Layout
+
+| Path | What |
+|---|---|
+| `app/` | The application |
+| `app/src/app/` | Routes (App Router) |
+| `app/src/lib/` | Domain logic: auth, authz, matching, plans, notifications, tokens |
+| `app/prisma/schema.prisma` | Database schema |
+| `app/tests/` | Integration and unit tests |
+| `docs/` | Product, architecture, business model and roadmap documents |
+
+## Background documents
+
+These predate the current build and describe intent rather than shipped state.
+Where they disagree with the code, the code is authoritative.
+
+| Path | What |
+|---|---|
+| [docs/01-vision-strategy.md](docs/01-vision-strategy.md) | Vision, product strategy, market and competitive analysis |
+| [docs/02-product.md](docs/02-product.md) | Personas, journeys, information architecture, permissions |
+| [docs/03-architecture.md](docs/03-architecture.md) | Stack, backend, security, schema, API, auth |
+| [docs/04-design-system.md](docs/04-design-system.md) | Tokens, typography, components, motion, accessibility |
+| [docs/05-business-model.md](docs/05-business-model.md) | Business model, pricing, forecast, unit economics |
+| [docs/06-gtm-growth.md](docs/06-gtm-growth.md) | Go-to-market, growth, acquisition |
+| [docs/07-roadmap-execution.md](docs/07-roadmap-execution.md) | Roadmap, sprints, launch, scaling, risk |
+| [docs/08-product-specification.md](docs/08-product-specification.md) | Master specification and feature specs |
+
+---
 
 desco.global | © 2026 Desco Global

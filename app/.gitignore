@@ -1,4 +1,7 @@
 .vercel
 .env*
+# The template carries no secrets and must be committed, or a new developer
+# has no way to know which variables the app requires.
+!.env.example
 .claude/
 .claude-flow/
