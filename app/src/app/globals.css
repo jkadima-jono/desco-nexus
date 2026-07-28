@@ -35,6 +35,13 @@
 html { background: var(--color-mist); }
 body { font-family: var(--font-body); color: var(--color-charcoal); }
 h1, h2, h3, h4, .display { font-family: var(--font-display); }
+html[lang="zh"] body,
+html[lang="zh"] h1,
+html[lang="zh"] h2,
+html[lang="zh"] h3,
+html[lang="zh"] h4 {
+  font-family: "PingFang SC", "Microsoft YaHei", "Noto Sans CJK SC", system-ui, sans-serif;
+}
 
 .public-container {
   width: min(100% - 2rem, 76rem);

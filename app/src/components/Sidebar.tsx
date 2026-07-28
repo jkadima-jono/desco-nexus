@@ -2,10 +2,11 @@
 
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 import { useI18n } from "./I18nProvider";
 import LanguageSwitcher from "./LanguageSwitcher";
 import NotificationBell from "./NotificationBell";
+import { useModalFocus } from "./useModalFocus";
 
 type NavItem = { href: string; key: string; icon: string };
 type NavGroup = { labelKey: string; items: NavItem[] };
@@ -34,6 +35,8 @@ const REVIEW_SUBMISSIONS: NavItem = { href: "/admin/submissions", key: "nav.revi
 const VERIFICATION: NavItem = { href: "/admin/verification", key: "nav.verification", icon: "✓" };
 const AI_USAGE: NavItem = { href: "/admin/ai-usage", key: "nav.aiUsage", icon: "✦" };
 const BILLING: NavItem = { href: "/admin/users", key: "nav.billing", icon: "$" };
+const CONTRACTS: NavItem = { href: "/admin/contracts", key: "nav.contracts", icon: "§" };
+const ANALYTICS: NavItem = { href: "/admin/analytics", key: "nav.analytics", icon: "▥" };
 const TRUST: NavItem = { href: "/trust", key: "nav.trust", icon: "✓" };
 const ABOUT: NavItem = { href: "/about", key: "nav.about", icon: "◆" };
 const INQUIRIES: NavItem = { href: "/admin/inquiries", key: "nav.inquiries", icon: "✉" };
@@ -46,14 +49,14 @@ const NAV_BY_ROLE: Record<string, NavItem[]> = {
   investor: [DISCOVER, MATCH, SAVED, MANDATES, PIPELINE, PORTFOLIO, SEARCH, MESSAGES, PILLARS],
   owner: [PROJECTS, SUBMIT_PROJECT, INVESTOR_MATCHES, MESSAGES, PILLARS],
   advisor: [DISCOVER, MANDATES, TRANSACTIONS, MESSAGES, PILLARS],
-  admin: [ADMIN_HOME, DISCOVER, MATCH, SAVED, MANDATES, PIPELINE, PORTFOLIO, INVESTOR_MATCHES, REVIEW_SUBMISSIONS, VERIFICATION, AI_USAGE, BILLING, SEARCH, MESSAGES, PILLARS],
+  admin: [ADMIN_HOME, DISCOVER, MATCH, SAVED, MANDATES, PIPELINE, PORTFOLIO, INVESTOR_MATCHES, REVIEW_SUBMISSIONS, VERIFICATION, AI_USAGE, CONTRACTS, ANALYTICS, BILLING, SEARCH, MESSAGES, PILLARS],
 };
 
 const ADMIN_GROUPS: NavGroup[] = [
   { labelKey: "navGroup.overview", items: [ADMIN_HOME] },
   { labelKey: "navGroup.investment", items: [DISCOVER, MATCH, SAVED, MANDATES, PIPELINE, PORTFOLIO] },
   { labelKey: "navGroup.control", items: [INVESTOR_MATCHES, REVIEW_SUBMISSIONS, VERIFICATION, INQUIRIES] },
-  { labelKey: "navGroup.operations", items: [AI_USAGE, BILLING] },
+  { labelKey: "navGroup.operations", items: [AI_USAGE, CONTRACTS, ANALYTICS, BILLING] },
   { labelKey: "navGroup.tools", items: [SEARCH, MESSAGES, PILLARS] },
 ];
 
@@ -71,22 +74,15 @@ export default function Sidebar({ user }: { user: SidebarUser }) {
   const [mobileOpen, setMobileOpen] = useState(false);
   const menuButtonRef = useRef<HTMLButtonElement>(null);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
-
-  useEffect(() => {
-    if (!mobileOpen) return;
-    const previousOverflow = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
-    closeButtonRef.current?.focus();
-    const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape") setMobileOpen(false);
-    };
-    document.addEventListener("keydown", handleKeyDown);
-    return () => {
-      document.body.style.overflow = previousOverflow;
-      document.removeEventListener("keydown", handleKeyDown);
-      menuButtonRef.current?.focus();
-    };
-  }, [mobileOpen]);
+  const mobileNavigationRef = useRef<HTMLElement>(null);
+  const closeMobileNavigation = useCallback(() => setMobileOpen(false), []);
+  useModalFocus({
+    open: mobileOpen,
+    container: mobileNavigationRef,
+    initialFocus: closeButtonRef,
+    returnFocus: menuButtonRef,
+    onClose: closeMobileNavigation,
+  });
   const logout = async () => {
     await fetch("/api/auth/logout", { method: "POST" });
     router.push("/login");
@@ -157,7 +153,7 @@ export default function Sidebar({ user }: { user: SidebarUser }) {
       </header>
       {mobileOpen && (
         <div className="lg:hidden fixed inset-0 z-50 bg-black/50" role="presentation" onClick={() => setMobileOpen(false)}>
-          <aside id="mobile-navigation" role="dialog" aria-modal="true" aria-label="Workspace navigation" className="relative h-full w-full overflow-hidden bg-ink text-white flex flex-col shadow-2xl sm:w-80" onClick={(e) => e.stopPropagation()}>
+          <aside ref={mobileNavigationRef} id="mobile-navigation" role="dialog" aria-modal="true" aria-label="Workspace navigation" tabIndex={-1} className="relative h-full w-full overflow-hidden bg-ink text-white flex flex-col shadow-2xl sm:w-80" onClick={(e) => e.stopPropagation()}>
             <button ref={closeButtonRef} type="button" onClick={() => setMobileOpen(false)} className="absolute z-10 top-3 right-3 min-w-11 min-h-11 rounded-xl text-2xl text-white hover:bg-white/10" aria-label="Close navigation">×</button>
             {navigation}
           </aside>

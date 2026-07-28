@@ -42,6 +42,9 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Dependency vulnerability gate
+        run: npm audit --omit=dev --audit-level=high
+
       - name: Prepare database
         run: |
           npx prisma generate
@@ -49,7 +52,7 @@ jobs:
           npx tsx prisma/seed.ts
 
       - name: Type check
-        run: npx tsc --noEmit
+        run: npm run typecheck
 
       - name: Production build
         run: npm run build
@@ -76,4 +79,14 @@ jobs:
             cat server.log
             exit 1
           fi
+          curl -sfI http://localhost:3000/ | grep -qi "content-security-policy:"
+          curl -sf http://localhost:3000/robots.txt | grep -q "Sitemap:"
+          curl -sf http://localhost:3000/sitemap.xml | grep -q "<urlset"
+          CROSS_SITE_STATUS=$(curl -s -o /dev/null -w "%{http_code}" \
+            -X POST \
+            -H "Origin: https://attacker.invalid" \
+            -H "Content-Type: application/json" \
+            -d '{}' \
+            http://localhost:3000/api/contact)
+          test "$CROSS_SITE_STATUS" = "403"
           node --test tests/api.test.mjs

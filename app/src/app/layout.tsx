@@ -8,6 +8,7 @@ import { getSessionUser } from "@/lib/auth";
 import { getLocale } from "@/lib/i18n-server";
 import { I18nProvider } from "@/components/I18nProvider";
 import { t } from "@/lib/i18n";
+import ProductAnalytics from "@/components/ProductAnalytics";
 
 const montserrat = Montserrat({
   subsets: ["latin"],
@@ -26,10 +27,22 @@ const playfair = Playfair_Display({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? "https://app-liart-sigma-57.vercel.app"),
   title: "DESCO Nexus — Structured African investment opportunities",
   description:
     "Review structured African investment opportunities with clear disclosure, sponsor-controlled diligence, and mandate-based screening.",
   icons: { icon: "/brand/desco-coin.png" },
+  openGraph: {
+    type: "website",
+    siteName: "DESCO Nexus",
+    title: "DESCO Nexus — Structured African investment opportunities",
+    description: "Review structured African investment opportunities with clear disclosure and controlled diligence.",
+  },
+  twitter: {
+    card: "summary",
+    title: "DESCO Nexus — Structured African investment opportunities",
+    description: "Review structured African investment opportunities with clear disclosure and controlled diligence.",
+  },
 };
 
 export default async function RootLayout({
@@ -42,6 +55,7 @@ export default async function RootLayout({
       <body className={`${montserrat.variable} ${openSans.variable} ${playfair.variable} min-h-screen`}>
         <a href="#main-content" className="skip-link">Skip to main content</a>
         <I18nProvider locale={locale}>
+        <ProductAnalytics />
         <div className={user ? "flex min-h-screen" : "min-h-screen"}>
           {user ? (
             <Sidebar user={{ fullName: user.fullName, title: user.title, role: user.role }} />

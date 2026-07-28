@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { SECTORS, INSTRUMENTS, computeCompleteness, missingRequiredFields, STATUS_LABELS, type SubmissionDraft } from "@/lib/submissions";
+import { trackProductEvent } from "@/components/ProductAnalytics";
 
 type Submission = SubmissionDraft & {
   id: string;
@@ -47,7 +48,12 @@ export default function SubmissionManager() {
     setForm(s);
     setShowForm(true);
   };
-  const startNew = () => { setEditingId(null); setForm(emptyForm); setShowForm(true); };
+  const startNew = () => {
+    trackProductEvent("submission_started");
+    setEditingId(null);
+    setForm(emptyForm);
+    setShowForm(true);
+  };
   const cancel = () => { setEditingId(null); setForm(emptyForm); setShowForm(false); setError(null); };
 
   const save = async () => {
@@ -60,6 +66,7 @@ export default function SubmissionManager() {
       });
       const data = await res.json();
       if (!res.ok) { setError(data.error ?? "Could not save."); return; }
+      if (!editingId) trackProductEvent("submission_started", { draftCreated: true });
       cancel();
       await load();
     } finally { setBusy(false); }
@@ -72,6 +79,7 @@ export default function SubmissionManager() {
     });
     const data = await res.json();
     if (!res.ok) { setError(data.error + (data.missing ? `: ${data.missing.map((f: string) => FIELD_LABELS[f] ?? f).join(", ")}` : "")); return; }
+    trackProductEvent("submission_completed");
     await load();
   };
   const withdraw = async (id: string) => {

@@ -34,6 +34,8 @@ export default async function AdminDashboard() {
     activeGrants,
     meetingsByStatus,
     newInquiries,
+    activeContracts,
+    productEvents30d,
   ] = await Promise.all([
     prisma.listing.count(),
     prisma.listing.count({ where: { verified: true } }),
@@ -47,6 +49,8 @@ export default async function AdminDashboard() {
     prisma.dataRoomAccess.count({ where: { revokedAt: null } }),
     prisma.meeting.groupBy({ by: ["status"], _count: true }),
     prisma.contactInquiry.count({ where: { status: "new" } }),
+    prisma.commercialContract.count({ where: { status: "active" } }),
+    prisma.productEvent.count({ where: { createdAt: { gte: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000) } } }),
   ]);
 
   const totalRaiseM = Math.round((raiseAgg._sum.raiseUsd ?? 0) / 1_000_000);
@@ -100,6 +104,8 @@ export default async function AdminDashboard() {
       <div className="grid grid-cols-2 sm:grid-cols-2 gap-3 mb-6">
         <Tile value={newInquiries} label="New contact inquiries" href="/admin/inquiries" />
         <Tile value={aiTotal + " (" + aiClaude + " via Claude)"} label="Recorded AI generations" href="/admin/ai-usage" />
+        <Tile value={productEvents30d} label="Product events · 30 days" href="/admin/analytics" />
+        <Tile value={activeContracts} label="Active organization contracts" href="/admin/contracts" />
       </div>
 
       <h2 className="text-[11px] font-bold uppercase tracking-wider text-wgray mb-2">Demo entitlement and commercial scenarios</h2>

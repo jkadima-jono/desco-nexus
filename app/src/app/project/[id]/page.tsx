@@ -15,6 +15,7 @@ import Link from "next/link";
 import { computeMatchExplanation, parseJsonArray, type MandateCriteria } from "@/lib/matching";
 import MatchFeedback from "./MatchFeedback";
 import RequestInfoButton from "./RequestInfoButton";
+import OpportunityViewTracker from "./OpportunityViewTracker";
 import DataRoomAccessPanel from "./DataRoomAccessPanel";
 import MeetingsPanel from "./MeetingsPanel";
 import { hasDataRoomAccess } from "@/lib/dataroom";
@@ -93,6 +94,7 @@ export default async function ProjectDetail({
 
   return (
     <div>
+      <OpportunityViewTracker listingId={l.id} sector={l.sector} />
       <div className="relative bg-ink text-white overflow-hidden">
         <HeroVisual listing={l} className="absolute inset-0 opacity-40" overlay={false} />
         <div className="absolute inset-0 bg-gradient-to-r from-ink via-ink/80 to-ink/40" />

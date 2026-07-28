@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { trackProductEvent } from "@/components/ProductAnalytics";
 
 const TOPICS = [
   { value: "general", label: "General inquiry" },
@@ -39,6 +40,7 @@ export default function ContactForm({ initialTopic = "general", projectId }: { i
         setError(data.error ?? "Could not send — retry.");
         return;
       }
+      trackProductEvent("contact_submitted", { topic });
       setSent(true);
     } catch {
       setError("Network error — retry.");

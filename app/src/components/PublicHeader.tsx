@@ -2,9 +2,10 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 import LanguageSwitcher from "./LanguageSwitcher";
 import { useI18n } from "./I18nProvider";
+import { useModalFocus } from "./useModalFocus";
 
 const LINKS = [
   ["/opportunities", "nav.opportunities"],
@@ -21,22 +22,9 @@ export default function PublicHeader() {
   const [open, setOpen] = useState(false);
   const menuButton = useRef<HTMLButtonElement>(null);
   const closeButton = useRef<HTMLButtonElement>(null);
-
-  useEffect(() => {
-    if (!open) return;
-    const previous = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
-    closeButton.current?.focus();
-    const closeOnEscape = (event: KeyboardEvent) => {
-      if (event.key === "Escape") setOpen(false);
-    };
-    document.addEventListener("keydown", closeOnEscape);
-    return () => {
-      document.body.style.overflow = previous;
-      document.removeEventListener("keydown", closeOnEscape);
-      menuButton.current?.focus();
-    };
-  }, [open]);
+  const mobileNavigation = useRef<HTMLElement>(null);
+  const closeMenu = useCallback(() => setOpen(false), []);
+  useModalFocus({ open, container: mobileNavigation, initialFocus: closeButton, returnFocus: menuButton, onClose: closeMenu });
 
   const nav = (
     <nav aria-label="Public navigation" className="flex flex-col gap-1 xl:flex-row xl:items-center xl:gap-1">
@@ -91,10 +79,12 @@ export default function PublicHeader() {
       {open && (
         <div className="fixed inset-0 z-50 bg-black/55 xl:hidden" onClick={() => setOpen(false)}>
           <aside
+            ref={mobileNavigation}
             id="public-mobile-navigation"
             role="dialog"
             aria-modal="true"
             aria-label={t("nav.public")}
+            tabIndex={-1}
             className="ml-auto flex h-full w-full flex-col overflow-y-auto bg-ink p-5 text-white sm:w-[22rem]"
             onClick={(event) => event.stopPropagation()}
           >

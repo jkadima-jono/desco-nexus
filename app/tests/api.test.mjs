@@ -963,11 +963,12 @@ test("teaser generation is honestly labeled and logged for admin oversight", asy
 });
 
 test("message draft generates real content per-thread, honestly labeled, and is logged", async () => {
+  const investor = await demoLogin("investor");
+  const investorUser = await prisma.user.findUniqueOrThrow({ where: { email: "investor@demo.invalid" } });
   const thread = await prisma.thread.create({
-    data: { name: "AI Draft Test Sponsor", org: "AI Draft Test Sponsor", messages: { create: [{ sender: "them", text: "What is the diligence timeline?" }] } },
+    data: { ownerId: investorUser.id, name: "AI Draft Test Sponsor", org: "AI Draft Test Sponsor", messages: { create: [{ sender: "them", text: "What is the diligence timeline?" }] } },
   });
   try {
-    const investor = await demoLogin("investor");
     const res = await fetch(BASE + "/api/ai/message-draft", {
       method: "POST", headers: { cookie: investor, "Content-Type": "application/json" },
       body: JSON.stringify({ threadId: thread.id }),
@@ -976,6 +977,13 @@ test("message draft generates real content per-thread, honestly labeled, and is 
     const data = await res.json();
     assert.equal(data.source, "template", "no ANTHROPIC_API_KEY is configured in this environment");
     assert.ok(data.draft.length > 0);
+
+    const advisor = await demoLogin("advisor");
+    const forbiddenThread = await fetch(BASE + "/api/ai/message-draft", {
+      method: "POST", headers: { cookie: advisor, "Content-Type": "application/json" },
+      body: JSON.stringify({ threadId: thread.id }),
+    });
+    assert.equal(forbiddenThread.status, 404, "another user must not discover or use the investor's thread");
 
     const admin = await demoLogin("admin");
     const usagePage = await (await fetch(BASE + "/admin/ai-usage", { headers: { cookie: admin } })).text();
@@ -1089,4 +1097,70 @@ test("/admin dashboard is admin-only and rolls up real platform data", async () 
   assert.ok(body.includes("Administration"));
   assert.ok(body.includes("Published listings"), "must roll up real listing counts, not a placeholder");
   assert.ok(body.includes("Assigned monthly scenario value"), "financial figures must stay honestly labeled as scenario-only");
+});
+
+test("cross-site state-changing requests are rejected", async () => {
+  const res = await fetch(BASE + "/api/contact", {
+    method: "POST",
+    headers: { "Content-Type": "application/json", Origin: "https://attacker.invalid" },
+    body: JSON.stringify({}),
+  });
+  assert.equal(res.status, 403);
+});
+
+test("product events accept only the documented privacy-minimised contract", async () => {
+  const invalid = await fetch(BASE + "/api/events", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ event: "arbitrary_tracking_event", path: "/" }),
+  });
+  assert.equal(invalid.status, 400);
+
+  const path = "/test-product-event";
+  const valid = await fetch(BASE + "/api/events", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ event: "page_view", path, context: { surface: "integration-test" } }),
+  });
+  assert.equal(valid.status, 204);
+  const stored = await prisma.productEvent.findFirst({ where: { event: "page_view", path }, orderBy: { createdAt: "desc" } });
+  assert.ok(stored);
+  assert.equal(stored.context, JSON.stringify({ surface: "integration-test" }));
+  await prisma.productEvent.delete({ where: { id: stored.id } });
+});
+
+test("organization contracts require admin approval and retain decision history", async () => {
+  const investor = await demoLogin("investor");
+  const organization = await prisma.organization.findFirstOrThrow();
+  const plan = await prisma.plan.findFirstOrThrow({ orderBy: { sortOrder: "asc" } });
+  const denied = await fetch(BASE + "/api/admin/contracts", {
+    method: "POST",
+    headers: { cookie: investor, "Content-Type": "application/json" },
+    body: JSON.stringify({ orgId: organization.id, planId: plan.id }),
+  });
+  assert.equal(denied.status, 403);
+
+  const admin = await demoLogin("admin");
+  const createdRes = await fetch(BASE + "/api/admin/contracts", {
+    method: "POST",
+    headers: { cookie: admin, "Content-Type": "application/json" },
+    body: JSON.stringify({ orgId: organization.id, planId: plan.id, currency: "usd", seatLimit: 10 }),
+  });
+  assert.equal(createdRes.status, 200);
+  const { contract } = await createdRes.json();
+  try {
+    assert.equal(contract.status, "draft");
+    const activeRes = await fetch(BASE + "/api/admin/contracts", {
+      method: "PATCH",
+      headers: { cookie: admin, "Content-Type": "application/json" },
+      body: JSON.stringify({ id: contract.id, status: "active", note: "Approved for controlled pilot" }),
+    });
+    assert.equal(activeRes.status, 200);
+    const active = await prisma.commercialContract.findUniqueOrThrow({ where: { id: contract.id } });
+    assert.equal(active.status, "active");
+    assert.ok(active.approvedBy);
+    assert.ok(JSON.parse(active.history).length >= 2);
+  } finally {
+    await prisma.commercialContract.delete({ where: { id: contract.id } });
+  }
 });

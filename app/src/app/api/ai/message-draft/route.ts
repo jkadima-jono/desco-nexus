@@ -2,8 +2,13 @@ import { NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
 import { getSessionUser } from "@/lib/auth";
 import { generateMessageDraft } from "@/lib/ai";
+import { applyRateLimit, rejectUntrustedOrigin } from "@/lib/request-security";
 
 export async function POST(req: Request) {
+  const originError = rejectUntrustedOrigin(req);
+  if (originError) return originError;
+  const limited = applyRateLimit(req, "ai-message-draft", 10, 60_000);
+  if (limited) return limited;
   const user = await getSessionUser();
   if (!user) {
     return NextResponse.json({ error: "Sign in required" }, { status: 401 });
@@ -17,8 +22,8 @@ export async function POST(req: Request) {
   if (!body.threadId) {
     return NextResponse.json({ error: "threadId required" }, { status: 400 });
   }
-  const thread = await prisma.thread.findUnique({
-    where: { id: body.threadId },
+  const thread = await prisma.thread.findFirst({
+    where: { id: body.threadId, ownerId: user.id },
     include: { messages: { orderBy: { createdAt: "asc" } } },
   });
   if (!thread) {

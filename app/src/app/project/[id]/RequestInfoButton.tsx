@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { trackProductEvent } from "@/components/ProductAnalytics";
 
 export default function RequestInfoButton({
   listingId,
@@ -27,6 +28,12 @@ export default function RequestInfoButton({
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ listingId, action }),
       });
+      if (res.ok) {
+        const event = action === "dataroom_requested"
+          ? "data_room_requested"
+          : action === "info_requested" ? "information_requested" : "comparison_started";
+        trackProductEvent(event, { listingId });
+      }
       setState(res.ok ? "done" : "idle");
     } catch {
       setState("idle");

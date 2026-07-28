@@ -9,19 +9,20 @@ datasource db {
 }
 
 model User {
-  id           String        @id @default(cuid())
-  email        String        @unique
-  fullName     String
-  title        String?
-  role         String        @default("investor") // investor|owner|advisor|admin
-  orgId        String?
-  planId       String?
-  plan         Plan?         @relation(fields: [planId], references: [id])
-  matchActions MatchAction[]
-  matchFeedback MatchFeedback[]
-  mandates     StandingMandate[]
-  submissions  ProjectSubmission[]
-  collections  Collection[]
+  id                 String              @id @default(cuid())
+  email              String              @unique
+  fullName           String
+  title              String?
+  role               String              @default("investor") // investor|owner|advisor|admin
+  orgId              String?
+  organization       Organization?       @relation(fields: [orgId], references: [id])
+  planId             String?
+  plan               Plan?               @relation(fields: [planId], references: [id])
+  matchActions       MatchAction[]
+  matchFeedback      MatchFeedback[]
+  mandates           StandingMandate[]
+  submissions        ProjectSubmission[]
+  collections        Collection[]
   savedOpportunities SavedOpportunity[]
   dataRoomAccess     DataRoomAccess[]
   documentDownloads  DocumentAccessLog[]
@@ -29,6 +30,7 @@ model User {
   aiGenerations      AiGenerationLog[]
   notifications      Notification[]
   sessions           Session[]
+  threads            Thread[]
 }
 
 // Server-side session record so a stolen or old cookie can actually be
@@ -50,7 +52,7 @@ model Notification {
   id        String   @id @default(cuid())
   userId    String
   user      User     @relation(fields: [userId], references: [id])
-  type      String   // dataroom_granted|meeting_requested|meeting_confirmed|meeting_declined|meeting_cancelled|deal_stage
+  type      String // dataroom_granted|meeting_requested|meeting_confirmed|meeting_declined|meeting_cancelled|deal_stage
   title     String
   body      String
   link      String?
@@ -64,70 +66,99 @@ model Notification {
 // once (npx tsx scripts/seed-plans.ts), not created via UI — pricing
 // tiers are product-defined, not user-editable.
 model Plan {
-  id                String   @id @default(cuid())
-  name              String   @unique
+  id                String               @id @default(cuid())
+  name              String               @unique
   priceUsdPerMonth  Int
-  maxActiveMandates Int?     // null = unlimited
-  maxCollections    Int?     // null = unlimited
-  description       String   @default("")
-  sortOrder         Int      @default(0)
+  maxActiveMandates Int? // null = unlimited
+  maxCollections    Int? // null = unlimited
+  description       String               @default("")
+  sortOrder         Int                  @default(0)
   users             User[]
+  contracts         CommercialContract[]
 }
 
 model Organization {
-  id       String    @id @default(cuid())
-  name     String    @unique
-  type     String    // investor|seeker|advisor|government
-  country  String
-  listings Listing[]
+  id        String               @id @default(cuid())
+  name      String               @unique
+  type      String // investor|seeker|advisor|government
+  country   String
+  listings  Listing[]
+  users     User[]
+  contracts CommercialContract[]
+}
+
+// Sales-assisted organization agreement. It records the approved commercial
+// scope without implying payment processing, invoicing or collected revenue.
+model CommercialContract {
+  id                String       @id @default(cuid())
+  orgId             String
+  organization      Organization @relation(fields: [orgId], references: [id])
+  planId            String
+  plan              Plan         @relation(fields: [planId], references: [id])
+  status            String       @default("draft") // draft|approved|active|suspended|expired|cancelled
+  currency          String       @default("USD")
+  annualValueMinor  Int?
+  seatLimit         Int?
+  serviceLevel      String       @default("")
+  dataRetentionDays Int?
+  termsVersion      String?
+  startsAt          DateTime?
+  endsAt            DateTime?
+  approvedBy        String?
+  approvedAt        DateTime?
+  history           String       @default("[]")
+  createdAt         DateTime     @default(now())
+  updatedAt         DateTime     @default(now()) @updatedAt
+
+  @@index([orgId, status])
 }
 
 model Listing {
-  id               String        @id // slug
-  orgId            String
-  org              Organization  @relation(fields: [orgId], references: [id])
-  title            String
-  sector           String
-  sectorColor      String
-  country          String
-  flag             String
-  raiseUsd         Int
-  instrument       String
-  stage            String
-  irr              String
-  summary          String
+  id                     String             @id // slug
+  orgId                  String
+  org                    Organization       @relation(fields: [orgId], references: [id])
+  title                  String
+  sector                 String
+  sectorColor            String
+  country                String
+  flag                   String
+  raiseUsd               Int
+  instrument             String
+  stage                  String
+  irr                    String
+  summary                String
   useOfFunds             String? // carried from ProjectSubmission at publish time
-  fundingSecuredUsd      Int?    // carried from ProjectSubmission at publish time
-  sponsorContributionUsd Int?    // carried from ProjectSubmission at publish time
-  verified         Boolean       @default(false)
-  verifiedBy       String?       // admin fullName — real reviewer, not a fabricated vendor
-  verifiedAt       DateTime?
-  verificationNote String        @default("") // evidence description recorded at verify/unverify time
-  verificationHistory String     @default("[]") // [{by,action,note,governmentBacked?,govMechanism?,at}]
-  governmentBacked Boolean       @default(false)
-  govMechanism     String?       // guarantee|concession|ppa|grant|letter|first-loss|tax|other
-  matchScore       Int
-  readiness        Int
-  esg              Int
-  risk             Int
-  highlights       String        // JSON array
-  whyMatch         String
-  docs             Document[]
-  images           ListingImage[]
-  matchActions     MatchAction[]
-  matchFeedback    MatchFeedback[]
-  deals            Deal[]
-  savedBy          SavedOpportunity[]
-  dataRoomAccess   DataRoomAccess[]
-  meetings         Meeting[]
-  createdAt        DateTime      @default(now())
-  updatedAt        DateTime      @default(now()) @updatedAt
+  fundingSecuredUsd      Int? // carried from ProjectSubmission at publish time
+  sponsorContributionUsd Int? // carried from ProjectSubmission at publish time
+  verified               Boolean            @default(false)
+  verifiedBy             String? // admin fullName — real reviewer, not a fabricated vendor
+  verifiedAt             DateTime?
+  verificationNote       String             @default("") // evidence description recorded at verify/unverify time
+  verificationHistory    String             @default("[]") // [{by,action,note,governmentBacked?,govMechanism?,at}]
+  governmentBacked       Boolean            @default(false)
+  govMechanism           String? // guarantee|concession|ppa|grant|letter|first-loss|tax|other
+  matchScore             Int
+  readiness              Int
+  esg                    Int
+  risk                   Int
+  highlights             String // JSON array
+  whyMatch               String
+  docs                   Document[]
+  images                 ListingImage[]
+  matchActions           MatchAction[]
+  matchFeedback          MatchFeedback[]
+  deals                  Deal[]
+  savedBy                SavedOpportunity[]
+  dataRoomAccess         DataRoomAccess[]
+  meetings               Meeting[]
+  createdAt              DateTime           @default(now())
+  updatedAt              DateTime           @default(now()) @updatedAt
 }
 
 model Document {
-  id         String  @id @default(cuid())
+  id         String              @id @default(cuid())
   listingId  String
-  listing    Listing @relation(fields: [listingId], references: [id])
+  listing    Listing             @relation(fields: [listingId], references: [id])
   name       String
   size       String
   folder     String
@@ -148,7 +179,7 @@ model DataRoomAccess {
   listing   Listing   @relation(fields: [listingId], references: [id])
   userId    String
   user      User      @relation(fields: [userId], references: [id])
-  grantedBy String    // fullName of the sponsor/admin who granted access
+  grantedBy String // fullName of the sponsor/admin who granted access
   createdAt DateTime  @default(now())
   revokedAt DateTime?
 
@@ -167,14 +198,14 @@ model DocumentAccessLog {
 }
 
 model MatchAction {
-  id        String   @id @default(cuid())
-  userId    String
-  user      User     @relation(fields: [userId], references: [id])
-  listingId String
-  listing   Listing  @relation(fields: [listingId], references: [id])
-  action    String   // interested|pass|saved|info_requested
+  id         String   @id @default(cuid())
+  userId     String
+  user       User     @relation(fields: [userId], references: [id])
+  listingId  String
+  listing    Listing  @relation(fields: [listingId], references: [id])
+  action     String // interested|pass|saved|info_requested
   matchScore Int
-  createdAt DateTime @default(now())
+  createdAt  DateTime @default(now())
 }
 
 // Investor feedback on why a match was unsuitable. This influences future
@@ -186,7 +217,7 @@ model MatchFeedback {
   user      User     @relation(fields: [userId], references: [id])
   listingId String
   listing   Listing  @relation(fields: [listingId], references: [id])
-  mandateId String?  // loose reference, no FK — mandate may be edited/deleted later without orphaning this record
+  mandateId String? // loose reference, no FK — mandate may be edited/deleted later without orphaning this record
   reason    String
   createdAt DateTime @default(now())
 }
@@ -196,11 +227,11 @@ model MatchFeedback {
 // log — this table is the mutable enrichment layer (which collection,
 // notes, tags), not a second "is this saved" boolean.
 model Collection {
-  id        String   @id @default(cuid())
+  id        String             @id @default(cuid())
   userId    String
-  user      User     @relation(fields: [userId], references: [id])
+  user      User               @relation(fields: [userId], references: [id])
   name      String
-  createdAt DateTime @default(now())
+  createdAt DateTime           @default(now())
   items     SavedOpportunity[]
 
   @@unique([userId, name])
@@ -231,7 +262,7 @@ model Meeting {
   listing       Listing   @relation(fields: [listingId], references: [id])
   requesterId   String
   requester     User      @relation(fields: [requesterId], references: [id])
-  proposedSlots String    // JSON array of ISO datetime strings, investor-proposed
+  proposedSlots String // JSON array of ISO datetime strings, investor-proposed
   note          String    @default("")
   status        String    @default("requested") // requested|confirmed|declined|cancelled
   confirmedSlot DateTime?
@@ -247,36 +278,36 @@ model AiGenerationLog {
   id        String   @id @default(cuid())
   userId    String
   user      User     @relation(fields: [userId], references: [id])
-  kind      String   // teaser|message_draft
-  source    String   // claude|template — which path actually produced the content
+  kind      String // teaser|message_draft
+  source    String // claude|template — which path actually produced the content
   listingId String?
   threadId  String?
   createdAt DateTime @default(now())
 }
 
 model Deal {
-  id        String   @id @default(cuid())
-  listingId String
-  listing   Listing  @relation(fields: [listingId], references: [id])
+  id            String            @id @default(cuid())
+  listingId     String
+  listing       Listing           @relation(fields: [listingId], references: [id])
   capitalCalls  CapitalCall[]
   distributions Distribution[]
   updates       PortfolioUpdate[]
-  title     String
-  flag      String
-  amount    String
-  stage     String   // see lib/deals.ts STAGES — 12-stage lifecycle
-  parentId  String?
-  parent    Deal?    @relation("Tranches", fields: [parentId], references: [id])
-  tranches  Deal[]   @relation("Tranches")
-  kind      String   @default("opportunity") // opportunity|equity-tranche|debt-tranche|workstream
-  history   String   @default("[]")          // [{from,to,by,reason,at}]
-  probability Int?                           // override, else stage default
-  owner     String
-  nextStep  String
-  dueDate   DateTime?
-  decisionNotes String @default("[]")        // [{by,note,at}]
-  createdAt DateTime @default(now())
-  updatedAt DateTime @default(now()) @updatedAt
+  title         String
+  flag          String
+  amount        String
+  stage         String // see lib/deals.ts STAGES — 12-stage lifecycle
+  parentId      String?
+  parent        Deal?             @relation("Tranches", fields: [parentId], references: [id])
+  tranches      Deal[]            @relation("Tranches")
+  kind          String            @default("opportunity") // opportunity|equity-tranche|debt-tranche|workstream
+  history       String            @default("[]") // [{from,to,by,reason,at}]
+  probability   Int? // override, else stage default
+  owner         String
+  nextStep      String
+  dueDate       DateTime?
+  decisionNotes String            @default("[]") // [{by,note,at}]
+  createdAt     DateTime          @default(now())
+  updatedAt     DateTime          @default(now()) @updatedAt
 
   @@unique([listingId, title])
 }
@@ -285,14 +316,18 @@ model Thread {
   id       String    @id @default(cuid())
   name     String
   org      String
+  ownerId  String?
+  owner    User?     @relation(fields: [ownerId], references: [id])
   messages Message[]
+
+  @@index([ownerId])
 }
 
 model Message {
   id        String   @id @default(cuid())
   threadId  String
   thread    Thread   @relation(fields: [threadId], references: [id])
-  sender    String   // them|me|system
+  sender    String // them|me|system
   text      String
   createdAt DateTime @default(now())
 }
@@ -323,41 +358,41 @@ model CommentLike {
 // mutating it in place, so published listings never carry unreviewed
 // owner edits.
 model ProjectSubmission {
-  id                 String   @id @default(cuid())
-  ownerId            String
-  owner              User     @relation(fields: [ownerId], references: [id])
-  orgName            String
-  ownershipStatement String   @default("")
-  title              String   @default("")
-  country            String   @default("")
-  region             String   @default("")
-  sector             String   @default("")
-  stage              String   @default("")
-  raiseUsd           Int?
-  fundingSecuredUsd  Int?
+  id                     String  @id @default(cuid())
+  ownerId                String
+  owner                  User    @relation(fields: [ownerId], references: [id])
+  orgName                String
+  ownershipStatement     String  @default("")
+  title                  String  @default("")
+  country                String  @default("")
+  region                 String  @default("")
+  sector                 String  @default("")
+  stage                  String  @default("")
+  raiseUsd               Int?
+  fundingSecuredUsd      Int?
   sponsorContributionUsd Int?
-  instrument         String   @default("")
-  useOfFunds         String   @default("")
-  revenueModel       String   @default("")
-  financialSummary   String   @default("")
-  permitsStatus      String   @default("")
-  landRights         String   @default("")
-  governmentInvolvement String @default("")
-  governmentBacked   Boolean  @default(false)
-  esgSummary         String   @default("")
-  keyRisks           String   @default("")
-  managementTeam     String   @default("")
-  advisors           String   @default("")
-  documentsNote      String   @default("")
-  timetable          String   @default("")
+  instrument             String  @default("")
+  useOfFunds             String  @default("")
+  revenueModel           String  @default("")
+  financialSummary       String  @default("")
+  permitsStatus          String  @default("")
+  landRights             String  @default("")
+  governmentInvolvement  String  @default("")
+  governmentBacked       Boolean @default(false)
+  esgSummary             String  @default("")
+  keyRisks               String  @default("")
+  managementTeam         String  @default("")
+  advisors               String  @default("")
+  documentsNote          String  @default("")
+  timetable              String  @default("")
 
-  status             String   @default("draft") // draft|submitted|under_review|changes_requested|approved|rejected
+  status             String  @default("draft") // draft|submitted|under_review|changes_requested|approved|rejected
   reviewedBy         String?
   reviewNotes        String?
   publishedListingId String?
 
-  createdAt          DateTime @default(now())
-  updatedAt          DateTime @default(now()) @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
 }
 
 model ListingImage {
@@ -375,42 +410,42 @@ model StandingMandate {
   userId    String
   user      User     @relation(fields: [userId], references: [id])
   name      String
-  query     String   // freeform note; also the origin text when converted from an AI Search
-  criteria  String   // JSON parsed criteria snapshot (legacy, kept for AI Search conversion)
+  query     String // freeform note; also the origin text when converted from an AI Search
+  criteria  String // JSON parsed criteria snapshot (legacy, kept for AI Search conversion)
   threshold Int      @default(70)
   frequency String   @default("weekly") // daily|weekly
   active    Boolean  @default(true)
   createdAt DateTime @default(now())
 
   // Structured investor-mandate fields (guided onboarding).
-  investorType         String?  // institutional|family-office|pe|vc|infra-fund|bank-dfi|sovereign-pension|hnw-angel|corporate|advisor
-  sectors              String   @default("[]") // JSON string[] — Agriculture|Infrastructure|Mining|Healthcare|Water
-  countries            String   @default("[]") // JSON string[]
-  ticketMinUsd         Int?
-  ticketMaxUsd         Int?
-  instruments          String   @default("[]") // JSON string[] — equity|debt|blended|spv|other
-  stagePreference      String?  // e.g. "Structuring", "Active" — free text matching Listing.stage vocabulary
-  targetReturn         String?  // e.g. "15-20% IRR"
-  horizonYears         Int?
-  riskTolerance        String?  // low|medium|high
-  currency             String   @default("USD")
-  esgRequired          Boolean  @default(false)
-  govSupportRequired   Boolean  @default(false)
-  excludedSectors      String   @default("[]") // JSON string[]
-  excludedCountries    String   @default("[]") // JSON string[]
-  coInvestPreference   String?  // solo|co-invest|either
+  investorType       String? // institutional|family-office|pe|vc|infra-fund|bank-dfi|sovereign-pension|hnw-angel|corporate|advisor
+  sectors            String  @default("[]") // JSON string[] — Agriculture|Infrastructure|Mining|Healthcare|Water
+  countries          String  @default("[]") // JSON string[]
+  ticketMinUsd       Int?
+  ticketMaxUsd       Int?
+  instruments        String  @default("[]") // JSON string[] — equity|debt|blended|spv|other
+  stagePreference    String? // e.g. "Structuring", "Active" — free text matching Listing.stage vocabulary
+  targetReturn       String? // e.g. "15-20% IRR"
+  horizonYears       Int?
+  riskTolerance      String? // low|medium|high
+  currency           String  @default("USD")
+  esgRequired        Boolean @default(false)
+  govSupportRequired Boolean @default(false)
+  excludedSectors    String  @default("[]") // JSON string[]
+  excludedCountries  String  @default("[]") // JSON string[]
+  coInvestPreference String? // solo|co-invest|either
 }
 
 model CapitalCall {
-  id         String   @id @default(cuid())
+  id         String    @id @default(cuid())
   dealId     String
-  deal       Deal     @relation(fields: [dealId], references: [id])
+  deal       Deal      @relation(fields: [dealId], references: [id])
   callNumber Int
   amountUsd  Int
   purpose    String
-  noticeDate DateTime @default(now())
+  noticeDate DateTime  @default(now())
   dueDate    DateTime
-  status     String   @default("issued") // issued|paid|overdue
+  status     String    @default("issued") // issued|paid|overdue
   paidAt     DateTime?
 }
 
@@ -419,7 +454,7 @@ model Distribution {
   dealId      String
   deal        Deal     @relation(fields: [dealId], references: [id])
   amountUsd   Int
-  kind        String   // return-of-capital|profit|interest
+  kind        String // return-of-capital|profit|interest
   paymentDate DateTime @default(now())
 }
 
@@ -440,7 +475,7 @@ model InvestorEngagement {
   investorId   String
   listingId    String
   lastActivity DateTime @default(now())
-  stage        String   // viewed|saved|nda|room-access|messaged|committed
+  stage        String // viewed|saved|nda|room-access|messaged|committed
 
   @@unique([sponsorOrgId, investorId, listingId])
 }
@@ -452,6 +487,18 @@ model ContactInquiry {
   organization String?
   topic        String   @default("general") // general|investor-access|project-submission|data-room|institutional-partnership|government-dfi|inaccurate-information|technical-support
   message      String
-  status       String   @default("new")     // new|read
+  status       String   @default("new") // new|read
   createdAt    DateTime @default(now())
+}
+
+// Privacy-minimised product telemetry. Events intentionally omit names,
+// email addresses, IP addresses, cookies and free-text fields.
+model ProductEvent {
+  id        String   @id @default(cuid())
+  event     String
+  path      String
+  context   String   @default("{}")
+  createdAt DateTime @default(now())
+
+  @@index([event, createdAt])
 }
