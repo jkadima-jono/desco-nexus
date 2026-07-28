@@ -38,17 +38,16 @@ export default function PillarsIndex() {
           </Reveal>
           <Reveal delay={80}>
             <h1 style={{ fontFamily: "var(--font-serif)" }} className="font-semibold text-4xl lg:text-6xl tracking-tight leading-[1.05]">
-              Transforming Kasai.
+              Agriculture, infrastructure,
               <br />
-              Empowering the DRC.
+              healthcare and water.
             </h1>
           </Reveal>
           <Reveal delay={160}>
             <p className="text-white/70 text-base lg:text-lg mt-6 max-w-2xl mx-auto leading-relaxed">
-              An integrated African developer and operator unlocking the
-              potential of the Democratic Republic of Congo — a $750M Phase 1
-              investment opportunity across agriculture, infrastructure,
-              healthcare, and water.
+              Desco Global develops and operates businesses in the Democratic
+              Republic of Congo. Phase 1 is a $750M programme across four
+              sectors, based in the Kasai region.
             </p>
           </Reveal>
           <Reveal delay={240}>
@@ -82,14 +81,13 @@ export default function PillarsIndex() {
         </Reveal>
         <Reveal delay={160}>
           <p className="text-wgray mt-5 leading-relaxed max-w-2xl mx-auto">
-            Founded in 2023 with its headquarters in South Africa, Desco
-            Global is a purpose-driven holding company dedicated to unlocking
-            the potential of the Democratic Republic of Congo. By integrating
-            agriculture, infrastructure, healthcare, and water, we create
-            self-reinforcing ecosystems that deliver sustainable financial
-            returns and transformative social impact — governed by an
-            independent board, international audit standards, and an
-            IFC-aligned environmental and social management system.
+            Desco Global was founded in 2023 and is headquartered in South
+            Africa. It builds and runs businesses in the Democratic Republic of
+            Congo across agriculture, infrastructure, healthcare and water,
+            where each business is intended to support the others: ports and
+            roads carry what the farms produce. Governance is through an
+            independent board, international audit standards and an IFC-aligned
+            environmental and social management system.
           </p>
         </Reveal>
       </section>

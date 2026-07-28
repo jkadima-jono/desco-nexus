@@ -55,7 +55,7 @@ export default async function InvestorsPage() {
           <div className="mt-8 grid gap-5 md:grid-cols-3">
             <InstitutionalCard title="Review qualified opportunities" body="Start with comparison-ready public teasers, clear sponsors and visible disclosure status." />
             <InstitutionalCard title="Match against your mandate" body="Use explicit sector, geography, ticket, instrument and exclusion criteria." />
-            <InstitutionalCard title="Unlock diligence when justified" body="Request restricted material and sponsor engagement only after initial screening." />
+            <InstitutionalCard title="Request diligence when justified" body="Request restricted material and sponsor engagement only after initial screening." />
           </div>
           <div className="mt-10"><NumberedProcess items={STEPS} /></div>
           <div className="mt-8"><QuietNotice>Investors remain responsible for legal, financial, tax, technical, ESG and commercial due diligence. A platform status is not investment approval.</QuietNotice></div>

@@ -65,7 +65,7 @@ const en: Dict = {
   "common.language": "Language",
   "home.platform": "A DESCO Global investment platform",
   "home.heroTitle": "Structured African opportunities. Clearer investment decisions.",
-  "home.heroBody": "Review structured opportunities, compare them against investment mandates and unlock controlled diligence. Project sponsors can prepare institutional-quality listings and manage access from public teaser to deeper review.",
+  "home.heroBody": "Review structured opportunities, compare them against investment mandates and request controlled diligence. Project sponsors can prepare institutional-quality listings and manage access from public teaser to deeper review.",
   "home.review": "Review opportunities",
   "home.diligence": "How diligence works",
   "home.investorTitle": "Screen before committing diligence resources.",

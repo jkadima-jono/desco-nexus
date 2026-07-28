@@ -335,7 +335,7 @@ export default async function ProjectDetail({
               </div>
             ) : (
               <div className="space-y-3">
-                <p className="text-sm leading-6 text-wgray">An approved investor workspace unlocks mandate matching, project-specific access requests and sponsor meetings.</p>
+                <p className="text-sm leading-6 text-wgray">An approved investor workspace adds mandate matching, project-specific access requests and sponsor meetings.</p>
                 <Link href={`/contact?topic=investor-access&project=${l.id}`} className="block text-center bg-gold text-ink font-display font-bold text-sm py-2.5 rounded-xl">Apply for investor access</Link>
               </div>
             )}

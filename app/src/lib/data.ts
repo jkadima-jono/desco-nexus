@@ -72,7 +72,7 @@ export const listings: Listing[] = [
     ],
     docs: [],
     whyMatch:
-      "Infrastructure gateway asset underpinning Desco Global's integrated Kasai platform — unlocks export routes for the agri and mining pillars.",
+      "Infrastructure gateway asset in Desco Global's Kasai platform — opens export routes for the agriculture and mining pillars.",
   },
   {
     id: "port-de-kasenga",

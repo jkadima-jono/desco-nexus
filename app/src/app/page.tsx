@@ -150,7 +150,7 @@ export default async function Home() {
                   <ul className="mt-5 space-y-2 text-sm text-slate">
                     <li>Review structured public opportunities</li>
                     <li>Match opportunities against your mandate</li>
-                    <li>Unlock deeper diligence only when justified</li>
+                    <li>Request deeper diligence only when justified</li>
                   </ul>
                   <Link href="/investors" className="button-secondary mt-7">{t(locale, "home.investorCta")}</Link>
                 </article>
