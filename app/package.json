@@ -9,7 +9,8 @@
     "start": "next start",
     "typecheck": "tsc --noEmit --incremental false",
     "test:api": "node --test tests/api.test.mjs",
-    "test": "npm run typecheck",
+    "test:unit": "tsx --test tests/loginToken.test.ts",
+    "test": "npm run typecheck && npm run test:unit",
     "check": "npm run typecheck && npm run build"
   },
   "dependencies": {
