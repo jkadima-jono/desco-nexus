@@ -32,9 +32,9 @@ export const PILLAR_ICON: Record<string, string> = {
   investdesco: "/brand/pillars/invest.png",
 };
 
-// Every pillar/sector without a dedicated icon falls back to the Desco
-// coin — never a placeholder letter, never a mismatched borrowed icon.
-export const FALLBACK_ICON = "/brand/desco-coin.png";
+// Every pillar/sector without a dedicated icon falls back to the official
+// DESCO Compass emblem — never a placeholder letter or borrowed icon.
+export const FALLBACK_ICON = "/brand/desco-compass-logo.jpg";
 
 // Listing "sector" strings map to the pillar they belong to, so a sector
 // always resolves to the correct brand color and icon. Mining and

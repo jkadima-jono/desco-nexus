@@ -62,9 +62,9 @@ function LoginForm() {
           <Link href="/" aria-label="Return to DESCO Compass home" className="inline-block">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
-              src="/brand/desco-coin.png"
-              alt=""
-              className="mx-auto mb-4 h-20 w-20 rounded-full shadow-[0_8px_24px_rgb(184_149_61/0.45)]"
+              src="/brand/desco-compass-logo.jpg"
+              alt="Official DESCO Compass logo"
+              className="mx-auto mb-4 h-28 w-28 rounded-full object-cover shadow-[0_8px_24px_rgb(184_149_61/0.45)]"
             />
           </Link>
           <div className="font-display font-extrabold text-3xl text-white tracking-tight">

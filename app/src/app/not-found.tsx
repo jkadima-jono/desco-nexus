@@ -9,9 +9,9 @@ export default async function NotFound() {
       <div className="text-center max-w-md">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
-          src="/brand/desco-coin.png"
+          src="/brand/desco-compass-logo.jpg"
           alt=""
-          className="w-16 h-16 rounded-full mx-auto mb-5 opacity-80"
+          className="mx-auto mb-5 h-20 w-20 rounded-full object-cover opacity-80"
         />
         <h1 className="font-display font-extrabold text-3xl tracking-tight mb-2">
           {t(locale, "notFound.title")}

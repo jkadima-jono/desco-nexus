@@ -12,7 +12,7 @@ export default function Footer() {
       <div className="public-container grid gap-8 py-9 text-xs text-wgray lg:grid-cols-[1fr_auto_auto] lg:items-start lg:gap-12">
         <div className="flex max-w-sm items-start gap-3">
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/brand/desco-coin.png" alt="" className="mt-0.5 h-6 w-6 rounded-full" />
+          <img src="/brand/desco-compass-logo.jpg" alt="" className="mt-0.5 h-7 w-7 rounded-full object-cover" />
           <span className="leading-5">© {new Date().getFullYear()} Desco Global. {t("footer.demo")}</span>
         </div>
         <nav aria-label={copy.exploreNavigation} className="grid grid-cols-2 gap-x-8 font-semibold sm:grid-cols-4 lg:grid-cols-2">

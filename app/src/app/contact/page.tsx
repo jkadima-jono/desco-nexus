@@ -22,9 +22,9 @@ export default async function ContactPage({
         <div className="text-center mb-10">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
-            src="/brand/desco-coin.png"
-            alt="Desco Global"
-            className="w-16 h-16 rounded-full mx-auto mb-5 shadow-[0_8px_24px_rgb(184_149_61/0.4)]"
+            src="/brand/desco-compass-logo.jpg"
+            alt="Official DESCO Compass logo"
+            className="mx-auto mb-5 h-24 w-24 rounded-full object-cover shadow-[0_8px_24px_rgb(184_149_61/0.4)]"
           />
           <h1 style={{ fontFamily: "var(--font-serif)" }} className="font-semibold text-3xl lg:text-4xl tracking-tight">
             {ui.title}

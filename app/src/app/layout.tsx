@@ -32,17 +32,19 @@ export const metadata: Metadata = {
   title: "DESCO Compass — Structured African investment opportunities",
   description:
     "Review structured African investment opportunities with clear disclosure, sponsor-controlled diligence, and mandate-based screening.",
-  icons: { icon: "/brand/desco-coin.png" },
+  icons: { icon: "/brand/desco-compass-logo.jpg", apple: "/brand/desco-compass-logo.jpg" },
   openGraph: {
     type: "website",
     siteName: "DESCO Compass",
     title: "DESCO Compass — Structured African investment opportunities",
     description: "Review structured African investment opportunities with clear disclosure and controlled diligence.",
+    images: [{ url: "/brand/desco-compass-logo.jpg", width: 800, height: 800, alt: "Official DESCO Compass logo" }],
   },
   twitter: {
     card: "summary",
     title: "DESCO Compass — Structured African investment opportunities",
     description: "Review structured African investment opportunities with clear disclosure and controlled diligence.",
+    images: ["/brand/desco-compass-logo.jpg"],
   },
 };
 

@@ -53,7 +53,7 @@ export default function PublicHeader() {
         <div className="public-container flex h-16 items-center justify-between gap-6">
           <Link href="/" className="flex shrink-0 items-center gap-3" aria-label="DESCO Compass home">
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/brand/desco-coin.png" alt="" className="h-9 w-9 rounded-full" />
+            <img src="/brand/desco-compass-logo.jpg" alt="" className="h-10 w-10 rounded-full object-cover" />
             <span className="font-display text-base font-extrabold">
               DESCO <span className="text-gold">Compass</span>
             </span>

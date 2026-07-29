@@ -30,9 +30,9 @@ export default async function PillarsIndex() {
           <Reveal>
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
-              src="/brand/desco-coin.png"
-              alt="Desco Global"
-              className="w-14 h-14 rounded-full mx-auto mb-6 shadow-[0_8px_24px_rgb(184_149_61/0.4)]"
+              src="/brand/desco-compass-logo.jpg"
+              alt="Official DESCO Compass logo"
+              className="mx-auto mb-6 h-28 w-28 rounded-full object-cover shadow-[0_8px_24px_rgb(184_149_61/0.4)]"
             />
             <p className="text-gold font-bold text-xs uppercase tracking-[0.2em] mb-4">
               {copy.vision}
