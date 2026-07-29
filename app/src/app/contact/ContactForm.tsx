@@ -1,7 +1,10 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { trackProductEvent } from "@/components/ProductAnalytics";
+import type { Locale } from "@/lib/i18n";
+import { contactLegalAcknowledgement, investmentUi } from "@/lib/translations/investment-ui";
 
 const TOPICS = [
   { value: "general", label: "General inquiry" },
@@ -15,7 +18,9 @@ const TOPICS = [
   { value: "technical-support", label: "Technical support" },
 ];
 
-export default function ContactForm({ initialTopic = "general", projectId }: { initialTopic?: string; projectId?: string }) {
+export default function ContactForm({ initialTopic = "general", projectId, locale }: { initialTopic?: string; projectId?: string; locale: Locale }) {
+  const ui = investmentUi(locale).contact;
+  const legalUi = contactLegalAcknowledgement(locale);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [organization, setOrganization] = useState("");
@@ -24,6 +29,7 @@ export default function ContactForm({ initialTopic = "general", projectId }: { i
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [sent, setSent] = useState(false);
+  const [acknowledged, setAcknowledged] = useState(false);
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -37,13 +43,13 @@ export default function ContactForm({ initialTopic = "general", projectId }: { i
       });
       const data = await res.json();
       if (!res.ok) {
-        setError(data.error ?? "Could not send — retry.");
+        setError(data.error ?? ui.retry);
         return;
       }
       trackProductEvent("contact_submitted", { topic });
       setSent(true);
     } catch {
-      setError("Network error — retry.");
+      setError(ui.network);
     } finally {
       setBusy(false);
     }
@@ -55,9 +61,9 @@ export default function ContactForm({ initialTopic = "general", projectId }: { i
         <div className="w-12 h-12 rounded-full bg-gold-soft text-gold flex items-center justify-center mx-auto mb-4 text-xl">
           ✓
         </div>
-        <h2 className="font-display font-bold text-xl text-charcoal">Message received</h2>
+        <h2 className="font-display font-bold text-xl text-charcoal">{ui.received}</h2>
         <p className="text-wgray text-sm mt-2">
-          Thank you. A DESCO team member will review the inquiry and respond using the details supplied.
+          {ui.receivedBody}
         </p>
       </div>
     );
@@ -68,7 +74,7 @@ export default function ContactForm({ initialTopic = "general", projectId }: { i
       <div className="grid sm:grid-cols-2 gap-4">
         <div>
           <label htmlFor="name" className="block text-[11px] font-bold uppercase tracking-wider text-wgray mb-1.5">
-            Full name
+            {ui.fullName}
           </label>
           <input
             id="name"
@@ -80,7 +86,7 @@ export default function ContactForm({ initialTopic = "general", projectId }: { i
         </div>
         <div>
           <label htmlFor="email" className="block text-[11px] font-bold uppercase tracking-wider text-wgray mb-1.5">
-            Email
+            {ui.email}
           </label>
           <input
             id="email"
@@ -94,7 +100,7 @@ export default function ContactForm({ initialTopic = "general", projectId }: { i
       </div>
       <div>
         <label htmlFor="organization" className="block text-[11px] font-bold uppercase tracking-wider text-wgray mb-1.5">
-          Organization <span className="normal-case font-normal text-wgray/70">(optional)</span>
+          {ui.organization} <span className="normal-case font-normal text-wgray/70">({ui.optional})</span>
         </label>
         <input
           id="organization"
@@ -105,7 +111,7 @@ export default function ContactForm({ initialTopic = "general", projectId }: { i
       </div>
       <div>
         <label htmlFor="topic" className="block text-[11px] font-bold uppercase tracking-wider text-wgray mb-1.5">
-          Topic
+          {ui.topic}
         </label>
         <select
           id="topic"
@@ -113,14 +119,14 @@ export default function ContactForm({ initialTopic = "general", projectId }: { i
           onChange={(e) => setTopic(e.target.value)}
           className="w-full bg-mist rounded-xl px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-gold"
         >
-          {TOPICS.map((t) => (
-            <option key={t.value} value={t.value}>{t.label}</option>
+          {TOPICS.map((topicOption) => (
+            <option key={topicOption.value} value={topicOption.value}>{ui.topics[topicOption.value]}</option>
           ))}
         </select>
       </div>
       <div>
         <label htmlFor="message" className="block text-[11px] font-bold uppercase tracking-wider text-wgray mb-1.5">
-          Message
+          {ui.message}
         </label>
         <textarea
           id="message"
@@ -136,11 +142,24 @@ export default function ContactForm({ initialTopic = "general", projectId }: { i
           {error}
         </div>
       )}
+      <label className="flex items-start gap-3 rounded-xl border border-charcoal/10 bg-mist p-3 text-xs leading-5 text-slate">
+        <input
+          type="checkbox"
+          required
+          checked={acknowledged}
+          onChange={(event) => setAcknowledged(event.target.checked)}
+          className="mt-0.5 h-4 w-4 shrink-0 accent-gold"
+        />
+        <span>
+          {legalUi.acknowledgement}{" "}
+          <Link href="/legal" className="font-bold text-ink underline underline-offset-2">{legalUi.legalStatus}</Link>.
+        </span>
+      </label>
       <button
-        disabled={busy}
+        disabled={busy || !acknowledged}
         className="w-full bg-gold text-ink font-display font-bold py-3.5 rounded-xl hover:brightness-110 disabled:opacity-60"
       >
-        {busy ? "Sending…" : "Send message"}
+        {busy ? ui.sending : ui.send}
       </button>
     </form>
   );

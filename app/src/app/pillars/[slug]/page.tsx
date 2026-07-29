@@ -1,11 +1,13 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import type { Metadata } from "next";
-import { PILLARS, getPillar } from "@/lib/pillars";
+import { PILLARS } from "@/lib/pillars";
 import { pillarIcon } from "@/lib/theme";
 import Reveal from "@/components/story/Reveal";
 import StatCounter from "@/components/story/StatCounter";
 import Timeline from "@/components/story/Timeline";
+import { getLocale } from "@/lib/i18n-server";
+import { getPillarsLegal } from "@/lib/translations/pillars-legal";
 
 export function generateStaticParams() {
   return PILLARS.map((p) => ({ slug: p.slug }));
@@ -17,7 +19,7 @@ export async function generateMetadata({
   params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
   const { slug } = await params;
-  const pillar = getPillar(slug);
+  const pillar = getPillarsLegal(await getLocale()).pillars.find((item) => item.slug === slug);
   if (!pillar) return {};
   return {
     title: pillar.name + " — DESCO Nexus",
@@ -31,16 +33,17 @@ export default async function PillarPage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const pillar = getPillar(slug);
+  const copy = getPillarsLegal(await getLocale());
+  const pillar = copy.pillars.find((item) => item.slug === slug);
   if (!pillar) notFound();
 
-  const others = PILLARS.filter((p) => p.slug !== slug).slice(0, 3);
+  const others = copy.pillars.filter((p) => p.slug !== slug).slice(0, 3);
 
   return (
     <div>
-      <nav aria-label="Breadcrumb" className="max-w-5xl mx-auto px-6 lg:px-8 pt-6">
+      <nav aria-label={copy.detail.breadcrumb} className="max-w-5xl mx-auto px-6 lg:px-8 pt-6">
         <Link href="/pillars" className="text-xs font-bold text-wgray hover:text-charcoal">
-          ← All pillars
+          ← {copy.detail.all}
         </Link>
       </nav>
 
@@ -87,29 +90,29 @@ export default async function PillarPage({
         <div className="lg:col-span-2 space-y-10">
           <Reveal>
             <section>
-              <h2 className="font-display font-bold text-xl mb-3">Executive summary</h2>
+              <h2 className="font-display font-bold text-xl mb-3">{copy.detail.executive}</h2>
               <p className="text-wgray leading-relaxed">{pillar.summary}</p>
             </section>
           </Reveal>
 
           <Reveal>
             <section className="bg-gold-soft border-l-4 border-gold rounded-2xl p-6">
-              <h2 className="font-display font-bold text-lg mb-2 text-gold">Investment thesis</h2>
+              <h2 className="font-display font-bold text-lg mb-2 text-gold">{copy.detail.thesis}</h2>
               <p className="text-sm leading-relaxed">{pillar.thesis}</p>
             </section>
           </Reveal>
 
           <Reveal>
             <section>
-              <h2 className="font-display font-bold text-xl mb-3">Market opportunity</h2>
+              <h2 className="font-display font-bold text-xl mb-3">{copy.detail.market}</h2>
               <p className="text-wgray leading-relaxed">{pillar.marketOpportunity}</p>
             </section>
           </Reveal>
 
           <Reveal>
             <section>
-              <h2 className="font-display font-bold text-xl mb-1">Strategic objectives</h2>
-              <p className="text-xs text-wgray mb-3">Planned goals — not yet completed or independently verified.</p>
+              <h2 className="font-display font-bold text-xl mb-1">{copy.detail.objectives}</h2>
+              <p className="text-xs text-wgray mb-3">{copy.detail.objectivesNote}</p>
               <ul className="space-y-2.5">
                 {pillar.objectives.map((o) => (
                   <li key={o} className="flex items-start gap-3 text-sm">
@@ -128,8 +131,8 @@ export default async function PillarPage({
 
           <Reveal>
             <section>
-              <h2 className="font-display font-bold text-xl mb-6">Timeline &amp; milestones</h2>
-              <Timeline milestones={pillar.milestones} />
+              <h2 className="font-display font-bold text-xl mb-6">{copy.detail.timeline}</h2>
+              <Timeline milestones={pillar.milestones} pendingLabel={copy.detail.inProgress} />
             </section>
           </Reveal>
         </div>
@@ -138,7 +141,7 @@ export default async function PillarPage({
           <Reveal>
             <section className="bg-white rounded-2xl p-6 shadow-[0_1px_3px_rgb(44_62_80/0.08)]">
               <h2 className="font-display font-bold text-sm uppercase tracking-wider text-wgray mb-4">
-                Impact metrics
+                {copy.detail.impact}
               </h2>
               <div className="grid grid-cols-1 gap-5">
                 {pillar.impact.map((s) => (
@@ -146,11 +149,7 @@ export default async function PillarPage({
                 ))}
               </div>
               <p className="text-[11px] text-wgray mt-4 pt-4 border-t border-charcoal/10 leading-relaxed">
-                Figures above are drawn from Desco Global&rsquo;s own investor
-                deck and business plans and have not been independently
-                verified by Nexus. Figures marked &ldquo;target,&rdquo;
-                &ldquo;planned,&rdquo; or &ldquo;projected&rdquo; are forward
-                estimates, not measured results.
+                {copy.detail.impactNote}
               </p>
             </section>
           </Reveal>
@@ -158,7 +157,7 @@ export default async function PillarPage({
           <Reveal>
             <section className="bg-white rounded-2xl p-6 shadow-[0_1px_3px_rgb(44_62_80/0.08)]">
               <h2 className="font-display font-bold text-sm uppercase tracking-wider text-wgray mb-3">
-                Geographic coverage
+                {copy.detail.geography}
               </h2>
               <ul className="space-y-2 text-sm">
                 {pillar.geography.map((g) => (
@@ -168,8 +167,7 @@ export default async function PillarPage({
                 ))}
               </ul>
               <p className="text-[11px] text-wgray mt-4 pt-4 border-t border-charcoal/10">
-                Interactive map coming soon — regions listed reflect current
-                and near-term operating geography.
+                {copy.detail.mapNote}
               </p>
             </section>
           </Reveal>
@@ -177,17 +175,16 @@ export default async function PillarPage({
           <Reveal>
             <section className="bg-ink text-white rounded-2xl p-6">
               <h2 className="font-display font-bold text-lg mb-2">
-                Engage with {pillar.shortName}
+                {copy.detail.engage} {pillar.shortName}
               </h2>
               <p className="text-white/70 text-sm leading-relaxed mb-4">
-                Investor resources, data room access, and structuring
-                discussions happen inside the Nexus platform.
+                {copy.detail.engageBody}
               </p>
               <Link
                 href="/login"
                 className="block text-center bg-gold text-ink font-display font-bold text-sm py-3 rounded-xl hover:brightness-110"
               >
-                Sign in to Nexus
+                {copy.detail.signIn}
               </Link>
             </section>
           </Reveal>
@@ -196,7 +193,7 @@ export default async function PillarPage({
 
       <section className="bg-mist py-14">
         <div className="max-w-5xl mx-auto px-6 lg:px-8">
-          <h2 className="font-display font-bold text-lg mb-5">Explore other pillars</h2>
+          <h2 className="font-display font-bold text-lg mb-5">{copy.detail.others}</h2>
           <div className="grid gap-4 sm:grid-cols-3">
             {others.map((p) => (
               <Link

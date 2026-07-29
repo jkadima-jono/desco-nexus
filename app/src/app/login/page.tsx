@@ -1,9 +1,11 @@
 "use client";
 
 import { Suspense, useState } from "react";
+import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useI18n } from "@/components/I18nProvider";
 import { sanitizeNextPath } from "@/lib/nextParam";
+import { sharedCopy } from "@/lib/translations/shared";
 
 const PERSONAS = [
   { id: "investor", labelKey: "login.demoInvestor", icon: "◈" },
@@ -23,7 +25,8 @@ export default function Login() {
 }
 
 function LoginForm() {
-  const { t } = useI18n();
+  const { locale, t } = useI18n();
+  const copy = sharedCopy(locale);
   const router = useRouter();
   const searchParams = useSearchParams();
   const [busy, setBusy] = useState<string | null>(null);
@@ -56,12 +59,14 @@ function LoginForm() {
     <div className="min-h-screen bg-ink flex items-center justify-center px-6 py-10">
       <div className="w-full max-w-md">
         <div className="text-center mb-8">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src="/brand/desco-coin.png"
-            alt="Desco Global"
-            className="w-20 h-20 rounded-full mx-auto mb-4 shadow-[0_8px_24px_rgb(184_149_61/0.45)]"
-          />
+          <Link href="/" aria-label="Return to DESCO Nexus home" className="inline-block">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="/brand/desco-coin.png"
+              alt=""
+              className="mx-auto mb-4 h-20 w-20 rounded-full shadow-[0_8px_24px_rgb(184_149_61/0.45)]"
+            />
+          </Link>
           <div className="font-display font-extrabold text-3xl text-white tracking-tight">
             DESCO <span className="text-gold">Nexus</span>
           </div>
@@ -96,16 +101,19 @@ function LoginForm() {
           <p className="text-[11px] text-wgray mt-5 leading-relaxed">
             {t("login.demoNote")}
           </p>
+          <Link href="/opportunities" className="button-secondary mt-5 w-full">
+            {copy.backToOpportunities}
+          </Link>
         </div>
 
-        <div className="flex justify-center gap-4 text-[11px] text-white/40 mt-6">
-          <a href="/legal" className="hover:text-white/70">Privacy</a>
-          <a href="/legal" className="hover:text-white/70">Terms</a>
-          <a href="/legal" className="hover:text-white/70">Security</a>
-          <a href="/contact" className="hover:text-white/70">Contact</a>
+        <div className="mt-6 flex justify-center gap-4 text-xs text-white/65">
+          <a href="/legal" className="hover:text-white/70">{copy.privacy}</a>
+          <a href="/legal" className="hover:text-white/70">{copy.terms}</a>
+          <a href="/legal" className="hover:text-white/70">{copy.security}</a>
+          <a href="/contact" className="hover:text-white/70">{copy.contact}</a>
         </div>
-        <p className="text-center text-white/30 text-[11px] mt-3">
-          desco.global | © 2026 Desco Global
+        <p className="mt-3 text-center text-xs text-white/60">
+          desco.global | © 2026 DESCO Global
         </p>
       </div>
     </div>

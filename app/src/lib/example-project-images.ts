@@ -3,56 +3,64 @@ export type ExampleProjectImage = {
   url: string;
   caption: string;
   isExample: true;
+  kind?: "example" | "regional";
 };
 
 const EXAMPLES: Record<string, ExampleProjectImage[]> = {
   "port-de-ndomba": [{
-    id: "example-port-de-ndomba",
-    url: "/examples/project-port.svg",
-    caption: "Replaceable example visual · river-port concept · not project evidence",
+    id: "regional-port-de-ndomba",
+    url: "/project-media/desco-drc/port-ndomba-river.jpg",
+    caption: "DESCO-supplied regional DRC river image. Exact project location unconfirmed.",
     isExample: true,
+    kind: "regional",
   }],
   "port-de-kasenga": [{
-    id: "example-port-de-kasenga",
-    url: "/examples/project-port.svg",
-    caption: "Replaceable example visual · cross-border port concept · not project evidence",
+    id: "regional-port-de-kasenga",
+    url: "/project-media/desco-drc/port-kasenga-river.jpg",
+    caption: "DESCO-supplied regional DRC river image. Exact project location unconfirmed.",
     isExample: true,
+    kind: "regional",
   }],
   "comicordia-mining": [{
-    id: "example-comicordia-mining",
-    url: "/examples/project-mining.svg",
-    caption: "Replaceable example visual · mining-site concept · not project evidence",
+    id: "regional-comicordia-mining",
+    url: "/project-media/desco-drc/comicordia-terrain.jpg",
+    caption: "DESCO-supplied regional DRC terrain image. Exact project location unconfirmed.",
     isExample: true,
+    kind: "regional",
   }],
   "comicordia-agri": [{
-    id: "example-comicordia-agri",
-    url: "/examples/project-agriculture.svg",
-    caption: "Replaceable example visual · agricultural platform concept · not project evidence",
+    id: "regional-comicordia-agri",
+    url: "/project-media/desco-drc/comicordia-agriculture.jpg",
+    caption: "DESCO-supplied regional DRC agricultural image. Exact project location unconfirmed.",
     isExample: true,
+    kind: "regional",
   }],
   "manioc-plant": [{
-    id: "example-manioc-plant",
-    url: "/examples/project-agriculture.svg",
-    caption: "Replaceable example visual · processing-facility concept · not project evidence",
+    id: "regional-manioc-plant",
+    url: "/project-media/desco-drc/manioc-agriculture.jpg",
+    caption: "DESCO-supplied regional DRC agricultural image. Exact project location unconfirmed.",
     isExample: true,
+    kind: "regional",
   }],
   "phardesco-mbuji-mayi": [{
     id: "example-phardesco-mbuji-mayi",
     url: "/examples/project-healthcare.svg",
-    caption: "Replaceable example visual · community-health hub concept · not project evidence",
+    caption: "Illustrative healthcare-hub concept. Not a project photograph or evidence.",
     isExample: true,
   }],
   "tilu-pepm-8252": [{
-    id: "example-tilu-pepm-8252",
-    url: "/examples/project-mining.svg",
-    caption: "Replaceable example visual · exploration prospect · not project evidence",
+    id: "regional-tilu-pepm-8252",
+    url: "/project-media/desco-drc/tilu-access-road.jpg",
+    caption: "DESCO-supplied regional DRC access-road image. Exact project location unconfirmed.",
     isExample: true,
+    kind: "regional",
   }],
   "sciress-kolwezi-12423": [{
-    id: "example-sciress-kolwezi-12423",
-    url: "/examples/project-mining.svg",
-    caption: "Replaceable example visual · mining permit opportunity · not project evidence",
+    id: "regional-sciress-kolwezi-12423",
+    url: "/project-media/desco-drc/scires-terrain.jpg",
+    caption: "DESCO-supplied regional DRC terrain image. Exact project location unconfirmed.",
     isExample: true,
+    kind: "regional",
   }],
 };
 

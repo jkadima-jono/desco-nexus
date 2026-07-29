@@ -2,10 +2,11 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import ProjectCard from "@/components/ProjectCard";
 import { prisma, toListing } from "@/lib/db";
-import { fmtUsd, listings as sourceListings, type Listing } from "@/lib/data";
+import { capitalPresentation, fmtUsd, listings as sourceListings, type Listing } from "@/lib/data";
 import { getSessionUser } from "@/lib/auth";
 import { getLocale } from "@/lib/i18n-server";
 import { t } from "@/lib/i18n";
+import { getMarketingCopy, getMarketingMetadata, type HomeMarketingCopy } from "@/lib/translations/marketing";
 import {
   DisclosureChip,
   InstitutionalCard,
@@ -16,87 +17,54 @@ import {
 
 export const dynamic = "force-dynamic";
 
-export const metadata: Metadata = {
-  title: "DESCO Nexus — Structured African opportunities",
-  description:
-    "Review structured African investment opportunities with clear disclosure, sponsor-controlled diligence, and mandate-based screening.",
-  alternates: { canonical: "/" },
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const metadata = getMarketingMetadata(await getLocale(), "home");
+  return { ...metadata, alternates: { canonical: "/" } };
+}
 
-const INVESTOR_PROCESS = [
-  { title: "Review the public teaser", body: "Assess the thesis, capital requirement, sponsor, stage, risks and disclosure status." },
-  { title: "Evaluate mandate fit", body: "Compare sector, geography, ticket size and instrument against saved investment criteria." },
-  { title: "Request controlled access", body: "Ask the sponsor for access to restricted financial, technical and legal material." },
-  { title: "Review confidential material", body: "Use the permission-controlled room and recorded activity history." },
-  { title: "Meet the sponsor", body: "Request a meeting when the public and restricted information supports deeper engagement." },
-  { title: "Progress independently", body: "Complete legal, financial, technical and commercial due diligence outside the platform." },
-];
-
-const TRUST_CONTROLS = [
-  {
-    title: "Structured project review",
-    body: "DESCO reviews submissions for structure, completeness and internal consistency before publication. This is not independent investment verification.",
-  },
-  {
-    title: "Clear disclosure status",
-    body: "Public modules identify sponsor-provided, DESCO-reviewed, pending and restricted information.",
-  },
-  {
-    title: "Permission-controlled rooms",
-    body: "Confidential documents require an authenticated session and an explicit, revocable access grant.",
-  },
-  {
-    title: "Recorded access activity",
-    body: "Material access decisions, downloads and workflow changes can be logged for operational oversight.",
-  },
-  {
-    title: "Sponsor-controlled confidentiality",
-    body: "Sponsors decide which approved users can access restricted project information.",
-  },
-];
-
-function FeaturedBrief({ listing }: { listing: Listing }) {
+function FeaturedBrief({ listing, copy }: { listing: Listing; copy: HomeMarketingCopy }) {
+  const capital = capitalPresentation(listing);
   return (
     <div className="overflow-hidden rounded-xl border border-white/14 bg-white text-ink shadow-2xl shadow-black/25">
       <div className="bg-gradient-to-br from-ink to-navy p-5 text-white">
         <div className="flex flex-wrap items-center justify-between gap-3">
-          <p className="eyebrow text-gold">Featured opportunity briefing</p>
+          <p className="eyebrow text-gold">{copy.featured}</p>
           <span className="text-xs font-semibold text-white/70">{listing.flag} {listing.country}</span>
         </div>
         <h2 className="mt-5 max-w-md font-display text-xl font-bold leading-snug text-white">{listing.title}</h2>
-        <p className="mt-3 text-xs leading-5 text-white/65">{listing.sector} · Public teaser</p>
+        <p className="mt-3 text-xs leading-5 text-white/65">{listing.sector} · {copy.publicTeaser}</p>
       </div>
       <div className="grid grid-cols-2 border-b border-ink/10">
         <div className="border-r border-ink/10 p-4">
-          <p className="text-[10px] font-bold uppercase tracking-wider text-slate">Capital sought</p>
-          <p className="mt-1 font-display text-2xl font-extrabold">{fmtUsd(listing.raiseUsd)}</p>
+          <p className="text-xs font-bold text-slate">{capital.includeInProjectTotal ? copy.capitalSought : capital.label}</p>
+          <p className="mt-1 font-display text-2xl font-extrabold">{capital.value}</p>
         </div>
         <div className="p-4">
-          <p className="text-[10px] font-bold uppercase tracking-wider text-slate">Project stage</p>
+          <p className="text-[10px] font-bold uppercase tracking-wider text-slate">{copy.projectStage}</p>
           <p className="mt-2 text-sm font-semibold">{listing.stage}</p>
         </div>
       </div>
       <div className="grid gap-3 p-4 text-xs sm:grid-cols-2">
         <div>
-          <p className="text-slate">Sector</p>
+          <p className="text-slate">{copy.sector}</p>
           <p className="mt-1 font-semibold">{listing.sector}</p>
         </div>
         <div>
-          <p className="text-slate">Location</p>
+          <p className="text-slate">{copy.location}</p>
           <p className="mt-1 font-semibold">{listing.country}</p>
         </div>
         <div>
-          <p className="text-slate">Disclosure</p>
-          <div className="mt-1"><DisclosureChip tone="pending">Sponsor-provided</DisclosureChip></div>
+          <p className="text-slate">{copy.disclosure}</p>
+          <div className="mt-1"><DisclosureChip tone="pending">{copy.sponsorProvided}</DisclosureChip></div>
         </div>
         <div>
-          <p className="text-slate">Data room</p>
-          <div className="mt-1"><DisclosureChip tone="restricted">Readiness not public</DisclosureChip></div>
+          <p className="text-slate">{copy.dataRoom}</p>
+          <div className="mt-1"><DisclosureChip tone="restricted">{copy.readinessNotPublic}</DisclosureChip></div>
         </div>
       </div>
       <div className="border-t border-ink/10 px-4 py-3">
         <Link href={`/project/${listing.id}`} className="inline-flex min-h-11 items-center text-xs font-bold text-ink hover:text-gold">
-          Review opportunity →
+          {copy.reviewOpportunity} →
         </Link>
       </div>
     </div>
@@ -106,6 +74,7 @@ function FeaturedBrief({ listing }: { listing: Listing }) {
 export default async function Home() {
   const user = await getSessionUser();
   const locale = await getLocale();
+  const copy = getMarketingCopy(locale, "home");
   const rows = await prisma.listing.findMany({
     include: { org: true, images: true },
     orderBy: { updatedAt: "desc" },
@@ -113,7 +82,10 @@ export default async function Home() {
   });
   const listings = rows.length > 0 ? rows.map(toListing) : sourceListings;
   const featured = listings.slice(0, 6);
-  const totalCapital = featured.reduce((sum, listing) => sum + listing.raiseUsd, 0);
+  const totalProjectCapital = featured.reduce(
+    (sum, listing) => sum + (capitalPresentation(listing).includeInProjectTotal ? listing.raiseUsd : 0),
+    0,
+  );
 
   return (
     <>
@@ -137,7 +109,7 @@ export default async function Home() {
                   {t(locale, "home.diligence")}
                 </Link>
               </div>
-              <FeaturedBrief listing={featured[0]} />
+              <FeaturedBrief listing={featured[0]} copy={copy} />
             </div>
           </section>
 
@@ -148,9 +120,7 @@ export default async function Home() {
                   <p className="eyebrow text-teal">{t(locale, "nav.forInvestors")}</p>
                   <h2 className="editorial-heading mt-4 text-3xl text-ink">{t(locale, "home.investorTitle")}</h2>
                   <ul className="mt-5 space-y-2 text-sm text-slate">
-                    <li>Review structured public opportunities</li>
-                    <li>Match opportunities against your mandate</li>
-                    <li>Request deeper diligence only when justified</li>
+                    {copy.investorBenefits.map((item) => <li key={item}>{item}</li>)}
                   </ul>
                   <Link href="/investors" className="button-secondary mt-7">{t(locale, "home.investorCta")}</Link>
                 </article>
@@ -158,9 +128,7 @@ export default async function Home() {
                   <p className="eyebrow text-gold">{t(locale, "nav.forOwners")}</p>
                   <h2 className="editorial-heading mt-4 text-3xl text-ink">{t(locale, "home.sponsorTitle")}</h2>
                   <ul className="mt-5 space-y-2 text-sm text-slate">
-                    <li>Prepare a sponsor-ready listing</li>
-                    <li>Control confidential information access</li>
-                    <li>Coordinate qualified investor engagement</li>
+                    {copy.sponsorBenefits.map((item) => <li key={item}>{item}</li>)}
                   </ul>
                   <Link href="/sponsors" className="button-secondary mt-7">{t(locale, "home.sponsorCta")}</Link>
                 </article>
@@ -193,9 +161,9 @@ export default async function Home() {
               body={t(locale, "home.opportunitiesBody")}
             />
             <div className="shrink-0 border-l border-gold pl-5">
-              <p className="font-display text-2xl font-extrabold text-ink">{fmtUsd(totalCapital)}</p>
-              <p className="mt-1 text-[10px] font-bold uppercase tracking-wider text-slate">Capital represented in displayed teasers</p>
-              <p className="mt-1 text-[10px] text-slate">Sponsor-provided figures</p>
+              <p className="font-display text-2xl font-extrabold text-ink">{fmtUsd(totalProjectCapital)}</p>
+              <p className="mt-1 text-xs font-bold text-slate">{copy.capitalRepresented}</p>
+              <p className="mt-1 text-xs text-slate">{copy.sponsorFigures}</p>
             </div>
           </div>
 
@@ -216,50 +184,50 @@ export default async function Home() {
           <section className="bg-ivory py-14 lg:py-18" id="how-it-works">
             <div className="public-container">
               <SectionHeading
-                eyebrow="Investor diligence pathway"
-                title="A controlled path from screening to deeper review."
-                body="DESCO Nexus supports screening, information exchange and engagement. Investors remain responsible for their own legal, financial, technical and commercial due diligence."
+                eyebrow={copy.processEyebrow}
+                title={copy.processTitle}
+                body={copy.processBody}
               />
-              <div className="mt-9"><NumberedProcess items={INVESTOR_PROCESS} /></div>
-              <div className="mt-7"><Link href="/diligence" className="button-secondary">Review the full diligence process</Link></div>
+              <div className="mt-9"><NumberedProcess items={copy.process} /></div>
+              <div className="mt-7"><Link href="/diligence" className="button-secondary">{copy.processCta}</Link></div>
             </div>
           </section>
 
           <section className="bg-white py-14 lg:py-18" id="trust">
             <div className="public-container">
               <SectionHeading
-                eyebrow="Trust and disclosure"
-                title="Controls described by what they actually do."
-                body="The platform distinguishes public, sponsor-provided, DESCO-reviewed, restricted and independently verified information. No status is an investment endorsement."
+                eyebrow={copy.trustEyebrow}
+                title={copy.trustTitle}
+                body={copy.trustBody}
               />
               <div className="mt-9 grid gap-4 md:grid-cols-2 lg:grid-cols-5">
-                {TRUST_CONTROLS.map((control) => (
+                {copy.controls.map((control) => (
                   <InstitutionalCard key={control.title} title={control.title} body={control.body} />
                 ))}
               </div>
               <div className="mt-8">
                 <QuietNotice>
-                  DESCO Nexus does not claim AML or KYC completion, SOC 2 certification, GDPR compliance, government approval, guaranteed returns or independent project verification unless expressly supported by approved evidence.
+                  {copy.trustNotice}
                 </QuietNotice>
               </div>
-              <Link href="/trust" className="button-secondary mt-7">Read the disclosure framework</Link>
+              <Link href="/trust" className="button-secondary mt-7">{copy.trustCta}</Link>
             </div>
           </section>
 
           <section className="bg-ink py-14 text-white lg:py-18">
             <div className="public-container grid gap-10 lg:grid-cols-[1fr_auto] lg:items-end">
               <div>
-                <p className="eyebrow text-gold">Choose your next step</p>
+                <p className="eyebrow text-gold">{copy.nextEyebrow}</p>
                 <h2 className="editorial-heading mt-4 max-w-3xl text-3xl text-white lg:text-4xl">
-                  Review opportunities or prepare a project for institutional screening.
+                  {copy.nextTitle}
                 </h2>
                 <p className="mt-4 max-w-2xl text-sm leading-7 text-white/62">
-                  Investor and sponsor journeys remain distinct through screening, access decisions and engagement.
+                  {copy.nextBody}
                 </p>
               </div>
               <div className="flex flex-wrap gap-3">
-                <Link href="/opportunities" className="button-primary">Review opportunities</Link>
-                <Link href="/sponsors" className="button-on-dark">Prepare a project</Link>
+                <Link href="/opportunities" className="button-primary">{copy.reviewCta}</Link>
+                <Link href="/sponsors" className="button-on-dark">{copy.prepareCta}</Link>
               </div>
             </div>
           </section>

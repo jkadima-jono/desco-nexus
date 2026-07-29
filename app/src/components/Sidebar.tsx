@@ -5,6 +5,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { useCallback, useRef, useState } from "react";
 import { useI18n } from "./I18nProvider";
 import LanguageSwitcher from "./LanguageSwitcher";
+import { sharedCopy } from "@/lib/translations/shared";
 import NotificationBell from "./NotificationBell";
 import { useModalFocus } from "./useModalFocus";
 
@@ -70,7 +71,8 @@ type SidebarUser = { fullName: string; title: string | null; role?: string } | n
 export default function Sidebar({ user }: { user: SidebarUser }) {
   const pathname = usePathname();
   const router = useRouter();
-  const { t } = useI18n();
+  const { locale, t } = useI18n();
+  const copy = sharedCopy(locale);
   const [mobileOpen, setMobileOpen] = useState(false);
   const menuButtonRef = useRef<HTMLButtonElement>(null);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
@@ -107,7 +109,7 @@ export default function Sidebar({ user }: { user: SidebarUser }) {
       <nav aria-label="Workspace navigation" className="min-h-0 flex-1 overflow-y-auto px-3 pb-3">
         {navGroups.map((group, groupIndex) => (
           <div key={group.labelKey} className={groupIndex > 0 ? "mt-5 border-t border-white/8 pt-4" : ""}>
-            <p className="mb-1 px-3 text-[9px] font-bold uppercase tracking-[0.16em] text-white/38">
+            <p className="mb-1 px-3 text-xs font-bold uppercase tracking-[0.14em] text-white/65">
               {t(group.labelKey)}
             </p>
             <div className="space-y-1">
@@ -130,7 +132,7 @@ export default function Sidebar({ user }: { user: SidebarUser }) {
             <div className="w-9 h-9 rounded-full bg-gold text-ink font-display font-bold flex items-center justify-center">{user.fullName.charAt(0)}</div>
             <div className="min-w-0 flex-1"><div className="text-sm font-semibold truncate">{user.fullName}</div><div className="text-[11px] text-gold truncate">✓ {user.title ?? t("nav.member")}</div></div>
             <NotificationBell />
-            <button onClick={logout} className="text-[11px] text-white/60 hover:text-white" aria-label="Sign out">⎋</button>
+            <button onClick={logout} className="text-[11px] text-white/60 hover:text-white" aria-label={copy.signOut}>⎋</button>
           </div>
         ) : (
           <div className="space-y-2">
@@ -149,12 +151,12 @@ export default function Sidebar({ user }: { user: SidebarUser }) {
       </aside>
       <header className="lg:hidden fixed inset-x-0 top-0 z-40 h-16 bg-ink text-white flex items-center justify-between px-4 shadow-lg">
         <Link href="/" className="font-display font-extrabold">DESCO <span className="text-gold">Nexus</span></Link>
-        <button ref={menuButtonRef} type="button" onClick={() => setMobileOpen(true)} aria-expanded={mobileOpen} aria-controls="mobile-navigation" className="min-w-11 min-h-11 rounded-xl border border-white/20 text-xl" aria-label="Open navigation">☰</button>
+        <button ref={menuButtonRef} type="button" onClick={() => setMobileOpen(true)} aria-expanded={mobileOpen} aria-controls="mobile-navigation" className="min-w-11 min-h-11 rounded-xl border border-white/20 text-xl" aria-label={t("nav.open")}>☰</button>
       </header>
       {mobileOpen && (
         <div className="lg:hidden fixed inset-0 z-50 bg-black/50" role="presentation" onClick={() => setMobileOpen(false)}>
-          <aside ref={mobileNavigationRef} id="mobile-navigation" role="dialog" aria-modal="true" aria-label="Workspace navigation" tabIndex={-1} className="relative h-full w-full overflow-hidden bg-ink text-white flex flex-col shadow-2xl sm:w-80" onClick={(e) => e.stopPropagation()}>
-            <button ref={closeButtonRef} type="button" onClick={() => setMobileOpen(false)} className="absolute z-10 top-3 right-3 min-w-11 min-h-11 rounded-xl text-2xl text-white hover:bg-white/10" aria-label="Close navigation">×</button>
+          <aside ref={mobileNavigationRef} id="mobile-navigation" role="dialog" aria-modal="true" aria-label={copy.workspaceNavigation} tabIndex={-1} className="relative h-full w-full overflow-hidden bg-ink text-white flex flex-col shadow-2xl sm:w-80" onClick={(e) => e.stopPropagation()}>
+            <button ref={closeButtonRef} type="button" onClick={() => setMobileOpen(false)} className="absolute z-10 top-3 right-3 min-w-11 min-h-11 rounded-xl text-2xl text-white hover:bg-white/10" aria-label={t("nav.close")}>×</button>
             {navigation}
           </aside>
         </div>

@@ -9,29 +9,15 @@ import {
   SectionHeading,
 } from "@/components/public/PublicPrimitives";
 import { getLocale } from "@/lib/i18n-server";
-import { getPublicHero } from "@/lib/public-copy";
+import { getMarketingCopy, getMarketingMetadata } from "@/lib/translations/marketing";
 
-export const metadata: Metadata = {
-  title: "For project sponsors — DESCO Nexus",
-  description: "Prepare a structured project listing and manage controlled investor diligence.",
-};
-
-const READINESS = [
-  "Sponsor information", "Project structure", "Market case", "Technical readiness", "Financial model",
-  "Legal and regulatory position", "Land and permits", "ESG and community", "Risk disclosure", "Supporting documents",
-];
-
-const PROCESS = [
-  { title: "Assess readiness", body: "Identify gaps across sponsor, project, market, financial, legal, ESG and document information." },
-  { title: "Prepare structured information", body: "Turn fragmented material into consistent fields, evidence references and clear disclosure." },
-  { title: "Complete DESCO review", body: "Resolve completeness and internal-consistency questions before publication." },
-  { title: "Publish a public teaser", body: "Provide enough public value for investors to screen without exposing restricted material." },
-  { title: "Review access requests", body: "Approve or decline qualified users and retain control over confidential information." },
-  { title: "Coordinate engagement", body: "Manage meetings, documents, messages and next steps through the workspace." },
-];
+export async function generateMetadata(): Promise<Metadata> {
+  return getMarketingMetadata(await getLocale(), "sponsors");
+}
 
 export default async function SponsorsPage() {
-  const hero = getPublicHero(await getLocale(), "sponsors");
+  const copy = getMarketingCopy(await getLocale(), "sponsors");
+  const hero = copy.hero;
   return (
     <>
       <PageHero
@@ -43,15 +29,15 @@ export default async function SponsorsPage() {
         aside={
           <div className="briefing-card">
             <div className="flex items-center justify-between">
-              <p className="eyebrow text-gold">Readiness framework</p>
-              <DisclosureChip tone="pending">Under review</DisclosureChip>
+              <p className="eyebrow text-gold">{copy.framework}</p>
+              <DisclosureChip tone="pending">{copy.underReview}</DisclosureChip>
             </div>
             <div className="mt-5 space-y-3">
-              {READINESS.slice(0, 6).map((item) => (
+              {copy.readiness.slice(0, 6).map((item) => (
                 <div key={item} className="flex items-center gap-3 border-b border-ink/8 pb-3 text-sm">
                   <span aria-hidden="true" className="grid h-5 w-5 place-items-center rounded-full border border-teal/35 text-[10px] text-teal">✓</span>
                   <span>{item}</span>
-                  <span className="ml-auto text-[10px] uppercase tracking-wider text-slate">Required</span>
+                  <span className="ml-auto text-[10px] uppercase tracking-wider text-slate">{copy.required}</span>
                 </div>
               ))}
             </div>
@@ -61,16 +47,16 @@ export default async function SponsorsPage() {
       <section className="bg-ivory py-14 lg:py-18">
         <div className="public-container">
           <SectionHeading
-            eyebrow="Sponsor transformation"
-            title="Structure the public case, then control the deeper review."
-            body="The sponsor route covers readiness, submission, disclosure, listing preparation, confidential documents, access decisions and investor engagement."
+            eyebrow={copy.sectionEyebrow}
+            title={copy.sectionTitle}
+            body={copy.sectionBody}
           />
           <div className="mt-8 grid gap-4 md:grid-cols-2 lg:grid-cols-5">
-            {READINESS.map((item) => <InstitutionalCard key={item} title={item} />)}
+            {copy.readiness.map((item) => <InstitutionalCard key={item} title={item} />)}
           </div>
-          <div className="mt-10"><NumberedProcess items={PROCESS} /></div>
-          <div className="mt-8"><QuietNotice>DESCO review addresses structure, completeness and internal consistency. It does not constitute legal approval, project endorsement or independent investment verification.</QuietNotice></div>
-          <Link href="/submit-project" className="button-primary mt-8">Start a structured submission</Link>
+          <div className="mt-10"><NumberedProcess items={copy.process} /></div>
+          <div className="mt-8"><QuietNotice>{copy.notice}</QuietNotice></div>
+          <Link href="/submit-project" className="button-primary mt-8">{copy.startCta}</Link>
         </div>
       </section>
     </>

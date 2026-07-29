@@ -9,6 +9,7 @@ import { getLocale } from "@/lib/i18n-server";
 import { I18nProvider } from "@/components/I18nProvider";
 import { t } from "@/lib/i18n";
 import ProductAnalytics from "@/components/ProductAnalytics";
+import { sharedCopy } from "@/lib/translations/shared";
 
 const montserrat = Montserrat({
   subsets: ["latin"],
@@ -50,10 +51,11 @@ export default async function RootLayout({
 }: Readonly<{ children: React.ReactNode }>) {
   const user = await getSessionUser();
   const locale = await getLocale();
+  const copy = sharedCopy(locale);
   return (
     <html lang={locale}>
       <body className={`${montserrat.variable} ${openSans.variable} ${playfair.variable} min-h-screen`}>
-        <a href="#main-content" className="skip-link">Skip to main content</a>
+        <a href="#main-content" className="skip-link">{copy.skipToContent}</a>
         <I18nProvider locale={locale}>
         <ProductAnalytics />
         <div className={user ? "flex min-h-screen" : "min-h-screen"}>

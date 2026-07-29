@@ -3,12 +3,16 @@ import { prisma } from "@/lib/db";
 import { fmtUsd } from "@/lib/data";
 import CompareExportButton from "./CompareExportButton";
 import { getInvestmentEvidence, normalizeStage } from "@/lib/investment-evidence";
+import type { Metadata } from "next";
+import { getLocale } from "@/lib/i18n-server";
+import { investmentUi } from "@/lib/translations/investment-ui";
+import { localizeInvestmentEvidence, localizeListing } from "@/lib/translations/listing-content";
 
 export const dynamic = "force-dynamic";
 
-export const metadata = {
-  title: "Compare Opportunities — DESCO Nexus",
-};
+export async function generateMetadata(): Promise<Metadata> {
+  return { title: investmentUi(await getLocale()).compare.metadataTitle };
+}
 
 const NOT_DISCLOSED = "Not disclosed";
 
@@ -49,53 +53,66 @@ export default async function ComparePage({
   searchParams: Promise<{ ids?: string | string[] }>;
 }) {
   const { ids: idsParam } = await searchParams;
+  const locale = await getLocale();
+  const ui = investmentUi(locale).compare;
   const rawIds = Array.isArray(idsParam) ? idsParam : (idsParam || "").split(",");
   const ids = rawIds.map((s) => s.trim()).filter(Boolean).slice(0, 4);
-  const listings = await getListings(ids);
+  const rawListings = await getListings(ids);
+  const listings = rawListings.map((listing) => localizeListing({ ...listing, org: listing.org.name, sectorColor: "", docs: [], flag: listing.flag, scores: { match: 0, readiness: 0, esg: 0, risk: 0 }, summary: listing.summary, highlights: JSON.parse(listing.highlights) as string[], whyMatch: listing.whyMatch, photos: [] }, locale));
+  const comparisonRows = ROWS.map((row) => ({
+    label: ui.rows[row.label] ?? row.label,
+    values: listings.map((listing) => {
+      const value = row.value(rawListings.find((item) => item.id === listing.id)!);
+      if (value === NOT_DISCLOSED) return ui.notDisclosed;
+      if (row.label === "Instrument") return listing.instrument;
+      if (row.label === "Geography") return `${listing.flag} ${listing.country}`;
+      if (row.label === "Stage") return listing.stage;
+      if (row.label === "Return information") return listing.irr;
+      if (row.label === "Evidence source date") return localizeInvestmentEvidence(getInvestmentEvidence(listing), locale).provenance.sourceDate;
+      return value;
+    }),
+  }));
 
   return (
     <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 lg:py-10">
       <div className="flex items-center justify-between flex-wrap gap-3">
         <div>
-          <h1 className="font-display font-extrabold text-2xl tracking-tight">Compare Opportunities</h1>
+          <h1 className="font-display font-extrabold text-2xl tracking-tight">{ui.title}</h1>
           <p className="text-wgray text-sm mt-1 max-w-2xl">
-            Side-by-side data only. Nexus does not recommend an investment or
-            rank these opportunities against each other — review all fields,
-            including any marked &quot;{NOT_DISCLOSED}&quot;, before deciding.
+            {ui.intro(ui.notDisclosed)}
           </p>
         </div>
         <div className="flex gap-2">
-          <CompareExportButton listings={listings} rows={ROWS.map((r) => r.label)} />
-          <Link href="/saved" className="text-xs font-bold bg-mist px-4 py-2 rounded-lg self-start">Back to saved</Link>
+          <CompareExportButton titles={listings.map((listing) => listing.title)} rows={comparisonRows} label={ui.exportCsv} />
+          <Link href="/saved" className="text-xs font-bold bg-mist px-4 py-2 rounded-lg self-start">{ui.back}</Link>
         </div>
       </div>
 
       {listings.length === 0 ? (
         <div className="bg-white rounded-2xl p-10 text-center border border-charcoal/10 mt-6">
-          <p className="text-sm text-wgray">No opportunities selected. Go back to Saved and pick at least one to compare.</p>
+          <p className="text-sm text-wgray">{ui.none}</p>
         </div>
       ) : (
         <div className="mt-6 overflow-x-auto">
           <table className="w-full text-sm border-collapse min-w-[640px]">
             <thead>
               <tr>
-                <th className="text-left p-3 border-b border-charcoal/10 text-[10px] font-bold uppercase tracking-wider text-wgray w-40">Field</th>
+                <th className="text-left p-3 border-b border-charcoal/10 text-[10px] font-bold uppercase tracking-wider text-wgray w-40">{ui.field}</th>
                 {listings.map((l) => (
                   <th key={l.id} className="text-left p-3 border-b border-charcoal/10">
                     <Link href={"/project/" + l.id} className="font-display font-bold hover:underline">{l.title}</Link>
-                    <div className="text-[11px] text-wgray font-normal">{l.org.name}</div>
+                    <div className="text-[11px] text-wgray font-normal">{l.org}</div>
                   </th>
                 ))}
               </tr>
             </thead>
             <tbody>
-              {ROWS.map((row) => (
+              {comparisonRows.map((row) => (
                 <tr key={row.label}>
                   <td className="p-3 border-b border-charcoal/5 text-xs font-bold text-wgray align-top">{row.label}</td>
-                  {listings.map((l) => {
-                    const v = row.value(l);
+                  {row.values.map((v, index) => {
                     return (
-                      <td key={l.id} className={"p-3 border-b border-charcoal/5 align-top " + (v === NOT_DISCLOSED ? "text-wgray italic" : "")}>
+                      <td key={listings[index].id} className={"p-3 border-b border-charcoal/5 align-top " + (v === ui.notDisclosed ? "text-wgray italic" : "")}>
                         {v}
                       </td>
                     );
@@ -103,12 +120,13 @@ export default async function ComparePage({
                 </tr>
               ))}
               <tr>
-                <td className="p-3 text-xs font-bold text-wgray align-top">Missing data</td>
+                <td className="p-3 text-xs font-bold text-wgray align-top">{ui.missing}</td>
                 {listings.map((l) => {
-                  const missing = ROWS.filter((r) => r.value(l) === NOT_DISCLOSED).map((r) => r.label);
+                  const sourceListing = rawListings.find((item) => item.id === l.id)!;
+                  const missing = ROWS.filter((r) => r.value(sourceListing) === NOT_DISCLOSED).map((r) => ui.rows[r.label] ?? r.label);
                   return (
                     <td key={l.id} className="p-3 align-top text-xs text-wgray">
-                      {missing.length > 0 ? missing.join(", ") : "None — all fields disclosed"}
+                      {missing.length > 0 ? missing.join(", ") : ui.noneMissing}
                     </td>
                   );
                 })}

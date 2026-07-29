@@ -3,7 +3,7 @@ import type { Pillar } from "@/lib/pillars";
 import { pillarIcon } from "@/lib/theme";
 import Reveal from "./Reveal";
 
-export default function PillarCard({ pillar, index = 0 }: { pillar: Pillar; index?: number }) {
+export default function PillarCard({ pillar, index = 0, learnMore = "Learn more" }: { pillar: Pillar; index?: number; learnMore?: string }) {
   return (
     <Reveal delay={index * 60}>
       <Link
@@ -24,7 +24,7 @@ export default function PillarCard({ pillar, index = 0 }: { pillar: Pillar; inde
         <h3 className="font-display font-bold text-lg mb-1.5">{pillar.name}</h3>
         <p className="text-sm text-wgray leading-relaxed mb-4">{pillar.tagline}</p>
         <span className="text-xs font-bold uppercase tracking-wider text-gold group-hover:underline">
-          Learn more →
+          {learnMore} →
         </span>
       </Link>
     </Reveal>

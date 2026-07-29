@@ -1,18 +1,20 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import ProjectCard from "@/components/ProjectCard";
 import { PageHero, QuietNotice, SectionHeading } from "@/components/public/PublicPrimitives";
 import { prisma, toListing } from "@/lib/db";
 import { listings as sourceListings } from "@/lib/data";
 import { getLocale } from "@/lib/i18n-server";
 import { getPublicHero } from "@/lib/public-copy";
+import ComparisonGrid from "./ComparisonGrid";
+import { investmentUi } from "@/lib/translations/investment-ui";
+import { localizeListing } from "@/lib/translations/listing-content";
 
 export const dynamic = "force-dynamic";
 
-export const metadata: Metadata = {
-  title: "Opportunities — DESCO Nexus",
-  description: "Review structured African investment opportunity teasers by sector, geography, stage, instrument and capital requirement.",
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const ui = investmentUi(await getLocale());
+  return { title: ui.opportunities.metadataTitle, description: ui.opportunities.metadataDescription };
+}
 
 type Params = {
   sector?: string;
@@ -63,7 +65,9 @@ function matchesUpdated(value: Date | undefined, band: string) {
 
 export default async function Opportunities({ searchParams }: { searchParams: Promise<Params> }) {
   const params = await searchParams;
-  const hero = getPublicHero(await getLocale(), "opportunities");
+  const locale = await getLocale();
+  const hero = getPublicHero(locale, "opportunities");
+  const ui = investmentUi(locale).opportunities;
   const {
     sector = "All",
     country = "All",
@@ -81,7 +85,7 @@ export default async function Opportunities({ searchParams }: { searchParams: Pr
     include: { org: true, images: true, docs: true },
     orderBy: { updatedAt: "desc" },
   });
-  const allListings = rows.length > 0 ? rows.map(toListing) : sourceListings;
+  const allListings = (rows.length > 0 ? rows.map(toListing) : sourceListings).map((listing) => localizeListing(listing, locale));
   const sectors = optionValues(allListings.map((item) => item.sector));
   const countries = optionValues(allListings.map((item) => item.country));
   const stages = optionValues(allListings.map((item) => item.stage));
@@ -120,9 +124,9 @@ export default async function Opportunities({ searchParams }: { searchParams: Pr
         secondary={{ href: "/diligence", label: hero.secondary }}
         aside={
           <div className="analytical-panel p-6 text-ink">
-            <p className="eyebrow text-teal">Screening principle</p>
-            <p className="mt-4 font-serif text-2xl leading-tight">Public value before gated diligence.</p>
-            <p className="mt-4 text-sm leading-6 text-slate">Missing disclosure remains visible and should influence whether deeper review is warranted.</p>
+            <p className="eyebrow text-teal">{ui.screeningPrinciple}</p>
+            <p className="mt-4 font-serif text-2xl leading-tight">{ui.screeningTitle}</p>
+            <p className="mt-4 text-sm leading-6 text-slate">{ui.screeningBody}</p>
           </div>
         }
       />
@@ -130,99 +134,83 @@ export default async function Opportunities({ searchParams }: { searchParams: Pr
       <section className="bg-ivory py-12 lg:py-16" aria-labelledby="opportunity-results">
         <div className="public-container">
           <SectionHeading
-            eyebrow="Browse and compare"
-            title={`${listings.length} public ${listings.length === 1 ? "opportunity" : "opportunities"}`}
-            body="Figures and project claims remain sponsor-provided unless a module expressly identifies reviewed or independently verified evidence."
+            eyebrow={ui.browse}
+            title={ui.result(listings.length)}
+            body={ui.disclosureBody}
           />
 
-          <form method="get" className="mt-8 rounded-lg border border-ink/10 bg-white p-4" aria-label="Filter opportunities">
+          <form method="get" className="mt-8 rounded-lg border border-ink/10 bg-white p-4" aria-label={ui.filterLabel}>
             <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
               {[
-                ["sector", "Sector", sector, sectors],
-                ["country", "Geography", country, countries],
-                ["stage", "Project stage", stage, stages],
-                ["instrument", "Instrument", instrument, instruments],
-                ["sponsor", "Sponsor", sponsor, sponsors],
+                ["sector", ui.sector, sector, sectors],
+                ["country", ui.geography, country, countries],
+                ["stage", ui.stage, stage, stages],
+                ["instrument", ui.instrument, instrument, instruments],
+                ["sponsor", ui.sponsor, sponsor, sponsors],
               ].map(([name, label, value, options]) => (
                 <label key={name as string}>
                   <span className={labelClass}>{label as string}</span>
                   <select name={name as string} defaultValue={value as string} className={selectClass}>
-                    {(options as string[]).map((option) => <option key={option}>{option}</option>)}
+                    {(options as string[]).map((option) => <option key={option} value={option}>{option === "All" ? ui.all : option}</option>)}
                   </select>
                 </label>
               ))}
               <label>
-                <span className={labelClass}>Capital requirement</span>
+                <span className={labelClass}>{ui.capital}</span>
                 <select name="capital" defaultValue={capital} className={selectClass}>
-                  <option value="All">All sizes</option>
-                  <option value="under-10">Under $10M</option>
+                  <option value="All">{ui.allSizes}</option>
+                  <option value="under-10">{ui.under10}</option>
                   <option value="10-50">$10M–$50M</option>
                   <option value="50-100">$50M–$100M</option>
                   <option value="100-plus">$100M+</option>
                 </select>
               </label>
               <label>
-                <span className={labelClass}>Evidence review</span>
+                <span className={labelClass}>{ui.evidence}</span>
                 <select name="disclosure" defaultValue={disclosure} className={selectClass}>
-                  <option value="All">All statuses</option>
-                  <option value="pending">Review pending</option>
-                  <option value="reviewed">Evidence review recorded</option>
+                  <option value="All">{ui.allStatuses}</option>
+                  <option value="pending">{ui.pending}</option>
+                  <option value="reviewed">{ui.reviewed}</option>
                 </select>
               </label>
               <label>
-                <span className={labelClass}>Data-room readiness</span>
+                <span className={labelClass}>{ui.roomReadiness}</span>
                 <select name="dataroom" defaultValue={dataroom} className={selectClass}>
-                  <option value="All">All statuses</option>
-                  <option value="prepared">Documents recorded</option>
-                  <option value="not-publicly-confirmed">Not publicly confirmed</option>
+                  <option value="All">{ui.allStatuses}</option>
+                  <option value="prepared">{ui.documentsRecorded}</option>
+                  <option value="not-publicly-confirmed">{ui.notConfirmed}</option>
                 </select>
               </label>
               <label>
-                <span className={labelClass}>Last updated</span>
+                <span className={labelClass}>{ui.updated}</span>
                 <select name="updated" defaultValue={updated} className={selectClass}>
-                  <option value="All">Any date</option>
-                  <option value="30">Past 30 days</option>
-                  <option value="90">Past 90 days</option>
-                  <option value="older">More than 90 days ago</option>
+                  <option value="All">{ui.anyDate}</option>
+                  <option value="30">{ui.past30}</option>
+                  <option value="90">{ui.past90}</option>
+                  <option value="older">{ui.older90}</option>
                 </select>
               </label>
               <label>
-                <span className={labelClass}>Sort</span>
+                <span className={labelClass}>{ui.sort}</span>
                 <select name="sort" defaultValue={sort} className={selectClass}>
-                  <option value="latest">Latest listed</option>
-                  <option value="updated">Recently updated</option>
-                  <option value="capital">Capital size</option>
-                  <option value="stage">Project stage</option>
+                  <option value="latest">{ui.latest}</option>
+                  <option value="updated">{ui.recentlyUpdated}</option>
+                  <option value="capital">{ui.capitalSize}</option>
+                  <option value="stage">{ui.stage}</option>
                 </select>
               </label>
             </div>
             <div className="mt-4 flex flex-wrap gap-3">
-              <button className="button-primary" type="submit">Apply filters</button>
-              <Link href="/opportunities" className="button-secondary">Clear filters</Link>
+              <button className="button-primary" type="submit">{ui.apply}</button>
+              <Link href="/opportunities" className="button-secondary">{ui.clear}</Link>
             </div>
           </form>
 
-          <form action="/saved/compare" method="get" className="mt-7">
-            <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
-              <p id="opportunity-results" className="text-sm text-slate">Select up to four opportunities for a field-by-field comparison.</p>
-              <button type="submit" className="button-secondary">Compare selected</button>
-            </div>
-            <div className="grid gap-5 lg:grid-cols-2">
-              {listings.map((listing, index) => (
-                <div key={listing.id} className="relative">
-                  <label className="absolute right-3 top-3 z-10 flex min-h-11 cursor-pointer items-center gap-2 rounded-md bg-white/95 px-3 text-xs font-bold text-ink shadow">
-                    <input type="checkbox" name="ids" value={listing.id} className="h-4 w-4 accent-gold" />
-                    Compare
-                  </label>
-                  <ProjectCard listing={listing} index={index} />
-                </div>
-              ))}
-            </div>
-          </form>
+          <ComparisonGrid listings={listings} locale={locale} />
 
           {listings.length === 0 && (
             <div className="mt-7">
-              <QuietNotice>No public opportunity currently matches these filters. Clear one or more criteria to broaden the screening set.</QuietNotice>
+              <QuietNotice>{ui.empty}</QuietNotice>
             </div>
           )}
         </div>

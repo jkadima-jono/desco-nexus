@@ -21,7 +21,7 @@ export function PageHero({
     <header className="institutional-hero">
       <div className="public-container grid gap-10 py-14 lg:grid-cols-[minmax(0,1.15fr)_minmax(19rem,.85fr)] lg:items-center lg:py-20">
         <div>
-          <nav aria-label="Breadcrumb" className="mb-7 flex items-center gap-2 text-[11px] font-semibold text-white/48">
+          <nav aria-label={eyebrow} className="mb-7 flex items-center gap-2 text-xs font-semibold text-white/65">
             <LocalizedHomeLink />
             <span aria-hidden="true">/</span>
             <span aria-current="page" className="text-white/72">{eyebrow}</span>

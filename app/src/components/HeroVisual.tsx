@@ -1,5 +1,7 @@
 import type { Listing } from "@/lib/data";
 import { exampleProjectImages } from "@/lib/example-project-images";
+import type { Locale } from "@/lib/i18n";
+import { investmentUi } from "@/lib/translations/investment-ui";
 
 // Deterministic pattern pick per listing (brand: African-inspired geometric
 // library — circular unity, connected nodes, radial burst).
@@ -60,11 +62,14 @@ export default function HeroVisual({
   listing,
   className = "",
   overlay = true,
+  locale = "en",
 }: {
   listing: Listing;
   className?: string;
   overlay?: boolean;
+  locale?: Locale;
 }) {
+  const ui = investmentUi(locale).images;
   const photo = listing.photos?.[0] ?? exampleProjectImages(listing.id)[0];
   if (photo) {
     return (
@@ -72,7 +77,7 @@ export default function HeroVisual({
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           src={photo.url}
-          alt={photo.caption ?? listing.title}
+          alt=""
           loading="lazy"
           decoding="async"
           width={1200}
@@ -84,7 +89,7 @@ export default function HeroVisual({
         )}
         {photo.isExample && (
           <span className="absolute right-3 top-3 rounded-full bg-ink/85 px-2.5 py-1 text-[9px] font-bold uppercase tracking-[0.12em] text-white">
-            Example visual · replaceable
+            {photo.kind === "regional" ? ui.regional : ui.example}
           </span>
         )}
       </div>

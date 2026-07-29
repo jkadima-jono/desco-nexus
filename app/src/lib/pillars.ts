@@ -29,10 +29,10 @@ export const PILLARS: Pillar[] = [
     slug: "agridesco",
     name: "Agridesco",
     shortName: "Agriculture",
-    tagline: "Cultivating Prosperity — feeding 90M+ people, from subsistence to surplus.",
+    tagline: "Proposed agricultural production, processing and market-access programme.",
     color: pillarColor("agridesco"),
     summary:
-      "Agridesco develops large-scale farming cooperatives, processing hubs, and market access across the Grand Kasai region — organizing smallholders into outgrower networks with input credit, shared mechanization, post-harvest storage, and value-add milling.",
+      "Sponsor materials propose farming cooperatives, processing hubs and market-access infrastructure across the Grand Kasai region. Land access, farmer participation, yields, offtake and operating evidence remain subject to diligence.",
     thesis:
       "The Grand Kasai region holds over 15 million hectares of arable land and 1,500mm of annual rainfall, yet the DRC spends an estimated $3.0B a year importing food it could grow domestically. Agridesco exists to close that gap by giving smallholders the processing and market-access infrastructure that converts fertile land into investable, exportable surplus.",
     marketOpportunity:
@@ -60,10 +60,10 @@ export const PILLARS: Pillar[] = [
     slug: "investdesco",
     name: "Investdesco",
     shortName: "Strategic Capital",
-    tagline: "Investing in Tomorrow — capital for sustainable growth.",
+    tagline: "Capital structuring for proposed infrastructure and operating projects.",
     color: pillarColor("investdesco"),
     summary:
-      "Investdesco is Desco Global's strategic financial and infrastructure engine — structuring capital partnerships, joint ventures, and long-term investment vehicles across ports, industrial parks, renewable energy, and the group's mining-development partnerships.",
+      "Sponsor materials describe Investdesco as the proposed capital and infrastructure arm for ports, industrial parks, energy and mining-development partnerships. Project rights, counterparties and financing terms require confirmation.",
     thesis:
       "Frontier real-asset opportunities in the Grand Kasai region fail to attract capital not for lack of resources, but for lack of structure — unclear logistics, informal production, and absent enabling infrastructure. Investdesco absorbs that structuring risk first: securing access, building the port and logistics backbone, then introducing disciplined capital aligned with long-term value creation.",
     marketOpportunity:
@@ -93,10 +93,10 @@ export const PILLARS: Pillar[] = [
     slug: "phardesco",
     name: "Phardesco",
     shortName: "Healthcare",
-    tagline: "Healing with Purpose — healthcare access and clinical quality.",
+    tagline: "Proposed pharmaceutical, diagnostic and community-health services.",
     color: pillarColor("phardesco"),
     summary:
-      "Phardesco (Pharmacies, Développement et Santé du Congo) builds a network of solar-powered Pharmalab Hubs combining pharmaceutical retail, diagnostics, clean-water access, and health education, beginning with a first hub in Mbuji-Mayi, Grand Kasai.",
+      "Sponsor materials propose solar-powered Pharmalab Hubs combining pharmaceutical retail, diagnostics, water access and health education, beginning in Mbuji-Mayi. Licensing, demand, procurement, clinical governance and forecasts remain subject to diligence.",
     thesis:
       "In Kasai, one pharmacist serves more than 50,000 people against a WHO benchmark of 1 per 2,000, and over 80% of the DRC's population lacks regular access to quality medicines. Phardesco closes that gap with an integrated, self-sustaining Pharmalab model rather than a standalone pharmacy chain.",
     marketOpportunity:
@@ -125,10 +125,10 @@ export const PILLARS: Pillar[] = [
     slug: "waterdesco",
     name: "Waterdesco",
     shortName: "Water & Sanitation",
-    tagline: "Pure Life, Sustainable Future.",
+    tagline: "Proposed drinking-water and sanitation infrastructure.",
     color: pillarColor("waterdesco"),
     summary:
-      "Waterdesco secures Africa's future by expanding equitable access to clean drinking water and building resilient sanitation infrastructure — treated by Desco Global as foundational to every other pillar, not an add-on.",
+      "Sponsor materials propose drinking-water and sanitation infrastructure for the Grand Kasai region. Project locations, technical designs, rights, tariffs, funding and delivery plans are not yet publicly evidenced.",
     thesis:
       "\"Water is the foundation of dignity.\" Every other pillar — agriculture, mining, community health — depends on reliable water access. Waterdesco is the infrastructure investment with the widest multiplier effect across the platform.",
     marketOpportunity:

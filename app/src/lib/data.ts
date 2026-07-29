@@ -26,7 +26,13 @@ export type Listing = {
   highlights: string[];
   docs: { name: string; size: string; folder: string }[];
   whyMatch: string;
-  photos?: { id: string; url: string; caption: string | null; isExample?: boolean }[];
+  photos?: {
+    id: string;
+    url: string;
+    caption: string | null;
+    isExample?: boolean;
+    kind?: "example" | "regional";
+  }[];
   // Sponsor-provided financial detail carried from the intake submission.
   // Absent on the static seed literals below; optional on published
   // listings too, since older listings were published before these fields
@@ -39,6 +45,49 @@ export type Listing = {
   // through toListing() from the database.
   updatedAt?: Date;
 };
+
+export type CapitalPresentation = {
+  label: string;
+  value: string;
+  includeInProjectTotal: boolean;
+};
+
+export function capitalPresentation(listing: Pick<Listing, "id" | "raiseUsd">): CapitalPresentation {
+  if (listing.id === "comicordia-agri") {
+    return {
+      label: "Programme allocation, not a project-specific ask",
+      value: fmtUsd(listing.raiseUsd),
+      includeInProjectTotal: false,
+    };
+  }
+  if (listing.raiseUsd <= 0) {
+    return {
+      label: "Capital requirement not publicly disclosed",
+      value: "Not disclosed",
+      includeInProjectTotal: false,
+    };
+  }
+  return {
+    label: "Project capital sought",
+    value: fmtUsd(listing.raiseUsd),
+    includeInProjectTotal: true,
+  };
+}
+
+export function returnPresentation(listing: Pick<Listing, "id" | "irr">) {
+  const labels: Record<string, string> = {
+    "port-de-ndomba": "Programme return target, not a project return",
+    "port-de-kasenga": "Programme return target, not a project return",
+    "comicordia-agri": "Programme return target, not a project return",
+    "manioc-plant": "Sponsor unit-economics illustration",
+    "phardesco-mbuji-mayi": "Sponsor operating forecast",
+    "sciress-kolwezi-12423": "Sponsor return illustration",
+  };
+  return {
+    label: labels[listing.id] ?? "Return information",
+    value: listing.irr,
+  };
+}
 
 // Sourced from Desco Global's own investor deck, business plans and
 // project-folder technical records
@@ -63,7 +112,7 @@ export const listings: Listing[] = [
     stage: "Feasibility reported by sponsor",
     irr: "Part of Desco Global's 17.2% target Phase 1 program IRR",
     summary:
-      "Strategic river gateway on the Kasai River — the central logistics hub connecting the Grand Kasai region to Kinshasa and export markets. Phase 1 (2026–2028): quay wall, dredging, multi-purpose berths, warehousing and silos, fuel & bunkering, customs/compliance, digital smart gate. Phase 2 (2028–2030): adjacent industrial park and agro-processing integration.",
+      "The sponsor proposes a river-port development on the Kasai River intended to connect the Grand Kasai region with Kinshasa and export routes. Proposed works include a quay wall, dredging, berths, warehousing, silos, fuel services, customs facilities and a digital gate. Feasibility, rights, permits, demand, cost and delivery evidence are not publicly disclosed.",
     verified: false,
     governmentBacked: false,
     scores: { match: 91, readiness: 78, esg: 74, risk: 46 },
@@ -89,14 +138,14 @@ export const listings: Listing[] = [
     stage: "Structuring",
     irr: "Part of Desco Global's 17.2% target Phase 1 program IRR",
     summary:
-      "Cross-border trade gateway on Lake Mweru linking Kasai's agricultural surplus to Zambian Copperbelt demand and the Angola corridor. Throughput target 300k tons/year. One-stop-border-post integration targets a 40% reduction in cross-border clearance times.",
+      "The sponsor proposes a Lake Mweru port intended to support trade with Zambia and connections towards Angola. Sponsor targets include annual throughput of 300,000 tonnes and a 40% reduction in border-clearance time; supporting studies are not publicly disclosed.",
     verified: false,
     governmentBacked: false,
     scores: { match: 84, readiness: 63, esg: 71, risk: 52 },
     highlights: [
       "300k tons/year throughput target",
       "Cross-border link to Zambia (Copperbelt) and Angola",
-      "One-stop border post — 40% faster clearance",
+      "Sponsor target: 40% reduction in border-clearance time; supporting study not public",
     ],
     docs: [],
     whyMatch:
@@ -152,7 +201,7 @@ export const listings: Listing[] = [
     ],
     docs: [],
     whyMatch:
-      "High-ESG flagship agri platform anchoring Desco Global's Agridesco pillar and its 90M-person food-security thesis.",
+      "Agriculture opportunity requiring validation of farmer reach, land access, offtake, safeguards and reported impact.",
   },
   {
     id: "manioc-plant",
@@ -165,9 +214,9 @@ export const listings: Listing[] = [
     raiseUsd: 4_483_170,
     instrument: "Equity + equipment finance",
     stage: "Pre-construction",
-    irr: "Illustrative unit economics: ~$15,444/batch on a 2,000kg cassava-leaf input run",
+    irr: "Sponsor model: approximately $15,444 per batch based on a 2,000 kg input; assumptions not independently reviewed",
     summary:
-      "A 4-hectare freeze-drying (lyophilization) facility near Kimwenza station on the Kinshasa–Matadi rail line, sourcing cassava leaf (\"pondu\") from smallholder growers in Mont Ngafula and neighboring Kongo Central. Output is a vacuum-packed powder preserving taste and color for roughly 10 years, sold through a women-led retail and depot network across Kinshasa.",
+      "Sponsor materials describe a proposed four-hectare freeze-drying facility near Kimwenza station, sourcing cassava leaves from growers in Mont Ngafula and Kongo Central. The materials state an approximate ten-year shelf life and propose distribution through retail vendors and depots; product testing, demand and validation evidence are not publicly disclosed.",
     verified: false,
     governmentBacked: false,
     scores: { match: 79, readiness: 74, esg: 81, risk: 39 },
@@ -200,7 +249,7 @@ export const listings: Listing[] = [
     highlights: [
       "First of a planned 10+ hub network (medium-term), 50+ hubs by 2035",
       "Solar-powered, cold-chain capable, GMP-track generic production planned",
-      "Financing partners referenced: IFC, Proparco, AfDB, UNDP",
+      "Potential financing institutions named in sponsor materials; no participation or commitment is confirmed",
     ],
     docs: [],
     whyMatch:

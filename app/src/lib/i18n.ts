@@ -11,9 +11,7 @@ export const LOCALE_LABELS: Record<Locale, string> = {
   zh: "简体中文",
 };
 
-type Dict = Record<string, string>;
-
-const en: Dict = {
+const en = {
   "nav.discover": "Discover",
   "nav.match": "Match",
   "nav.deals": "Deals",
@@ -60,7 +58,8 @@ const en: Dict = {
   "navGroup.tools": "Tools and reference",
   "navGroup.workspace": "Workspace",
   "footer.demo": "DESCO Nexus is a demonstration environment.",
-  "system.demoBanner": "Demo environment · Illustrative accounts and project information · Not an offer or investment recommendation",
+  "system.demoBanner": "Demo environment · Fictional workspace accounts · Project teasers are sponsor-provided · Not an offer or investment recommendation",
+  "system.translationScope": "Navigation is translated. Project, financial and legal disclosures remain in English pending reviewed translations.",
   "common.home": "Home",
   "common.language": "Language",
   "home.platform": "A DESCO Global investment platform",
@@ -183,6 +182,9 @@ const en: Dict = {
   "scores.risk": "Risk",
 };
 
+type TranslationKey = keyof typeof en;
+type Dict = Record<TranslationKey, string>;
+
 const fr: Dict = {
   "nav.discover": "Découvrir",
   "nav.match": "Match",
@@ -230,7 +232,8 @@ const fr: Dict = {
   "navGroup.tools": "Outils et références",
   "navGroup.workspace": "Espace de travail",
   "footer.demo": "DESCO Nexus est un environnement de démonstration.",
-  "system.demoBanner": "Environnement de démonstration · Comptes et informations de projet illustratifs · Ni offre ni recommandation d’investissement",
+  "system.demoBanner": "Environnement de démonstration · Comptes fictifs · Informations de projet fournies par les promoteurs · Ni offre ni recommandation d’investissement",
+  "system.translationScope": "La navigation est traduite. Les informations sur les projets, les finances et les mentions légales restent en anglais dans l’attente de traductions vérifiées.",
   "common.home": "Accueil",
   "common.language": "Langue",
   "home.platform": "Une plateforme d’investissement de DESCO Global",
@@ -400,7 +403,8 @@ const es: Dict = {
   "navGroup.tools": "Herramientas y referencias",
   "navGroup.workspace": "Espacio de trabajo",
   "footer.demo": "DESCO Nexus es un entorno de demostración.",
-  "system.demoBanner": "Entorno de demostración · Cuentas e información de proyectos ilustrativas · No es una oferta ni una recomendación de inversión",
+  "system.demoBanner": "Entorno de demostración · Cuentas ficticias · Información de proyectos proporcionada por los promotores · No es una oferta ni una recomendación de inversión",
+  "system.translationScope": "La navegación está traducida. La información de proyectos, financiera y legal permanece en inglés hasta que se revisen las traducciones.",
   "common.home": "Inicio",
   "common.language": "Idioma",
   "home.platform": "Una plataforma de inversión de DESCO Global",
@@ -570,7 +574,8 @@ const pt: Dict = {
   "navGroup.tools": "Ferramentas e referências",
   "navGroup.workspace": "Espaço de trabalho",
   "footer.demo": "DESCO Nexus é um ambiente de demonstração.",
-  "system.demoBanner": "Ambiente de demonstração · Contas e informações de projetos ilustrativas · Não constitui oferta nem recomendação de investimento",
+  "system.demoBanner": "Ambiente de demonstração · Contas fictícias · Informações de projetos fornecidas pelos promotores · Não constitui oferta nem recomendação de investimento",
+  "system.translationScope": "A navegação está traduzida. As informações sobre projetos, finanças e aspetos legais permanecem em inglês até à revisão das traduções.",
   "common.home": "Início",
   "common.language": "Idioma",
   "home.platform": "Uma plataforma de investimento da DESCO Global",
@@ -741,7 +746,8 @@ const zh: Dict = {
   "navGroup.tools": "工具与参考",
   "navGroup.workspace": "工作区",
   "footer.demo": "DESCO Nexus 为演示环境。",
-  "system.demoBanner": "演示环境 · 账户和项目信息仅供说明 · 不构成要约或投资建议",
+  "system.demoBanner": "演示环境 · 工作区账户为虚构数据 · 项目信息由发起方提供 · 不构成要约或投资建议",
+  "system.translationScope": "导航已翻译。项目、财务及法律披露在审核译文完成前仍以英文显示。",
   "common.home": "首页",
   "common.language": "语言",
   "home.platform": "DESCO Global 投资平台",
@@ -870,5 +876,6 @@ export function isLocale(v: string | undefined | null): v is Locale {
 }
 
 export function t(locale: Locale, key: string): string {
-  return dicts[locale][key] ?? dicts.en[key] ?? key;
+  const translationKey = key as TranslationKey;
+  return dicts[locale][translationKey] ?? dicts.en[translationKey] ?? key;
 }

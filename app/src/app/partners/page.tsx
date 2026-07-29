@@ -2,22 +2,15 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { InstitutionalCard, PageHero, QuietNotice, SectionHeading } from "@/components/public/PublicPrimitives";
 import { getLocale } from "@/lib/i18n-server";
-import { getPublicHero } from "@/lib/public-copy";
+import { getMarketingCopy, getMarketingMetadata } from "@/lib/translations/marketing";
 
-export const metadata: Metadata = {
-  title: "Partners and advisors — DESCO Nexus",
-  description: "Routes for legal, financial, technical, government and development partners supporting structured opportunities.",
-};
-
-const PARTNERS = [
-  ["Legal and transaction advisors", "Support legal structuring, disclosure, document review and transaction execution."],
-  ["Financial advisors and lenders", "Support financial modelling, capital structure, credit review and investor engagement."],
-  ["Technical and ESG specialists", "Support feasibility, engineering, environmental, social and operational review."],
-  ["Government and development institutions", "Support public-sector coordination, policy context and development alignment."],
-];
+export async function generateMetadata(): Promise<Metadata> {
+  return getMarketingMetadata(await getLocale(), "partners");
+}
 
 export default async function PartnersPage() {
-  const hero = getPublicHero(await getLocale(), "partners");
+  const copy = getMarketingCopy(await getLocale(), "partners");
+  const hero = copy.hero;
   return (
     <>
       <PageHero
@@ -29,12 +22,12 @@ export default async function PartnersPage() {
       />
       <section className="bg-ivory py-14 lg:py-18">
         <div className="public-container">
-          <SectionHeading eyebrow="Participation model" title="Defined roles, authorised access and clear accountability." />
+          <SectionHeading eyebrow={copy.sectionEyebrow} title={copy.sectionTitle} />
           <div className="mt-8 grid gap-5 md:grid-cols-2">
-            {PARTNERS.map(([title, body]) => <InstitutionalCard key={title} title={title} body={body} />)}
+            {copy.cards.map((card) => <InstitutionalCard key={card.title} {...card} />)}
           </div>
-          <div className="mt-8"><QuietNotice>No advisor, government body, development institution or commercial partner should be displayed as affiliated with DESCO Nexus without approved source evidence.</QuietNotice></div>
-          <Link href="/contact?topic=institutional-partnership" className="button-primary mt-8">Start a partnership inquiry</Link>
+          <div className="mt-8"><QuietNotice>{copy.notice}</QuietNotice></div>
+          <Link href="/contact?topic=institutional-partnership" className="button-primary mt-8">{copy.startCta}</Link>
         </div>
       </section>
     </>

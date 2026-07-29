@@ -1,7 +1,7 @@
 import type { Milestone } from "@/lib/pillars";
 import Reveal from "./Reveal";
 
-export default function Timeline({ milestones }: { milestones: Milestone[] }) {
+export default function Timeline({ milestones, pendingLabel = "In progress" }: { milestones: Milestone[]; pendingLabel?: string }) {
   return (
     <ol className="relative border-l-2 border-charcoal/10 ml-3 space-y-8">
       {milestones.map((m, i) => (
@@ -15,7 +15,7 @@ export default function Timeline({ milestones }: { milestones: Milestone[] }) {
               aria-hidden="true"
             />
             <div className="text-[11px] font-bold uppercase tracking-wider text-wgray">
-              {m.year} {!m.done && "· In progress"}
+              {m.year} {!m.done && `· ${pendingLabel}`}
             </div>
             <div className="text-sm font-semibold mt-0.5">{m.label}</div>
           </li>

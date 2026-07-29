@@ -1,6 +1,8 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { useI18n } from "./I18nProvider";
+import { sharedCopy } from "@/lib/translations/shared";
 
 type Notification = {
   id: string;
@@ -15,6 +17,8 @@ type Notification = {
 const POLL_MS = 30_000;
 
 export default function NotificationBell() {
+  const { locale } = useI18n();
+  const copy = sharedCopy(locale);
   const [open, setOpen] = useState(false);
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [unreadCount, setUnreadCount] = useState(0);
@@ -64,8 +68,9 @@ export default function NotificationBell() {
       <button
         type="button"
         onClick={toggle}
-        aria-label={unreadCount > 0 ? unreadCount + " unread notifications" : "Notifications"}
+        aria-label={unreadCount > 0 ? unreadCount + " " + copy.unreadNotifications : copy.notifications}
         aria-expanded={open}
+        aria-controls="notification-panel"
         className="relative w-9 h-9 rounded-full flex items-center justify-center text-white/70 hover:bg-white/10 hover:text-white"
       >
         <span aria-hidden="true">🔔</span>
@@ -77,23 +82,25 @@ export default function NotificationBell() {
       </button>
       {open && (
         <div
-          role="dialog"
-          aria-label="Notifications"
+          id="notification-panel"
+          role="region"
+          aria-label={copy.notifications}
           className="fixed inset-x-4 bottom-20 z-[60] max-h-[60vh] overflow-y-auto rounded-2xl border border-charcoal/10 bg-white text-charcoal shadow-2xl lg:absolute lg:inset-x-auto lg:bottom-full lg:right-0 lg:mb-2 lg:w-80 lg:max-h-96"
         >
-          <div className="px-4 py-3 border-b border-charcoal/10 text-xs font-bold uppercase tracking-wider text-wgray">
-            Notifications
+          <div className="flex items-center justify-between border-b border-charcoal/10 px-4 py-2">
+            <span className="text-xs font-bold uppercase tracking-wider text-wgray">{copy.notifications}</span>
+            <button type="button" onClick={() => setOpen(false)} className="min-h-11 min-w-11 rounded-lg text-xl" aria-label={copy.closeNotifications}>×</button>
           </div>
           {notifications.length === 0 ? (
-            <div className="px-4 py-6 text-sm text-wgray text-center">Nothing yet.</div>
+            <div className="px-4 py-6 text-sm text-wgray text-center">{copy.nothingYet}</div>
           ) : (
             notifications.map((n) => {
               const content = (
                 <div className="px-4 py-3 border-b border-charcoal/5 last:border-0 hover:bg-mist">
                   <div className="text-sm font-semibold">{n.title}</div>
                   <div className="text-xs text-wgray mt-0.5">{n.body}</div>
-                  <div className="text-[10px] text-wgray/70 mt-1">
-                    {new Date(n.createdAt).toLocaleString("en-GB", { day: "2-digit", month: "short", hour: "2-digit", minute: "2-digit" })}
+                  <div className="mt-1 text-xs text-wgray">
+                    {new Date(n.createdAt).toLocaleString(locale, { day: "2-digit", month: "short", hour: "2-digit", minute: "2-digit" })}
                   </div>
                 </div>
               );
