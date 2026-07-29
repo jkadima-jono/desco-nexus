@@ -9,31 +9,36 @@ datasource db {
 }
 
 model User {
-  id                 String              @id @default(cuid())
-  email              String              @unique
-  fullName           String
-  title              String?
-  role               String              @default("investor") // investor|owner|advisor|admin
-  orgId              String?
-  organization       Organization?       @relation(fields: [orgId], references: [id])
-  planId             String?
-  plan               Plan?               @relation(fields: [planId], references: [id])
-  matchActions       MatchAction[]
-  matchFeedback      MatchFeedback[]
-  mandates           StandingMandate[]
-  submissions        ProjectSubmission[]
-  collections        Collection[]
-  savedOpportunities SavedOpportunity[]
-  dataRoomAccess     DataRoomAccess[]
-  documentDownloads  DocumentAccessLog[]
-  meetingRequests    Meeting[]
-  aiGenerations      AiGenerationLog[]
-  notifications      Notification[]
-  sessions           Session[]
-  threads            Thread[]
+  id                    String              @id @default(cuid())
+  email                 String              @unique
+  fullName              String
+  title                 String?
+  role                  String              @default("investor") // investor|owner|advisor|admin
+  orgId                 String?
+  organization          Organization?       @relation(fields: [orgId], references: [id])
+  planId                String?
+  plan                  Plan?               @relation(fields: [planId], references: [id])
+  matchActions          MatchAction[]
+  matchFeedback         MatchFeedback[]
+  mandates              StandingMandate[]
+  submissions           ProjectSubmission[]
+  collections           Collection[]
+  savedOpportunities    SavedOpportunity[]
+  dataRoomAccess        DataRoomAccess[]
+  documentDownloads     DocumentAccessLog[]
+  meetingRequests       Meeting[]
+  aiGenerations         AiGenerationLog[]
+  notifications         Notification[]
+  sessions              Session[]
+  threads               Thread[]
+  crmOwnedContacts      CrmContact[]        @relation("CrmContactOwner")
+  crmOwnedOpportunities CrmOpportunity[]    @relation("CrmOpportunityOwner")
+  crmCreatedActivities  CrmActivity[]       @relation("CrmActivityActor")
+  crmAssignedTasks      CrmTask[]           @relation("CrmTaskAssignee")
+  crmCreatedTasks       CrmTask[]           @relation("CrmTaskCreator")
   // Null until the address is proven by consuming a login link. Never set
   // by registration alone — see lib/loginToken.ts.
-  emailVerifiedAt    DateTime?
+  emailVerifiedAt       DateTime?
 }
 
 // Single-use, short-lived email sign-in link. Keyed by email rather than
@@ -98,13 +103,17 @@ model Plan {
 }
 
 model Organization {
-  id        String               @id @default(cuid())
-  name      String               @unique
-  type      String // investor|seeker|advisor|government
-  country   String
-  listings  Listing[]
-  users     User[]
-  contracts CommercialContract[]
+  id               String               @id @default(cuid())
+  name             String               @unique
+  type             String // investor|seeker|advisor|government
+  country          String
+  listings         Listing[]
+  users            User[]
+  contracts        CommercialContract[]
+  crmContacts      CrmContact[]
+  crmOpportunities CrmOpportunity[]
+  crmActivities    CrmActivity[]
+  crmTasks         CrmTask[]
 }
 
 // Sales-assisted organization agreement. It records the approved commercial
@@ -171,6 +180,7 @@ model Listing {
   savedBy                SavedOpportunity[]
   dataRoomAccess         DataRoomAccess[]
   meetings               Meeting[]
+  crmOpportunities       CrmOpportunity[]
   createdAt              DateTime           @default(now())
   updatedAt              DateTime           @default(now()) @updatedAt
 }
@@ -521,4 +531,116 @@ model ProductEvent {
   createdAt DateTime @default(now())
 
   @@index([event, createdAt])
+}
+
+// Shared rate-limit state for serverless production instances.
+model RateLimitBucket {
+  key       String   @id
+  count     Int      @default(0)
+  resetsAt  DateTime
+  updatedAt DateTime @default(now()) @updatedAt
+
+  @@index([resetsAt])
+}
+
+// Admin CRM. CRM contacts are relationship records and do not receive
+// platform access unless a separate User account is created.
+model CrmContact {
+  id             String           @id @default(cuid())
+  organizationId String?
+  organization   Organization?    @relation(fields: [organizationId], references: [id])
+  ownerId        String?
+  owner          User?            @relation("CrmContactOwner", fields: [ownerId], references: [id])
+  firstName      String
+  lastName       String
+  email          String?
+  phone          String?
+  title          String?
+  contactType    String           @default("investor")
+  status         String           @default("lead")
+  source         String           @default("manual")
+  notes          String           @default("")
+  opportunities  CrmOpportunity[]
+  activities     CrmActivity[]
+  tasks          CrmTask[]
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @default(now()) @updatedAt
+
+  @@index([email])
+  @@index([organizationId, status])
+  @@index([ownerId, status])
+}
+
+model CrmOpportunity {
+  id              String        @id @default(cuid())
+  name            String
+  organizationId  String?
+  organization    Organization? @relation(fields: [organizationId], references: [id])
+  contactId       String?
+  contact         CrmContact?   @relation(fields: [contactId], references: [id])
+  listingId       String?
+  listing         Listing?      @relation(fields: [listingId], references: [id])
+  ownerId         String?
+  owner           User?         @relation("CrmOpportunityOwner", fields: [ownerId], references: [id])
+  stage           String        @default("identified")
+  status          String        @default("open")
+  valueUsd        Decimal?      @db.Decimal(18, 2)
+  currency        String        @default("USD")
+  probability     Int           @default(10)
+  nextStep        String        @default("")
+  expectedCloseAt DateTime?
+  history         String        @default("[]")
+  activities      CrmActivity[]
+  tasks           CrmTask[]
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @default(now()) @updatedAt
+
+  @@index([stage, status])
+  @@index([ownerId, status])
+  @@index([listingId])
+}
+
+model CrmActivity {
+  id             String          @id @default(cuid())
+  contactId      String?
+  contact        CrmContact?     @relation(fields: [contactId], references: [id])
+  organizationId String?
+  organization   Organization?   @relation(fields: [organizationId], references: [id])
+  opportunityId  String?
+  opportunity    CrmOpportunity? @relation(fields: [opportunityId], references: [id])
+  actorId        String
+  actor          User            @relation("CrmActivityActor", fields: [actorId], references: [id])
+  type           String          @default("note")
+  subject        String
+  body           String          @default("")
+  occurredAt     DateTime        @default(now())
+  createdAt      DateTime        @default(now())
+
+  @@index([contactId, occurredAt])
+  @@index([opportunityId, occurredAt])
+}
+
+model CrmTask {
+  id             String          @id @default(cuid())
+  title          String
+  description    String          @default("")
+  status         String          @default("open")
+  priority       String          @default("normal")
+  dueAt          DateTime?
+  assigneeId     String?
+  assignee       User?           @relation("CrmTaskAssignee", fields: [assigneeId], references: [id])
+  createdById    String
+  createdBy      User            @relation("CrmTaskCreator", fields: [createdById], references: [id])
+  contactId      String?
+  contact        CrmContact?     @relation(fields: [contactId], references: [id])
+  organizationId String?
+  organization   Organization?   @relation(fields: [organizationId], references: [id])
+  opportunityId  String?
+  opportunity    CrmOpportunity? @relation(fields: [opportunityId], references: [id])
+  completedAt    DateTime?
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @default(now()) @updatedAt
+
+  @@index([assigneeId, status, dueAt])
+  @@index([opportunityId, status])
 }

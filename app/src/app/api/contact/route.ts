@@ -19,7 +19,7 @@ const TOPICS = new Set([
 export async function POST(req: Request) {
   const originError = rejectUntrustedOrigin(req);
   if (originError) return originError;
-  const limited = applyRateLimit(req, "contact", 8, 15 * 60_000);
+  const limited = await applyRateLimit(req, "contact", 8, 15 * 60_000);
   if (limited) return limited;
   let body: { name?: string; email?: string; organization?: string; topic?: string; message?: string };
   try {
@@ -46,6 +46,21 @@ export async function POST(req: Request) {
   const inquiry = await prisma.contactInquiry.create({
     data: { name, email, organization, topic, message },
   });
+  const administrators = await prisma.user.findMany({
+    where: { role: "admin" },
+    select: { id: true },
+  });
+  if (administrators.length > 0) {
+    await prisma.notification.createMany({
+      data: administrators.map((administrator) => ({
+        userId: administrator.id,
+        type: "contact_inquiry",
+        title: "New contact inquiry",
+        body: `${name} submitted a ${topic.replaceAll("-", " ")} inquiry.`,
+        link: "/admin/inquiries",
+      })),
+    });
+  }
   return NextResponse.json({ ok: true, id: inquiry.id });
 }
 

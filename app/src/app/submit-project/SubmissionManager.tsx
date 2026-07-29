@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { SECTORS, INSTRUMENTS, computeCompleteness, missingRequiredFields, STATUS_LABELS, type SubmissionDraft } from "@/lib/submissions";
 import { trackProductEvent } from "@/components/ProductAnalytics";
+import { projectHref } from "@/lib/project-slugs";
 
 type Submission = SubmissionDraft & {
   id: string;
@@ -119,7 +120,7 @@ export default function SubmissionManager() {
                         </div>
                       )}
                       {s.status === "approved" && s.publishedListingId && (
-                        <a href={`/project/${s.publishedListingId}`} className="text-xs text-gold font-bold hover:underline mt-1.5 inline-block">
+                        <a href={projectHref(s.publishedListingId)} className="text-sm text-gold font-bold hover:underline mt-1.5 inline-block">
                           View published listing →
                         </a>
                       )}

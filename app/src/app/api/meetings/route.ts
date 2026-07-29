@@ -3,6 +3,7 @@ import { prisma } from "@/lib/db";
 import { getSessionUser } from "@/lib/auth";
 import { canManageListing, unauthorized } from "@/lib/authz";
 import { notifyOrg } from "@/lib/notifications";
+import { projectHref } from "@/lib/project-slugs";
 
 const MAX_SLOTS = 5;
 
@@ -73,7 +74,7 @@ export async function POST(req: Request) {
       "meeting_requested",
       "New meeting request",
       user.fullName + " requested a meeting for \"" + listing.title + "\".",
-      "/project/" + listingId + "#meetings"
+      projectHref(listingId) + "#meetings"
     );
   }
   return NextResponse.json({ ok: true, meeting });

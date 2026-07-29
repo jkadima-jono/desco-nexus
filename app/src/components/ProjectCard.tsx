@@ -8,6 +8,7 @@ import { sectorForeground } from "@/lib/theme";
 import type { Locale } from "@/lib/i18n";
 import { investmentUi } from "@/lib/translations/investment-ui";
 import { localizeListing } from "@/lib/translations/listing-content";
+import { projectHref } from "@/lib/project-slugs";
 
 function formatUpdated(date: Date | undefined, locale: Locale): string {
   if (!date) return "—";
@@ -38,7 +39,7 @@ export default function ProjectCard({
 
   return (
     <Link
-      href={"/project/" + listing.id}
+      href={projectHref(listing.id)}
       aria-label={accessibleName}
       className="card-rise group block overflow-hidden rounded-xl border border-charcoal/10 bg-white shadow-[0_1px_3px_rgb(44_62_80/0.06)] transition-all hover:border-gold/50 hover:shadow-[0_8px_24px_rgb(44_62_80/0.10)]"
       style={{ animationDelay: index * 40 + "ms" }}

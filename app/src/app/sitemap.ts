@@ -1,6 +1,7 @@
 import type { MetadataRoute } from "next";
 import { listings } from "@/lib/data";
 import { PILLARS } from "@/lib/pillars";
+import { projectHref } from "@/lib/project-slugs";
 
 const PUBLIC_ROUTES = [
   "", "/about", "/contact", "/diligence", "/investors", "/opportunities",
@@ -8,7 +9,7 @@ const PUBLIC_ROUTES = [
 ];
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const base = process.env.NEXT_PUBLIC_SITE_URL ?? "https://app-liart-sigma-57.vercel.app";
+  const base = process.env.NEXT_PUBLIC_SITE_URL ?? "https://compass.desco.global";
   const now = new Date();
   return [
     ...PUBLIC_ROUTES.map((route) => ({
@@ -24,7 +25,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.6,
     })),
     ...listings.map((listing) => ({
-      url: `${base}/project/${listing.id}`,
+      url: `${base}${projectHref(listing.id)}`,
       lastModified: listing.updatedAt ?? now,
       changeFrequency: "weekly" as const,
       priority: 0.8,

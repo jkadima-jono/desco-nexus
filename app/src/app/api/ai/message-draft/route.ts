@@ -7,7 +7,7 @@ import { applyRateLimit, rejectUntrustedOrigin } from "@/lib/request-security";
 export async function POST(req: Request) {
   const originError = rejectUntrustedOrigin(req);
   if (originError) return originError;
-  const limited = applyRateLimit(req, "ai-message-draft", 10, 60_000);
+  const limited = await applyRateLimit(req, "ai-message-draft", 10, 60_000);
   if (limited) return limited;
   const user = await getSessionUser();
   if (!user) {

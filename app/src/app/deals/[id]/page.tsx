@@ -1,5 +1,6 @@
 import { notFound, redirect } from "next/navigation";
 import Link from "next/link";
+import { projectHref } from "@/lib/project-slugs";
 import { prisma } from "@/lib/db";
 import { getSessionUser } from "@/lib/auth";
 import { canManageDeal } from "@/lib/authz";
@@ -59,7 +60,7 @@ export default async function DealWorkspace({
             {deal.kind !== "opportunity" && (
               <span className="mr-2 px-2 py-0.5 rounded-full bg-gold-soft text-gold text-[11px] font-bold uppercase tracking-wider">{deal.kind}</span>
             )}
-            <Link href={"/project/" + deal.listingId} className="text-gold font-bold hover:underline">
+            <Link href={projectHref(deal.listingId)} className="text-gold font-bold hover:underline">
               {deal.listing.title}
             </Link>{" "}
             · {deal.listing.org.name}

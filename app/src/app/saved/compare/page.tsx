@@ -7,6 +7,7 @@ import type { Metadata } from "next";
 import { getLocale } from "@/lib/i18n-server";
 import { investmentUi } from "@/lib/translations/investment-ui";
 import { localizeInvestmentEvidence, localizeListing } from "@/lib/translations/listing-content";
+import { projectHref } from "@/lib/project-slugs";
 
 export const dynamic = "force-dynamic";
 
@@ -100,7 +101,7 @@ export default async function ComparePage({
                 <th className="text-left p-3 border-b border-charcoal/10 text-[10px] font-bold uppercase tracking-wider text-wgray w-40">{ui.field}</th>
                 {listings.map((l) => (
                   <th key={l.id} className="text-left p-3 border-b border-charcoal/10">
-                    <Link href={"/project/" + l.id} className="font-display font-bold hover:underline">{l.title}</Link>
+                    <Link href={projectHref(l.id)} className="font-display font-bold hover:underline">{l.title}</Link>
                     <div className="text-[11px] text-wgray font-normal">{l.org}</div>
                   </th>
                 ))}

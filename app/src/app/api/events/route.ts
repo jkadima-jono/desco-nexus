@@ -18,7 +18,7 @@ const EVENTS = new Set([
 export async function POST(req: Request) {
   const originError = rejectUntrustedOrigin(req);
   if (originError) return originError;
-  const limited = applyRateLimit(req, "product-event", 120, 60_000);
+  const limited = await applyRateLimit(req, "product-event", 120, 60_000);
   if (limited) return limited;
 
   let body: { event?: string; path?: string; context?: Record<string, string | number | boolean> };

@@ -1,15 +1,13 @@
 import { NextResponse } from "next/server";
-import { mkdir, writeFile } from "fs/promises";
 import path from "path";
 import crypto from "crypto";
+import { put } from "@vercel/blob";
 import { prisma } from "@/lib/db";
 import { getSessionUser } from "@/lib/auth";
 import { canManageListing, forbidden } from "@/lib/authz";
 
 const MAX_BYTES = 20 * 1024 * 1024;
 const ALLOWED_EXT = new Set([".pdf", ".xlsx", ".docx", ".pptx", ".png", ".jpg", ".jpeg", ".csv"]);
-const UPLOAD_DIR = path.join(process.cwd(), "uploads");
-
 function fmtSize(n: number): string {
   return n >= 1024 * 1024
     ? (n / (1024 * 1024)).toFixed(1) + " MB"
@@ -54,12 +52,12 @@ export async function POST(req: Request) {
     );
   }
 
-  const storageKey = crypto.randomUUID() + ext;
-  await mkdir(UPLOAD_DIR, { recursive: true });
-  await writeFile(
-    path.join(UPLOAD_DIR, storageKey),
-    Buffer.from(await file.arrayBuffer())
-  );
+  const storageKey = `documents/${listingId}/${crypto.randomUUID()}${ext}`;
+  const blob = await put(storageKey, file, {
+    access: "private",
+    addRandomSuffix: false,
+    contentType: file.type || "application/octet-stream",
+  });
 
   const doc = await prisma.document.create({
     data: {
@@ -68,7 +66,7 @@ export async function POST(req: Request) {
       name: path.basename(file.name).slice(0, 200),
       size: fmtSize(file.size),
       folder,
-      storageKey,
+      storageKey: blob.pathname,
       mime: file.type || "application/octet-stream",
     },
   });

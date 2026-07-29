@@ -9,6 +9,7 @@ import {
 const prisma = new PrismaClient();
 const SOURCE_MANAGED_IDS = new Set([
   "comicordia-mining",
+  "comicordia-agri",
   "tilu-pepm-8252",
   "sciress-kolwezi-12423",
 ]);

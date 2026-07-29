@@ -1,12 +1,9 @@
 import { NextResponse } from "next/server";
-import { readFile } from "fs/promises";
-import path from "path";
+import { get } from "@vercel/blob";
 import { prisma } from "@/lib/db";
 import { getSessionUser } from "@/lib/auth";
 import { hasDataRoomAccess } from "@/lib/dataroom";
 import { forbidden } from "@/lib/authz";
-
-const UPLOAD_DIR = path.join(process.cwd(), "uploads");
 
 export async function GET(
   _req: Request,
@@ -34,19 +31,16 @@ export async function GET(
       { status: 404 }
     );
   }
-  // storageKey is server-generated (UUID+ext); resolve + prefix check blocks traversal
-  const filePath = path.resolve(UPLOAD_DIR, doc.storageKey);
-  if (!filePath.startsWith(UPLOAD_DIR + path.sep)) {
-    return NextResponse.json({ error: "Invalid document" }, { status: 400 });
-  }
   try {
-    const data = await readFile(filePath);
+    const blob = await get(doc.storageKey, { access: "private" });
+    if (!blob) return NextResponse.json({ error: "File unavailable" }, { status: 404 });
     await prisma.documentAccessLog.create({ data: { documentId: doc.id, userId: user.id } });
-    return new NextResponse(data, {
+    return new NextResponse(blob.stream, {
       headers: {
         "Content-Type": doc.mime ?? "application/octet-stream",
         "Content-Disposition":
           'attachment; filename="' + doc.name.replace(/"/g, "") + '"',
+        "Cache-Control": "private, no-store",
       },
     });
   } catch {

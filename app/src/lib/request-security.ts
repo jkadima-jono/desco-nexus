@@ -1,7 +1,6 @@
 import { NextResponse } from "next/server";
-
-type Bucket = { count: number; resetsAt: number };
-const buckets = new Map<string, Bucket>();
+import crypto from "crypto";
+import { prisma } from "./db";
 
 export function rejectUntrustedOrigin(req: Request): NextResponse | null {
   const origin = req.headers.get("origin");
@@ -14,34 +13,34 @@ export function rejectUntrustedOrigin(req: Request): NextResponse | null {
   return NextResponse.json({ error: "Untrusted request origin" }, { status: 403 });
 }
 
-export function applyRateLimit(
+export async function applyRateLimit(
   req: Request,
   scope: string,
   limit: number,
   windowMs: number,
-): NextResponse | null {
+): Promise<NextResponse | null> {
   const forwarded = req.headers.get("x-forwarded-for")?.split(",")[0]?.trim();
   const client = forwarded || req.headers.get("x-real-ip") || "unknown";
-  const key = `${scope}:${client}`;
+  const key = crypto.createHash("sha256").update(`${scope}:${client}`).digest("hex");
   const now = Date.now();
-  const current = buckets.get(key);
-  const bucket = !current || current.resetsAt <= now
-    ? { count: 1, resetsAt: now + windowMs }
-    : { count: current.count + 1, resetsAt: current.resetsAt };
-  buckets.set(key, bucket);
-
-  if (buckets.size > 10_000) {
-    for (const [bucketKey, value] of buckets) {
-      if (value.resetsAt <= now) buckets.delete(bucketKey);
+  const bucket = await prisma.$transaction(async (tx) => {
+    const current = await tx.rateLimitBucket.findUnique({ where: { key } });
+    if (!current || current.resetsAt.getTime() <= now) {
+      return tx.rateLimitBucket.upsert({
+        where: { key },
+        update: { count: 1, resetsAt: new Date(now + windowMs) },
+        create: { key, count: 1, resetsAt: new Date(now + windowMs) },
+      });
     }
-  }
+    return tx.rateLimitBucket.update({ where: { key }, data: { count: { increment: 1 } } });
+  });
   if (bucket.count <= limit) return null;
 
   return NextResponse.json(
     { error: "Too many requests. Please retry later." },
     {
       status: 429,
-      headers: { "Retry-After": String(Math.max(1, Math.ceil((bucket.resetsAt - now) / 1000))) },
+      headers: { "Retry-After": String(Math.max(1, Math.ceil((bucket.resetsAt.getTime() - now) / 1000))) },
     },
   );
 }

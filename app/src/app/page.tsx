@@ -14,6 +14,7 @@ import {
   QuietNotice,
   SectionHeading,
 } from "@/components/public/PublicPrimitives";
+import { projectHref } from "@/lib/project-slugs";
 
 export const dynamic = "force-dynamic";
 
@@ -63,7 +64,7 @@ function FeaturedBrief({ listing, copy }: { listing: Listing; copy: HomeMarketin
         </div>
       </div>
       <div className="border-t border-ink/10 px-4 py-3">
-        <Link href={`/project/${listing.id}`} className="inline-flex min-h-11 items-center text-xs font-bold text-ink hover:text-gold">
+        <Link href={projectHref(listing.id)} className="inline-flex min-h-11 items-center text-sm font-bold text-ink hover:text-gold">
           {copy.reviewOpportunity} →
         </Link>
       </div>

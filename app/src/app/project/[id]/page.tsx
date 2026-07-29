@@ -1,4 +1,4 @@
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import { capitalPresentation, fmtUsd, returnPresentation } from "@/lib/data";
 import { prisma, toListing } from "@/lib/db";
 import { UploadDoc, TeaserGenerator } from "./RoomTools";
@@ -24,6 +24,7 @@ import { getInvestmentEvidence, normalizeStage, summarizeEvidence } from "@/lib/
 import { sectorForeground } from "@/lib/theme";
 import { investmentUi } from "@/lib/translations/investment-ui";
 import { localizeInvestmentEvidence, localizeListing } from "@/lib/translations/listing-content";
+import { internalProjectId, projectHref, publicProjectId } from "@/lib/project-slugs";
 
 export const dynamic = "force-dynamic";
 
@@ -34,7 +35,8 @@ export async function generateMetadata({
 }: {
   params: Promise<{ id: string }>;
 }): Promise<Metadata> {
-  const { id } = await params;
+  const { id: requestedId } = await params;
+  const id = internalProjectId(requestedId);
   const metadataUi = investmentUi(await getLocale()).project;
   const row = await prisma.listing.findUnique({ where: { id } });
   if (!row) return {};
@@ -45,8 +47,8 @@ export async function generateMetadata({
   return {
     title: row.title + " — DESCO Compass",
     description,
-    alternates: { canonical: "/project/" + row.id },
-    openGraph: { title: row.title, description, url: "/project/" + row.id, type: "website" },
+    alternates: { canonical: projectHref(row.id) },
+    openGraph: { title: row.title, description, url: projectHref(row.id), type: "website" },
   };
 }
 
@@ -55,7 +57,9 @@ export default async function ProjectDetail({
 }: {
   params: Promise<{ id: string }>;
 }) {
-  const { id } = await params;
+  const { id: requestedId } = await params;
+  const id = internalProjectId(requestedId);
+  if (requestedId !== publicProjectId(id)) redirect(projectHref(id));
   const locale = await getLocale();
   const ui = investmentUi(locale).project;
   const user = await getSessionUser();
@@ -104,7 +108,7 @@ export default async function ProjectDetail({
     : null;
 
   return (
-    <div>
+    <div className="pb-24 lg:pb-0">
       <OpportunityViewTracker listingId={l.id} sector={l.sector} />
       <div className="relative bg-ink text-white overflow-hidden">
         <HeroVisual listing={l} className="absolute inset-0 opacity-40" overlay={false} locale={locale} />

@@ -28,7 +28,7 @@ const playfair = Playfair_Display({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? "https://app-liart-sigma-57.vercel.app"),
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? "https://compass.desco.global"),
   title: "DESCO Compass — Structured African investment opportunities",
   description:
     "Review structured African investment opportunities with clear disclosure, sponsor-controlled diligence, and mandate-based screening.",

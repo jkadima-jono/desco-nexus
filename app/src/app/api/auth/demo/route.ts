@@ -20,7 +20,7 @@ const PERSONAS: Record<
     fullName: "Demo Sponsor",
     title: "Demo · Project Owner",
     role: "owner",
-    org: "Comicordia Corporation",
+    org: "Desco Global (Agridesco)",
   },
   advisor: {
     email: "advisor@demo.invalid",

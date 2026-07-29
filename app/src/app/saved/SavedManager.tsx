@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { fmtUsd } from "@/lib/data";
+import { projectHref } from "@/lib/project-slugs";
 
 type SavedItem = {
   id: string;
@@ -105,7 +106,7 @@ export default function SavedManager() {
                   className="mt-1.5 w-4 h-4"
                 />
                 <div className="flex-1 min-w-0">
-                  <a href={"/project/" + s.listingId} className="font-display font-bold hover:underline">{s.listing.title}</a>
+                  <a href={projectHref(s.listingId)} className="font-display font-bold hover:underline">{s.listing.title}</a>
                   <div className="text-xs text-wgray mt-0.5">
                     {s.listing.flag} {s.listing.country} · {s.listing.sector} · {fmtUsd(s.listing.raiseUsd)} · {s.listing.org.name}
                   </div>

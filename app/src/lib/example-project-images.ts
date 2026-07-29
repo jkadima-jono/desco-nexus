@@ -29,8 +29,8 @@ const EXAMPLES: Record<string, ExampleProjectImage[]> = {
     kind: "regional",
   }],
   "comicordia-agri": [{
-    id: "regional-comicordia-agri",
-    url: "/project-media/desco-drc/comicordia-agriculture.jpg",
+    id: "regional-agridesco-grand-kasai",
+    url: "/project-media/desco-drc/agridesco-grand-kasai.jpg",
     caption: "DESCO-supplied regional DRC agricultural image. Exact project location unconfirmed.",
     isExample: true,
     kind: "regional",

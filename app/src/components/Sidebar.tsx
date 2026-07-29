@@ -41,6 +41,7 @@ const ANALYTICS: NavItem = { href: "/admin/analytics", key: "nav.analytics", ico
 const TRUST: NavItem = { href: "/trust", key: "nav.trust", icon: "✓" };
 const ABOUT: NavItem = { href: "/about", key: "nav.about", icon: "◆" };
 const INQUIRIES: NavItem = { href: "/admin/inquiries", key: "nav.inquiries", icon: "✉" };
+const CRM: NavItem = { href: "/admin/crm", key: "nav.crm", icon: "◎" };
 
 // Role-appropriate subsets of real, working routes only — no links to
 // pages that don't exist yet (data-rooms/analytics land in later phases
@@ -50,11 +51,11 @@ const NAV_BY_ROLE: Record<string, NavItem[]> = {
   investor: [DISCOVER, MATCH, SAVED, MANDATES, PIPELINE, PORTFOLIO, SEARCH, MESSAGES, PILLARS],
   owner: [PROJECTS, SUBMIT_PROJECT, INVESTOR_MATCHES, MESSAGES, PILLARS],
   advisor: [DISCOVER, MANDATES, TRANSACTIONS, MESSAGES, PILLARS],
-  admin: [ADMIN_HOME, DISCOVER, MATCH, SAVED, MANDATES, PIPELINE, PORTFOLIO, INVESTOR_MATCHES, REVIEW_SUBMISSIONS, VERIFICATION, AI_USAGE, CONTRACTS, ANALYTICS, BILLING, SEARCH, MESSAGES, PILLARS],
+  admin: [ADMIN_HOME, CRM, DISCOVER, MATCH, SAVED, MANDATES, PIPELINE, PORTFOLIO, INVESTOR_MATCHES, REVIEW_SUBMISSIONS, VERIFICATION, AI_USAGE, CONTRACTS, ANALYTICS, BILLING, SEARCH, MESSAGES, PILLARS],
 };
 
 const ADMIN_GROUPS: NavGroup[] = [
-  { labelKey: "navGroup.overview", items: [ADMIN_HOME] },
+  { labelKey: "navGroup.overview", items: [ADMIN_HOME, CRM] },
   { labelKey: "navGroup.investment", items: [DISCOVER, MATCH, SAVED, MANDATES, PIPELINE, PORTFOLIO] },
   { labelKey: "navGroup.control", items: [INVESTOR_MATCHES, REVIEW_SUBMISSIONS, VERIFICATION, INQUIRIES] },
   { labelKey: "navGroup.operations", items: [AI_USAGE, CONTRACTS, ANALYTICS, BILLING] },

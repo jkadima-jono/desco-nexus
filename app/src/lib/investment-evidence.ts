@@ -58,7 +58,7 @@ const THESIS: Record<string, string> = {
   "comicordia-mining":
     "Comicordia proposes staged mechanisation of gold and diamond activity near Luiza and Musefu. The folder supports a historical geological case and an operating concept, but current title, resource, mine life, feasibility, environmental approvals and transaction authority still require verification.",
   "comicordia-agri":
-    "The sponsor proposes an integrated smallholder and processing platform. The case depends on evidence for land access, farmer participation, yields, offtake, operating performance and the allocation of programme-level capital.",
+    "Agridesco proposes a standalone smallholder and processing platform in Grand Kasaï. The case depends on evidence for project ownership, land access, farmer participation, yields, offtake, operating performance and the allocation of programme-level capital.",
   "manioc-plant":
     "The sponsor proposes a cassava-leaf processing facility supported by a local sourcing and distribution network. The case depends on validated unit economics, site rights, equipment quotations, demand and working-capital requirements.",
   "phardesco-mbuji-mayi":
@@ -66,7 +66,7 @@ const THESIS: Record<string, string> = {
   "waterdesco-grand-kasai":
     "The sponsor proposes a clean-water network for Grand Kasaï, but its 2026 decks describe two different configurations: 300 decentralized solar WASH hubs or 12 treatment stations with 500 km of network. The case depends on reconciling the technical scope and validating water sources, demand, affordability, permits, capital cost, operating cost and maintenance capacity.",
   "tilu-pepm-8252":
-    "The supplied historical geochemical study identifies copper and cobalt anomalies at PEPM 8252 but does not establish a mineral resource. The case depends on current title verification, modern exploration, independent technical review, environmental and social baseline work, and a disclosed funding plan.",
+    "The supplied historical geochemical study identifies copper and cobalt anomalies under research permit 8252 and lists copper, cobalt and gold as target substances, but it does not establish a mineral resource. The case depends on renewal and current-title verification, modern exploration, independent technical review, environmental and social baseline work, and a disclosed funding plan.",
   "sciress-kolwezi-12423":
     "Scires Mining proposes to acquire and advance PE 12423 through drilling, resource definition, feasibility work and pre-production engineering. The opportunity remains pre-resource: permit transfer, title, historical data, metallurgy, environmental approvals, development costs and transaction terms require independent diligence.",
 };
@@ -182,13 +182,13 @@ const PROJECT_EVIDENCE: Record<
       },
       {
         label: "Ownership and development rights",
-        value: "The study concerns PEPM 8252; current ownership, renewal and validity are not established by the public record",
+        value: "The study records research permit 8252 as granted on 21 July 2007 for a renewable five-year term. Subsequent renewals, current ownership and present validity are not established by the supplied record",
         status: "partial",
         source: "Tilu preliminary technical geochemical study",
       },
       {
         label: "Technical evidence",
-        value: "The study reports 933 soil samples over 24 survey lines and copper-cobalt anomalies; it does not report a mineral resource or reserve",
+        value: "The study reports 933 soil samples over 24 survey lines across approximately 89 km², with copper values up to 581 ppm and cobalt values up to 7,490 ppm. These are geochemical indicators; no mineral resource or reserve is reported",
         status: "partial",
         source: "Tilu preliminary technical geochemical study",
       },
@@ -241,7 +241,7 @@ const PROJECT_EVIDENCE: Record<
     provenance: {
       classification: "Historical exploration study",
       source: "Tilu Mining preliminary technical geochemical study",
-      sourceDate: "Study describes 2010 fieldwork; current title evidence not supplied",
+      sourceDate: "Permit granted July 2007; study describes 2010 fieldwork; current renewal evidence not supplied",
       reviewStatus: "DESCO folder review recorded; independent verification not recorded",
     },
   },

@@ -4,6 +4,7 @@ import { getSessionUser } from "@/lib/auth";
 import { STAGES, isValidTransition, requiresReason, type Stage } from "@/lib/deals";
 import { canManageDeal } from "@/lib/authz";
 import { notify } from "@/lib/notifications";
+import { projectHref } from "@/lib/project-slugs";
 
 export async function PATCH(
   req: Request,
@@ -83,7 +84,7 @@ export async function PATCH(
         "deal_stage",
         "Stage updated",
         "\"" + deal.title + "\" moved to \"" + data.stage + "\".",
-        "/project/" + deal.listingId
+        projectHref(deal.listingId)
       );
     }
   }

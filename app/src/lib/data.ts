@@ -95,7 +95,7 @@ export function returnPresentation(listing: Pick<Listing, "id" | "irr">) {
 // Manioc-Project business plan, the Tilu preliminary geochemical study,
 // and the Sciress CAMI extract) — no invented projects, figures, or
 // sponsors. Where the source deck gives only a pillar-level allocation
-// (Comicordia entries), that is stated explicitly rather than presented
+// (including the Agridesco programme), that is stated explicitly rather than presented
 // as a project-specific ask. Legacy score fields remain only for schema
 // compatibility and are not used for public ranking or disclosure.
 export const listings: Listing[] = [
@@ -179,8 +179,8 @@ export const listings: Listing[] = [
   },
   {
     id: "comicordia-agri",
-    title: "Comicordia Agricultural Complex",
-    org: "Comicordia Corporation",
+    title: "Agridesco Integrated Agriculture Project — Grand Kasaï",
+    org: "Desco Global (Agridesco)",
     sector: "Agriculture",
     sectorColor: colorForSector("Agriculture"),
     country: "DR Congo",
@@ -190,7 +190,7 @@ export const listings: Listing[] = [
     stage: "Operating information supplied",
     irr: "Part of Desco Global's 17.2% target Phase 1 program IRR",
     summary:
-      "Desco Global's proposed agricultural impact platform in central DRC, organizing smallholders into outgrower networks with input credit, shared mechanization, post-harvest storage, and value-add milling for maize, cassava, and soy — intended to connect farmers with proposed offtake arrangements at transparent prices.",
+      "Agridesco proposes a standalone agricultural platform in central DRC, organising smallholders through input finance, shared mechanisation, post-harvest storage and processing for maize, cassava and soy. The model is intended to connect participating farmers with transparent purchasing arrangements. Farmer reach, land access, operating evidence and offtake commitments remain subject to verification.",
     verified: false,
     governmentBacked: false,
     scores: { match: 82, readiness: 69, esg: 89, risk: 44 },
@@ -201,7 +201,7 @@ export const listings: Listing[] = [
     ],
     docs: [],
     whyMatch:
-      "Agriculture opportunity requiring validation of farmer reach, land access, offtake, safeguards and reported impact.",
+      "Standalone Agridesco project requiring validation of farmer participation, land access, production assumptions, offtake, safeguards and reported impact.",
   },
   {
     id: "manioc-plant",
@@ -285,7 +285,7 @@ export const listings: Listing[] = [
   },
   {
     id: "tilu-pepm-8252",
-    title: "Tilu Mining — PEPM 8252 Copper-Cobalt Prospect",
+    title: "Tilu Mining — Permit 8252 Copper-Cobalt-Gold Prospect",
     org: "Tilu Mining SPRL",
     sector: "Mining",
     sectorColor: colorForSector("Mining"),
@@ -293,17 +293,17 @@ export const listings: Listing[] = [
     flag: "🇨🇩",
     raiseUsd: 0,
     instrument: "Exploration capital requirement not publicly disclosed",
-    stage: "Historical exploration data — current title status unverified",
+    stage: "Historical exploration data — permit renewal and current title status unverified",
     irr: "Not publicly disclosed",
     summary:
-      "An early-stage copper-cobalt exploration prospect in Manono territory. A historical technical study reports geochemical work completed in 2010 across permit area PEPM 8252, including 933 soil samples. The study recommends structural mapping, trenching and drilling before any mineral resource can be defined. Current permit ownership, validity and renewal status have not been independently verified.",
+      "An early-stage copper-cobalt-gold prospect in Manono territory. A historical technical study records research permit 8252, granted in July 2007, and a 2010 geochemical campaign covering 933 soil samples. The work identified copper and cobalt anomalies and recommended structural mapping, trenching and drilling. The original permit term, subsequent renewals, current ownership and standing have not been independently verified.",
     verified: false,
     governmentBacked: false,
     scores: { match: 0, readiness: 20, esg: 0, risk: 80 },
     highlights: [
-      "Historical study reports 933 soil samples across 24 north-south lines",
-      "Study reports copper and cobalt anomalies; no mineral resource or reserve is disclosed",
-      "Structural mapping, trenching and exploration drilling remain recommended",
+      "Historical study reports 933 soil samples across 24 north-south lines over approximately 89 km²",
+      "Reported ranges: copper up to 581 ppm and cobalt up to 7,490 ppm; these are exploration indicators, not a resource",
+      "The 2007 research permit lists copper, cobalt and gold; current renewal and standing require confirmation",
     ],
     docs: [],
     whyMatch:
@@ -331,6 +331,7 @@ export const listings: Listing[] = [
     highlights: [
       "Sponsor deck describes PE 12423 as six mining squares covering approximately 5.066 km²",
       "Sponsor-reported exploration history: four diamond holes, 22 RC holes, trenching and 1,334 soil samples",
+      "$15M is allocated to proposed acquisition and $30M to exploration, studies and pre-production work",
       "A 500m by 300m northern copper anomaly remains a proposed priority drilling target; no compliant resource is disclosed",
     ],
     docs: [],

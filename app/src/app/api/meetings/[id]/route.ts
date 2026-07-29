@@ -3,6 +3,7 @@ import { prisma } from "@/lib/db";
 import { getSessionUser } from "@/lib/auth";
 import { canManageListing, unauthorized, forbidden } from "@/lib/authz";
 import { notify, notifyOrg } from "@/lib/notifications";
+import { projectHref } from "@/lib/project-slugs";
 
 // Sponsor/admin confirm a proposed slot (or decline); the requester may
 // cancel their own request while it's still pending.
@@ -53,7 +54,7 @@ export async function PATCH(
     },
   });
 
-  const link = "/project/" + meeting.listingId + "#meetings";
+  const link = projectHref(meeting.listingId) + "#meetings";
   if (body.status === "confirmed") {
     await notify(meeting.requesterId, "meeting_confirmed", "Meeting confirmed", "Your meeting request for \"" + meeting.listing.title + "\" was confirmed.", link);
   } else if (body.status === "declined") {

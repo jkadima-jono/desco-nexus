@@ -36,6 +36,9 @@ export default async function AdminDashboard() {
     newInquiries,
     activeContracts,
     productEvents30d,
+    crmContacts,
+    crmOpenOpportunities,
+    crmOpenTasks,
   ] = await Promise.all([
     prisma.listing.count(),
     prisma.listing.count({ where: { verified: true } }),
@@ -51,6 +54,9 @@ export default async function AdminDashboard() {
     prisma.contactInquiry.count({ where: { status: "new" } }),
     prisma.commercialContract.count({ where: { status: "active" } }),
     prisma.productEvent.count({ where: { createdAt: { gte: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000) } } }),
+    prisma.crmContact.count({ where: { status: { not: "inactive" } } }).catch(() => 0),
+    prisma.crmOpportunity.count({ where: { status: "open" } }).catch(() => 0),
+    prisma.crmTask.count({ where: { status: { in: ["open", "in-progress"] } } }).catch(() => 0),
   ]);
 
   const totalRaiseM = Math.round((raiseAgg._sum.raiseUsd ?? 0) / 1_000_000);
@@ -106,6 +112,13 @@ export default async function AdminDashboard() {
         <Tile value={aiTotal + " (" + aiClaude + " via Claude)"} label="Recorded AI generations" href="/admin/ai-usage" />
         <Tile value={productEvents30d} label="Product events · 30 days" href="/admin/analytics" />
         <Tile value={activeContracts} label="Active organization contracts" href="/admin/contracts" />
+      </div>
+
+      <h2 className="text-[11px] font-bold uppercase tracking-wider text-wgray mb-2">Relationship management</h2>
+      <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 mb-6">
+        <Tile value={crmContacts} label="Active CRM relationships" href="/admin/crm" />
+        <Tile value={crmOpenOpportunities} label="Open CRM opportunities" href="/admin/crm" />
+        <Tile value={crmOpenTasks} label="CRM follow-ups due" href="/admin/crm" />
       </div>
 
       <h2 className="text-[11px] font-bold uppercase tracking-wider text-wgray mb-2">Demo entitlement and commercial scenarios</h2>
