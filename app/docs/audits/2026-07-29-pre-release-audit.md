@@ -1,4 +1,4 @@
-# DESCO Nexus pre-release audit
+# DESCO Compass pre-release audit
 
 Date: 29 July 2026  
 Scope: public website, project teasers, investor disclosure, navigation, responsive behaviour, accessibility, localization and editorial consistency.

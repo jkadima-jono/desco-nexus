@@ -11,7 +11,7 @@ export default function CompareExportButton({ titles, rows, label }: { titles: s
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
-    a.download = "nexus-comparison.csv";
+    a.download = "desco-compass-comparison.csv";
     a.click();
     URL.revokeObjectURL(url);
   };

@@ -1,4 +1,4 @@
-# DESCO Nexus measurement plan
+# DESCO Compass measurement plan
 
 The pilot is measured at organization and decision-journey level. Raw traffic and account counts are secondary.
 

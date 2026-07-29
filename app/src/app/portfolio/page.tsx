@@ -39,7 +39,7 @@ export default async function Portfolio() {
     <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-6 lg:py-8">
       <h1 className="font-display font-extrabold text-3xl tracking-tight">Portfolio</h1>
       <p className="text-wgray text-sm mt-1 mb-6">
-        Your positions across Nexus — capital calls, distributions, and
+        Your positions across Compass — capital calls, distributions, and
         sponsor reporting in one place.
       </p>
 

@@ -63,16 +63,41 @@ const THESIS: Record<string, string> = {
     "The sponsor proposes a cassava-leaf processing facility supported by a local sourcing and distribution network. The case depends on validated unit economics, site rights, equipment quotations, demand and working-capital requirements.",
   "phardesco-mbuji-mayi":
     "The sponsor proposes an integrated pharmacy, diagnostics, water and health-education hub. The case depends on licensing, demand evidence, procurement and cold-chain capability, operating forecasts and the path to breakeven.",
+  "waterdesco-grand-kasai":
+    "The sponsor proposes a clean-water network for Grand Kasaï, but its 2026 decks describe two different configurations: 300 decentralized solar WASH hubs or 12 treatment stations with 500 km of network. The case depends on reconciling the technical scope and validating water sources, demand, affordability, permits, capital cost, operating cost and maintenance capacity.",
   "tilu-pepm-8252":
     "The supplied historical geochemical study identifies copper and cobalt anomalies at PEPM 8252 but does not establish a mineral resource. The case depends on current title verification, modern exploration, independent technical review, environmental and social baseline work, and a disclosed funding plan.",
   "sciress-kolwezi-12423":
     "Scires Mining proposes to acquire and advance PE 12423 through drilling, resource definition, feasibility work and pre-production engineering. The opportunity remains pre-resource: permit transfer, title, historical data, metallurgy, environmental approvals, development costs and transaction terms require independent diligence.",
 };
 
-const MINING_EVIDENCE: Record<
+const PROJECT_EVIDENCE: Record<
   string,
   Pick<InvestmentEvidence, "fields" | "risks" | "provenance">
 > = {
+  "waterdesco-grand-kasai": {
+    fields: [
+      { label: "Legal project entity", value: "WaterDesco is presented as a Desco Global pillar; the project SPV and contracting entity are not disclosed", status: "partial", source: "Desco Global 2026 investor decks" },
+      { label: "Ownership and development rights", value: NOT_DISCLOSED, status: "not-disclosed" },
+      { label: "Technical evidence", value: "Two sponsor decks describe different network designs. No reconciled basis of design, site list, hydrogeological work, source-water tests or engineering study is public", status: "partial", source: "Desco Master Deck new visual identity; Executive Presentation DRC 2026" },
+      { label: "Development plan", value: "Master deck proposes a 2026 rollout from 10 pilot hubs to 300 hubs. A separate deck places an active distribution network in Q2 2029", status: "partial", source: "Desco Global 2026 investor decks" },
+      { label: "Revenue and offtake evidence", value: "Sponsor concepts include pay-per-use and subscriptions, but customer demand, affordability, tariff approval, collection and anchor-offtake evidence are not public", status: "partial", source: "Desco Master Deck new visual identity" },
+      { label: "Implementation timetable", value: "Conflicting sponsor schedules require reconciliation before reliance", status: "partial", source: "Desco Global 2026 investor decks" },
+    ],
+    risks: [
+      { label: "Development and construction", value: "Network configuration, sites, water sources, engineering design, procurement plan and cost estimates are not reconciled or independently reviewed", status: "partial", source: "Cross-deck review" },
+      { label: "Commercial and offtake", value: "Affordability, willingness to pay, tariff approval, collection performance and subsidy requirements are not evidenced", status: "not-disclosed" },
+      { label: "Legal, title and permitting", value: "Land access, abstraction rights, environmental approvals, water-quality permits and operating licences are not publicly disclosed", status: "not-disclosed" },
+      { label: "Financial and currency", value: "The $12 million budget is a sponsor concept allocation; detailed CAPEX, contingencies, OPEX, FX exposure and financing terms are not public", status: "partial", source: "Desco Global 2026 investor decks" },
+      { label: "Environmental and social", value: "Source sustainability, seasonal yield, waste-stream handling, community consent and inclusion safeguards require baseline studies", status: "not-disclosed" },
+    ],
+    provenance: {
+      classification: "Confidential sponsor concepts and forward-looking targets",
+      source: "Desco Master Deck new visual identity; Master updated deck; Executive Presentation DRC 2026",
+      sourceDate: "2026 decks; retrieved from DESCO Global Investor Decks on 29 July 2026",
+      reviewStatus: "DESCO source comparison recorded; independent technical, legal and financial verification not recorded",
+    },
+  },
   "comicordia-mining": {
     fields: [
       {
@@ -340,7 +365,7 @@ export function getInvestmentEvidence(listing: {
   fundingSecuredUsd?: number | null;
   sponsorContributionUsd?: number | null;
 }): InvestmentEvidence {
-  const miningEvidence = MINING_EVIDENCE[listing.id];
+  const projectEvidence = PROJECT_EVIDENCE[listing.id];
   const fields: EvidenceField[] = [
     {
       label: "Use of funds",
@@ -360,14 +385,14 @@ export function getInvestmentEvidence(listing: {
       status: listing.sponsorContributionUsd != null ? "partial" : "not-disclosed",
       source: listing.sponsorContributionUsd != null ? "Sponsor submission; supporting evidence not public" : undefined,
     },
-    ...(miningEvidence?.fields ?? COMMON_FIELDS),
+    ...(projectEvidence?.fields ?? COMMON_FIELDS),
   ];
 
   return {
     thesis: THESIS[listing.id] || listing.summary,
     fields,
-    risks: miningEvidence?.risks ?? COMMON_RISKS,
-    provenance: miningEvidence?.provenance ?? {
+    risks: projectEvidence?.risks ?? COMMON_RISKS,
+    provenance: projectEvidence?.provenance ?? {
       classification: "Sponsor-provided project information and targets",
       source: "DESCO Global investor materials and project submissions",
       sourceDate: "Source date not disclosed on the public record",

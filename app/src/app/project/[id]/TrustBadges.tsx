@@ -74,12 +74,12 @@ export default function TrustBadges({
       claim: verificationNote || "Sponsor identity and company registration reviewed",
       verificationType: "Identity & company verification",
       source: verifiedBy
-        ? "Reviewed by Nexus admin — no external eKYC/registry vendor connected in this build"
+        ? "Reviewed by Compass admin — no external eKYC/registry vendor connected in this build"
         : "Demo seed fixture — no verification vendor connected in this build",
       verifiedBy: verifiedBy ? verifiedBy + (verifiedAt ? " on " + new Date(verifiedAt).toLocaleDateString() : "") : "Not independently verified",
       checked: verifiedBy ? "Reviewed by admin" : "Self-reported (demo data)",
       limitations:
-        "This platform has no connected eKYC/registry vendor. \"Verified\" means a Nexus admin recorded reviewing the stated evidence, not an independent third-party check.",
+        "This platform has no connected eKYC/registry vendor. \"Verified\" means a Compass admin recorded reviewing the stated evidence, not an independent third-party check.",
     });
   }
   if (governmentBacked) {

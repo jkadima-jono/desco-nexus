@@ -256,6 +256,34 @@ export const listings: Listing[] = [
       "Early-stage healthcare-access platform anchoring Desco Global's Phardesco pillar in its founding region.",
   },
   {
+    id: "waterdesco-grand-kasai",
+    title: "WaterDesco — Grand Kasaï Clean Water Network",
+    org: "Desco Global (Waterdesco)",
+    sector: "Water",
+    sectorColor: colorForSector("Water"),
+    country: "DR Congo",
+    flag: "🇨🇩",
+    raiseUsd: 12_000_000,
+    instrument: "Proposed blended infrastructure and impact capital; final structure not disclosed",
+    stage: "Concept design — scope requires reconciliation",
+    irr: "No project return disclosed; sponsor materials prioritise operating cost recovery",
+    summary:
+      "WaterDesco proposes clean-water infrastructure for underserved communities in Grand Kasaï. A 2026 master deck describes 300 decentralized solar-powered WASH hubs and a $12 million deployment budget. A separate 2026 executive deck describes 12 treatment stations, 500 km of distribution network and 50,000 m³/day capacity. The alternatives have not been reconciled, and site studies, source-water tests, permits, procurement evidence and a reviewed financial model are not publicly disclosed.",
+    useOfFunds:
+      "Sponsor concept allocation: solar pumping and dispensing hardware, multi-stage filtration, monitoring, deployment, local maintenance capability and community operations. Detailed quantities and supplier quotations are not public.",
+    verified: false,
+    governmentBacked: false,
+    scores: { match: 0, readiness: 28, esg: 0, risk: 69 },
+    highlights: [
+      "Master-deck concept: 300 solar WASH hubs with a $12 million phase-one deployment budget",
+      "Alternative executive-deck concept: 12 treatment stations, 500 km of network and 50,000 m³/day",
+      "Sponsor materials describe low-cost pay-per-use and subscription models; demand, affordability and collection evidence are not public",
+    ],
+    docs: [],
+    whyMatch:
+      "Early-stage Waterdesco infrastructure concept for investors able to fund technical, environmental, affordability and delivery diligence before selecting a network design.",
+  },
+  {
     id: "tilu-pepm-8252",
     title: "Tilu Mining — PEPM 8252 Copper-Cobalt Prospect",
     org: "Tilu Mining SPRL",

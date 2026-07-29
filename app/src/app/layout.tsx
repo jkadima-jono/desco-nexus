@@ -29,19 +29,19 @@ const playfair = Playfair_Display({
 
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? "https://app-liart-sigma-57.vercel.app"),
-  title: "DESCO Nexus — Structured African investment opportunities",
+  title: "DESCO Compass — Structured African investment opportunities",
   description:
     "Review structured African investment opportunities with clear disclosure, sponsor-controlled diligence, and mandate-based screening.",
   icons: { icon: "/brand/desco-coin.png" },
   openGraph: {
     type: "website",
-    siteName: "DESCO Nexus",
-    title: "DESCO Nexus — Structured African investment opportunities",
+    siteName: "DESCO Compass",
+    title: "DESCO Compass — Structured African investment opportunities",
     description: "Review structured African investment opportunities with clear disclosure and controlled diligence.",
   },
   twitter: {
     card: "summary",
-    title: "DESCO Nexus — Structured African investment opportunities",
+    title: "DESCO Compass — Structured African investment opportunities",
     description: "Review structured African investment opportunities with clear disclosure and controlled diligence.",
   },
 };

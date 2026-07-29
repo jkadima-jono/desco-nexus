@@ -101,7 +101,7 @@ export default function Sidebar({ user }: { user: SidebarUser }) {
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src="/brand/desco-coin.png" alt="Desco Global" className="w-10 h-10 rounded-full shadow-[0_2px_8px_rgb(184_149_61/0.5)]" />
           <div>
-            <div className="font-display font-extrabold text-lg tracking-tight leading-tight">DESCO <span className="text-gold">Nexus</span></div>
+            <div className="font-display font-extrabold text-lg tracking-tight leading-tight">DESCO <span className="text-gold">Compass</span></div>
             <div className="text-[10px] text-white/50 font-body">{t("brand.tagline")}</div>
           </div>
         </div>
@@ -150,7 +150,7 @@ export default function Sidebar({ user }: { user: SidebarUser }) {
         {navigation}
       </aside>
       <header className="lg:hidden fixed inset-x-0 top-0 z-40 h-16 bg-ink text-white flex items-center justify-between px-4 shadow-lg">
-        <Link href="/" className="font-display font-extrabold">DESCO <span className="text-gold">Nexus</span></Link>
+        <Link href="/" className="font-display font-extrabold">DESCO <span className="text-gold">Compass</span></Link>
         <button ref={menuButtonRef} type="button" onClick={() => setMobileOpen(true)} aria-expanded={mobileOpen} aria-controls="mobile-navigation" className="min-w-11 min-h-11 rounded-xl border border-white/20 text-xl" aria-label={t("nav.open")}>☰</button>
       </header>
       {mobileOpen && (

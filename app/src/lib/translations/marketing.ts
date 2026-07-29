@@ -131,7 +131,7 @@ export type HomeMarketingCopy = MarketingCopy["home"];
 
 const en: MarketingCopy = {
   home: {
-    metadata: { title: "DESCO Nexus — Structured African opportunities", description: "Review structured African investment opportunities with clear disclosure, sponsor-controlled due diligence and mandate-based screening." },
+    metadata: { title: "DESCO Compass — Structured African opportunities", description: "Review structured African investment opportunities with clear disclosure, sponsor-controlled due diligence and mandate-based screening." },
     featured: "Featured opportunity briefing", publicTeaser: "Public teaser", capitalSought: "Capital sought",
     projectStage: "Project stage", sector: "Sector", location: "Location", disclosure: "Disclosure",
     sponsorProvided: "Sponsor-provided", dataRoom: "Data room", readinessNotPublic: "Readiness not public",
@@ -139,7 +139,7 @@ const en: MarketingCopy = {
     sponsorBenefits: ["Prepare an institutional listing", "Control access to confidential information", "Coordinate qualified investor engagement"],
     capitalRepresented: "Capital represented in displayed teasers", sponsorFigures: "Sponsor-provided figures",
     processEyebrow: "Investor due diligence pathway", processTitle: "A controlled path from screening to deeper review.",
-    processBody: "DESCO Nexus supports screening, information exchange and engagement. Investors remain responsible for their own legal, financial, technical and commercial due diligence.",
+    processBody: "DESCO Compass supports screening, information exchange and engagement. Investors remain responsible for their own legal, financial, technical and commercial due diligence.",
     process: [
       { title: "Review the public teaser", body: "Assess the thesis, capital requirement, sponsor, stage, risks and disclosure status." },
       { title: "Evaluate mandate fit", body: "Compare sector, geography, ticket size and instrument with saved investment criteria." },
@@ -158,15 +158,15 @@ const en: MarketingCopy = {
       { title: "Recorded access activity", body: "Material access decisions, downloads and workflow changes can be logged for operational oversight." },
       { title: "Sponsor-controlled confidentiality", body: "Sponsors decide which approved users can access restricted project information." },
     ],
-    trustNotice: "DESCO Nexus does not claim completed AML or KYC checks, SOC 2 certification, GDPR compliance, government approval, guaranteed returns or independent project verification unless supported by approved evidence.",
+    trustNotice: "DESCO Compass does not claim completed AML or KYC checks, SOC 2 certification, GDPR compliance, government approval, guaranteed returns or independent project verification unless supported by approved evidence.",
     trustCta: "Read the disclosure framework", nextEyebrow: "Choose your next step",
     nextTitle: "Review opportunities or prepare a project for institutional screening.",
     nextBody: "Investor and sponsor journeys remain distinct through screening, access decisions and engagement.",
     reviewCta: "Review opportunities", prepareCta: "Prepare a project",
   },
   about: {
-    metadata: { title: "About DESCO Global — DESCO Nexus", description: "DESCO Global’s role in connecting structured projects, capital providers and strategic partners." },
-    hero: { eyebrow: "About DESCO Global", title: "Connecting structured projects, capital and strategic partners.", body: "DESCO Global operates DESCO Nexus as an investment-opportunity and due diligence platform focused initially on the Democratic Republic of the Congo, with capacity to support selected African markets.", primary: "Contact DESCO Global", secondary: "Review investment pillars" },
+    metadata: { title: "About DESCO Global — DESCO Compass", description: "DESCO Global’s role in connecting structured projects, capital providers and strategic partners." },
+    hero: { eyebrow: "About DESCO Global", title: "Connecting structured projects, capital and strategic partners.", body: "DESCO Global operates DESCO Compass as an investment-opportunity and due diligence platform focused initially on the Democratic Republic of the Congo, with capacity to support selected African markets.", primary: "Contact DESCO Global", secondary: "Review investment pillars" },
     notice: "This page does not claim an investment track record, client list, transaction history, office network or regulatory status that has not been supplied and approved by DESCO Global.",
     sectionEyebrow: "Platform rationale", sectionTitle: "A clearer interface between project preparation and investor review.",
     cards: [
@@ -178,8 +178,8 @@ const en: MarketingCopy = {
     partnersCta: "Partners and advisers", inquiryCta: "Submit an enquiry",
   },
   diligence: {
-    metadata: { title: "How due diligence works — DESCO Nexus", description: "Understand public screening, access requests, restricted documents and sponsor engagement on DESCO Nexus." },
-    hero: { eyebrow: "Controlled due diligence", title: "Information access should follow a justified screening decision.", body: "DESCO Nexus separates public screening information from permission-controlled financial, technical, legal and transaction material.", primary: "Review public opportunities", secondary: "Read disclosure standards" },
+    metadata: { title: "How due diligence works — DESCO Compass", description: "Understand public screening, access requests, restricted documents and sponsor engagement on DESCO Compass." },
+    hero: { eyebrow: "Controlled due diligence", title: "Information access should follow a justified screening decision.", body: "DESCO Compass separates public screening information from permission-controlled financial, technical, legal and transaction material.", primary: "Review public opportunities", secondary: "Read disclosure standards" },
     accessState: "Access status", statuses: ["Public teaser", "Request pending", "Restricted", "Approved access"],
     accessNote: "Access decisions should identify the user, organisation, project, permission scope and decision record.",
     processEyebrow: "Investor process", processTitle: "From public screening to controlled review.",
@@ -194,11 +194,11 @@ const en: MarketingCopy = {
     roomEyebrow: "Data room structure", roomTitle: "A predictable document structure.",
     roomBody: "Folder availability depends on sponsor submission and approved access.", folderLabel: "Folder",
     folders: ["Executive overview", "Corporate and sponsor information", "Financial information", "Technical studies", "Legal and regulatory", "Land, permits and concessions", "ESG and community", "Commercial agreements", "Risk and insurance", "Transaction documents"],
-    notice: "DESCO Nexus supports screening, controlled information exchange and engagement. It does not replace legal, financial, technical, tax, ESG or commercial due diligence.",
+    notice: "DESCO Compass supports screening, controlled information exchange and engagement. It does not replace legal, financial, technical, tax, ESG or commercial due diligence.",
   },
   investors: {
-    metadata: { title: "For investors — DESCO Nexus", description: "Screen structured opportunities against an investment mandate before committing resources to deeper due diligence." },
-    hero: { eyebrow: "Investor pathway", title: "Assess mandate fit before committing to full due diligence.", body: "DESCO Nexus helps institutional investors, funds, family offices, lenders and strategic capital providers screen structured opportunities and control the transition into deeper review.", primary: "Apply for investor access", secondary: "Review opportunities" },
+    metadata: { title: "For investors — DESCO Compass", description: "Screen structured opportunities against an investment mandate before committing resources to deeper due diligence." },
+    hero: { eyebrow: "Investor pathway", title: "Assess mandate fit before committing to full due diligence.", body: "DESCO Compass helps institutional investors, funds, family offices, lenders and strategic capital providers screen structured opportunities and control the transition into deeper review.", primary: "Apply for investor access", secondary: "Review opportunities" },
     preview: "Mandate builder preview", mandateFields: ["Preferred sectors", "Geographic focus", "Ticket size", "Investment instrument", "Project stage", "Impact requirements", "Risk tolerance", "Control preference"],
     matchingNote: "Matching uses disclosed project fields and deterministic criteria. It is a screening aid, not investment advice.",
     sectionEyebrow: "Investor operating model", sectionTitle: "Review opportunities against defined mandate criteria.",
@@ -219,7 +219,7 @@ const en: MarketingCopy = {
     applyCta: "Apply for an investor workspace",
   },
   sponsors: {
-    metadata: { title: "For project sponsors — DESCO Nexus", description: "Prepare a structured project listing and manage controlled investor due diligence." },
+    metadata: { title: "For project sponsors — DESCO Compass", description: "Prepare a structured project listing and manage controlled investor due diligence." },
     hero: { eyebrow: "Sponsor pathway", title: "Prepare your project for institutional investor review.", body: "Move from fragmented project information to a structured institutional listing, a clear public teaser and permission-controlled due diligence.", primary: "Assess project readiness", secondary: "Discuss sponsor support" },
     framework: "Readiness framework", underReview: "Under review", required: "Required",
     readiness: ["Sponsor information", "Project structure", "Market case", "Technical readiness", "Financial model", "Legal and regulatory position", "Land and permits", "ESG and community", "Risk disclosure", "Supporting documents"],
@@ -237,8 +237,8 @@ const en: MarketingCopy = {
     startCta: "Start a structured submission",
   },
   partners: {
-    metadata: { title: "Partners and advisers — DESCO Nexus", description: "Routes for legal, financial, technical, government and development partners supporting structured opportunities." },
-    hero: { eyebrow: "Partners and advisers", title: "Professional support for structured project preparation and review.", body: "DESCO Nexus can coordinate authorised advisers and institutions around project information, due diligence and investor engagement without implying endorsement or partnership where none has been formally approved.", primary: "Submit a partnership enquiry", secondary: "Review the due diligence model" },
+    metadata: { title: "Partners and advisers — DESCO Compass", description: "Routes for legal, financial, technical, government and development partners supporting structured opportunities." },
+    hero: { eyebrow: "Partners and advisers", title: "Professional support for structured project preparation and review.", body: "DESCO Compass can coordinate authorised advisers and institutions around project information, due diligence and investor engagement without implying endorsement or partnership where none has been formally approved.", primary: "Submit a partnership enquiry", secondary: "Review the due diligence model" },
     sectionEyebrow: "Participation model", sectionTitle: "Defined roles, authorised access and clear accountability.",
     cards: [
       { title: "Legal and transaction advisers", body: "Support legal structuring, disclosure, document review and transaction execution." },
@@ -246,12 +246,12 @@ const en: MarketingCopy = {
       { title: "Technical and ESG specialists", body: "Support feasibility, engineering, environmental, social and operational review." },
       { title: "Government and development institutions", body: "Support public-sector coordination, policy context and development alignment." },
     ],
-    notice: "No adviser, government body, development institution or commercial partner should be displayed as affiliated with DESCO Nexus without approved source evidence.",
+    notice: "No adviser, government body, development institution or commercial partner should be displayed as affiliated with DESCO Compass without approved source evidence.",
     startCta: "Start a partnership enquiry",
   },
   pricing: {
-    metadata: { title: "Commercial model — DESCO Nexus", description: "How DESCO Nexus proposes to structure investor, sponsor and institutional-partner access." },
-    hero: { eyebrow: "Commercial model", title: "Institutional access should have documented scope and terms.", body: "DESCO Nexus does not currently process payments, issue invoices or offer self-service subscriptions. These pathways describe a proposed sales-assisted model for discussion, not binding prices or an offer.", primary: "Discuss commercial scope", secondary: "Review the investor pathway" },
+    metadata: { title: "Commercial model — DESCO Compass", description: "How DESCO Compass proposes to structure investor, sponsor and institutional-partner access." },
+    hero: { eyebrow: "Commercial model", title: "Institutional access should have documented scope and terms.", body: "DESCO Compass does not currently process payments, issue invoices or offer self-service subscriptions. These pathways describe a proposed sales-assisted model for discussion, not binding prices or an offer.", primary: "Discuss commercial scope", secondary: "Review the investor pathway" },
     heroNotice: "No payment processor is connected. No displayed workspace configuration is billed, collected revenue or an approved commercial quotation.",
     pathsEyebrow: "Proposed pathways", pathsTitle: "Different users require different commercial structures.",
     pathsBody: "The public product should explain who pays, what the fee covers, what remains project-specific and which services require a separate mandate.",
@@ -274,9 +274,9 @@ const en: MarketingCopy = {
     discussCta: "Discuss commercial scope",
   },
   trust: {
-    metadata: { title: "Trust and disclosures — DESCO Nexus", description: "How DESCO Nexus labels project information, review status, restricted access and verification evidence." },
-    hero: { eyebrow: "Trust and disclosure", title: "Status and evidence are shown without implying endorsement.", body: "DESCO Nexus describes project information and access controls by what has occurred, who supplied the information and what evidence supports the status.", primary: "Read the legal methodology", secondary: "How controlled access works" },
-    heroNotice: "Nothing on DESCO Nexus constitutes a securities offer, investment recommendation, financial guarantee or legal approval.",
+    metadata: { title: "Trust and disclosures — DESCO Compass", description: "How DESCO Compass labels project information, review status, restricted access and verification evidence." },
+    hero: { eyebrow: "Trust and disclosure", title: "Status and evidence are shown without implying endorsement.", body: "DESCO Compass describes project information and access controls by what has occurred, who supplied the information and what evidence supports the status.", primary: "Read the legal methodology", secondary: "How controlled access works" },
+    heroNotice: "Nothing on DESCO Compass constitutes a securities offer, investment recommendation, financial guarantee or legal approval.",
     sectionEyebrow: "Disclosure language", sectionTitle: "Statuses designed to remain clear under scrutiny.",
     statuses: [
       { title: "Sponsor-provided", body: "Information supplied by the project sponsor and not independently verified.", tone: "pending" },
@@ -301,12 +301,12 @@ const fr: MarketingCopy = {
   ...en,
   home: {
     ...en.home,
-    metadata: { title: "DESCO Nexus — Opportunités africaines structurées", description: "Examinez des opportunités d’investissement africaines structurées avec une divulgation claire, une diligence contrôlée par le porteur et un filtrage selon le mandat." },
+    metadata: { title: "DESCO Compass — Opportunités africaines structurées", description: "Examinez des opportunités d’investissement africaines structurées avec une divulgation claire, une diligence contrôlée par le porteur et un filtrage selon le mandat." },
     featured: "Présentation d’une opportunité", publicTeaser: "Présentation publique", capitalSought: "Capital recherché", projectStage: "Stade du projet", sector: "Secteur", location: "Localisation", disclosure: "Divulgation", sponsorProvided: "Fourni par le porteur", dataRoom: "Data room", readinessNotPublic: "État de préparation non public", reviewOpportunity: "Examiner l’opportunité",
     investorBenefits: ["Examiner les opportunités publiques structurées", "Comparer les opportunités à votre mandat", "Demander une diligence approfondie uniquement lorsqu’elle est justifiée"],
     sponsorBenefits: ["Préparer un dossier institutionnel", "Contrôler l’accès aux informations confidentielles", "Coordonner les échanges avec des investisseurs qualifiés"],
     capitalRepresented: "Capital présenté dans les fiches affichées", sponsorFigures: "Chiffres fournis par les porteurs",
-    processEyebrow: "Parcours de diligence investisseur", processTitle: "Un parcours contrôlé, du filtrage à l’examen approfondi.", processBody: "DESCO Nexus facilite le filtrage, l’échange d’informations et les échanges. Les investisseurs restent responsables de leur propre diligence juridique, financière, technique et commerciale.",
+    processEyebrow: "Parcours de diligence investisseur", processTitle: "Un parcours contrôlé, du filtrage à l’examen approfondi.", processBody: "DESCO Compass facilite le filtrage, l’échange d’informations et les échanges. Les investisseurs restent responsables de leur propre diligence juridique, financière, technique et commerciale.",
     process: [
       { title: "Examiner la présentation publique", body: "Évaluer la thèse, le besoin en capital, le porteur, le stade, les risques et le niveau de divulgation." },
       { title: "Évaluer l’adéquation au mandat", body: "Comparer le secteur, la géographie, le ticket et l’instrument aux critères enregistrés." },
@@ -323,12 +323,12 @@ const fr: MarketingCopy = {
       { title: "Activité d’accès enregistrée", body: "Les décisions d’accès, téléchargements et changements de processus peuvent être journalisés." },
       { title: "Confidentialité contrôlée par le porteur", body: "Les porteurs décident quels utilisateurs approuvés accèdent aux informations restreintes." },
     ],
-    trustNotice: "DESCO Nexus ne revendique pas de contrôles AML ou KYC achevés, de certification SOC 2, de conformité RGPD, d’approbation publique, de rendement garanti ou de vérification indépendante sans preuve approuvée.",
+    trustNotice: "DESCO Compass ne revendique pas de contrôles AML ou KYC achevés, de certification SOC 2, de conformité RGPD, d’approbation publique, de rendement garanti ou de vérification indépendante sans preuve approuvée.",
     trustCta: "Lire le cadre de divulgation", nextEyebrow: "Choisissez la prochaine étape", nextTitle: "Examinez les opportunités ou préparez un projet au filtrage institutionnel.", nextBody: "Les parcours investisseur et porteur restent distincts lors du filtrage, des décisions d’accès et des échanges.", reviewCta: "Examiner les opportunités", prepareCta: "Préparer un projet",
   },
   about: {
-    metadata: { title: "À propos de DESCO Global — DESCO Nexus", description: "Le rôle de DESCO Global dans la mise en relation de projets structurés, de capitaux et de partenaires stratégiques." },
-    hero: { eyebrow: "À propos de DESCO Global", title: "Relier projets structurés, capitaux et partenaires stratégiques.", body: "DESCO Global exploite DESCO Nexus comme plateforme d’opportunités et de diligence, initialement centrée sur la République démocratique du Congo et certains marchés africains.", primary: "Contacter DESCO Global", secondary: "Examiner les piliers d’investissement" },
+    metadata: { title: "À propos de DESCO Global — DESCO Compass", description: "Le rôle de DESCO Global dans la mise en relation de projets structurés, de capitaux et de partenaires stratégiques." },
+    hero: { eyebrow: "À propos de DESCO Global", title: "Relier projets structurés, capitaux et partenaires stratégiques.", body: "DESCO Global exploite DESCO Compass comme plateforme d’opportunités et de diligence, initialement centrée sur la République démocratique du Congo et certains marchés africains.", primary: "Contacter DESCO Global", secondary: "Examiner les piliers d’investissement" },
     notice: "Cette page ne revendique aucun historique d’investissement, portefeuille client, historique de transactions, réseau de bureaux ou statut réglementaire non fourni et approuvé par DESCO Global.",
     sectionEyebrow: "Raison d’être de la plateforme", sectionTitle: "Une interface plus claire entre préparation des projets et examen investisseur.",
     cards: [{ title: "Structure du projet", body: "Aider les porteurs à organiser les informations publiques et restreintes dans un format cohérent." }, { title: "Filtrage des capitaux", body: "Aider les investisseurs à comparer les opportunités aux critères explicites de leur mandat." }, { title: "Diligence contrôlée", body: "Donner aux porteurs le contrôle des informations confidentielles et des décisions d’accès." }, { title: "Coordination stratégique", body: "Faciliter réunions, communications et prochaines étapes entre organisations autorisées." }],
@@ -336,8 +336,8 @@ const fr: MarketingCopy = {
   },
   diligence: {
     ...en.diligence,
-    metadata: { title: "Fonctionnement de la diligence — DESCO Nexus", description: "Comprendre le filtrage public, les demandes d’accès, les documents restreints et les échanges avec les porteurs." },
-    hero: { eyebrow: "Diligence contrôlée", title: "L’accès à l’information doit suivre une décision de filtrage justifiée.", body: "DESCO Nexus sépare les informations publiques des documents financiers, techniques, juridiques et transactionnels soumis à autorisation.", primary: "Examiner les opportunités publiques", secondary: "Lire les normes de divulgation" },
+    metadata: { title: "Fonctionnement de la diligence — DESCO Compass", description: "Comprendre le filtrage public, les demandes d’accès, les documents restreints et les échanges avec les porteurs." },
+    hero: { eyebrow: "Diligence contrôlée", title: "L’accès à l’information doit suivre une décision de filtrage justifiée.", body: "DESCO Compass sépare les informations publiques des documents financiers, techniques, juridiques et transactionnels soumis à autorisation.", primary: "Examiner les opportunités publiques", secondary: "Lire les normes de divulgation" },
     accessState: "Statut d’accès", statuses: ["Présentation publique", "Demande en attente", "Restreint", "Accès approuvé"], accessNote: "Les décisions d’accès doivent identifier l’utilisateur, l’organisation, le projet, le périmètre d’autorisation et la décision.",
     processEyebrow: "Processus investisseur", processTitle: "Du filtrage public à l’examen contrôlé.",
     process: [
@@ -350,12 +350,12 @@ const fr: MarketingCopy = {
     ],
     roomEyebrow: "Structure de la data room", roomTitle: "Une architecture documentaire prévisible.", roomBody: "La disponibilité des dossiers dépend des documents fournis et de l’accès approuvé.", folderLabel: "Dossier",
     folders: ["Synthèse exécutive", "Informations sur la société et le porteur", "Informations financières", "Études techniques", "Juridique et réglementaire", "Terrains, permis et concessions", "ESG et communautés", "Accords commerciaux", "Risques et assurances", "Documents transactionnels"],
-    notice: "DESCO Nexus facilite le filtrage, l’échange contrôlé d’informations et les échanges. Il ne remplace pas la diligence juridique, financière, technique, fiscale, ESG ou commerciale.",
+    notice: "DESCO Compass facilite le filtrage, l’échange contrôlé d’informations et les échanges. Il ne remplace pas la diligence juridique, financière, technique, fiscale, ESG ou commerciale.",
   },
   investors: {
     ...en.investors,
-    metadata: { title: "Pour les investisseurs — DESCO Nexus", description: "Filtrer les opportunités structurées selon un mandat avant d’engager des ressources de diligence." },
-    hero: { eyebrow: "Parcours investisseur", title: "Évaluez l’adéquation au mandat avant d’engager une diligence complète.", body: "DESCO Nexus aide les investisseurs institutionnels, fonds, family offices, prêteurs et investisseurs stratégiques à filtrer les opportunités et à contrôler le passage vers un examen approfondi.", primary: "Demander un accès investisseur", secondary: "Examiner les opportunités" },
+    metadata: { title: "Pour les investisseurs — DESCO Compass", description: "Filtrer les opportunités structurées selon un mandat avant d’engager des ressources de diligence." },
+    hero: { eyebrow: "Parcours investisseur", title: "Évaluez l’adéquation au mandat avant d’engager une diligence complète.", body: "DESCO Compass aide les investisseurs institutionnels, fonds, family offices, prêteurs et investisseurs stratégiques à filtrer les opportunités et à contrôler le passage vers un examen approfondi.", primary: "Demander un accès investisseur", secondary: "Examiner les opportunités" },
     preview: "Aperçu du mandat", mandateFields: ["Secteurs privilégiés", "Ciblage géographique", "Taille du ticket", "Instrument d’investissement", "Stade du projet", "Exigences d’impact", "Tolérance au risque", "Préférence de contrôle"],
     matchingNote: "Le rapprochement utilise les champs divulgués et des critères déterministes. Il s’agit d’un outil de filtrage, pas d’un conseil en investissement.",
     sectionEyebrow: "Modèle opérationnel investisseur", sectionTitle: "Examiner les opportunités selon des critères de mandat définis.",
@@ -373,7 +373,7 @@ const fr: MarketingCopy = {
   },
   sponsors: {
     ...en.sponsors,
-    metadata: { title: "Pour les porteurs de projet — DESCO Nexus", description: "Préparer un dossier structuré et gérer une diligence investisseur contrôlée." },
+    metadata: { title: "Pour les porteurs de projet — DESCO Compass", description: "Préparer un dossier structuré et gérer une diligence investisseur contrôlée." },
     hero: { eyebrow: "Parcours porteur de projet", title: "Préparez votre projet à un examen investisseur institutionnel.", body: "Transformez des informations fragmentées en dossier institutionnel structuré, présentation publique claire et diligence à accès contrôlé.", primary: "Évaluer la maturité du projet", secondary: "Discuter de l’accompagnement" },
     framework: "Cadre de préparation", underReview: "En cours d’examen", required: "Requis",
     readiness: ["Informations sur le porteur", "Structure du projet", "Analyse de marché", "Maturité technique", "Modèle financier", "Position juridique et réglementaire", "Terrains et permis", "ESG et communautés", "Divulgation des risques", "Documents justificatifs"],
@@ -391,17 +391,17 @@ const fr: MarketingCopy = {
   },
   partners: {
     ...en.partners,
-    metadata: { title: "Partenaires et conseillers — DESCO Nexus", description: "Parcours pour les partenaires juridiques, financiers, techniques, publics et de développement." },
-    hero: { eyebrow: "Partenaires et conseillers", title: "Un accompagnement professionnel pour la préparation et l’examen des projets.", body: "DESCO Nexus peut coordonner des conseillers et institutions autorisés autour de l’information, de la diligence et des échanges investisseurs, sans laisser entendre une affiliation non approuvée.", primary: "Transmettre une demande de partenariat", secondary: "Examiner le modèle de diligence" },
+    metadata: { title: "Partenaires et conseillers — DESCO Compass", description: "Parcours pour les partenaires juridiques, financiers, techniques, publics et de développement." },
+    hero: { eyebrow: "Partenaires et conseillers", title: "Un accompagnement professionnel pour la préparation et l’examen des projets.", body: "DESCO Compass peut coordonner des conseillers et institutions autorisés autour de l’information, de la diligence et des échanges investisseurs, sans laisser entendre une affiliation non approuvée.", primary: "Transmettre une demande de partenariat", secondary: "Examiner le modèle de diligence" },
     sectionEyebrow: "Modèle de participation", sectionTitle: "Rôles définis, accès autorisé et responsabilité claire.",
     cards: [{ title: "Conseillers juridiques et transactionnels", body: "Accompagner la structuration juridique, la divulgation, l’examen des documents et l’exécution." }, { title: "Conseillers financiers et prêteurs", body: "Accompagner la modélisation financière, la structure du capital, l’analyse crédit et les échanges investisseurs." }, { title: "Spécialistes techniques et ESG", body: "Accompagner les études de faisabilité, l’ingénierie et les examens environnementaux, sociaux et opérationnels." }, { title: "Institutions publiques et de développement", body: "Accompagner la coordination publique, le contexte réglementaire et l’alignement de développement." }],
-    notice: "Aucun conseiller, organisme public, institution de développement ou partenaire commercial ne doit être présenté comme affilié à DESCO Nexus sans preuve approuvée.",
+    notice: "Aucun conseiller, organisme public, institution de développement ou partenaire commercial ne doit être présenté comme affilié à DESCO Compass sans preuve approuvée.",
     startCta: "Transmettre une demande de partenariat",
   },
   pricing: {
     ...en.pricing,
-    metadata: { title: "Modèle commercial — DESCO Nexus", description: "Comment DESCO Nexus propose de structurer l’accès des investisseurs, porteurs et partenaires institutionnels." },
-    hero: { eyebrow: "Modèle commercial", title: "L’accès institutionnel doit avoir un périmètre et des conditions documentés.", body: "DESCO Nexus ne traite actuellement aucun paiement, n’émet aucune facture et ne propose aucun abonnement en libre-service. Ces parcours décrivent un modèle assisté proposé à la discussion.", primary: "Discuter du périmètre commercial", secondary: "Examiner le parcours investisseur" },
+    metadata: { title: "Modèle commercial — DESCO Compass", description: "Comment DESCO Compass propose de structurer l’accès des investisseurs, porteurs et partenaires institutionnels." },
+    hero: { eyebrow: "Modèle commercial", title: "L’accès institutionnel doit avoir un périmètre et des conditions documentés.", body: "DESCO Compass ne traite actuellement aucun paiement, n’émet aucune facture et ne propose aucun abonnement en libre-service. Ces parcours décrivent un modèle assisté proposé à la discussion.", primary: "Discuter du périmètre commercial", secondary: "Examiner le parcours investisseur" },
     heroNotice: "Aucun prestataire de paiement n’est connecté. Aucune configuration affichée n’est facturée, un revenu encaissé ou un devis approuvé.",
     pathsEyebrow: "Parcours proposés", pathsTitle: "Des utilisateurs différents exigent des structures commerciales différentes.", pathsBody: "Le produit public doit préciser qui paie, ce que couvrent les frais, ce qui reste propre au projet et quels services exigent un mandat distinct.",
     paths: [
@@ -415,9 +415,9 @@ const fr: MarketingCopy = {
   },
   trust: {
     ...en.trust,
-    metadata: { title: "Confiance et divulgation — DESCO Nexus", description: "Comment DESCO Nexus qualifie les informations, le statut d’examen, l’accès restreint et les preuves." },
-    hero: { eyebrow: "Confiance et divulgation", title: "Le statut et les preuves sont présentés sans suggérer d’approbation.", body: "DESCO Nexus décrit les informations et contrôles d’accès selon les actions effectuées, leur source et les preuves disponibles.", primary: "Lire la méthodologie juridique", secondary: "Comprendre l’accès contrôlé" },
-    heroNotice: "Rien sur DESCO Nexus ne constitue une offre de titres, un conseil en investissement, une garantie financière ou une approbation juridique.",
+    metadata: { title: "Confiance et divulgation — DESCO Compass", description: "Comment DESCO Compass qualifie les informations, le statut d’examen, l’accès restreint et les preuves." },
+    hero: { eyebrow: "Confiance et divulgation", title: "Le statut et les preuves sont présentés sans suggérer d’approbation.", body: "DESCO Compass décrit les informations et contrôles d’accès selon les actions effectuées, leur source et les preuves disponibles.", primary: "Lire la méthodologie juridique", secondary: "Comprendre l’accès contrôlé" },
+    heroNotice: "Rien sur DESCO Compass ne constitue une offre de titres, un conseil en investissement, une garantie financière ou une approbation juridique.",
     sectionEyebrow: "Langage de divulgation", sectionTitle: "Des statuts conçus pour rester clairs sous examen.",
     statuses: [{ title: "Fourni par le porteur", body: "Information fournie par le porteur et non vérifiée indépendamment.", tone: "pending" }, { title: "Examiné par DESCO", body: "Examiné pour la structure, l’exhaustivité et la cohérence interne.", tone: "reviewed" }, { title: "Vérification indépendante en attente", body: "Aucune validation tierce approuvée n’est enregistrée.", tone: "pending" }, { title: "Document vérifié", body: "Un document précis dispose d’un enregistrement de vérification et d’un périmètre défini.", tone: "reviewed" }, { title: "Restreint", body: "Seuls les utilisateurs authentifiés et approuvés peuvent accéder à l’information.", tone: "restricted" }, { title: "Approuvé pour publication", body: "Un administrateur a approuvé la publication; cela ne constitue pas une recommandation.", tone: "public" }],
     controls: [{ title: "Examen des informations", body: "DESCO examine la structure, l’exhaustivité et la cohérence interne. Il ne s’agit pas d’une vérification indépendante." }, { title: "Statut de la fiche", body: "Les administrateurs DESCO enregistrent et gèrent le statut. Il ne constitue ni approbation ni recommandation." }, { title: "Accès à la data room", body: "Les documents confidentiels sont réservés aux utilisateurs approuvés via un accès contrôlé." }, { title: "Journal d’activité", body: "L’activité significative et les décisions d’accès peuvent être journalisées." }],
@@ -441,7 +441,7 @@ function completeTranslation(locale: "es" | "pt" | "zh"): MarketingCopy {
   return {
     home: {
       metadata: {
-        title: tr("DESCO Nexus — Oportunidades africanas estructuradas", "DESCO Nexus — Oportunidades africanas estruturadas", "DESCO Nexus — 结构化非洲投资机会"),
+        title: tr("DESCO Compass — Oportunidades africanas estructuradas", "DESCO Compass — Oportunidades africanas estruturadas", "DESCO Compass — 结构化非洲投资机会"),
         description: tr("Revise oportunidades de inversión africanas estructuradas con divulgación clara, diligencia controlada por el promotor y selección según mandato.", "Analise oportunidades de investimento africanas estruturadas com divulgação clara, diligência controlada pelo promotor e seleção segundo o mandato.", "审阅结构化非洲投资机会，了解清晰的披露状态、由项目发起方控制的尽调访问以及基于投资授权的筛选。"),
       },
       featured: tr("Ficha de oportunidad destacada", "Ficha de oportunidade em destaque", "重点项目简介"),
@@ -469,7 +469,7 @@ function completeTranslation(locale: "es" | "pt" | "zh"): MarketingCopy {
       sponsorFigures: tr("Cifras proporcionadas por los promotores", "Valores fornecidos pelos promotores", "项目发起方提供的数据"),
       processEyebrow: tr("Proceso de diligencia del inversor", "Processo de diligência do investidor", "投资者尽调流程"),
       processTitle: tr("Un proceso controlado desde la selección hasta la revisión detallada.", "Um processo controlado desde a seleção até à análise aprofundada.", "从初步筛选到深入审查的受控流程。"),
-      processBody: tr("DESCO Nexus facilita la selección, el intercambio de información y el contacto. Los inversores siguen siendo responsables de su propia diligencia jurídica, financiera, técnica y comercial.", "A DESCO Nexus facilita a seleção, a troca de informação e o contacto. Os investidores continuam responsáveis pela sua própria diligência jurídica, financeira, técnica e comercial.", "DESCO Nexus 支持筛选、信息交换和项目沟通。投资者仍须自行完成法律、财务、技术和商业尽调。"),
+      processBody: tr("DESCO Compass facilita la selección, el intercambio de información y el contacto. Los inversores siguen siendo responsables de su propia diligencia jurídica, financiera, técnica y comercial.", "A DESCO Compass facilita a seleção, a troca de informação e o contacto. Os investidores continuam responsáveis pela sua própria diligência jurídica, financeira, técnica e comercial.", "DESCO Compass 支持筛选、信息交换和项目沟通。投资者仍须自行完成法律、财务、技术和商业尽调。"),
       process: [
         step("Revisar la presentación pública", "Analisar a apresentação pública", "审阅公开简介", "Evaluar la tesis, el capital, el promotor, la etapa, los riesgos y la divulgación.", "Avaliar a tese, o capital, o promotor, a fase, os riscos e a divulgação.", "评估投资逻辑、融资需求、发起方、阶段、风险及披露状态。"),
         step("Evaluar la adecuación al mandato", "Avaliar o alinhamento com o mandato", "评估投资授权匹配度", "Comparar sector, geografía, tamaño de inversión e instrumento con los criterios guardados.", "Comparar setor, geografia, montante e instrumento com os critérios guardados.", "将行业、地区、投资规模和工具与已保存的投资标准比较。"),
@@ -489,7 +489,7 @@ function completeTranslation(locale: "es" | "pt" | "zh"): MarketingCopy {
         card("Actividad de acceso registrada", "Atividade de acesso registada", "访问活动记录", "Las decisiones de acceso, descargas y cambios de flujo pueden registrarse.", "As decisões de acesso, transferências e alterações de fluxo podem ser registadas.", "重要访问决定、下载及流程变更可被记录。"),
         card("Confidencialidad controlada por el promotor", "Confidencialidade controlada pelo promotor", "发起方控制保密访问", "El promotor decide qué usuarios aprobados acceden a la información restringida.", "O promotor decide que utilizadores aprovados acedem à informação restrita.", "项目发起方决定哪些获批用户可访问受限资料。"),
       ],
-      trustNotice: tr("DESCO Nexus no declara controles AML/KYC completados, certificación SOC 2, cumplimiento del RGPD, aprobación pública, rentabilidad garantizada ni verificación independiente sin pruebas aprobadas.", "A DESCO Nexus não declara controlos AML/KYC concluídos, certificação SOC 2, conformidade com o RGPD, aprovação pública, retornos garantidos ou verificação independente sem provas aprovadas.", "除非有经批准的证据，DESCO Nexus 不声称已完成反洗钱或客户身份识别、取得 SOC 2 认证、符合 GDPR、获得政府批准、保证回报或完成独立核实。"),
+      trustNotice: tr("DESCO Compass no declara controles AML/KYC completados, certificación SOC 2, cumplimiento del RGPD, aprobación pública, rentabilidad garantizada ni verificación independiente sin pruebas aprobadas.", "A DESCO Compass não declara controlos AML/KYC concluídos, certificação SOC 2, conformidade com o RGPD, aprovação pública, retornos garantidos ou verificação independente sem provas aprovadas.", "除非有经批准的证据，DESCO Compass 不声称已完成反洗钱或客户身份识别、取得 SOC 2 认证、符合 GDPR、获得政府批准、保证回报或完成独立核实。"),
       trustCta: tr("Leer el marco de divulgación", "Ler o quadro de divulgação", "阅读披露框架"),
       nextEyebrow: tr("Elija el siguiente paso", "Escolha o passo seguinte", "选择下一步"),
       nextTitle: tr("Revise oportunidades o prepare un proyecto para la selección institucional.", "Analise oportunidades ou prepare um projeto para seleção institucional.", "审阅投资机会，或准备项目接受机构筛选。"),
@@ -498,8 +498,8 @@ function completeTranslation(locale: "es" | "pt" | "zh"): MarketingCopy {
       prepareCta: tr("Preparar un proyecto", "Preparar um projeto", "准备项目"),
     },
     about: {
-      metadata: { title: tr("Acerca de DESCO Global — DESCO Nexus", "Sobre a DESCO Global — DESCO Nexus", "关于 DESCO Global — DESCO Nexus"), description: tr("El papel de DESCO Global en la conexión de proyectos estructurados, capital y socios estratégicos.", "O papel da DESCO Global na ligação entre projetos estruturados, capital e parceiros estratégicos.", "DESCO Global 在连接结构化项目、资本和战略合作伙伴方面的角色。") },
-      hero: { eyebrow: tr("Acerca de DESCO Global", "Sobre a DESCO Global", "关于 DESCO Global"), title: tr("Conectar proyectos estructurados, capital y socios estratégicos.", "Ligar projetos estruturados, capital e parceiros estratégicos.", "连接结构化项目、资本与战略合作伙伴。"), body: tr("DESCO Global opera DESCO Nexus como plataforma de oportunidades y diligencia, centrada inicialmente en la RDC y con capacidad para apoyar mercados africanos seleccionados.", "A DESCO Global opera a DESCO Nexus como plataforma de oportunidades e diligência, inicialmente centrada na RDC e com capacidade para apoiar mercados africanos selecionados.", "DESCO Global 运营 DESCO Nexus 投资机会与尽调平台，初期重点覆盖刚果民主共和国，并可支持部分非洲市场。"), primary: tr("Contactar con DESCO Global", "Contactar a DESCO Global", "联系 DESCO Global"), secondary: tr("Revisar los pilares de inversión", "Analisar os pilares de investimento", "查看投资业务支柱") },
+      metadata: { title: tr("Acerca de DESCO Global — DESCO Compass", "Sobre a DESCO Global — DESCO Compass", "关于 DESCO Global — DESCO Compass"), description: tr("El papel de DESCO Global en la conexión de proyectos estructurados, capital y socios estratégicos.", "O papel da DESCO Global na ligação entre projetos estruturados, capital e parceiros estratégicos.", "DESCO Global 在连接结构化项目、资本和战略合作伙伴方面的角色。") },
+      hero: { eyebrow: tr("Acerca de DESCO Global", "Sobre a DESCO Global", "关于 DESCO Global"), title: tr("Conectar proyectos estructurados, capital y socios estratégicos.", "Ligar projetos estruturados, capital e parceiros estratégicos.", "连接结构化项目、资本与战略合作伙伴。"), body: tr("DESCO Global opera DESCO Compass como plataforma de oportunidades y diligencia, centrada inicialmente en la RDC y con capacidad para apoyar mercados africanos seleccionados.", "A DESCO Global opera a DESCO Compass como plataforma de oportunidades e diligência, inicialmente centrada na RDC e com capacidade para apoiar mercados africanos selecionados.", "DESCO Global 运营 DESCO Compass 投资机会与尽调平台，初期重点覆盖刚果民主共和国，并可支持部分非洲市场。"), primary: tr("Contactar con DESCO Global", "Contactar a DESCO Global", "联系 DESCO Global"), secondary: tr("Revisar los pilares de inversión", "Analisar os pilares de investimento", "查看投资业务支柱") },
       notice: tr("Esta página no atribuye a DESCO Global un historial de inversión, lista de clientes, operaciones, red de oficinas o situación regulatoria que no haya sido aportada y aprobada.", "Esta página não atribui à DESCO Global um histórico de investimento, lista de clientes, transações, rede de escritórios ou estatuto regulamentar que não tenha sido fornecido e aprovado.", "本页不声称 DESCO Global 拥有未经其提供和批准的投资业绩、客户名单、交易记录、办公网络或监管资质。"),
       sectionEyebrow: tr("Función de la plataforma", "Função da plataforma", "平台定位"),
       sectionTitle: tr("Una interfaz más clara entre la preparación de proyectos y la revisión del inversor.", "Uma interface mais clara entre a preparação de projetos e a análise do investidor.", "在项目准备与投资者审查之间建立更清晰的界面。"),
@@ -526,8 +526,8 @@ type CardFactory = (esTitle: string, ptTitle: string, zhTitle: string, esBody: s
 
 function translatedDiligence(locale: "es" | "pt" | "zh", tr: Tr, step: CardFactory): MarketingCopy["diligence"] {
   return {
-    metadata: { title: tr("Cómo funciona la diligencia — DESCO Nexus", "Como funciona a diligência — DESCO Nexus", "尽调流程 — DESCO Nexus"), description: tr("Comprenda la selección pública, las solicitudes de acceso, los documentos restringidos y la relación con el promotor.", "Compreenda a seleção pública, os pedidos de acesso, os documentos restritos e o contacto com o promotor.", "了解公开筛选、访问申请、受限文件及与项目发起方的沟通。") },
-    hero: { eyebrow: tr("Diligencia controlada", "Diligência controlada", "受控尽调"), title: tr("El acceso a la información debe seguir a una decisión de selección justificada.", "O acesso à informação deve seguir uma decisão de seleção fundamentada.", "信息访问应建立在有依据的筛选决定之上。"), body: tr("DESCO Nexus separa la información pública del material financiero, técnico, jurídico y transaccional sujeto a permisos.", "A DESCO Nexus separa a informação pública do material financeiro, técnico, jurídico e transacional sujeito a autorização.", "DESCO Nexus 将公开筛选信息与需要权限的财务、技术、法律和交易资料分开管理。"), primary: tr("Revisar oportunidades públicas", "Analisar oportunidades públicas", "查看公开投资机会"), secondary: tr("Leer las normas de divulgación", "Ler as normas de divulgação", "阅读披露标准") },
+    metadata: { title: tr("Cómo funciona la diligencia — DESCO Compass", "Como funciona a diligência — DESCO Compass", "尽调流程 — DESCO Compass"), description: tr("Comprenda la selección pública, las solicitudes de acceso, los documentos restringidos y la relación con el promotor.", "Compreenda a seleção pública, os pedidos de acesso, os documentos restritos e o contacto com o promotor.", "了解公开筛选、访问申请、受限文件及与项目发起方的沟通。") },
+    hero: { eyebrow: tr("Diligencia controlada", "Diligência controlada", "受控尽调"), title: tr("El acceso a la información debe seguir a una decisión de selección justificada.", "O acesso à informação deve seguir uma decisão de seleção fundamentada.", "信息访问应建立在有依据的筛选决定之上。"), body: tr("DESCO Compass separa la información pública del material financiero, técnico, jurídico y transaccional sujeto a permisos.", "A DESCO Compass separa a informação pública do material financeiro, técnico, jurídico e transacional sujeito a autorização.", "DESCO Compass 将公开筛选信息与需要权限的财务、技术、法律和交易资料分开管理。"), primary: tr("Revisar oportunidades públicas", "Analisar oportunidades públicas", "查看公开投资机会"), secondary: tr("Leer las normas de divulgación", "Ler as normas de divulgação", "阅读披露标准") },
     accessState: tr("Estado de acceso", "Estado de acesso", "访问状态"),
     statuses: [tr("Presentación pública", "Apresentação pública", "公开简介"), tr("Solicitud pendiente", "Pedido pendente", "申请待处理"), tr("Restringido", "Restrito", "受限"), tr("Acceso aprobado", "Acesso aprovado", "访问已获批")],
     accessNote: tr("Las decisiones deben identificar al usuario, la organización, el proyecto, el alcance del permiso y el registro de la decisión.", "As decisões devem identificar o utilizador, a organização, o projeto, o âmbito da permissão e o registo da decisão.", "访问决定应记录用户、机构、项目、权限范围及决定记录。"),
@@ -552,14 +552,14 @@ function translatedDiligence(locale: "es" | "pt" | "zh", tr: Tr, step: CardFacto
       tr("ESG y comunidad", "ESG e comunidade", "ESG 与社区"), tr("Acuerdos comerciales", "Acordos comerciais", "商业协议"),
       tr("Riesgos y seguros", "Riscos e seguros", "风险与保险"), tr("Documentos de transacción", "Documentos da transação", "交易文件"),
     ],
-    notice: tr("DESCO Nexus facilita la selección y el intercambio controlado. No sustituye la diligencia jurídica, financiera, técnica, fiscal, ESG o comercial.", "A DESCO Nexus facilita a seleção e a troca controlada. Não substitui a diligência jurídica, financeira, técnica, fiscal, ESG ou comercial.", "DESCO Nexus 支持筛选及受控信息交换，但不能替代法律、财务、技术、税务、ESG 或商业尽调。"),
+    notice: tr("DESCO Compass facilita la selección y el intercambio controlado. No sustituye la diligencia jurídica, financiera, técnica, fiscal, ESG o comercial.", "A DESCO Compass facilita a seleção e a troca controlada. Não substitui a diligência jurídica, financeira, técnica, fiscal, ESG ou comercial.", "DESCO Compass 支持筛选及受控信息交换，但不能替代法律、财务、技术、税务、ESG 或商业尽调。"),
   };
 }
 
 function translatedInvestors(locale: "es" | "pt" | "zh", tr: Tr, card: CardFactory, step: CardFactory): MarketingCopy["investors"] {
   return {
-    metadata: { title: tr("Para inversores — DESCO Nexus", "Para investidores — DESCO Nexus", "投资者 — DESCO Nexus"), description: tr("Compare oportunidades estructuradas con un mandato antes de dedicar recursos a la diligencia.", "Compare oportunidades estruturadas com um mandato antes de dedicar recursos à diligência.", "在投入深入尽调资源前，根据投资授权筛选结构化机会。") },
-    hero: { eyebrow: tr("Recorrido del inversor", "Percurso do investidor", "投资者路径"), title: tr("Evalúe la adecuación al mandato antes de una diligencia completa.", "Avalie o alinhamento com o mandato antes da diligência completa.", "开展全面尽调前，先判断项目是否符合投资授权。"), body: tr("DESCO Nexus ayuda a inversores institucionales, fondos, family offices, prestamistas y capital estratégico a seleccionar oportunidades y controlar el paso a una revisión detallada.", "A DESCO Nexus ajuda investidores institucionais, fundos, family offices, credores e capital estratégico a selecionar oportunidades e controlar a passagem para uma análise aprofundada.", "DESCO Nexus 帮助机构投资者、基金、家族办公室、贷款机构和战略资本筛选项目，并控制进入深入审查的过程。"), primary: tr("Solicitar acceso de inversor", "Solicitar acesso de investidor", "申请投资者权限"), secondary: tr("Revisar oportunidades", "Analisar oportunidades", "查看投资机会") },
+    metadata: { title: tr("Para inversores — DESCO Compass", "Para investidores — DESCO Compass", "投资者 — DESCO Compass"), description: tr("Compare oportunidades estructuradas con un mandato antes de dedicar recursos a la diligencia.", "Compare oportunidades estruturadas com um mandato antes de dedicar recursos à diligência.", "在投入深入尽调资源前，根据投资授权筛选结构化机会。") },
+    hero: { eyebrow: tr("Recorrido del inversor", "Percurso do investidor", "投资者路径"), title: tr("Evalúe la adecuación al mandato antes de una diligencia completa.", "Avalie o alinhamento com o mandato antes da diligência completa.", "开展全面尽调前，先判断项目是否符合投资授权。"), body: tr("DESCO Compass ayuda a inversores institucionales, fondos, family offices, prestamistas y capital estratégico a seleccionar oportunidades y controlar el paso a una revisión detallada.", "A DESCO Compass ajuda investidores institucionais, fundos, family offices, credores e capital estratégico a selecionar oportunidades e controlar a passagem para uma análise aprofundada.", "DESCO Compass 帮助机构投资者、基金、家族办公室、贷款机构和战略资本筛选项目，并控制进入深入审查的过程。"), primary: tr("Solicitar acceso de inversor", "Solicitar acesso de investidor", "申请投资者权限"), secondary: tr("Revisar oportunidades", "Analisar oportunidades", "查看投资机会") },
     preview: tr("Vista previa del mandato", "Pré-visualização do mandato", "投资授权设置预览"),
     mandateFields: [tr("Sectores preferidos", "Setores preferidos", "偏好行业"), tr("Enfoque geográfico", "Foco geográfico", "地域重点"), tr("Tamaño de inversión", "Montante de investimento", "投资规模"), tr("Instrumento", "Instrumento", "投资工具"), tr("Etapa del proyecto", "Fase do projeto", "项目阶段"), tr("Requisitos de impacto", "Requisitos de impacto", "影响要求"), tr("Tolerancia al riesgo", "Tolerância ao risco", "风险承受度"), tr("Preferencia de control", "Preferência de controlo", "控制权偏好")],
     matchingNote: tr("La comparación utiliza campos divulgados y criterios deterministas. Es una ayuda de selección, no asesoramiento de inversión.", "A comparação utiliza campos divulgados e critérios determinísticos. É uma ajuda à seleção, não aconselhamento de investimento.", "匹配使用已披露项目字段及确定性标准，仅用于筛选，不构成投资建议。"),
@@ -585,7 +585,7 @@ function translatedInvestors(locale: "es" | "pt" | "zh", tr: Tr, card: CardFacto
 
 function translatedSponsors(locale: "es" | "pt" | "zh", tr: Tr, card: CardFactory, step: CardFactory): MarketingCopy["sponsors"] {
   return {
-    metadata: { title: tr("Para promotores de proyectos — DESCO Nexus", "Para promotores de projetos — DESCO Nexus", "项目发起方 — DESCO Nexus"), description: tr("Prepare una ficha estructurada y gestione una diligencia controlada.", "Prepare uma ficha estruturada e faça a gestão de uma diligência controlada.", "准备结构化项目资料并管理受控投资者尽调。") },
+    metadata: { title: tr("Para promotores de proyectos — DESCO Compass", "Para promotores de projetos — DESCO Compass", "项目发起方 — DESCO Compass"), description: tr("Prepare una ficha estructurada y gestione una diligencia controlada.", "Prepare uma ficha estruturada e faça a gestão de uma diligência controlada.", "准备结构化项目资料并管理受控投资者尽调。") },
     hero: { eyebrow: tr("Recorrido del promotor", "Percurso do promotor", "项目发起方路径"), title: tr("Prepare su proyecto para la revisión de inversores institucionales.", "Prepare o seu projeto para a análise de investidores institucionais.", "为机构投资者审查做好项目准备。"), body: tr("Convierta información fragmentada en una ficha institucional, una presentación pública clara y una diligencia con permisos.", "Transforme informação fragmentada numa ficha institucional, numa apresentação pública clara e numa diligência com permissões.", "将分散信息整理为机构级项目资料、清晰的公开简介和权限受控的尽调流程。"), primary: tr("Evaluar la preparación", "Avaliar a preparação", "评估项目准备度"), secondary: tr("Hablar sobre apoyo al promotor", "Discutir apoio ao promotor", "讨论项目支持") },
     framework: tr("Marco de preparación", "Quadro de preparação", "准备度框架"),
     underReview: tr("En revisión", "Em análise", "审核中"),
@@ -609,8 +609,8 @@ function translatedSponsors(locale: "es" | "pt" | "zh", tr: Tr, card: CardFactor
 
 function translatedPartners(locale: "es" | "pt" | "zh", tr: Tr, card: CardFactory): MarketingCopy["partners"] {
   return {
-    metadata: { title: tr("Socios y asesores — DESCO Nexus", "Parceiros e consultores — DESCO Nexus", "合作伙伴与顾问 — DESCO Nexus"), description: tr("Vías para socios jurídicos, financieros, técnicos, públicos y de desarrollo.", "Percursos para parceiros jurídicos, financeiros, técnicos, públicos e de desenvolvimento.", "法律、财务、技术、政府和发展合作伙伴的参与路径。") },
-    hero: { eyebrow: tr("Socios y asesores", "Parceiros e consultores", "合作伙伴与顾问"), title: tr("Apoyo profesional para preparar y revisar proyectos estructurados.", "Apoio profissional para preparar e analisar projetos estruturados.", "为结构化项目准备和审查提供专业支持。"), body: tr("DESCO Nexus puede coordinar asesores e instituciones autorizados sin dar a entender un respaldo o una relación no aprobada.", "A DESCO Nexus pode coordenar consultores e instituições autorizados sem sugerir apoio ou relação não aprovada.", "DESCO Nexus 可协调获授权的顾问与机构，但不会暗示未经批准的认可或合作关系。"), primary: tr("Enviar una consulta de colaboración", "Enviar um pedido de parceria", "提交合作咨询"), secondary: tr("Revisar el modelo de diligencia", "Analisar o modelo de diligência", "查看尽调模式") },
+    metadata: { title: tr("Socios y asesores — DESCO Compass", "Parceiros e consultores — DESCO Compass", "合作伙伴与顾问 — DESCO Compass"), description: tr("Vías para socios jurídicos, financieros, técnicos, públicos y de desarrollo.", "Percursos para parceiros jurídicos, financeiros, técnicos, públicos e de desenvolvimento.", "法律、财务、技术、政府和发展合作伙伴的参与路径。") },
+    hero: { eyebrow: tr("Socios y asesores", "Parceiros e consultores", "合作伙伴与顾问"), title: tr("Apoyo profesional para preparar y revisar proyectos estructurados.", "Apoio profissional para preparar e analisar projetos estruturados.", "为结构化项目准备和审查提供专业支持。"), body: tr("DESCO Compass puede coordinar asesores e instituciones autorizados sin dar a entender un respaldo o una relación no aprobada.", "A DESCO Compass pode coordenar consultores e instituições autorizados sem sugerir apoio ou relação não aprovada.", "DESCO Compass 可协调获授权的顾问与机构，但不会暗示未经批准的认可或合作关系。"), primary: tr("Enviar una consulta de colaboración", "Enviar um pedido de parceria", "提交合作咨询"), secondary: tr("Revisar el modelo de diligencia", "Analisar o modelo de diligência", "查看尽调模式") },
     sectionEyebrow: tr("Modelo de participación", "Modelo de participação", "参与模式"),
     sectionTitle: tr("Funciones definidas, acceso autorizado y responsabilidad clara.", "Funções definidas, acesso autorizado e responsabilidade clara.", "明确角色、授权访问和责任。"),
     cards: [
@@ -619,15 +619,15 @@ function translatedPartners(locale: "es" | "pt" | "zh", tr: Tr, card: CardFactor
       card("Especialistas técnicos y ESG", "Especialistas técnicos e ESG", "技术与 ESG 专家", "Apoyar la viabilidad, la ingeniería y las revisiones ambientales, sociales y operativas.", "Apoiar a viabilidade, a engenharia e as análises ambientais, sociais e operacionais.", "支持可行性、工程、环境、社会和运营审查。"),
       card("Instituciones públicas y de desarrollo", "Instituições públicas e de desenvolvimento", "政府与发展机构", "Apoyar la coordinación pública, el contexto de políticas y el desarrollo.", "Apoiar a coordenação pública, o contexto de políticas e o desenvolvimento.", "支持公共部门协调、政策背景及发展目标衔接。"),
     ],
-    notice: tr("Ningún asesor, organismo público, institución de desarrollo o socio debe mostrarse como afiliado sin pruebas aprobadas.", "Nenhum consultor, organismo público, instituição de desenvolvimento ou parceiro deve ser apresentado como afiliado sem provas aprovadas.", "没有经批准的来源证据，不应将任何顾问、政府机构、发展机构或商业伙伴展示为 DESCO Nexus 的关联方。"),
+    notice: tr("Ningún asesor, organismo público, institución de desarrollo o socio debe mostrarse como afiliado sin pruebas aprobadas.", "Nenhum consultor, organismo público, instituição de desenvolvimento ou parceiro deve ser apresentado como afiliado sem provas aprovadas.", "没有经批准的来源证据，不应将任何顾问、政府机构、发展机构或商业伙伴展示为 DESCO Compass 的关联方。"),
     startCta: tr("Iniciar una consulta de colaboración", "Iniciar um pedido de parceria", "发起合作咨询"),
   };
 }
 
 function translatedPricing(locale: "es" | "pt" | "zh", tr: Tr, card: CardFactory): MarketingCopy["pricing"] {
   return {
-    metadata: { title: tr("Modelo comercial — DESCO Nexus", "Modelo comercial — DESCO Nexus", "商业模式 — DESCO Nexus"), description: tr("Cómo propone DESCO Nexus estructurar el acceso de inversores, promotores y socios institucionales.", "Como a DESCO Nexus propõe estruturar o acesso de investidores, promotores e parceiros institucionais.", "DESCO Nexus 拟如何安排投资者、项目发起方和机构合作伙伴的访问。") },
-    hero: { eyebrow: tr("Modelo comercial", "Modelo comercial", "商业模式"), title: tr("El acceso institucional debe tener alcance y condiciones documentados.", "O acesso institucional deve ter âmbito e condições documentados.", "机构访问应有明确并记录在案的范围和条款。"), body: tr("DESCO Nexus no procesa pagos, emite facturas ni ofrece suscripciones de autoservicio. Estas vías describen un modelo asistido propuesto, no precios vinculantes ni una oferta.", "A DESCO Nexus não processa pagamentos, emite faturas ou oferece subscrições self-service. Estes percursos descrevem um modelo assistido proposto, não preços vinculativos nem uma oferta.", "DESCO Nexus 目前不处理付款、不出具发票，也不提供自助订阅。以下路径仅说明拟议的销售支持模式，不构成约束性价格或要约。"), primary: tr("Hablar del alcance comercial", "Discutir o âmbito comercial", "讨论商业合作范围"), secondary: tr("Revisar el recorrido del inversor", "Analisar o percurso do investidor", "查看投资者路径") },
+    metadata: { title: tr("Modelo comercial — DESCO Compass", "Modelo comercial — DESCO Compass", "商业模式 — DESCO Compass"), description: tr("Cómo propone DESCO Compass estructurar el acceso de inversores, promotores y socios institucionales.", "Como a DESCO Compass propõe estruturar o acesso de investidores, promotores e parceiros institucionais.", "DESCO Compass 拟如何安排投资者、项目发起方和机构合作伙伴的访问。") },
+    hero: { eyebrow: tr("Modelo comercial", "Modelo comercial", "商业模式"), title: tr("El acceso institucional debe tener alcance y condiciones documentados.", "O acesso institucional deve ter âmbito e condições documentados.", "机构访问应有明确并记录在案的范围和条款。"), body: tr("DESCO Compass no procesa pagos, emite facturas ni ofrece suscripciones de autoservicio. Estas vías describen un modelo asistido propuesto, no precios vinculantes ni una oferta.", "A DESCO Compass não processa pagamentos, emite faturas ou oferece subscrições self-service. Estes percursos descrevem um modelo assistido proposto, não preços vinculativos nem uma oferta.", "DESCO Compass 目前不处理付款、不出具发票，也不提供自助订阅。以下路径仅说明拟议的销售支持模式，不构成约束性价格或要约。"), primary: tr("Hablar del alcance comercial", "Discutir o âmbito comercial", "讨论商业合作范围"), secondary: tr("Revisar el recorrido del inversor", "Analisar o percurso do investidor", "查看投资者路径") },
     heroNotice: tr("No hay procesador de pagos conectado. Ninguna configuración mostrada constituye facturación, ingresos cobrados o una cotización aprobada.", "Não existe processador de pagamentos ligado. Nenhuma configuração apresentada constitui faturação, receita cobrada ou cotação aprovada.", "目前未连接支付处理商。所展示的工作区配置不代表已计费、已收收入或经批准的报价。"),
     pathsEyebrow: tr("Vías propuestas", "Percursos propostos", "拟议路径"),
     pathsTitle: tr("Cada tipo de usuario requiere una estructura comercial distinta.", "Cada tipo de utilizador exige uma estrutura comercial distinta.", "不同用户需要不同的商业结构。"),
@@ -656,9 +656,9 @@ function translatedPricing(locale: "es" | "pt" | "zh", tr: Tr, card: CardFactory
 
 function translatedTrust(locale: "es" | "pt" | "zh", tr: Tr, card: CardFactory): MarketingCopy["trust"] {
   return {
-    metadata: { title: tr("Confianza y divulgación — DESCO Nexus", "Confiança e divulgação — DESCO Nexus", "信任与披露 — DESCO Nexus"), description: tr("Cómo etiqueta DESCO Nexus la información, la revisión, el acceso restringido y las pruebas.", "Como a DESCO Nexus classifica a informação, a análise, o acesso restrito e as provas.", "DESCO Nexus 如何标注项目信息、审查状态、受限访问及核实证据。") },
-    hero: { eyebrow: tr("Confianza y divulgación", "Confiança e divulgação", "信任与披露"), title: tr("El estado y las pruebas se muestran sin dar a entender respaldo.", "O estado e as provas são apresentados sem sugerir apoio.", "展示状态和证据，不暗示认可。"), body: tr("DESCO Nexus describe qué ocurrió, quién aportó la información y qué pruebas sustentan cada estado.", "A DESCO Nexus descreve o que ocorreu, quem forneceu a informação e que provas sustentam cada estado.", "DESCO Nexus 根据实际完成的工作、信息提供方和支持该状态的证据进行说明。"), primary: tr("Leer la metodología jurídica", "Ler a metodologia jurídica", "阅读法律方法说明"), secondary: tr("Cómo funciona el acceso controlado", "Como funciona o acesso controlado", "了解受控访问") },
-    heroNotice: tr("Nada en DESCO Nexus constituye oferta de valores, recomendación, garantía financiera o aprobación jurídica.", "Nada na DESCO Nexus constitui oferta de valores mobiliários, recomendação, garantia financeira ou aprovação jurídica.", "DESCO Nexus 的任何内容均不构成证券要约、投资建议、财务保证或法律批准。"),
+    metadata: { title: tr("Confianza y divulgación — DESCO Compass", "Confiança e divulgação — DESCO Compass", "信任与披露 — DESCO Compass"), description: tr("Cómo etiqueta DESCO Compass la información, la revisión, el acceso restringido y las pruebas.", "Como a DESCO Compass classifica a informação, a análise, o acesso restrito e as provas.", "DESCO Compass 如何标注项目信息、审查状态、受限访问及核实证据。") },
+    hero: { eyebrow: tr("Confianza y divulgación", "Confiança e divulgação", "信任与披露"), title: tr("El estado y las pruebas se muestran sin dar a entender respaldo.", "O estado e as provas são apresentados sem sugerir apoio.", "展示状态和证据，不暗示认可。"), body: tr("DESCO Compass describe qué ocurrió, quién aportó la información y qué pruebas sustentan cada estado.", "A DESCO Compass descreve o que ocorreu, quem forneceu a informação e que provas sustentam cada estado.", "DESCO Compass 根据实际完成的工作、信息提供方和支持该状态的证据进行说明。"), primary: tr("Leer la metodología jurídica", "Ler a metodologia jurídica", "阅读法律方法说明"), secondary: tr("Cómo funciona el acceso controlado", "Como funciona o acesso controlado", "了解受控访问") },
+    heroNotice: tr("Nada en DESCO Compass constituye oferta de valores, recomendación, garantía financiera o aprobación jurídica.", "Nada na DESCO Compass constitui oferta de valores mobiliários, recomendação, garantia financeira ou aprovação jurídica.", "DESCO Compass 的任何内容均不构成证券要约、投资建议、财务保证或法律批准。"),
     sectionEyebrow: tr("Lenguaje de divulgación", "Linguagem de divulgação", "披露用语"),
     sectionTitle: tr("El significado de cada estado.", "O significado de cada estado.", "各状态的含义。"),
     statuses: [

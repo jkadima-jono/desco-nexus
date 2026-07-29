@@ -22,7 +22,7 @@ export async function generateMetadata({
   const pillar = getPillarsLegal(await getLocale()).pillars.find((item) => item.slug === slug);
   if (!pillar) return {};
   return {
-    title: pillar.name + " — DESCO Nexus",
+    title: pillar.name + " — DESCO Compass",
     description: pillar.summary,
   };
 }

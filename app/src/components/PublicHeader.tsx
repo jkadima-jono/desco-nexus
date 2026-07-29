@@ -51,11 +51,11 @@ export default function PublicHeader() {
     <>
       <header className="sticky top-0 z-40 border-b border-white/10 bg-ink text-white">
         <div className="public-container flex h-16 items-center justify-between gap-6">
-          <Link href="/" className="flex shrink-0 items-center gap-3" aria-label="DESCO Nexus home">
+          <Link href="/" className="flex shrink-0 items-center gap-3" aria-label="DESCO Compass home">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src="/brand/desco-coin.png" alt="" className="h-9 w-9 rounded-full" />
             <span className="font-display text-base font-extrabold">
-              DESCO <span className="text-gold">Nexus</span>
+              DESCO <span className="text-gold">Compass</span>
             </span>
           </Link>
           <div className="hidden items-center gap-3 2xl:flex">
@@ -89,7 +89,7 @@ export default function PublicHeader() {
             onClick={(event) => event.stopPropagation()}
           >
             <div className="mb-8 flex items-center justify-between">
-              <span className="font-display font-extrabold">DESCO <span className="text-gold">Nexus</span></span>
+              <span className="font-display font-extrabold">DESCO <span className="text-gold">Compass</span></span>
               <button
                 ref={closeButton}
                 type="button"

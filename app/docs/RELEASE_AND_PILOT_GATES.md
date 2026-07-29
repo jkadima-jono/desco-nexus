@@ -1,4 +1,4 @@
-# DESCO Nexus release and pilot gates
+# DESCO Compass release and pilot gates
 
 This file defines the minimum controls for promoting a build or onboarding a pilot organization.
 

@@ -59,7 +59,7 @@ function LoginForm() {
     <div className="min-h-screen bg-ink flex items-center justify-center px-6 py-10">
       <div className="w-full max-w-md">
         <div className="text-center mb-8">
-          <Link href="/" aria-label="Return to DESCO Nexus home" className="inline-block">
+          <Link href="/" aria-label="Return to DESCO Compass home" className="inline-block">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src="/brand/desco-coin.png"
@@ -68,7 +68,7 @@ function LoginForm() {
             />
           </Link>
           <div className="font-display font-extrabold text-3xl text-white tracking-tight">
-            DESCO <span className="text-gold">Nexus</span>
+            DESCO <span className="text-gold">Compass</span>
           </div>
           <p className="text-white/50 text-sm mt-2">{t("login.tagline")}</p>
         </div>

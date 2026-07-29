@@ -5,8 +5,8 @@ import SubmissionManager from "./SubmissionManager";
 export const dynamic = "force-dynamic";
 
 export const metadata = {
-  title: "Submit a Project — DESCO Nexus",
-  description: "Present your project to qualified capital with a structured, verifiable listing on DESCO Nexus.",
+  title: "Submit a Project — DESCO Compass",
+  description: "Present your project to qualified capital with a structured, verifiable listing on DESCO Compass.",
 };
 
 export default async function SubmitProjectPage() {

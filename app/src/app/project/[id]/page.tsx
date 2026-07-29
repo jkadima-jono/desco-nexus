@@ -43,7 +43,7 @@ export async function generateMetadata({
     : metadataUi.capitalNotDisclosed;
   const description = `${row.sector} ${metadataUi.opportunityIn} ${row.country} — ${capital} · ${row.instrument}. ${normalizeStage(row.stage)}.`;
   return {
-    title: row.title + " — DESCO Nexus",
+    title: row.title + " — DESCO Compass",
     description,
     alternates: { canonical: "/project/" + row.id },
     openGraph: { title: row.title, description, url: "/project/" + row.id, type: "website" },

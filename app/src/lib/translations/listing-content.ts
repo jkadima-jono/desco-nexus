@@ -42,6 +42,12 @@ const fr = {
     highlights: ["Premier d’un réseau prévu de plus de 10 centres à moyen terme et de plus de 50 d’ici 2035", "Énergie solaire, chaîne du froid et production générique conforme aux BPF envisagée", "Des financeurs potentiels sont cités ; aucune participation ni engagement n’est confirmé"],
     whyMatch: "Plateforme d’accès aux soins en phase initiale, ancrant le pôle Phardesco dans sa région fondatrice.",
   },
+  "waterdesco-grand-kasai": {
+    sector: "Eau", country: "RDC", instrument: "Financement mixte d’infrastructure et d’impact proposé ; structure finale non communiquée", stage: "Conception — périmètre à réconcilier", irr: "Aucun rendement projet communiqué ; les documents privilégient la couverture des coûts d’exploitation",
+    summary: "WaterDesco propose des infrastructures d’eau potable pour les communautés mal desservies du Grand Kasaï. Un master deck 2026 décrit 300 centres WASH solaires décentralisés et un budget de 12 M$. Une autre présentation 2026 décrit 12 stations, 500 km de réseau et 50 000 m³/jour. Les variantes ne sont pas réconciliées et les études de site, analyses d’eau, permis, achats et modèle financier examiné ne sont pas publics.",
+    highlights: ["Concept du master deck : 300 centres WASH solaires et budget Phase 1 de 12 M$", "Autre concept : 12 stations, 500 km de réseau et 50 000 m³/jour", "Tarification à l’usage et abonnements décrits ; demande, accessibilité et recouvrement non prouvés"],
+    whyMatch: "Concept Waterdesco précoce nécessitant des diligences techniques, environnementales, tarifaires et d’exécution avant le choix du réseau.",
+  },
   "tilu-pepm-8252": {
     sector: "Mines", country: "RDC", instrument: "Besoin en capital d’exploration non communiqué publiquement", stage: "Données historiques d’exploration — statut actuel du titre non vérifié", irr: "Non communiqué publiquement",
     summary: "Prospect cuivre-cobalt précoce dans le territoire de Manono. Une étude historique rapporte des travaux géochimiques réalisés en 2010 sur PEPM 8252, dont 933 échantillons de sol. Elle recommande cartographie structurale, tranchées et forage avant toute définition de ressource. Propriété, validité et renouvellement du permis n’ont pas été vérifiés indépendamment.",
@@ -87,6 +93,7 @@ const esCopy: Record<string, Pick<ListingText, "summary" | "highlights" | "whyMa
     highlights: ["Primero de una red prevista de más de 10 centros a medio plazo y más de 50 para 2035", "Energía solar, cadena de frío y producción genérica en vía GMP previstas", "Se citan posibles financiadores; no se confirma participación ni compromiso"],
     whyMatch: "Plataforma de acceso sanitario en fase inicial que ancla el pilar Phardesco en su región de origen.",
   },
+  "waterdesco-grand-kasai": { summary: "WaterDesco propone infraestructura de agua potable para comunidades desatendidas del Gran Kasai. Un deck de 2026 describe 300 centros WASH solares y un presupuesto de 12 M$. Otra presentación describe 12 estaciones, 500 km de red y 50.000 m³/día. Las variantes no están conciliadas y no se publican estudios, pruebas de agua, permisos, compras ni un modelo financiero revisado.", highlights: ["Concepto del deck maestro: 300 centros WASH solares y 12 M$ de presupuesto de fase uno", "Concepto alternativo: 12 estaciones, 500 km de red y 50.000 m³/día", "Se describen pago por uso y suscripciones; demanda, asequibilidad y cobro no están demostrados"], whyMatch: "Concepto Waterdesco temprano que requiere diligencia técnica, ambiental, tarifaria y de ejecución antes de elegir el diseño." },
   "tilu-pepm-8252": {
     summary: "Prospecto temprano de cobre-cobalto en Manono. Un estudio histórico informa de trabajos geoquímicos realizados en 2010 en PEPM 8252, con 933 muestras de suelo. Recomienda cartografía estructural, zanjas y perforación antes de definir recursos. La propiedad, validez y renovación del permiso no se han verificado de forma independiente.",
     highlights: ["El estudio informa de 933 muestras de suelo en 24 líneas norte-sur", "Señala anomalías de cobre y cobalto; no se divulga ningún recurso o reserva", "Siguen recomendándose cartografía, zanjas y perforación de exploración"],
@@ -106,6 +113,7 @@ const ptCopy: Record<string, Pick<ListingText, "summary" | "highlights" | "whyMa
   "comicordia-agri": { summary: "Plataforma agrícola proposta no centro da RDC que organiza pequenos produtores em redes com crédito de insumos, mecanização partilhada, armazenamento e transformação de milho, mandioca e soja, procurando ligá-los a acordos de compra propostos a preços transparentes.", highlights: ["Dado do promotor: mais de 50.000 agricultores e 25.000 hectares; evidência e data não públicas", "Dado do promotor: mais de 40 aldeias e aumento de rendimento de 45%; método e data não públicos", "Emprego declarado: 10.000 mulheres; evidência de medição não pública"], whyMatch: "Oportunidade agrícola que exige validar alcance, acesso à terra, compra, salvaguardas e impacto declarado." },
   "manioc-plant": { summary: "Os materiais descrevem uma fábrica de liofilização de quatro hectares perto de Kimwenza, abastecida com folhas de mandioca de Mont Ngafula e Kongo Central. Indicam validade aproximada de dez anos e distribuição por vendedores e depósitos; testes de produto, procura e validação não são públicos.", highlights: ["Local de 4 hectares com energia solar, armazenamento refrigerado e tratamento de água", "Produto liofilizado com validade declarada de cerca de 10 anos", "Distribuição baseada em vendedoras de mercado"], whyMatch: "Ativo de transformação Agridesco de menor dimensão, com plano de construção orçamentado e canal de distribuição identificado." },
   "phardesco-mbuji-mayi": { summary: "Primeiro Pharmalab Hub proposto pela Phardesco: centro solar que integra farmácia, diagnóstico, água potável e educação sanitária no Grande Kasai. Os materiais do promotor indicam cerca de um farmacêutico por 50.000 pessoas, face à referência OMS de 1 por 2.000.", highlights: ["Primeiro de uma rede prevista de mais de 10 centros a médio prazo e mais de 50 até 2035", "Energia solar, cadeia de frio e produção genérica em trajetória GMP previstas", "São citados potenciais financiadores; não há participação ou compromisso confirmado"], whyMatch: "Plataforma inicial de acesso à saúde que ancora o pilar Phardesco na sua região de origem." },
+  "waterdesco-grand-kasai": { summary: "A WaterDesco propõe infraestruturas de água potável para comunidades mal servidas do Grande Kasai. Um deck de 2026 descreve 300 centros WASH solares e orçamento de US$12 milhões. Outra apresentação descreve 12 estações, 500 km de rede e 50.000 m³/dia. As variantes não estão reconciliadas e não são públicos estudos, testes de água, licenças, compras ou modelo financeiro revisto.", highlights: ["Conceito do deck principal: 300 centros WASH solares e US$12 milhões para a primeira fase", "Conceito alternativo: 12 estações, 500 km de rede e 50.000 m³/dia", "São descritos pagamento por utilização e assinaturas; procura, acessibilidade e cobrança não estão demonstradas"], whyMatch: "Conceito Waterdesco inicial que exige diligência técnica, ambiental, tarifária e de execução antes da escolha do desenho." },
   "tilu-pepm-8252": { summary: "Prospeção inicial de cobre-cobalto em Manono. Um estudo histórico relata trabalhos geoquímicos de 2010 em PEPM 8252, com 933 amostras de solo. Recomenda cartografia estrutural, trincheiras e perfuração antes de definir recursos. Propriedade, validade e renovação da licença não foram verificadas independentemente.", highlights: ["O estudo relata 933 amostras de solo em 24 linhas norte-sul", "Indica anomalias de cobre e cobalto; não é divulgado recurso ou reserva", "Continuam recomendadas cartografia, trincheiras e perfuração exploratória"], whyMatch: "Oportunidade mineira Investdesco inicial para investidores capazes de avaliar risco geológico e de título pré-recurso." },
   "sciress-kolwezi-12423": { summary: "A Scires Mining propõe adquirir e desenvolver PE 12423, projeto de exploração de cobalto-cobre em Lualaba. Uma apresentação de dezembro de 2025 descreve perfurações, trincheiras e amostragem históricas e um plano de US$45 milhões em duas fases. Não divulga recurso conforme, viabilidade concluída ou modelo financeiro revisto independentemente. Transferência, título, dados e autoridade de transação exigem diligência.", highlights: ["A apresentação descreve seis quadrículas mineiras cobrindo cerca de 5,066 km²", "Histórico declarado: quatro furos diamantados, 22 RC, trincheiras e 1.334 amostras de solo", "Uma anomalia de cobre de 500 por 300 m continua alvo de perfuração proposto; não há recurso conforme divulgado"], whyMatch: "Oportunidade Investdesco inicial em minerais críticos que exige diligência faseada sobre título, recurso, viabilidade, ambiente e comércio." },
 };
@@ -117,13 +125,14 @@ const zhCopy: Record<string, Pick<ListingText, "summary" | "highlights" | "whyMa
   "comicordia-agri": { summary: "拟议的刚果民主共和国中部农业平台，通过投入品信贷、共享机械化、收后仓储及玉米、木薯和大豆加工组织小农网络，计划以透明价格连接拟议承购安排。", highlights: ["发起方称覆盖 5 万多名农户和 2.5 万公顷；计量证据及报告日期未公开", "发起方称覆盖 40 多个村庄并使收入提高 45%；方法及日期未公开", "发起方称直接雇用 1 万名女性；计量证据未公开"], whyMatch: "需核验农户覆盖、土地使用权、承购、保障措施及所述影响的农业项目。" },
   "manioc-plant": { summary: "项目资料描述在 Kimwenza 附近建设四公顷冻干设施，从 Mont Ngafula 和 Kongo Central 的种植户采购木薯叶。资料称产品保质期约十年，并计划通过零售商贩和仓点分销；产品测试、需求及验证证据尚未公开。", highlights: ["4 公顷场地，配备太阳能、冷藏及现场水处理", "冻干产品所述保质期约 10 年", "以女性市场商贩为基础的分销模式"], whyMatch: "规模较小、拟快速进入市场的 Agridesco 加工资产，具有已列成本的建设计划及明确分销渠道。" },
   "phardesco-mbuji-mayi": { summary: "Phardesco 拟建设首个 Pharmalab Hub，为大开赛地区提供太阳能支持的一站式药品零售、诊断、清洁饮水及健康教育。发起方资料称当地约每 5 万人一名药剂师，而其引用的世卫组织基准为每 2,000 人一名。", highlights: ["拟建网络首个中心，中期超过 10 个，2035 年前超过 50 个", "计划配备太阳能、冷链能力及符合 GMP 路径的仿制药生产", "发起方资料列出潜在融资机构，但未确认参与或承诺"], whyMatch: "处于早期阶段的医疗可及性平台，是 Phardesco 在创始地区的核心项目。" },
+  "waterdesco-grand-kasai": { summary: "WaterDesco 拟为大开赛服务不足的社区建设清洁饮水基础设施。一份 2026 年主资料描述 300 个太阳能 WASH 站点及 1,200 万美元预算，另一份资料描述 12 个处理站、500 公里管网和每日 5 万立方米能力。两种方案尚未统一，场址研究、水质检测、许可、采购及经审阅财务模型均未公开。", highlights: ["主资料方案：300 个太阳能 WASH 站点，第一阶段预算 1,200 万美元", "另一方案：12 个处理站、500 公里管网及每日 5 万立方米", "资料描述按量付费及订阅模式；需求、可负担性及收费证据未公开"], whyMatch: "Waterdesco 早期概念，在选定网络设计前需要完成技术、环境、收费及交付尽调。" },
   "tilu-pepm-8252": { summary: "位于 Manono 的早期铜钴勘探项目。历史技术研究称 2010 年在 PEPM 8252 开展地球化学工作，包括 933 个土壤样本。研究建议在定义矿产资源量前开展构造测绘、探槽及钻探。当前矿权所有权、有效性及续期状态未经独立核验。", highlights: ["历史研究称在 24 条南北向测线上采集 933 个土壤样本", "研究称发现铜钴异常；未披露矿产资源量或储量", "仍建议开展构造测绘、探槽及勘探钻探"], whyMatch: "Investdesco 早期采矿项目，适合能够评估资源量确定前地质及矿权风险的投资者。" },
   "sciress-kolwezi-12423": { summary: "Scires Mining 拟收购并开发 Lualaba 省铜钴勘探项目 PE 12423。2025 年 12 月的发起方材料描述历史钻探、探槽及土壤采样，并提出 4,500 万美元两阶段资本计划。项目尚未披露合规资源量、已完成可行性研究或经独立审阅的财务模型。矿权转让、产权、技术数据及交易授权仍须尽调。", highlights: ["发起方材料称 PE 12423 包括六个矿权方格，约 5.066 平方公里", "发起方所述勘探历史：四个金刚石钻孔、22 个 RC 钻孔、探槽及 1,334 个土壤样本", "北部 500 米乘 300 米铜异常仍是拟议优先钻探目标；未披露合规资源量"], whyMatch: "Investdesco 早期关键矿产项目，需要分阶段核验矿权、资源量、可行性、环境及商业条件。" },
 };
 
 const es = Object.fromEntries(Object.entries(fr).map(([id, x]) => [id, {
   ...x,
-  sector: x.sector === "Mines" ? "Minería" : x.sector === "Santé" ? "Salud" : x.sector,
+  sector: x.sector === "Mines" ? "Minería" : x.sector === "Santé" ? "Salud" : x.sector === "Eau" ? "Agua" : x.sector,
   country: "R. D. del Congo",
   instrument: ({
     "port-de-ndomba": "SPV del proyecto — participación mayoritaria de DESCO",
@@ -132,6 +141,7 @@ const es = Object.fromEntries(Object.entries(fr).map(([id, x]) => [id, {
     "comicordia-agri": "Asignación del pilar Agridesco (30 % del programa Fase 1 de 750 M$)",
     "manioc-plant": "Capital y financiación de equipos",
     "phardesco-mbuji-mayi": "IFD y capital de impacto (captación inicial de 5–10 M$)",
+    "waterdesco-grand-kasai": "Financiación mixta de infraestructura e impacto propuesta; estructura final no divulgada",
     "tilu-pepm-8252": "Necesidad de capital de exploración no divulgada públicamente",
     "sciress-kolwezi-12423": "Capital, empresa conjunta o financiación de compraventa propuestos, sujetos a diligencia y términos definitivos",
   } as Record<string, string>)[id],
@@ -139,6 +149,7 @@ const es = Object.fromEntries(Object.entries(fr).map(([id, x]) => [id, {
     "port-de-ndomba": "Viabilidad declarada por el promotor", "port-de-kasenga": "Estructuración",
     "comicordia-mining": "Geología histórica y planificación minera conceptual", "comicordia-agri": "Información operativa facilitada",
     "manioc-plant": "Preconstrucción", "phardesco-mbuji-mayi": "Prelanzamiento",
+    "waterdesco-grand-kasai": "Diseño conceptual — alcance pendiente de conciliación",
     "tilu-pepm-8252": "Datos históricos de exploración — título actual sin verificar",
     "sciress-kolwezi-12423": "Exploración previa a recursos y adquisición de permiso propuesta",
   } as Record<string, string>)[id],
@@ -149,6 +160,7 @@ const es = Object.fromEntries(Object.entries(fr).map(([id, x]) => [id, {
     "comicordia-agri": "Incluido en el objetivo de TIR del 17,2 % del programa Fase 1 de DESCO Global",
     "manioc-plant": "Modelo del promotor: unos 15.444 $ por lote de 2.000 kg; supuestos no revisados independientemente",
     "phardesco-mbuji-mayi": "Previsión a 5 años: equilibrio EBITDA en el año 2 y +3,8 M$ en el año 5",
+    "waterdesco-grand-kasai": "No se divulga rentabilidad del proyecto; los materiales priorizan cubrir costes operativos",
     "tilu-pepm-8252": "No divulgado públicamente",
     "sciress-kolwezi-12423": "Ilustración del promotor: TIR objetivo del 35 %; sin recursos conformes, viabilidad ni modelo revisado independientemente",
   } as Record<string, string>)[id],
@@ -157,7 +169,7 @@ const es = Object.fromEntries(Object.entries(fr).map(([id, x]) => [id, {
 
 const pt = Object.fromEntries(Object.entries(fr).map(([id, x]) => [id, {
   ...x,
-  sector: x.sector === "Mines" ? "Mineração" : x.sector === "Santé" ? "Saúde" : x.sector,
+  sector: x.sector === "Mines" ? "Mineração" : x.sector === "Santé" ? "Saúde" : x.sector === "Eau" ? "Água" : x.sector,
   country: "RD Congo",
   instrument: ({
     "port-de-ndomba": "SPV do projeto — participação maioritária da DESCO",
@@ -166,6 +178,7 @@ const pt = Object.fromEntries(Object.entries(fr).map(([id, x]) => [id, {
     "comicordia-agri": "Alocação do pilar Agridesco (30% do programa Fase 1 de US$ 750 M)",
     "manioc-plant": "Capital próprio e financiamento de equipamentos",
     "phardesco-mbuji-mayi": "IFD e capital de impacto (captação inicial de US$ 5–10 M)",
+    "waterdesco-grand-kasai": "Financiamento misto de infraestrutura e impacto proposto; estrutura final não divulgada",
     "tilu-pepm-8252": "Necessidade de capital de exploração não divulgada publicamente",
     "sciress-kolwezi-12423": "Capital, joint venture ou financiamento de compra propostos, sujeitos a diligência e termos finais",
   } as Record<string, string>)[id],
@@ -173,6 +186,7 @@ const pt = Object.fromEntries(Object.entries(fr).map(([id, x]) => [id, {
     "port-de-ndomba": "Viabilidade declarada pelo promotor", "port-de-kasenga": "Estruturação",
     "comicordia-mining": "Geologia histórica e planeamento mineiro conceptual", "comicordia-agri": "Informação operacional fornecida",
     "manioc-plant": "Pré-construção", "phardesco-mbuji-mayi": "Pré-lançamento",
+    "waterdesco-grand-kasai": "Conceção — âmbito por reconciliar",
     "tilu-pepm-8252": "Dados históricos de exploração — título atual não verificado",
     "sciress-kolwezi-12423": "Exploração pré-recurso e aquisição de licença proposta",
   } as Record<string, string>)[id],
@@ -183,6 +197,7 @@ const pt = Object.fromEntries(Object.entries(fr).map(([id, x]) => [id, {
     "comicordia-agri": "Incluído no objetivo de TIR de 17,2% do programa Fase 1 da DESCO Global",
     "manioc-plant": "Modelo do promotor: cerca de US$15.444 por lote de 2.000 kg; pressupostos não revistos independentemente",
     "phardesco-mbuji-mayi": "Previsão a 5 anos: equilíbrio EBITDA no ano 2 e +US$3,8 M no ano 5",
+    "waterdesco-grand-kasai": "Sem retorno do projeto divulgado; os materiais priorizam a cobertura dos custos operacionais",
     "tilu-pepm-8252": "Não divulgado publicamente",
     "sciress-kolwezi-12423": "Ilustração do promotor: TIR alvo de 35%; sem recurso conforme, viabilidade ou modelo revisto independentemente",
   } as Record<string, string>)[id],
@@ -191,18 +206,20 @@ const pt = Object.fromEntries(Object.entries(fr).map(([id, x]) => [id, {
 
 const zh = Object.fromEntries(Object.entries(fr).map(([id, x]) => [id, {
   ...x,
-  sector: x.sector === "Mines" ? "采矿" : x.sector === "Santé" ? "医疗健康" : x.sector === "Agriculture" ? "农业" : "基础设施",
+  sector: x.sector === "Mines" ? "采矿" : x.sector === "Santé" ? "医疗健康" : x.sector === "Agriculture" ? "农业" : x.sector === "Eau" ? "水务" : "基础设施",
   country: "刚果民主共和国",
   instrument: ({
     "port-de-ndomba": "项目 SPV，DESCO 持有多数权益", "port-de-kasenga": "项目 SPV，DESCO 持有多数权益",
     "comicordia-mining": "拟议合资企业；公开交易条款尚未披露", "comicordia-agri": "Agridesco 业务支柱资本分配，占 7.5 亿美元第一阶段计划的 30%",
     "manioc-plant": "股权及设备融资", "phardesco-mbuji-mayi": "开发金融机构及影响力股权，初始融资 500万至1,000 万美元",
+    "waterdesco-grand-kasai": "拟议混合基础设施及影响力资本；最终结构未披露",
     "tilu-pepm-8252": "勘探融资需求尚未公开披露", "sciress-kolwezi-12423": "拟议股权、合资或承购融资，须经尽调并确定最终条款",
   } as Record<string, string>)[id],
   stage: ({
     "port-de-ndomba": "项目发起方报告已开展可行性研究", "port-de-kasenga": "结构设计阶段",
     "comicordia-mining": "历史地质资料及概念性矿山规划", "comicordia-agri": "已提供运营信息",
     "manioc-plant": "建设前阶段", "phardesco-mbuji-mayi": "启动前阶段",
+    "waterdesco-grand-kasai": "概念设计阶段，范围有待统一",
     "tilu-pepm-8252": "历史勘探数据，当前矿权状态未经核验", "sciress-kolwezi-12423": "资源量确定前勘探及拟议矿权收购",
   } as Record<string, string>)[id],
   irr: ({
@@ -212,6 +229,7 @@ const zh = Object.fromEntries(Object.entries(fr).map(([id, x]) => [id, {
     "comicordia-agri": "纳入 DESCO Global 第一阶段计划 17.2% 的目标内部收益率",
     "manioc-plant": "发起方模型：每批投入 2,000 公斤，约 15,444 美元；假设未经独立审阅",
     "phardesco-mbuji-mayi": "五年预测：第 2 年 EBITDA 盈亏平衡，第 5 年 EBITDA 约 380 万美元",
+    "waterdesco-grand-kasai": "未披露项目回报；发起方资料以覆盖运营成本为重点",
     "tilu-pepm-8252": "尚未公开披露",
     "sciress-kolwezi-12423": "发起方示例：目标内部收益率 35%；未披露合规资源量、可行性研究或独立审阅模型",
   } as Record<string, string>)[id],

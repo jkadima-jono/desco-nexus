@@ -2,8 +2,8 @@ import type { MetadataRoute } from "next";
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: "DESCO Nexus",
-    short_name: "Nexus",
+    name: "DESCO Compass",
+    short_name: "Compass",
     description: "Structured investment-opportunity screening and controlled diligence.",
     start_url: "/",
     display: "standalone",
