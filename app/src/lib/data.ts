@@ -1,4 +1,4 @@
-import { DESCO_COLORS } from "./theme";
+import { DESCO_COLORS, sectorColor as colorForSector } from "./theme";
 
 export type Scores = {
   match: number;      // 0-100 AI match vs. current mandate
@@ -40,9 +40,11 @@ export type Listing = {
   updatedAt?: Date;
 };
 
-// Sourced from Desco Global's own investor deck and business plans
+// Sourced from Desco Global's own investor deck, business plans and
+// project-folder technical records
 // (Desco_Investor_Deck_Fin.pdf, Phardesco_Expanded_Business_Plan.docx,
-// Manioc-Project business plan) — no invented projects, figures, or
+// Manioc-Project business plan, the Tilu preliminary geochemical study,
+// and the Sciress CAMI extract) — no invented projects, figures, or
 // sponsors. Where the source deck gives only a pillar-level allocation
 // (Comicordia entries), that is stated explicitly rather than presented
 // as a project-specific ask. Legacy score fields remain only for schema
@@ -53,7 +55,7 @@ export const listings: Listing[] = [
     title: "Port de Ndomba — Kasai River Gateway",
     org: "Desco Global (Investdesco)",
     sector: "Infrastructure",
-    sectorColor: DESCO_COLORS.charcoal,
+    sectorColor: colorForSector("Infrastructure"),
     country: "DR Congo",
     flag: "🇨🇩",
     raiseUsd: 85_000_000,
@@ -79,7 +81,7 @@ export const listings: Listing[] = [
     title: "Port de Kasenga — Lake Mweru Cross-Border Hub",
     org: "Desco Global (Investdesco)",
     sector: "Infrastructure",
-    sectorColor: DESCO_COLORS.charcoal,
+    sectorColor: colorForSector("Infrastructure"),
     country: "DR Congo",
     flag: "🇨🇩",
     raiseUsd: 65_000_000,
@@ -102,36 +104,36 @@ export const listings: Listing[] = [
   },
   {
     id: "comicordia-mining",
-    title: "Comicordia Corporation — Luiza-Mwefu Mining Concessions",
-    org: "Comicordia Corporation",
+    title: "Comicordia — Luiza-Musefu Gold and Diamond Programme",
+    org: "Comicordia/Luiza Mining Cooperative",
     sector: "Mining",
-    sectorColor: DESCO_COLORS.brandred,
+    sectorColor: colorForSector("Mining"),
     country: "DR Congo",
     flag: "🇨🇩",
-    raiseUsd: 20_000_000,
-    instrument: "Tiered mining development capital ($100K–$20M+, per Investdesco investment tiers)",
-    stage: "Concession modernization",
-    irr: "15–25% targeted annual ROI (Investdesco mining tier guidance)",
+    raiseUsd: 0,
+    instrument: "Proposed joint venture; public transaction terms not disclosed",
+    stage: "Historical geology and concept-stage mine planning",
+    irr: "Not publicly disclosed",
     summary:
-      "Investdesco states that it has secured exclusive development rights with Comicordia Corporation to modernize artisanal gold and diamond concessions across 924+ sq km in the Luiza-Mwefu territory, converting manual operations into semi-mechanized production hubs under a proposed responsible-sourcing framework described by the sponsor as OECD-aligned and mercury-free.",
+      "Comicordia proposes a staged move from artisanal activity to semi-mechanised gold and diamond recovery near Luiza and Musefu in Kasaï Central. The available folder contains a 2017 geological report for PR 13578, an October 2024 investment proposal and a concept-level operating-cost paper. These documents indicate geological potential and a development concept; they do not establish a current mineral resource, confirmed mine life or independently verified economics.",
     verified: false,
     governmentBacked: false,
-    scores: { match: 76, readiness: 55, esg: 58, risk: 68 },
+    scores: { match: 0, readiness: 35, esg: 0, risk: 75 },
     highlights: [
-      "Sponsor-reported concession area: 924+ sq km; title evidence not public",
-      "Gold purity 22–24K; strategic interest in copper and cobalt",
-      "Sponsor-stated OECD guidance alignment and mercury-free processing; evidence not public",
+      "2017 report covers PR 13578, described as eight mining squares over approximately 6.8 km²",
+      "Historical material discusses alluvial, eluvial and hard-rock gold potential, with associated diamond potential",
+      "Concept paper recommends a staged start and states that mine life has not been confirmed",
     ],
     docs: [],
     whyMatch:
-      "Flagship Investdesco mining partnership — formalizes artisanal production under Desco Global's responsible-sourcing model.",
+      "Early-stage Investdesco opportunity for investors able to fund title, geology, feasibility and environmental diligence before mine development.",
   },
   {
     id: "comicordia-agri",
     title: "Comicordia Agricultural Complex",
     org: "Comicordia Corporation",
     sector: "Agriculture",
-    sectorColor: DESCO_COLORS.emerald,
+    sectorColor: colorForSector("Agriculture"),
     country: "DR Congo",
     flag: "🇨🇩",
     raiseUsd: 225_000_000,
@@ -157,7 +159,7 @@ export const listings: Listing[] = [
     title: "Cassava Leaf Processing Plant — Kinshasa / Mont Ngafula",
     org: "Desco Global (Agridesco)",
     sector: "Agriculture",
-    sectorColor: DESCO_COLORS.emerald,
+    sectorColor: colorForSector("Agriculture"),
     country: "DR Congo",
     flag: "🇨🇩",
     raiseUsd: 4_483_170,
@@ -183,7 +185,7 @@ export const listings: Listing[] = [
     title: "Phardesco Pharmalab Hub — Mbuji-Mayi",
     org: "Desco Global (Phardesco)",
     sector: "Healthcare",
-    sectorColor: DESCO_COLORS.blue,
+    sectorColor: colorForSector("Healthcare"),
     country: "DR Congo",
     flag: "🇨🇩",
     raiseUsd: 10_000_000,
@@ -203,6 +205,60 @@ export const listings: Listing[] = [
     docs: [],
     whyMatch:
       "Early-stage healthcare-access platform anchoring Desco Global's Phardesco pillar in its founding region.",
+  },
+  {
+    id: "tilu-pepm-8252",
+    title: "Tilu Mining — PEPM 8252 Copper-Cobalt Prospect",
+    org: "Tilu Mining SPRL",
+    sector: "Mining",
+    sectorColor: colorForSector("Mining"),
+    country: "DR Congo",
+    flag: "🇨🇩",
+    raiseUsd: 0,
+    instrument: "Exploration capital requirement not publicly disclosed",
+    stage: "Historical exploration data — current title status unverified",
+    irr: "Not publicly disclosed",
+    summary:
+      "An early-stage copper-cobalt exploration prospect in Manono territory. A historical technical study reports geochemical work completed in 2010 across permit area PEPM 8252, including 933 soil samples. The study recommends structural mapping, trenching and drilling before any mineral resource can be defined. Current permit ownership, validity and renewal status have not been independently verified.",
+    verified: false,
+    governmentBacked: false,
+    scores: { match: 0, readiness: 20, esg: 0, risk: 80 },
+    highlights: [
+      "Historical study reports 933 soil samples across 24 north-south lines",
+      "Study reports copper and cobalt anomalies; no mineral resource or reserve is disclosed",
+      "Structural mapping, trenching and exploration drilling remain recommended",
+    ],
+    docs: [],
+    whyMatch:
+      "Early-stage Investdesco mining opportunity for investors able to evaluate pre-resource geological and title risk.",
+  },
+  {
+    id: "sciress-kolwezi-12423",
+    title: "Scires Mining — PE 12423 Cobalt-Copper Project",
+    org: "Scires Mining",
+    sector: "Mining",
+    sectorColor: colorForSector("Mining"),
+    country: "DR Congo",
+    flag: "🇨🇩",
+    raiseUsd: 45_000_000,
+    instrument: "Proposed equity, joint-venture or offtake financing, subject to diligence and final terms",
+    stage: "Pre-resource exploration and proposed permit acquisition",
+    irr: "Sponsor illustration: 35% target IRR; no compliant resource, feasibility study or independently reviewed model disclosed",
+    summary:
+      "Scires Mining proposes to acquire and develop PE 12423, a cobalt-copper exploration project in Lualaba Province. A December 2025 sponsor deck describes historical drilling, trenching and soil sampling, and proposes a $45 million two-stage capital plan. The project does not yet disclose a compliant mineral resource, completed feasibility study or independently reviewed financial model. Permit transfer, title, technical data and transaction authority remain subject to diligence.",
+    useOfFunds:
+      "Sponsor proposal: $15 million for permit acquisition, legal closing, regulatory costs and initial working capital; $30 million for drilling, resource definition, studies, infrastructure, engineering, environmental and community work, project management and contingency.",
+    verified: false,
+    governmentBacked: false,
+    scores: { match: 0, readiness: 38, esg: 0, risk: 76 },
+    highlights: [
+      "Sponsor deck describes PE 12423 as six mining squares covering approximately 5.066 km²",
+      "Sponsor-reported exploration history: four diamond holes, 22 RC holes, trenching and 1,334 soil samples",
+      "A 500m by 300m northern copper anomaly remains a proposed priority drilling target; no compliant resource is disclosed",
+    ],
+    docs: [],
+    whyMatch:
+      "Early-stage Investdesco critical-minerals opportunity requiring staged title, resource, feasibility, environmental and commercial diligence.",
   },
 ];
 
@@ -244,7 +300,9 @@ export type Thread = {
 export const threads: Thread[] = [];
 
 export const fmtUsd = (n: number) =>
-  n >= 1_000_000_000
+  n <= 0
+    ? "Not disclosed"
+    : n >= 1_000_000_000
     ? "$" + (n / 1_000_000_000).toFixed(1) + "B"
     : n >= 1_000_000
     ? "$" + Math.round(n / 1_000_000) + "M"

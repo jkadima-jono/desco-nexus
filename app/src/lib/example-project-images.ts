@@ -42,6 +42,18 @@ const EXAMPLES: Record<string, ExampleProjectImage[]> = {
     caption: "Replaceable example visual · community-health hub concept · not project evidence",
     isExample: true,
   }],
+  "tilu-pepm-8252": [{
+    id: "example-tilu-pepm-8252",
+    url: "/examples/project-mining.svg",
+    caption: "Replaceable example visual · exploration prospect · not project evidence",
+    isExample: true,
+  }],
+  "sciress-kolwezi-12423": [{
+    id: "example-sciress-kolwezi-12423",
+    url: "/examples/project-mining.svg",
+    caption: "Replaceable example visual · mining permit opportunity · not project evidence",
+    isExample: true,
+  }],
 };
 
 export function exampleProjectImages(listingId: string): ExampleProjectImage[] {

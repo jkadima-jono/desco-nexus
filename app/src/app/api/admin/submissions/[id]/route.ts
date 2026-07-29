@@ -2,15 +2,7 @@ import { NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
 import { getSessionUser } from "@/lib/auth";
 import { canReviewSubmissions } from "@/lib/authz";
-import { DESCO_COLORS } from "@/lib/theme";
-
-const SECTOR_COLOR: Record<string, string> = {
-  Agriculture: DESCO_COLORS.emerald,
-  Infrastructure: DESCO_COLORS.charcoal,
-  Mining: DESCO_COLORS.brandred,
-  Healthcare: DESCO_COLORS.blue,
-  Water: DESCO_COLORS.deepblue,
-};
+import { DESCO_COLORS, sectorColor } from "@/lib/theme";
 
 function slugify(title: string): string {
   return title.toLowerCase().trim().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "").slice(0, 60) || "project";
@@ -77,7 +69,7 @@ export async function PATCH(
         orgId: org.id,
         title: submission.title,
         sector: submission.sector,
-        sectorColor: SECTOR_COLOR[submission.sector] ?? DESCO_COLORS.charcoal,
+        sectorColor: sectorColor(submission.sector) ?? DESCO_COLORS.charcoal,
         country: submission.country || "DR Congo",
         flag: submission.country === "DR Congo" || !submission.country ? "🇨🇩" : "🏳",
         raiseUsd: submission.raiseUsd ?? 0,

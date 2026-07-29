@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
 import { createSessionToken, SESSION_COOKIE } from "@/lib/auth";
+import { isDemoAuthEnabled } from "@/lib/demoAuth";
 
 // Clearly fictional, isolated demo identities. This endpoint is available only
 // in development, preview deployments, or when explicitly enabled.
@@ -36,11 +37,12 @@ const PERSONAS: Record<
 };
 
 export async function POST(req: Request) {
-  const demoEnabled =
-    process.env.NODE_ENV !== "production" ||
-    process.env.VERCEL_ENV === "preview" ||
-    process.env.DEMO_AUTH_ENABLED === "true";
-  if (!demoEnabled || process.env.VERCEL_ENV === "production") {
+  const demoEnabled = isDemoAuthEnabled({
+    nodeEnv: process.env.NODE_ENV,
+    vercelEnv: process.env.VERCEL_ENV,
+    explicitFlag: process.env.DEMO_AUTH_ENABLED,
+  });
+  if (!demoEnabled) {
     return NextResponse.json({ error: "Demo authentication is disabled" }, { status: 404 });
   }
 

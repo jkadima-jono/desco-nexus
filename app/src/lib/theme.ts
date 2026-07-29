@@ -6,12 +6,23 @@ export const DESCO_COLORS = {
   brandred: "#C41E3A",
   gold: "#B8953D",
   emerald: "#00A550",
+  skyblue: "#0EA5E9",
   blue: "#0066CC",
   deepblue: "#0047AB",
   orange: "#FF8C00",
   charcoal: "#2C3E50",
   wgray: "#7F8C8D",
 } as const;
+
+// Official public colour assignment for Desco Global's four pillars.
+// Keep sector and pillar colours aligned through this map instead of
+// assigning colours independently in cards, forms, and story pages.
+export const PILLAR_COLOR: Record<string, string> = {
+  agridesco: DESCO_COLORS.emerald,
+  investdesco: DESCO_COLORS.brandred,
+  phardesco: DESCO_COLORS.gold,
+  waterdesco: DESCO_COLORS.skyblue,
+};
 
 // Official Desco Global pillar icons (only these four exist as real assets).
 export const PILLAR_ICON: Record<string, string> = {
@@ -42,4 +53,22 @@ export const SECTOR_TO_PILLAR: Record<string, string> = {
 
 export function pillarIcon(pillarSlug: string): string {
   return PILLAR_ICON[pillarSlug] ?? FALLBACK_ICON;
+}
+
+export function pillarColor(pillarSlug: string): string {
+  return PILLAR_COLOR[pillarSlug] ?? DESCO_COLORS.charcoal;
+}
+
+export function sectorColor(sector: string): string {
+  return pillarColor(SECTOR_TO_PILLAR[sector] ?? "");
+}
+
+// Gold, green, and sky blue need dark text to meet contrast requirements.
+// Investdesco red is dark enough to retain white text.
+export function pillarForeground(pillarSlug: string): string {
+  return pillarSlug === "investdesco" ? "#FFFFFF" : "#10161D";
+}
+
+export function sectorForeground(sector: string): string {
+  return pillarForeground(SECTOR_TO_PILLAR[sector] ?? "");
 }

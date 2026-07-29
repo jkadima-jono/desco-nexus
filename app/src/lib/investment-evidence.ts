@@ -52,13 +52,246 @@ const THESIS: Record<string, string> = {
   "port-de-kasenga":
     "The sponsor proposes a Lake Mweru cross-border trade hub. The investment case depends on documented corridor demand, border arrangements, operating rights, capital cost and commercial agreements.",
   "comicordia-mining":
-    "The sponsor proposes modernising artisanal mining concessions through semi-mechanised production and responsible-sourcing controls. The case depends on verified concession rights, geology, production economics, traceability and environmental controls.",
+    "Comicordia proposes staged mechanisation of gold and diamond activity near Luiza and Musefu. The folder supports a historical geological case and an operating concept, but current title, resource, mine life, feasibility, environmental approvals and transaction authority still require verification.",
   "comicordia-agri":
     "The sponsor proposes an integrated smallholder and processing platform. The case depends on evidence for land access, farmer participation, yields, offtake, operating performance and the allocation of programme-level capital.",
   "manioc-plant":
     "The sponsor proposes a cassava-leaf processing facility supported by a local sourcing and distribution network. The case depends on validated unit economics, site rights, equipment quotations, demand and working-capital requirements.",
   "phardesco-mbuji-mayi":
     "The sponsor proposes an integrated pharmacy, diagnostics, water and health-education hub. The case depends on licensing, demand evidence, procurement and cold-chain capability, operating forecasts and the path to breakeven.",
+  "tilu-pepm-8252":
+    "The supplied historical geochemical study identifies copper and cobalt anomalies at PEPM 8252 but does not establish a mineral resource. The case depends on current title verification, modern exploration, independent technical review, environmental and social baseline work, and a disclosed funding plan.",
+  "sciress-kolwezi-12423":
+    "Scires Mining proposes to acquire and advance PE 12423 through drilling, resource definition, feasibility work and pre-production engineering. The opportunity remains pre-resource: permit transfer, title, historical data, metallurgy, environmental approvals, development costs and transaction terms require independent diligence.",
+};
+
+const MINING_EVIDENCE: Record<
+  string,
+  Pick<InvestmentEvidence, "fields" | "risks" | "provenance">
+> = {
+  "comicordia-mining": {
+    fields: [
+      {
+        label: "Legal project entity",
+        value: "Comicordia/Luiza is described as a registered mining cooperative; legal documents remain subject to diligence",
+        status: "partial",
+        source: "Comicordia investment proposal, October 2024",
+      },
+      {
+        label: "Ownership and development rights",
+        value: "The proposal refers to an artisanal mining zone and a lease arrangement for PR 13343; the 2017 geological report concerns PR 13578. The relationship among these rights requires reconciliation",
+        status: "partial",
+        source: "Comicordia investment proposal and PR 13578 geological report",
+      },
+      {
+        label: "Technical evidence",
+        value: "Historical geological work indicates gold and diamond potential; no current internationally reportable mineral resource or reserve is disclosed",
+        status: "partial",
+        source: "PR 13578 geological report, October 2017",
+      },
+      {
+        label: "Development plan",
+        value: "A staged small-to-medium-scale open-cast concept is described. The source states that mine life is unconfirmed and cost estimates require site validation",
+        status: "partial",
+        source: "Musefu open-cast mining cost paper",
+      },
+      {
+        label: "Revenue and offtake evidence",
+        value: NOT_DISCLOSED,
+        status: "not-disclosed",
+      },
+      {
+        label: "Implementation timetable",
+        value: NOT_DISCLOSED,
+        status: "not-disclosed",
+      },
+    ],
+    risks: [
+      {
+        label: "Legal, title and permitting",
+        value: "Permit numbers and contractual rights differ across the supplied documents and require legal reconciliation",
+        status: "partial",
+        source: "Folder document review",
+      },
+      {
+        label: "Geology and resource",
+        value: "Historical indications have not been converted into a current independently reported resource or reserve",
+        status: "partial",
+        source: "PR 13578 geological report",
+      },
+      {
+        label: "Development and construction",
+        value: "The mine plan and costs are conceptual; site engineering, equipment quotations and mine scheduling are not disclosed",
+        status: "partial",
+        source: "Musefu open-cast mining cost paper",
+      },
+      {
+        label: "Environmental and social",
+        value: "Environmental baseline, impact assessment, closure plan and community agreements are not publicly disclosed",
+        status: "not-disclosed",
+      },
+      {
+        label: "Commercial and financial",
+        value: "Public transaction terms, validated operating model, funding plan and offtake evidence are not disclosed",
+        status: "not-disclosed",
+      },
+    ],
+    provenance: {
+      classification: "Historical technical material and sponsor proposal",
+      source: "PR 13578 geological report; Comicordia investment proposal; Musefu operating-cost concept",
+      sourceDate: "October 2017 to October 2024; one concept paper undated",
+      reviewStatus: "DESCO folder review recorded; independent verification not recorded",
+    },
+  },
+  "tilu-pepm-8252": {
+    fields: [
+      {
+        label: "Legal project entity",
+        value: "Tilu Mining SPRL is named in the supplied study",
+        status: "partial",
+        source: "Tilu preliminary technical geochemical study",
+      },
+      {
+        label: "Ownership and development rights",
+        value: "The study concerns PEPM 8252; current ownership, renewal and validity are not established by the public record",
+        status: "partial",
+        source: "Tilu preliminary technical geochemical study",
+      },
+      {
+        label: "Technical evidence",
+        value: "The study reports 933 soil samples over 24 survey lines and copper-cobalt anomalies; it does not report a mineral resource or reserve",
+        status: "partial",
+        source: "Tilu preliminary technical geochemical study",
+      },
+      {
+        label: "Next technical work",
+        value: "Structural mapping, trenching and exploration drilling are recommended",
+        status: "partial",
+        source: "Tilu preliminary technical geochemical study",
+      },
+      {
+        label: "Revenue and offtake evidence",
+        value: NOT_DISCLOSED,
+        status: "not-disclosed",
+      },
+      {
+        label: "Implementation timetable",
+        value: NOT_DISCLOSED,
+        status: "not-disclosed",
+      },
+    ],
+    risks: [
+      {
+        label: "Legal, title and permitting",
+        value: "Current permit status and chain of title require verification",
+        status: "partial",
+        source: "Historical study only",
+      },
+      {
+        label: "Geology and resource",
+        value: "Geochemical anomalies are exploration indicators and do not establish an economic deposit",
+        status: "partial",
+        source: "Tilu preliminary technical geochemical study",
+      },
+      {
+        label: "Development and construction",
+        value: "No mine plan, processing route, infrastructure plan or capital estimate is disclosed",
+        status: "not-disclosed",
+      },
+      {
+        label: "Environmental and social",
+        value: "Baseline studies, impact assessment and community agreements are not publicly disclosed",
+        status: "not-disclosed",
+      },
+      {
+        label: "Commercial and financial",
+        value: "Capital requirement, transaction structure, operating costs and offtake are not disclosed",
+        status: "not-disclosed",
+      },
+    ],
+    provenance: {
+      classification: "Historical exploration study",
+      source: "Tilu Mining preliminary technical geochemical study",
+      sourceDate: "Study describes 2010 fieldwork; current title evidence not supplied",
+      reviewStatus: "DESCO folder review recorded; independent verification not recorded",
+    },
+  },
+  "sciress-kolwezi-12423": {
+    fields: [
+      {
+        label: "Legal project entity",
+        value: "Scires Mining is presented as the proposed project owner and operator following acquisition; the acquisition vehicle and executed transfer documents are not disclosed",
+        status: "partial",
+        source: "Sponsor investment deck, December 2025",
+      },
+      {
+        label: "Ownership and development rights",
+        value: "The supplied materials state that PE 12423 is to be acquired by Scires Mining. Current ownership, authority to sell, transfer conditions and beneficial ownership require legal verification",
+        status: "partial",
+        source: "CAMI extract and sponsor investment deck",
+      },
+      {
+        label: "Permits and approvals",
+        value: "The CAMI extract describes PE 12423 over six mining squares, granted 20 March 2018 with stated validity to 19 March 2048. Current standing, encumbrances and transfer approval have not been independently checked",
+        status: "partial",
+        source: "CAMI cadastral extract printed 21 April 2025",
+      },
+      {
+        label: "Technical evidence",
+        value: "The sponsor reports historical diamond and RC drilling, trenching and soil sampling with copper and cobalt indications. No compliant mineral resource or reserve is disclosed",
+        status: "partial",
+        source: "Sponsor investment deck, December 2025",
+      },
+      {
+        label: "Development plan",
+        value: "Sponsor target: acquisition, advanced exploration, resource definition, studies and pre-production work over approximately 30 months before commissioning",
+        status: "partial",
+        source: "Sponsor investment deck, December 2025",
+      },
+      {
+        label: "Revenue and offtake evidence",
+        value: "No executed offtake agreement or independently reviewed revenue case is disclosed",
+        status: "not-disclosed",
+      },
+    ],
+    risks: [
+      {
+        label: "Legal, title and permitting",
+        value: "The proposed permit acquisition, authority to sell, title standing, encumbrances and regulatory transfer approvals require independent legal verification",
+        status: "partial",
+        source: "CAMI extract and sponsor investment deck",
+      },
+      {
+        label: "Geology and resource",
+        value: "Historical indications and anomalies do not establish grade continuity, tonnage, metallurgy or an economic resource",
+        status: "partial",
+        source: "Sponsor investment deck; no compliant resource disclosed",
+      },
+      {
+        label: "Development and construction",
+        value: "The processing route, mine design, infrastructure scope, schedule and costs remain conceptual pending resource definition and feasibility studies",
+        status: "partial",
+        source: "Sponsor investment deck, December 2025",
+      },
+      {
+        label: "Environmental and social",
+        value: "The sponsor budgets for ESIA and community work, but completed studies, approvals, baseline data and agreements are not disclosed",
+        status: "not-disclosed",
+      },
+      {
+        label: "Commercial and financial",
+        value: "The $45 million capital plan and projected returns are sponsor illustrations pending resource definition, feasibility, final transaction terms and independent model review",
+        status: "partial",
+        source: "Sponsor investment deck, December 2025",
+      },
+    ],
+    provenance: {
+      classification: "Mining-cadastre extract and confidential sponsor investment presentation",
+      source: "CAMI certificate extract for PE 12423; Scires Mining investment deck",
+      sourceDate: "CAMI extract printed 21 April 2025; sponsor deck dated December 2025",
+      reviewStatus: "DESCO source review recorded; independent legal, technical and financial verification not recorded",
+    },
+  },
 };
 
 export function normalizeStage(stage: string): string {
@@ -103,6 +336,7 @@ export function getInvestmentEvidence(listing: {
   fundingSecuredUsd?: number | null;
   sponsorContributionUsd?: number | null;
 }): InvestmentEvidence {
+  const miningEvidence = MINING_EVIDENCE[listing.id];
   const fields: EvidenceField[] = [
     {
       label: "Use of funds",
@@ -122,14 +356,14 @@ export function getInvestmentEvidence(listing: {
       status: listing.sponsorContributionUsd != null ? "partial" : "not-disclosed",
       source: listing.sponsorContributionUsd != null ? "Sponsor submission; supporting evidence not public" : undefined,
     },
-    ...COMMON_FIELDS,
+    ...(miningEvidence?.fields ?? COMMON_FIELDS),
   ];
 
   return {
     thesis: THESIS[listing.id] || listing.summary,
     fields,
-    risks: COMMON_RISKS,
-    provenance: {
+    risks: miningEvidence?.risks ?? COMMON_RISKS,
+    provenance: miningEvidence?.provenance ?? {
       classification: "Sponsor-provided project information and targets",
       source: "DESCO Global investor materials and project submissions",
       sourceDate: "Source date not disclosed on the public record",

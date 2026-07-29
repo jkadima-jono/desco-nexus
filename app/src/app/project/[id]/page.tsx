@@ -21,6 +21,7 @@ import MeetingsPanel from "./MeetingsPanel";
 import { hasDataRoomAccess } from "@/lib/dataroom";
 import type { Metadata } from "next";
 import { getInvestmentEvidence, normalizeStage, summarizeEvidence } from "@/lib/investment-evidence";
+import { sectorForeground } from "@/lib/theme";
 
 export const dynamic = "force-dynamic";
 
@@ -34,7 +35,10 @@ export async function generateMetadata({
   const { id } = await params;
   const row = await prisma.listing.findUnique({ where: { id } });
   if (!row) return {};
-  const description = `${row.sector} opportunity in ${row.country} — ${fmtUsd(row.raiseUsd)} sought via ${row.instrument}. ${normalizeStage(row.stage)}.`;
+  const capital = row.raiseUsd > 0
+    ? `${fmtUsd(row.raiseUsd)} sought`
+    : "capital requirement not publicly disclosed";
+  const description = `${row.sector} opportunity in ${row.country} — ${capital} via ${row.instrument}. ${normalizeStage(row.stage)}.`;
   return {
     title: row.title + " — DESCO Nexus",
     description,
@@ -101,8 +105,8 @@ export default async function ProjectDetail({
         <div className="relative max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8 lg:py-10">
           <div className="flex items-center gap-2 text-[11px] font-bold uppercase tracking-wider mb-3">
             <span
-              className="px-2 py-0.5 rounded-full text-white"
-              style={{ background: l.sectorColor }}
+              className="px-2 py-0.5 rounded-full"
+              style={{ background: l.sectorColor, color: sectorForeground(l.sector) }}
             >
               {l.sector}
             </span>
@@ -171,8 +175,8 @@ export default async function ProjectDetail({
               {l.highlights.map((h) => (
                 <li key={h} className="flex items-center gap-3 text-sm">
                   <span
-                    className="w-6 h-6 rounded-full flex items-center justify-center text-white text-xs shrink-0"
-                    style={{ background: l.sectorColor }}
+                    className="w-6 h-6 rounded-full flex items-center justify-center text-xs shrink-0"
+                    style={{ background: l.sectorColor, color: sectorForeground(l.sector) }}
                   >
                     ▸
                   </span>

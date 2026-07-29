@@ -4,6 +4,7 @@ import { fmtUsd } from "@/lib/data";
 import HeroVisual from "./HeroVisual";
 import SectorBadge from "./SectorBadge";
 import { getInvestmentEvidence, summarizeEvidence } from "@/lib/investment-evidence";
+import { sectorForeground } from "@/lib/theme";
 
 function formatUpdated(date: Date | undefined): string {
   if (!date) return "—";
@@ -23,7 +24,9 @@ export default function ProjectCard({
   const accessibleName = [
     listing.title,
     listing.country,
-    `${fmtUsd(listing.raiseUsd)} capital sought`,
+    listing.raiseUsd > 0
+      ? `${fmtUsd(listing.raiseUsd)} capital sought`
+      : "capital requirement not publicly disclosed",
   ].filter(Boolean).join(", ");
   const evidence = summarizeEvidence(getInvestmentEvidence(listing));
 
@@ -38,7 +41,10 @@ export default function ProjectCard({
       <div className="relative h-32 -mt-32 sm:h-40 sm:-mt-40 pointer-events-none">
         <div className="absolute inset-x-0 top-0 p-4 flex items-start justify-between">
           <div className="flex items-center gap-2 text-[11px] font-bold uppercase tracking-wider">
-            <span className="px-2 py-0.5 rounded-full text-white shadow-[0_1px_4px_rgb(16_22_29/0.3)]" style={{ background: listing.sectorColor }}>
+            <span
+              className="px-2 py-0.5 rounded-full shadow-[0_1px_4px_rgb(16_22_29/0.3)]"
+              style={{ background: listing.sectorColor, color: sectorForeground(listing.sector) }}
+            >
               {listing.sector}
             </span>
             <span className="text-white/90 drop-shadow">{listing.flag} {listing.country}</span>

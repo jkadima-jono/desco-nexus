@@ -9,7 +9,8 @@
     "start": "next start",
     "typecheck": "tsc --noEmit --incremental false",
     "test:api": "node --test tests/api.test.mjs",
-    "test:unit": "tsx --test tests/loginToken.test.ts",
+    "test:unit": "node --import tsx --test tests/*.test.ts",
+    "catalog:sync": "node --import tsx prisma/sync-catalog.ts",
     "test": "npm run typecheck && npm run test:unit",
     "check": "npm run typecheck && npm run build"
   },

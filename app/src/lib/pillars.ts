@@ -1,4 +1,4 @@
-import { DESCO_COLORS } from "./theme";
+import { pillarColor } from "./theme";
 
 export type Milestone = { year: string; label: string; done: boolean };
 export type ImpactStat = { label: string; value: number; suffix: string };
@@ -30,7 +30,7 @@ export const PILLARS: Pillar[] = [
     name: "Agridesco",
     shortName: "Agriculture",
     tagline: "Cultivating Prosperity — feeding 90M+ people, from subsistence to surplus.",
-    color: DESCO_COLORS.emerald,
+    color: pillarColor("agridesco"),
     summary:
       "Agridesco develops large-scale farming cooperatives, processing hubs, and market access across the Grand Kasai region — organizing smallholders into outgrower networks with input credit, shared mechanization, post-harvest storage, and value-add milling.",
     thesis:
@@ -61,7 +61,7 @@ export const PILLARS: Pillar[] = [
     name: "Investdesco",
     shortName: "Strategic Capital",
     tagline: "Investing in Tomorrow — capital for sustainable growth.",
-    color: DESCO_COLORS.gold,
+    color: pillarColor("investdesco"),
     summary:
       "Investdesco is Desco Global's strategic financial and infrastructure engine — structuring capital partnerships, joint ventures, and long-term investment vehicles across ports, industrial parks, renewable energy, and the group's mining-development partnerships.",
     thesis:
@@ -94,7 +94,7 @@ export const PILLARS: Pillar[] = [
     name: "Phardesco",
     shortName: "Healthcare",
     tagline: "Healing with Purpose — healthcare access and clinical quality.",
-    color: DESCO_COLORS.blue,
+    color: pillarColor("phardesco"),
     summary:
       "Phardesco (Pharmacies, Développement et Santé du Congo) builds a network of solar-powered Pharmalab Hubs combining pharmaceutical retail, diagnostics, clean-water access, and health education, beginning with a first hub in Mbuji-Mayi, Grand Kasai.",
     thesis:
@@ -126,7 +126,7 @@ export const PILLARS: Pillar[] = [
     name: "Waterdesco",
     shortName: "Water & Sanitation",
     tagline: "Pure Life, Sustainable Future.",
-    color: DESCO_COLORS.deepblue,
+    color: pillarColor("waterdesco"),
     summary:
       "Waterdesco secures Africa's future by expanding equitable access to clean drinking water and building resilient sanitation infrastructure — treated by Desco Global as foundational to every other pillar, not an add-on.",
     thesis:
