@@ -32,7 +32,7 @@ export const PILLARS: Pillar[] = [
     tagline: "Proposed agricultural production, processing and market-access programme.",
     color: pillarColor("agridesco"),
     summary:
-      "Sponsor materials propose farming cooperatives, processing hubs and market-access infrastructure across the Grand Kasai region. Land access, farmer participation, yields, offtake and operating evidence remain subject to diligence.",
+      "We are developing Agridesco around farming cooperatives, processing hubs and market-access infrastructure across Grand Kasaï. Before scaling, we require verified land access, farmer participation, yields, offtake and operating evidence.",
     thesis:
       "The Grand Kasai region holds over 15 million hectares of arable land and 1,500mm of annual rainfall, yet the DRC spends an estimated $3.0B a year importing food it could grow domestically. Agridesco exists to close that gap by giving smallholders the processing and market-access infrastructure that converts fertile land into investable, exportable surplus.",
     marketOpportunity:
@@ -63,7 +63,7 @@ export const PILLARS: Pillar[] = [
     tagline: "Capital structuring for proposed infrastructure and operating projects.",
     color: pillarColor("investdesco"),
     summary:
-      "Sponsor materials describe Investdesco as the proposed capital and infrastructure arm for ports, industrial parks, energy and mining-development partnerships. Project rights, counterparties and financing terms require confirmation.",
+      "We are building Investdesco as our capital and infrastructure platform for ports, industrial parks, energy and mining-development partnerships. We require confirmed project rights, counterparties and financing terms before committing capital.",
     thesis:
       "Frontier real-asset opportunities in the Grand Kasai region fail to attract capital not for lack of resources, but for lack of structure — unclear logistics, informal production, and absent enabling infrastructure. Investdesco absorbs that structuring risk first: securing access, building the port and logistics backbone, then introducing disciplined capital aligned with long-term value creation.",
     marketOpportunity:
@@ -96,7 +96,7 @@ export const PILLARS: Pillar[] = [
     tagline: "Proposed pharmaceutical, diagnostic and community-health services.",
     color: pillarColor("phardesco"),
     summary:
-      "Sponsor materials propose solar-powered Pharmalab Hubs combining pharmaceutical retail, diagnostics, water access and health education, beginning in Mbuji-Mayi. Licensing, demand, procurement, clinical governance and forecasts remain subject to diligence.",
+      "We are developing solar-powered Phardesco Pharmalab Hubs that combine pharmaceutical retail, diagnostics, water access and health education, beginning in Mbuji-Mayi. We require validated licensing, demand, procurement, clinical governance and forecasts before launch.",
     thesis:
       "In Kasai, one pharmacist serves more than 50,000 people against a WHO benchmark of 1 per 2,000, and over 80% of the DRC's population lacks regular access to quality medicines. Phardesco closes that gap with an integrated, self-sustaining Pharmalab model rather than a standalone pharmacy chain.",
     marketOpportunity:
@@ -128,7 +128,7 @@ export const PILLARS: Pillar[] = [
     tagline: "Proposed drinking-water and sanitation infrastructure.",
     color: pillarColor("waterdesco"),
     summary:
-      "Sponsor materials propose drinking-water and sanitation infrastructure for the Grand Kasai region. Project locations, technical designs, rights, tariffs, funding and delivery plans are not yet publicly evidenced.",
+      "We are developing Waterdesco as a drinking-water and sanitation platform for Grand Kasaï. We will confirm project locations, technical designs, rights, tariffs, funding and delivery plans before selecting the implementation configuration.",
     thesis:
       "\"Water is the foundation of dignity.\" Every other pillar — agriculture, mining, community health — depends on reliable water access. Waterdesco is the infrastructure investment with the widest multiplier effect across the platform.",
     marketOpportunity:

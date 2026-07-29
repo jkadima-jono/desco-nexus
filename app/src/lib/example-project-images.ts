@@ -62,6 +62,24 @@ const EXAMPLES: Record<string, ExampleProjectImage[]> = {
     isExample: true,
     kind: "regional",
   }],
+  "kasaji-kisenge-solar-50mw": [{
+    id: "example-kasaji-kisenge-solar",
+    url: "/examples/project-solar.svg",
+    caption: "Illustrative infrastructure concept. Not a project photograph or technical evidence.",
+    isExample: true,
+  }],
+  "ldc-integrated-housing-drc": [{
+    id: "example-ldc-integrated-housing",
+    url: "/examples/project-housing.svg",
+    caption: "Illustrative urban-infrastructure concept. Not a project rendering or evidence.",
+    isExample: true,
+  }],
+  "energulf-lotshi-block": [{
+    id: "example-energulf-lotshi",
+    url: "/examples/project-energy-exploration.svg",
+    caption: "Illustrative energy-exploration concept. Not a project photograph or technical evidence.",
+    isExample: true,
+  }],
 };
 
 export function exampleProjectImages(listingId: string): ExampleProjectImage[] {

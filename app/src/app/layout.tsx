@@ -31,19 +31,19 @@ export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? "https://compass.desco.global"),
   title: "DESCO Compass — Structured African investment opportunities",
   description:
-    "Review structured African investment opportunities with clear disclosure, sponsor-controlled diligence, and mandate-based screening.",
+    "We present structured African investment opportunities with clear disclosure, controlled diligence and mandate-based screening.",
   icons: { icon: "/brand/desco-compass-logo.jpg", apple: "/brand/desco-compass-logo.jpg" },
   openGraph: {
     type: "website",
     siteName: "DESCO Compass",
     title: "DESCO Compass — Structured African investment opportunities",
-    description: "Review structured African investment opportunities with clear disclosure and controlled diligence.",
+    description: "We present structured African investment opportunities with clear disclosure and controlled diligence.",
     images: [{ url: "/brand/desco-compass-logo.jpg", width: 800, height: 800, alt: "Official DESCO Compass logo" }],
   },
   twitter: {
     card: "summary",
     title: "DESCO Compass — Structured African investment opportunities",
-    description: "Review structured African investment opportunities with clear disclosure and controlled diligence.",
+    description: "We present structured African investment opportunities with clear disclosure and controlled diligence.",
     images: ["/brand/desco-compass-logo.jpg"],
   },
 };

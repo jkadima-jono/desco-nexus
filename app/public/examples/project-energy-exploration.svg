@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" role="img" aria-labelledby="title desc">
+  <title id="title">Illustrative onshore energy exploration project</title>
+  <desc id="desc">A conceptual onshore drilling site in a coastal landscape.</desc>
+  <defs><linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#dceaf0"/><stop offset="1" stop-color="#f1dfbd"/></linearGradient></defs>
+  <rect width="1600" height="900" fill="url(#sky)"/>
+  <path d="M0 510 Q350 450 700 525 T1600 490V900H0Z" fill="#8c8c62"/>
+  <path d="M0 680 Q400 610 760 690 T1600 650V900H0Z" fill="#5f6e49"/>
+  <path d="M1320 0h280v900h-280z" fill="#6f9daa" opacity=".6"/>
+  <g fill="none" stroke="#3e4647" stroke-width="12">
+    <path d="M790 200 620 745M790 200 960 745M675 570h230M710 455h160M745 340h90"/>
+    <path d="M790 200v560M635 745h310"/>
+  </g>
+  <g fill="#384d3f"><circle cx="210" cy="590" r="55"/><circle cx="340" cy="565" r="46"/><circle cx="1080" cy="575" r="60"/><circle cx="1200" cy="555" r="44"/></g>
+  <rect x="72" y="72" width="470" height="116" rx="12" fill="#fff" opacity=".92"/>
+  <text x="112" y="123" font-family="Arial, sans-serif" font-size="25" fill="#24343c" letter-spacing="3">ILLUSTRATIVE CONCEPT</text>
+  <text x="112" y="163" font-family="Georgia, serif" font-size="28" fill="#9e2035">ONSHORE EXPLORATION</text>
+</svg>

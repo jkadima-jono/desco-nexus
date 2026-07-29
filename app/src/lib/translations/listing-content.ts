@@ -8,13 +8,13 @@ type ListingTranslations = Record<Exclude<Locale, "en">, Record<string, ListingT
 const fr = {
   "port-de-ndomba": {
     sector: "Infrastructure", country: "RDC", instrument: "SPV de projet — participation majoritaire de DESCO", stage: "Faisabilité déclarée par le porteur", irr: "Inclus dans l’objectif de TRI de 17,2 % du programme Phase 1 de DESCO Global",
-    summary: "Le porteur propose un port fluvial sur la rivière Kasaï pour relier le Grand Kasaï à Kinshasa et aux voies d’exportation. Les travaux envisagés comprennent quai, dragage, postes d’amarrage, entrepôts, silos, services de carburant, douanes et contrôle d’accès numérique. Les preuves de faisabilité, droits, permis, demande, coûts et calendrier ne sont pas publiques.",
-    highlights: ["Le porteur déclare disposer d’une étude de faisabilité achevée", "Objectif du porteur : 1 200 emplois de construction et 450 emplois permanents", "Cadre déclaré : normes de performance IFC, plan biodiversité et pacte communautaire ; preuves non publiques"],
+    summary: "Nous structurons une opportunité portuaire sur la rivière Kasaï afin de relier le Grand Kasaï à Kinshasa et aux voies d’exportation. Le périmètre comprend quai, dragage, postes d’amarrage, entrepôts, silos, carburant, douanes et contrôle d’accès numérique. Avant d’avancer, nous exigeons des preuves vérifiées sur la faisabilité, les droits, permis, demande, coûts et calendrier.",
+    highlights: ["Les documents disponibles indiquent une étude de faisabilité achevée ; elle reste en cours d’examen", "Objectif de développement : 1 200 emplois de construction et 450 emplois permanents", "Cadre proposé : normes IFC, plan biodiversité et pacte communautaire ; preuves en cours d’examen"],
     whyMatch: "Infrastructure logistique de la plateforme Kasaï de DESCO Global, destinée à faciliter les exportations des pôles agricole et minier.",
   },
   "port-de-kasenga": {
     sector: "Infrastructure", country: "RDC", instrument: "SPV de projet — participation majoritaire de DESCO", stage: "Structuration", irr: "Inclus dans l’objectif de TRI de 17,2 % du programme Phase 1 de DESCO Global",
-    summary: "Le porteur propose un port sur le lac Moero pour soutenir le commerce avec la Zambie et les liaisons vers l’Angola. Il vise 300 000 tonnes par an et une réduction de 40 % du délai de dédouanement ; les études justificatives ne sont pas publiques.",
+    summary: "Nous structurons une opportunité portuaire sur le lac Moero pour soutenir le commerce avec la Zambie et les liaisons vers l’Angola. Le développement vise 300 000 tonnes par an et une réduction de 40 % du délai de dédouanement. Nous exigeons les études de demande, droits, coûts et livraison avant de considérer ces objectifs comme validés.",
     highlights: ["Objectif de débit : 300 000 tonnes par an", "Liaison transfrontalière avec la Zambie (Copperbelt) et l’Angola", "Objectif du porteur : réduction de 40 % du délai de dédouanement ; étude non publique"],
     whyMatch: "Actif de corridor régional complémentaire au Port de Ndomba dans la plateforme logistique intégrée de DESCO Global.",
   },
@@ -64,12 +64,12 @@ const fr = {
 
 const esCopy: Record<string, Pick<ListingText, "summary" | "highlights" | "whyMatch">> = {
   "port-de-ndomba": {
-    summary: "El promotor propone un puerto fluvial en el río Kasai para conectar el Gran Kasai con Kinshasa y las rutas de exportación. Las obras previstas incluyen muelle, dragado, atraques, almacenes, silos, combustible, aduanas y control de acceso digital. No se han divulgado públicamente pruebas de viabilidad, derechos, permisos, demanda, costes o ejecución.",
-    highlights: ["El promotor declara haber completado un estudio de viabilidad", "Objetivo del promotor: 1.200 empleos de construcción y 450 puestos operativos permanentes", "Marco declarado: Normas de Desempeño IFC, plan de biodiversidad y pacto comunitario; evidencia no pública"],
+    summary: "Estructuramos una oportunidad portuaria en el río Kasai para conectar el Gran Kasai con Kinshasa y las rutas de exportación. El alcance incluye muelle, dragado, atraques, almacenes, silos, combustible, aduanas y control digital. Antes de avanzar, exigimos pruebas verificadas de viabilidad, derechos, permisos, demanda, costes y ejecución.",
+    highlights: ["Los materiales indican un estudio de viabilidad terminado; sigue en revisión", "Objetivo de desarrollo: 1.200 empleos de construcción y 450 puestos permanentes", "Marco propuesto: normas IFC, plan de biodiversidad y pacto comunitario; evidencia en revisión"],
     whyMatch: "Infraestructura logística de la plataforma Kasai de DESCO Global, destinada a facilitar las exportaciones de los pilares agrícola y minero.",
   },
   "port-de-kasenga": {
-    summary: "El promotor propone un puerto en el lago Mweru para apoyar el comercio con Zambia y las conexiones hacia Angola. Sus objetivos incluyen 300.000 toneladas anuales y una reducción del 40 % en el tiempo de despacho fronterizo; los estudios de respaldo no son públicos.",
+    summary: "Estructuramos una oportunidad portuaria en el lago Mweru para apoyar el comercio con Zambia y las conexiones hacia Angola. El desarrollo apunta a 300.000 toneladas anuales y a reducir un 40 % el despacho fronterizo. Exigimos estudios de demanda, derechos, costes y ejecución antes de considerar validados estos objetivos.",
     highlights: ["Objetivo de capacidad: 300.000 toneladas anuales", "Conexión transfronteriza con Zambia (Copperbelt) y Angola", "Objetivo del promotor: reducir un 40 % el tiempo de despacho; estudio no público"],
     whyMatch: "Activo de corredor comercial regional que complementa el puerto de Ndomba dentro de la plataforma logística integrada de DESCO Global.",
   },
@@ -107,8 +107,8 @@ const esCopy: Record<string, Pick<ListingText, "summary" | "highlights" | "whyMa
 };
 
 const ptCopy: Record<string, Pick<ListingText, "summary" | "highlights" | "whyMatch">> = {
-  "port-de-ndomba": { summary: "O promotor propõe um porto fluvial no rio Kasai para ligar o Grande Kasai a Kinshasa e às rotas de exportação. As obras previstas incluem cais, dragagem, ancoradouros, armazéns, silos, combustível, alfândega e controlo digital de acesso. Não foram divulgadas provas públicas de viabilidade, direitos, licenças, procura, custos ou execução.", highlights: ["O promotor declara ter concluído um estudo de viabilidade", "Meta do promotor: 1.200 funções na construção e 450 postos operacionais permanentes", "Quadro declarado: Padrões de Desempenho IFC, plano de biodiversidade e pacto comunitário; evidência não pública"], whyMatch: "Infraestrutura logística da plataforma Kasai da DESCO Global, destinada a facilitar exportações dos pilares agrícola e mineiro." },
-  "port-de-kasenga": { summary: "O promotor propõe um porto no lago Mweru para apoiar o comércio com a Zâmbia e as ligações a Angola. As metas incluem 300.000 toneladas por ano e redução de 40% no tempo de desalfandegamento; os estudos de suporte não são públicos.", highlights: ["Meta de capacidade: 300.000 toneladas por ano", "Ligação transfronteiriça à Zâmbia (Copperbelt) e Angola", "Meta do promotor: redução de 40% no desalfandegamento; estudo não público"], whyMatch: "Ativo de corredor comercial regional que complementa o Porto de Ndomba na plataforma logística integrada da DESCO Global." },
+  "port-de-ndomba": { summary: "Estruturamos uma oportunidade portuária no rio Kasai para ligar o Grande Kasai a Kinshasa e às rotas de exportação. O âmbito inclui cais, dragagem, ancoradouros, armazéns, silos, combustível, alfândega e controlo digital. Antes de avançar, exigimos provas verificadas de viabilidade, direitos, licenças, procura, custos e execução.", highlights: ["Os materiais indicam um estudo de viabilidade concluído; continua em análise", "Meta de desenvolvimento: 1.200 funções na construção e 450 postos permanentes", "Quadro proposto: padrões IFC, plano de biodiversidade e pacto comunitário; evidência em análise"], whyMatch: "Infraestrutura logística da plataforma Kasai da DESCO Global, destinada a facilitar exportações dos pilares agrícola e mineiro." },
+  "port-de-kasenga": { summary: "Estruturamos uma oportunidade portuária no lago Mweru para apoiar o comércio com a Zâmbia e as ligações a Angola. O desenvolvimento visa 300.000 toneladas por ano e reduzir em 40% o tempo de desalfandegamento. Exigimos estudos de procura, direitos, custos e execução antes de considerar estas metas validadas.", highlights: ["Meta de capacidade: 300.000 toneladas por ano", "Ligação transfronteiriça à Zâmbia (Copperbelt) e Angola", "Meta: redução de 40% no desalfandegamento; estudo em análise"], whyMatch: "Ativo de corredor comercial regional que complementa o Porto de Ndomba na plataforma logística integrada da DESCO Global." },
   "comicordia-mining": { summary: "A Comicordia propõe passar por fases da atividade artesanal para a recuperação semimecanizada de ouro e diamantes perto de Luiza e Musefu. O dossiê contém um relatório geológico de 2017 sobre PR 13578, uma proposta de outubro de 2024 e um documento conceptual de custos. Indicam potencial e um conceito, mas não estabelecem recurso atual, vida útil confirmada ou economia verificada independentemente.", highlights: ["O relatório de 2017 cobre PR 13578, descrito como oito quadrículas mineiras em cerca de 6,8 km²", "O material histórico aborda potencial de ouro aluvial, eluvial e em rocha, além de diamantes", "O documento recomenda início faseado e afirma que a vida da mina não está confirmada"], whyMatch: "Oportunidade Investdesco inicial para investidores capazes de financiar diligência sobre título, geologia, viabilidade e ambiente." },
   "comicordia-agri": { summary: "Plataforma agrícola proposta no centro da RDC que organiza pequenos produtores em redes com crédito de insumos, mecanização partilhada, armazenamento e transformação de milho, mandioca e soja, procurando ligá-los a acordos de compra propostos a preços transparentes.", highlights: ["Dado do promotor: mais de 50.000 agricultores e 25.000 hectares; evidência e data não públicas", "Dado do promotor: mais de 40 aldeias e aumento de rendimento de 45%; método e data não públicos", "Emprego declarado: 10.000 mulheres; evidência de medição não pública"], whyMatch: "Oportunidade agrícola que exige validar alcance, acesso à terra, compra, salvaguardas e impacto declarado." },
   "manioc-plant": { summary: "Os materiais descrevem uma fábrica de liofilização de quatro hectares perto de Kimwenza, abastecida com folhas de mandioca de Mont Ngafula e Kongo Central. Indicam validade aproximada de dez anos e distribuição por vendedores e depósitos; testes de produto, procura e validação não são públicos.", highlights: ["Local de 4 hectares com energia solar, armazenamento refrigerado e tratamento de água", "Produto liofilizado com validade declarada de cerca de 10 anos", "Distribuição baseada em vendedoras de mercado"], whyMatch: "Ativo de transformação Agridesco de menor dimensão, com plano de construção orçamentado e canal de distribuição identificado." },
@@ -238,9 +238,94 @@ const zh = Object.fromEntries(Object.entries(fr).map(([id, x]) => [id, {
 
 const translations = { fr, es, pt, zh } satisfies ListingTranslations;
 
+const addedProjectTranslations: ListingTranslations = {
+  fr: {
+    "kasaji-kisenge-solar-50mw": {
+      sector: "Énergie", country: "RDC", instrument: "Besoin de financement de projet décrit dans la proposition technique 2023 ; structure de transaction non communiquée", stage: "Proposition technique et budget datés d’août 2023", irr: "Non communiqué publiquement",
+      summary: "Nous présentons une opportunité énergétique combinant 50 MW photovoltaïques, stockage, sous-stations moyenne tension, distribution et éclairage public pour Kasaji, Kisenge et les communautés voisines. La proposition technique 2023 estime le coût à 86,2 M$ et le délai à 11 mois après signature et financement. Avant d’avancer, nous exigeons la confirmation des droits fonciers, permis, accords avec l’opérateur, demande, prix d’achat et modèle financier.",
+      highlights: ["Capacité conçue : 50 MW photovoltaïques avec stockage et travaux de réseau", "Budget 2023 : 86 215 774,30 $, taxes et coûts de projet inclus", "Délai proposé : 11 mois après signature et financement", "Zone de service cible : Kasaji, Kisenge et les communautés voisines ; demande et raccordements à valider"],
+      whyMatch: "Nous considérons ce projet comme une opportunité énergétique potentielle pour Investdesco, sous réserve d’une validation technique, juridique, commerciale et financière actualisée.",
+    },
+    "ldc-integrated-housing-drc": {
+      sector: "Infrastructure", country: "RDC", instrument: "Programme proposé en partenariat public-privé et crédit logement ; structure financière non finalisée", stage: "Concept du porteur et plan de coûts préliminaire", irr: "Hypothèse du porteur : marge nette de 10 % par logement social ; modèle non examiné indépendamment",
+      summary: "Nous présentons une opportunité urbaine de grande ampleur réunissant logements, voirie, réseaux, équipements publics et activités industrielles sur trois sites proposés en RDC. Le coût conceptuel est estimé à 14,64 Md$. Nous envisageons une évaluation par phases, en commençant par un périmètre réconcilié, des sites et droits fonciers confirmés, une demande testée, la participation bancaire et des coûts validés indépendamment.",
+      highlights: ["Concept portant sur trois sites et plusieurs catégories de logements résidentiels, économiques et publics", "Estimation préliminaire : 14,64 Md$, dont 5 % pour le suivi-évaluation", "Mécanisme proposé : apport initial de 20 %, puis remboursement sur 15 ans au maximum", "Quantités de logements et capacités d’eau et d’électricité incohérentes dans les documents"],
+      whyMatch: "Nous y voyons une plateforme urbaine potentielle pour Investdesco, sous réserve de valider le périmètre, le foncier, l’urbanisme, la demande et le financement.",
+    },
+    "energulf-lotshi-block": {
+      sector: "Énergie", country: "RDC", instrument: "Financement d’exploration et d’évaluation ; conditions non communiquées publiquement", stage: "Avant forage — titre et autorisations actuels à confirmer", irr: "Non communiqué publiquement",
+      summary: "Nous présentons Lotshi comme une opportunité d’exploration terrestre couvrant une zone décrite comme faisant environ 506 km² au Kongo Central, entre Moanda et Lukula. Les documents identifient sept prospects et placent Dallas comme première cible de forage, à 1 500–2 300 mètres. Avant toute mise en relation financière, nous exigeons la confirmation du titre, de la propriété et des autorisations, l’accès aux données techniques, un budget de forage indépendant et un plan environnemental et de sécurité complet.",
+      highlights: ["Zone décrite : environ 506 km² au Kongo Central", "Programme historique : 202 km de sismique réalisés en 2010", "Sept prospects identifiés ; Dallas est la première cible de forage", "Profondeur prévue : 1 500 à 2 300 mètres ; logistique via Banana, Moanda et Ntala"],
+      whyMatch: "Nous classons Lotshi comme une opportunité énergétique Investdesco à haut risque, adaptée aux investisseurs disposant des capacités de diligence requises.",
+    },
+  },
+  es: {
+    "kasaji-kisenge-solar-50mw": {
+      sector: "Energía", country: "R. D. del Congo", instrument: "Necesidad de financiación descrita en la propuesta técnica de 2023; estructura no divulgada", stage: "Propuesta técnica y presupuesto de agosto de 2023", irr: "No divulgado públicamente",
+      summary: "Presentamos una oportunidad energética que combina 50 MW solares, almacenamiento, subestaciones, distribución y alumbrado público para Kasaji, Kisenge y comunidades cercanas. La propuesta de 2023 estima 86,2 M$ y 11 meses desde la firma y financiación. Antes de avanzar, exigimos confirmar suelo, permisos, acuerdos eléctricos, demanda, precios de compra y modelo financiero.",
+      highlights: ["Capacidad diseñada: 50 MW solares con almacenamiento y red", "Presupuesto de 2023: 86.215.774,30 $, impuestos y costes incluidos", "Plazo propuesto: 11 meses desde la firma y financiación", "Zona de servicio: Kasaji, Kisenge y comunidades cercanas; demanda y conexiones por validar"],
+      whyMatch: "Consideramos este proyecto una posible oportunidad energética Investdesco, sujeta a validación técnica, jurídica, comercial y financiera.",
+    },
+    "ldc-integrated-housing-drc": {
+      sector: "Infraestructura", country: "R. D. del Congo", instrument: "Programa público-privado y de crédito hipotecario propuesto; estructura financiera incompleta", stage: "Concepto del promotor y plan preliminar de costes", irr: "Supuesto del promotor: margen neto del 10 % por vivienda social; modelo no revisado independientemente",
+      summary: "Presentamos una oportunidad urbana de gran escala con vivienda, carreteras, servicios, equipamientos públicos y usos industriales en tres emplazamientos propuestos en la RDC. El coste conceptual es de 14,64 mil M$. Evaluaremos el programa por fases, comenzando por un alcance conciliado, suelo confirmado, demanda probada, participación bancaria y costes validados.",
+      highlights: ["Tres emplazamientos con vivienda residencial, económica y de servicio público", "Estimación preliminar: 14,64 mil M$, incluido un 5 % para seguimiento y evaluación", "Mecanismo propuesto: aportación inicial del 20 % y hasta 15 años de pago", "Las cantidades de vivienda y capacidades de agua y energía son incoherentes"],
+      whyMatch: "Vemos una posible plataforma urbana Investdesco, sujeta a validar alcance, suelo, planificación, demanda y financiación.",
+    },
+    "energulf-lotshi-block": {
+      sector: "Energía", country: "R. D. del Congo", instrument: "Financiación de exploración y evaluación; términos no divulgados", stage: "Preperforación; título y autorizaciones actuales por confirmar", irr: "No divulgado públicamente",
+      summary: "Presentamos Lotshi como una oportunidad de exploración terrestre de unos 506 km² en Kongo Central, entre Moanda y Lukula. Los materiales identifican siete prospectos y sitúan Dallas como primer objetivo, a 1.500–2.300 metros. Antes de introducir financiación, exigimos confirmar título, propiedad y aprobaciones, revisar los datos, validar el presupuesto y completar los planes ambientales y de seguridad.",
+      highlights: ["Área descrita: unos 506 km² en Kongo Central", "Programa histórico: 202 km de sísmica en 2010", "Siete prospectos identificados; Dallas es el primer objetivo", "Profundidad prevista: 1.500–2.300 metros; logística vía Banana, Moanda y Ntala"],
+      whyMatch: "Clasificamos Lotshi como una oportunidad energética Investdesco de alto riesgo para inversores con capacidad de diligencia especializada.",
+    },
+  },
+  pt: {
+    "kasaji-kisenge-solar-50mw": {
+      sector: "Energia", country: "RD Congo", instrument: "Necessidade de financiamento descrita na proposta técnica de 2023; estrutura não divulgada", stage: "Proposta técnica e orçamento de agosto de 2023", irr: "Não divulgado publicamente",
+      summary: "Apresentamos uma oportunidade energética que combina 50 MW solares, armazenamento, subestações, distribuição e iluminação pública para Kasaji, Kisenge e comunidades próximas. A proposta de 2023 estima US$ 86,2 milhões e 11 meses após contrato e financiamento. Antes de avançar, exigimos confirmar terrenos, licenças, acordos elétricos, procura, preços de compra e modelo financeiro.",
+      highlights: ["Capacidade projetada: 50 MW solares com armazenamento e rede", "Orçamento de 2023: US$ 86.215.774,30 com impostos e custos", "Prazo proposto: 11 meses após contrato e financiamento", "Área de serviço: Kasaji, Kisenge e comunidades próximas; procura e ligações por validar"],
+      whyMatch: "Consideramos este projeto uma potencial oportunidade energética Investdesco, sujeita a validação técnica, jurídica, comercial e financeira.",
+    },
+    "ldc-integrated-housing-drc": {
+      sector: "Infraestrutura", country: "RD Congo", instrument: "Programa público-privado e de crédito habitacional proposto; estrutura financeira incompleta", stage: "Conceito do promotor e plano preliminar de custos", irr: "Pressuposto do promotor: margem líquida de 10% por habitação social; modelo não revisto independentemente",
+      summary: "Apresentamos uma oportunidade urbana de grande escala com habitação, estradas, serviços, equipamentos públicos e usos industriais em três áreas propostas na RDC. O custo conceptual é de US$ 14,64 mil milhões. Avaliaremos o programa por fases, começando por um âmbito conciliado, terrenos confirmados, procura testada, participação bancária e custos validados.",
+      highlights: ["Três áreas com habitação residencial, económica e de serviço público", "Estimativa preliminar: US$ 14,64 mil milhões, incluindo 5% para monitorização e avaliação", "Mecanismo proposto: entrada de 20% e pagamento até 15 anos", "Quantidades de habitação e capacidades de água e energia são inconsistentes"],
+      whyMatch: "Vemos uma potencial plataforma urbana Investdesco, sujeita à validação do âmbito, terreno, planeamento, procura e financiamento.",
+    },
+    "energulf-lotshi-block": {
+      sector: "Energia", country: "RD Congo", instrument: "Financiamento de exploração e avaliação; termos não divulgados", stage: "Pré-perfuração; título e aprovações atuais por confirmar", irr: "Não divulgado publicamente",
+      summary: "Apresentamos Lotshi como uma oportunidade de exploração terrestre de cerca de 506 km² no Kongo Central, entre Moanda e Lukula. Os materiais identificam sete prospetos e colocam Dallas como primeiro alvo, a 1.500–2.300 metros. Antes de introduzir financiamento, exigimos confirmar título, propriedade e aprovações, rever os dados, validar o orçamento e concluir os planos ambientais e de segurança.",
+      highlights: ["Área descrita: cerca de 506 km² no Kongo Central", "Programa histórico: 202 km de sísmica em 2010", "Sete prospetos identificados; Dallas é o primeiro alvo", "Profundidade prevista: 1.500–2.300 metros; logística via Banana, Moanda e Ntala"],
+      whyMatch: "Classificamos Lotshi como uma oportunidade energética Investdesco de alto risco para investidores com capacidade de diligência especializada.",
+    },
+  },
+  zh: {
+    "kasaji-kisenge-solar-50mw": {
+      sector: "能源", country: "刚果民主共和国", instrument: "2023 年技术方案所述项目融资需求；交易结构未披露", stage: "2023 年 8 月技术方案及预算", irr: "尚未公开披露",
+      summary: "我们展示一项能源基础设施机会，为 Kasaji、Kisenge 及周边社区建设 50 MW 光伏、储能、中压变电站、配电及公共照明。2023 年方案估算总成本为 8,621.6 万美元，合同签署及融资落实后工期 11 个月。推进前，我们要求确认土地权利、许可、公用事业安排、需求、采购价格及财务模型。",
+      highlights: ["设计容量：50 MW 光伏发电、储能及电网工程", "2023 年预算：86,215,774.30 美元，含税费及项目成本", "拟议工期：合同签署及融资落实后 11 个月", "目标服务区域：Kasaji、Kisenge 及周边社区；需求及接入须核实"],
+      whyMatch: "我们将其视为潜在 Investdesco 能源机会，但须完成最新技术、法律、商业及融资核验。",
+    },
+    "ldc-integrated-housing-drc": {
+      sector: "基础设施", country: "刚果民主共和国", instrument: "拟议公私合作及住房按揭计划；融资结构尚未完成", stage: "发起方概念及初步成本计划", irr: "发起方假设每套社会住房净利润率为 10%；模型未经独立审阅",
+      summary: "我们展示一项大型城市发展机会，拟在刚果民主共和国三个片区整合住房、道路、公用设施、公共服务及工业用途。概念成本为 146.4 亿美元。我们将分阶段评估，首先统一范围、确认土地权利、测试需求、落实银行参与并独立验证成本。",
+      highlights: ["概念涵盖三个片区及住宅、经济型和公共服务住房", "初步估算：146.4 亿美元，包括 5% 监测评估费用", "拟议购房机制：首付 20%，其余款项最长 15 年偿还", "文件中的住房数量、电力容量及水务设施数据不一致"],
+      whyMatch: "我们认为其具备成为 Investdesco 城市平台的潜力，前提是核实范围、土地、规划、需求及融资。",
+    },
+    "energulf-lotshi-block": {
+      sector: "能源", country: "刚果民主共和国", instrument: "勘探及评价融资；交易条款未公开披露", stage: "钻探前阶段，须确认当前矿权及批准", irr: "尚未公开披露",
+      summary: "我们将 Lotshi 作为一项陆上勘探机会展示。资料称其位于 Kongo Central，面积约 506 平方公里，介于 Moanda 与 Lukula 之间，并识别出七个目标，Dallas 为首个钻探目标，计划深度 1,500–2,300 米。引入融资前，我们要求确认矿权、所有权及批准，审阅技术数据，独立验证预算，并完成环境及安全计划。",
+      highlights: ["资料所述面积：Kongo Central 约 506 平方公里", "历史工作：2010 年完成 202 公里地震勘测", "识别出七个目标；Dallas 为首个钻探目标", "计划深度：1,500–2,300 米；物流路线经 Banana、Moanda 及 Ntala"],
+      whyMatch: "我们将 Lotshi 归类为高风险 Investdesco 能源机会，适合具备专业尽调能力的投资者。",
+    },
+  },
+};
+
 export function localizeListing<T extends Listing>(listing: T, locale: Locale): T {
   if (locale === "en") return listing;
-  const translated = (translations[locale] as Record<string, ListingText>)[listing.id];
+  const translated =
+    addedProjectTranslations[locale][listing.id] ??
+    (translations[locale] as Record<string, ListingText>)[listing.id];
   return translated ? { ...listing, ...translated } : listing;
 }
 

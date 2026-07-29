@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" role="img" aria-labelledby="title desc">
+  <title id="title">Illustrative solar energy project</title>
+  <desc id="desc">A restrained conceptual landscape with solar panels and an electrical substation.</desc>
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#e8f3f8"/><stop offset="1" stop-color="#f7efe2"/></linearGradient>
+    <linearGradient id="panel" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#17334c"/><stop offset="1" stop-color="#315d78"/></linearGradient>
+  </defs>
+  <rect width="1600" height="900" fill="url(#sky)"/>
+  <circle cx="1275" cy="180" r="72" fill="#d8b65a" opacity=".86"/>
+  <path d="M0 540 Q330 470 680 545 T1600 520 V900 H0Z" fill="#b7a67c"/>
+  <g stroke="#d9e6ea" stroke-width="5" fill="url(#panel)">
+    <path d="M150 500 510 455 610 650 220 690Z"/><path d="M570 455 930 435 1000 620 625 650Z"/>
+    <path d="M980 435 1325 445 1390 625 1015 620Z"/>
+  </g>
+  <g stroke="#beccd2" stroke-width="2" opacity=".75">
+    <path d="M240 488 315 676M335 477 415 668M430 465 515 657M665 450 735 644M760 446 830 638M855 441 925 632M1070 438 1130 620M1160 441 1220 622M1250 444 1310 624"/>
+    <path d="M178 545 535 506M198 604 565 565M593 511 951 492M613 570 977 551M1000 492 1345 505M1022 550 1368 566"/>
+  </g>
+  <g fill="none" stroke="#536b73" stroke-width="8">
+    <path d="M1460 300v355M1388 390h144M1415 470h90"/><path d="M1388 390 1335 735M1532 390 1582 735"/>
+  </g>
+  <rect x="72" y="72" width="415" height="116" rx="12" fill="#fff" opacity=".9"/>
+  <text x="112" y="123" font-family="Arial, sans-serif" font-size="25" fill="#24343c" letter-spacing="3">ILLUSTRATIVE CONCEPT</text>
+  <text x="112" y="163" font-family="Georgia, serif" font-size="28" fill="#9e2035">SOLAR + GRID INFRASTRUCTURE</text>
+</svg>

@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" role="img" aria-labelledby="title desc">
+  <title id="title">Illustrative integrated housing project</title>
+  <desc id="desc">A conceptual urban plan with housing blocks, roads, trees and public facilities.</desc>
+  <rect width="1600" height="900" fill="#eee9df"/>
+  <path d="M0 670 1600 350V900H0Z" fill="#c7b891"/>
+  <path d="M-80 825 1660 475" stroke="#f4f0e7" stroke-width="125"/>
+  <path d="M-80 825 1660 475" stroke="#9f9a90" stroke-width="5" stroke-dasharray="32 24"/>
+  <g stroke="#704f3e" stroke-width="5">
+    <g fill="#d9c8aa"><path d="M120 520h220v150H120z"/><path d="M105 520 230 430 355 520z" fill="#9e2035"/></g>
+    <g fill="#d9c8aa"><path d="M425 410h250v170H425z"/><path d="M405 410 550 310 695 410z" fill="#9e2035"/></g>
+    <g fill="#d9c8aa"><path d="M780 555h235v155H780z"/><path d="M760 555 898 460 1035 555z" fill="#9e2035"/></g>
+    <g fill="#d9c8aa"><path d="M1135 350h270v185h-270z"/><path d="M1112 350 1270 245 1428 350z" fill="#9e2035"/></g>
+  </g>
+  <g fill="#345e47"><circle cx="92" cy="710" r="42"/><circle cx="385" cy="615" r="38"/><circle cx="730" cy="470" r="44"/><circle cx="1090" cy="610" r="40"/><circle cx="1475" cy="430" r="45"/></g>
+  <rect x="72" y="72" width="430" height="116" rx="12" fill="#fff" opacity=".92"/>
+  <text x="112" y="123" font-family="Arial, sans-serif" font-size="25" fill="#24343c" letter-spacing="3">ILLUSTRATIVE CONCEPT</text>
+  <text x="112" y="163" font-family="Georgia, serif" font-size="28" fill="#9e2035">INTEGRATED HOUSING</text>
+</svg>

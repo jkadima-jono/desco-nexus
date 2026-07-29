@@ -49,6 +49,7 @@ export const SECTOR_TO_PILLAR: Record<string, string> = {
   Water: "waterdesco",
   Mining: "investdesco",
   Infrastructure: "investdesco",
+  Energy: "investdesco",
 };
 
 export function pillarIcon(pillarSlug: string): string {

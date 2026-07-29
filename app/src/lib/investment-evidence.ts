@@ -69,12 +69,87 @@ const THESIS: Record<string, string> = {
     "The supplied historical geochemical study identifies copper and cobalt anomalies under research permit 8252 and lists copper, cobalt and gold as target substances, but it does not establish a mineral resource. The case depends on renewal and current-title verification, modern exploration, independent technical review, environmental and social baseline work, and a disclosed funding plan.",
   "sciress-kolwezi-12423":
     "Scires Mining proposes to acquire and advance PE 12423 through drilling, resource definition, feasibility work and pre-production engineering. The opportunity remains pre-resource: permit transfer, title, historical data, metallurgy, environmental approvals, development costs and transaction terms require independent diligence.",
+  "kasaji-kisenge-solar-50mw":
+    "The 2023 proposal defines a 50 MW solar, storage and distribution project for Kasaji and Kisenge. The investment case depends on refreshing the design and prices, confirming sites and rights, documenting utility and customer arrangements, and independently reviewing demand, grid integration, safeguards and financing.",
+  "ldc-integrated-housing-drc":
+    "LDC proposes a multi-site housing and urban-infrastructure programme. Before capital formation, the sponsor needs one controlled scope, a phased pilot, confirmed land and planning rights, household demand and affordability evidence, bank participation, cost validation and a deliverable procurement plan.",
+  "energulf-lotshi-block":
+    "Lotshi is an onshore exploration opportunity in Kongo Central with historical seismic coverage and seven prospects described in the available project material. The investment case depends on confirming current title and ownership, reviewing the underlying technical data and independent certification, and defining a financeable drilling, safeguards and appraisal programme.",
 };
 
 const PROJECT_EVIDENCE: Record<
   string,
   Pick<InvestmentEvidence, "fields" | "risks" | "provenance">
 > = {
+  "kasaji-kisenge-solar-50mw": {
+    fields: [
+      { label: "Legal project entity", value: "DIPC Group is named as designer and proposed implementer; the project SPV is not disclosed", status: "partial", source: "Kasaji–Kisenge technical proposal, August 2023" },
+      { label: "Ownership and development rights", value: NOT_DISCLOSED, status: "not-disclosed" },
+      { label: "Technical evidence", value: "A 40-page proposal describes 50 MW of solar generation, battery storage, substations, distribution and public lighting. Independent engineering review is not recorded", status: "partial", source: "Kasaji–Kisenge technical proposal, August 2023" },
+      { label: "Capital estimate", value: "Sponsor estimate: $86,215,774.30 including taxes and project delivery costs; quotations and current pricing require validation", status: "partial", source: "Kasaji–Kisenge technical proposal, August 2023" },
+      { label: "Revenue and offtake evidence", value: NOT_DISCLOSED, status: "not-disclosed" },
+      { label: "Implementation timetable", value: "Sponsor proposes 11 months from contract signature and funding; critical path and procurement evidence are not disclosed", status: "partial", source: "Kasaji–Kisenge technical proposal, August 2023" },
+    ],
+    risks: [
+      { label: "Development and construction", value: "The 2023 design, equipment quantities, battery configuration, grid studies, schedule and pricing require independent technical validation", status: "partial", source: "DESCO folder review" },
+      { label: "Commercial and offtake", value: "Customer demand, tariffs, utility interface, payment security and executed offtake arrangements are not disclosed", status: "not-disclosed" },
+      { label: "Legal, title and permitting", value: "Land rights, generation and distribution licences, environmental approvals and contracting authority are not disclosed", status: "not-disclosed" },
+      { label: "Financial and currency", value: "Financing terms, contingencies, escalation, foreign-exchange exposure and operating model are not disclosed", status: "not-disclosed" },
+      { label: "Environmental and social", value: "ESIA, land-use impacts, battery end-of-life plan and community consultation are not disclosed", status: "not-disclosed" },
+    ],
+    provenance: {
+      classification: "Sponsor technical proposal and preliminary budget",
+      source: "Projet d’électrification de Kasaji & Kisenge par système hybride, DIPC Group",
+      sourceDate: "Plans dated 31 August 2023; folder reviewed 29 July 2026",
+      reviewStatus: "DESCO source review recorded; independent technical, legal and financial verification not recorded",
+    },
+  },
+  "ldc-integrated-housing-drc": {
+    fields: [
+      { label: "Legal project entity", value: "ONGD Logement Décent pour les Congolais and ADDCPB are named in the concept paper; project SPVs and contracting authority are not disclosed", status: "partial", source: "LDC integrated modern city narrative" },
+      { label: "Ownership and development rights", value: NOT_DISCLOSED, status: "not-disclosed" },
+      { label: "Technical evidence", value: "Concept narrative and preliminary cost schedule cover three sites, but housing quantities and utility capacities are inconsistent across sections", status: "partial", source: "LDC integrated modern city narrative" },
+      { label: "Capital estimate", value: "Sponsor estimate: $14,635,509,000 including a 5% monitoring and evaluation allowance; no independent cost review is disclosed", status: "partial", source: "LDC integrated modern city narrative" },
+      { label: "Revenue and offtake evidence", value: "A proposed buyer pathway uses a 20% contribution and up to 15 years of repayment. Demand, affordability, lender commitments and credit performance are not evidenced", status: "partial", source: "LDC integrated modern city narrative" },
+      { label: "Implementation timetable", value: NOT_DISCLOSED, status: "not-disclosed" },
+    ],
+    risks: [
+      { label: "Scope and cost baseline", value: "Unit counts, power capacity, water assets and cost schedules conflict and must be reconciled before reliance", status: "partial", source: "DESCO folder review" },
+      { label: "Commercial and demand", value: "Household demand, affordability, absorption, pricing and employer or bank participation are not evidenced", status: "not-disclosed" },
+      { label: "Legal, title and permitting", value: "Site locations, land title, customary rights, planning consent, environmental approvals and public authority are not disclosed", status: "not-disclosed" },
+      { label: "Financial and currency", value: "The programme has no disclosed phased financing plan, lender commitments, subsidy framework, sensitivity analysis or foreign-exchange treatment", status: "not-disclosed" },
+      { label: "Delivery and governance", value: "Procurement strategy, design standards, programme controls, delivery partners and accountable governance are not disclosed", status: "not-disclosed" },
+    ],
+    provenance: {
+      classification: "Sponsor concept narrative and preliminary cost plan",
+      source: "LDC explanatory note, technical note and integrated modern city narrative",
+      sourceDate: "Documents undated; folder reviewed 29 July 2026",
+      reviewStatus: "DESCO source review recorded; independent technical, legal and financial verification not recorded",
+    },
+  },
+  "energulf-lotshi-block": {
+    fields: [
+      { label: "Legal project entity", value: "EnerGulf Congo SARL is identified as the local project company", status: "partial", source: "EnerGulf Lotshi project one-pager" },
+      { label: "Ownership and development rights", value: "The material describes a 90% EnerGulf and 10% COHYDRO participation and a separate 2024 conditional share-transfer arrangement. Current ownership, licence validity and completed approvals require legal confirmation", status: "partial", source: "EnerGulf Lotshi project one-pager" },
+      { label: "Technical evidence", value: "The material refers to 202 km of 2010 seismic work, seven prospects and an independent DeGolyer & MacNaughton review. The underlying seismic data and certification report are not included", status: "partial", source: "EnerGulf Lotshi project one-pager" },
+      { label: "Development plan", value: "The Dallas prospect is identified as the first drilling target at a planned depth of 1,500–2,300 metres, followed by testing and a possible second well", status: "partial", source: "EnerGulf Lotshi project one-pager" },
+      { label: "Revenue and offtake evidence", value: NOT_DISCLOSED, status: "not-disclosed" },
+      { label: "Implementation timetable", value: NOT_DISCLOSED, status: "not-disclosed" },
+    ],
+    risks: [
+      { label: "Legal, title and permitting", value: "Current licence standing, ownership, conditional transfer completion, government approvals and authority to raise capital require independent legal confirmation", status: "partial", source: "EnerGulf Lotshi project one-pager" },
+      { label: "Geology and resource", value: "Prospect and recoverable-volume figures in the one-pager are exploration estimates. The underlying technical report, assumptions and classification are not available for review", status: "partial", source: "DESCO folder review" },
+      { label: "Development and construction", value: "Well design, rig and service contracts, drilling budget, logistics plan, schedule and contingency are not disclosed", status: "not-disclosed" },
+      { label: "Environmental and social", value: "Current ESIA, demining clearance, emergency response, community engagement, spill prevention and abandonment plans are not disclosed", status: "not-disclosed" },
+      { label: "Commercial and financial", value: "Capital requirement, financing terms, fiscal assumptions, market route and independently reviewed economics are not disclosed", status: "not-disclosed" },
+    ],
+    provenance: {
+      classification: "Project summary derived from historical and transaction-related materials",
+      source: "EnerGulf Congo Lotshi Block one-pager",
+      sourceDate: "References activity from 1972 to a conditional 2024 transaction; folder reviewed 29 July 2026",
+      reviewStatus: "DESCO source review recorded; current legal, technical, environmental and financial verification not recorded",
+    },
+  },
   "waterdesco-grand-kasai": {
     fields: [
       { label: "Legal project entity", value: "WaterDesco is presented as a Desco Global pillar; the project SPV and contracting entity are not disclosed", status: "partial", source: "Desco Global 2026 investor decks" },

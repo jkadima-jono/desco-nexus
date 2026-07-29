@@ -13,7 +13,7 @@ const SUGGESTIONS = [
 ];
 
 export default function Search() {
-  const { t } = useI18n();
+  const { locale, t } = useI18n();
   const [q, setQ] = useState("");
   const [submitted, setSubmitted] = useState<string | null>(null);
   const [out, setOut] = useState<{ results: Listing[]; interpretation: string } | null>(null);
@@ -98,7 +98,7 @@ export default function Search() {
           </div>
           <div className="grid gap-5">
             {out.results.map((l, i) => (
-              <ProjectCard key={l.id} listing={l} index={i} />
+              <ProjectCard key={l.id} listing={l} index={i} locale={locale} />
             ))}
             {out.results.length === 0 && (
               <div className="bg-white rounded-2xl p-10 text-center text-sm text-wgray">

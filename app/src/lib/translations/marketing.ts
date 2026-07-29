@@ -131,7 +131,7 @@ export type HomeMarketingCopy = MarketingCopy["home"];
 
 const en: MarketingCopy = {
   home: {
-    metadata: { title: "DESCO Compass — Structured African opportunities", description: "Review structured African investment opportunities with clear disclosure, sponsor-controlled due diligence and mandate-based screening." },
+    metadata: { title: "DESCO Compass — Structured African opportunities", description: "We present structured African investment opportunities with clear disclosure, controlled due diligence and mandate-based screening." },
     featured: "Featured opportunity briefing", publicTeaser: "Public teaser", capitalSought: "Capital sought",
     projectStage: "Project stage", sector: "Sector", location: "Location", disclosure: "Disclosure",
     sponsorProvided: "Sponsor-provided", dataRoom: "Data room", readinessNotPublic: "Readiness not public",
@@ -139,7 +139,7 @@ const en: MarketingCopy = {
     sponsorBenefits: ["Prepare an institutional listing", "Control access to confidential information", "Coordinate qualified investor engagement"],
     capitalRepresented: "Capital represented in displayed teasers", sponsorFigures: "Sponsor-provided figures",
     processEyebrow: "Investor due diligence pathway", processTitle: "A controlled path from screening to deeper review.",
-    processBody: "DESCO Compass supports screening, information exchange and engagement. Investors remain responsible for their own legal, financial, technical and commercial due diligence.",
+    processBody: "We support screening, information exchange and engagement. Investors remain responsible for their own legal, financial, technical and commercial due diligence.",
     process: [
       { title: "Review the public teaser", body: "Assess the thesis, capital requirement, sponsor, stage, risks and disclosure status." },
       { title: "Evaluate mandate fit", body: "Compare sector, geography, ticket size and instrument with saved investment criteria." },
@@ -152,7 +152,7 @@ const en: MarketingCopy = {
     trustTitle: "Review status and access controls are defined explicitly.",
     trustBody: "The platform distinguishes public, sponsor-provided, DESCO-reviewed, restricted and independently verified information. No status is an investment endorsement.",
     controls: [
-      { title: "Structured project review", body: "DESCO reviews submissions for structure, completeness and internal consistency before publication. This is not independent investment verification." },
+      { title: "Structured project review", body: "We review submissions for structure, completeness and internal consistency before publication. This is not independent investment verification." },
       { title: "Clear disclosure status", body: "Public modules identify sponsor-provided, DESCO-reviewed, pending and restricted information." },
       { title: "Permission-controlled rooms", body: "Confidential documents require an authenticated session and an explicit, revocable access grant." },
       { title: "Recorded access activity", body: "Material access decisions, downloads and workflow changes can be logged for operational oversight." },
@@ -161,12 +161,12 @@ const en: MarketingCopy = {
     trustNotice: "DESCO Compass does not claim completed AML or KYC checks, SOC 2 certification, GDPR compliance, government approval, guaranteed returns or independent project verification unless supported by approved evidence.",
     trustCta: "Read the disclosure framework", nextEyebrow: "Choose your next step",
     nextTitle: "Review opportunities or prepare a project for institutional screening.",
-    nextBody: "Investor and sponsor journeys remain distinct through screening, access decisions and engagement.",
+    nextBody: "We keep investor and project-company journeys distinct through screening, access decisions and engagement.",
     reviewCta: "Review opportunities", prepareCta: "Prepare a project",
   },
   about: {
     metadata: { title: "About DESCO Global — DESCO Compass", description: "DESCO Global’s role in connecting structured projects, capital providers and strategic partners." },
-    hero: { eyebrow: "About DESCO Global", title: "Connecting structured projects, capital and strategic partners.", body: "DESCO Global operates DESCO Compass as an investment-opportunity and due diligence platform focused initially on the Democratic Republic of the Congo, with capacity to support selected African markets.", primary: "Contact DESCO Global", secondary: "Review investment pillars" },
+    hero: { eyebrow: "About DESCO Global", title: "We connect structured projects, capital and strategic partners.", body: "We operate DESCO Compass as an investment-opportunity and due diligence platform focused initially on the Democratic Republic of the Congo, with capacity to support selected African markets.", primary: "Contact DESCO Global", secondary: "Review investment pillars" },
     notice: "This page does not claim an investment track record, client list, transaction history, office network or regulatory status that has not been supplied and approved by DESCO Global.",
     sectionEyebrow: "Platform rationale", sectionTitle: "A clearer interface between project preparation and investor review.",
     cards: [
@@ -198,7 +198,7 @@ const en: MarketingCopy = {
   },
   investors: {
     metadata: { title: "For investors — DESCO Compass", description: "Screen structured opportunities against an investment mandate before committing resources to deeper due diligence." },
-    hero: { eyebrow: "Investor pathway", title: "Assess mandate fit before committing to full due diligence.", body: "DESCO Compass helps institutional investors, funds, family offices, lenders and strategic capital providers screen structured opportunities and control the transition into deeper review.", primary: "Apply for investor access", secondary: "Review opportunities" },
+    hero: { eyebrow: "Investor pathway", title: "Assess mandate fit before committing to full due diligence.", body: "We help institutional investors, funds, family offices, lenders and strategic capital providers screen structured opportunities and control the transition into deeper review.", primary: "Apply for investor access", secondary: "Review opportunities" },
     preview: "Mandate builder preview", mandateFields: ["Preferred sectors", "Geographic focus", "Ticket size", "Investment instrument", "Project stage", "Impact requirements", "Risk tolerance", "Control preference"],
     matchingNote: "Matching uses disclosed project fields and deterministic criteria. It is a screening aid, not investment advice.",
     sectionEyebrow: "Investor operating model", sectionTitle: "Review opportunities against defined mandate criteria.",
@@ -220,11 +220,11 @@ const en: MarketingCopy = {
   },
   sponsors: {
     metadata: { title: "For project sponsors — DESCO Compass", description: "Prepare a structured project listing and manage controlled investor due diligence." },
-    hero: { eyebrow: "Sponsor pathway", title: "Prepare your project for institutional investor review.", body: "Move from fragmented project information to a structured institutional listing, a clear public teaser and permission-controlled due diligence.", primary: "Assess project readiness", secondary: "Discuss sponsor support" },
+    hero: { eyebrow: "Project-company pathway", title: "We prepare projects for institutional investor review.", body: "We turn fragmented project information into a structured institutional listing, a clear public briefing and permission-controlled due diligence.", primary: "Assess project readiness", secondary: "Discuss project support" },
     framework: "Readiness framework", underReview: "Under review", required: "Required",
     readiness: ["Sponsor information", "Project structure", "Market case", "Technical readiness", "Financial model", "Legal and regulatory position", "Land and permits", "ESG and community", "Risk disclosure", "Supporting documents"],
     sectionEyebrow: "Project preparation", sectionTitle: "Structure the public case, then control the deeper review.",
-    sectionBody: "The sponsor route covers readiness, submission, disclosure, listing preparation, confidential documents, access decisions and investor engagement.",
+    sectionBody: "Our project-company pathway covers readiness, submission, disclosure, listing preparation, confidential documents, access decisions and investor engagement.",
     process: [
       { title: "Assess readiness", body: "Identify gaps across sponsor, project, market, financial, legal, ESG and document information." },
       { title: "Prepare structured information", body: "Turn fragmented material into consistent fields, evidence references and clear disclosure." },
@@ -238,7 +238,7 @@ const en: MarketingCopy = {
   },
   partners: {
     metadata: { title: "Partners and advisers — DESCO Compass", description: "Routes for legal, financial, technical, government and development partners supporting structured opportunities." },
-    hero: { eyebrow: "Partners and advisers", title: "Professional support for structured project preparation and review.", body: "DESCO Compass can coordinate authorised advisers and institutions around project information, due diligence and investor engagement without implying endorsement or partnership where none has been formally approved.", primary: "Submit a partnership enquiry", secondary: "Review the due diligence model" },
+    hero: { eyebrow: "Partners and advisers", title: "We coordinate professional support for project preparation and review.", body: "We can coordinate authorised advisers and institutions around project information, due diligence and investor engagement without implying endorsement or partnership where none has been formally approved.", primary: "Submit a partnership enquiry", secondary: "Review the due diligence model" },
     sectionEyebrow: "Participation model", sectionTitle: "Defined roles, authorised access and clear accountability.",
     cards: [
       { title: "Legal and transaction advisers", body: "Support legal structuring, disclosure, document review and transaction execution." },

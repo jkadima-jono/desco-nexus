@@ -34,6 +34,7 @@ function optionValues(values: string[]) {
 }
 
 function matchesCapital(value: number, band: string) {
+  if (band !== "All" && value <= 0) return false;
   if (band === "under-10") return value < 10_000_000;
   if (band === "10-50") return value >= 10_000_000 && value < 50_000_000;
   if (band === "50-100") return value >= 50_000_000 && value < 100_000_000;

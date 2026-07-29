@@ -7,17 +7,12 @@ import {
 } from "../src/lib/investment-evidence";
 
 const prisma = new PrismaClient();
-const SOURCE_MANAGED_IDS = new Set([
-  "comicordia-mining",
-  "comicordia-agri",
-  "tilu-pepm-8252",
-  "sciress-kolwezi-12423",
-]);
+const SOURCE_MANAGED_IDS = new Set(listings.map((listing) => listing.id));
 
-// Additive catalogue synchronisation for deployed environments. Existing
-// projects keep administrator-managed content and verification history; only
-// their shared pillar colour is refreshed. Missing catalogue projects are
-// created from the public-safe source data.
+// Catalogue synchronisation for DESCO-managed public opportunities. Public
+// narrative and disclosure fields follow the reviewed source catalogue on
+// every deployment, while verification history and uploaded room material
+// remain untouched.
 async function main() {
   let created = 0;
   let refreshed = 0;

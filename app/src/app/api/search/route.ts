@@ -8,17 +8,26 @@ import type { Listing } from "@/lib/data";
 // "Fintech" that no real listing carries.
 const SECTOR_MAP: [string, string][] = [
   ["agri", "Agriculture"], ["farm", "Agriculture"], ["cassava", "Agriculture"],
-  ["crop", "Agriculture"], ["food", "Agriculture"],
+  ["crop", "Agriculture"], ["food", "Agriculture"], ["agriculture", "Agriculture"],
+  ["agricultura", "Agriculture"], ["農業", "Agriculture"], ["农业", "Agriculture"],
   ["infra", "Infrastructure"], ["port", "Infrastructure"], ["logistics", "Infrastructure"],
-  ["gateway", "Infrastructure"], ["road", "Infrastructure"],
+  ["gateway", "Infrastructure"], ["road", "Infrastructure"], ["infrastructure", "Infrastructure"],
+  ["infraestructura", "Infrastructure"], ["infraestrutura", "Infrastructure"], ["基础设施", "Infrastructure"],
+  ["energy", "Energy"], ["solar", "Energy"], ["power", "Energy"], ["electricity", "Energy"],
+  ["énergie", "Energy"], ["energía", "Energy"], ["energia", "Energy"], ["能源", "Energy"],
   ["mining", "Mining"], ["mine", "Mining"], ["gold", "Mining"],
   ["diamond", "Mining"], ["concession", "Mining"], ["cobalt", "Mining"], ["copper", "Mining"],
+  ["mines", "Mining"], ["minería", "Mining"], ["mineração", "Mining"], ["采矿", "Mining"],
   ["health", "Healthcare"], ["clinic", "Healthcare"], ["pharma", "Healthcare"],
-  ["hospital", "Healthcare"], ["medicine", "Healthcare"],
-  ["water", "Water"], ["sanitation", "Water"],
+  ["hospital", "Healthcare"], ["medicine", "Healthcare"], ["santé", "Healthcare"],
+  ["salud", "Healthcare"], ["saúde", "Healthcare"], ["医疗", "Healthcare"],
+  ["water", "Water"], ["sanitation", "Water"], ["eau", "Water"], ["agua", "Water"], ["água", "Water"], ["水务", "Water"],
 ];
 
 const containsTerm = (query: string, term: string) => {
+  if (/[^\x00-\x7F]/.test(term) && !/[A-Za-zÀ-ÿ]/.test(term)) {
+    return query.includes(term.toLowerCase());
+  }
   const escaped = term.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
   return new RegExp(`\\b${escaped.replace(/\\ /g, "\\s+")}\\b`, "i").test(query);
 };
@@ -47,8 +56,8 @@ export async function GET(req: Request) {
     const [min, max] = [Math.min(...money), Math.max(...money)];
     results = results.filter((l) => l.raiseUsd >= min && l.raiseUsd <= max);
     parts.push("ticket: $" + min / 1e6 + "M–$" + max / 1e6 + "M");
-  } else if (containsTerm(q, "under") && money.length === 1) {
-    results = results.filter((l) => l.raiseUsd <= money[0]);
+  } else if (["under", "moins", "menos", "abaixo"].some((term) => containsTerm(q, term)) && money.length === 1) {
+    results = results.filter((l) => l.raiseUsd > 0 && l.raiseUsd <= money[0]);
     parts.push("ticket: ≤$" + money[0] / 1e6 + "M");
   }
 
@@ -64,7 +73,7 @@ export async function GET(req: Request) {
     results = results.filter((l) => l.verified);
     parts.push("verified only");
   }
-  if (["drc", "congo", "kasai"].some((term) => containsTerm(q, term))) {
+  if (["drc", "rdc", "congo", "kasai", "kasaï", "刚果"].some((term) => containsTerm(q, term))) {
     results = results.filter((l) => l.country === "DR Congo");
     parts.push("region: DR Congo");
   } else if (containsTerm(q, "africa")) {

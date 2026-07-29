@@ -170,7 +170,7 @@ export default async function Home() {
 
           <div className="mt-10 grid gap-5 lg:grid-cols-2">
             {featured.map((listing, index) => (
-              <ProjectCard key={listing.id} listing={listing} index={index} />
+              <ProjectCard key={listing.id} listing={listing} index={index} locale={locale} />
             ))}
           </div>
 
