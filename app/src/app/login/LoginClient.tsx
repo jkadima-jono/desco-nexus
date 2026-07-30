@@ -16,15 +16,27 @@ const PERSONAS = [
 
 // useSearchParams() requires a Suspense boundary or `next build` fails
 // static generation for this page.
-export default function Login({ demoEnabled }: { demoEnabled: boolean }) {
+export default function Login({
+  demoEnabled,
+  adminEnabled,
+}: {
+  demoEnabled: boolean;
+  adminEnabled: boolean;
+}) {
   return (
     <Suspense fallback={null}>
-      <LoginForm demoEnabled={demoEnabled} />
+      <LoginForm demoEnabled={demoEnabled} adminEnabled={adminEnabled} />
     </Suspense>
   );
 }
 
-function LoginForm({ demoEnabled }: { demoEnabled: boolean }) {
+function LoginForm({
+  demoEnabled,
+  adminEnabled,
+}: {
+  demoEnabled: boolean;
+  adminEnabled: boolean;
+}) {
   const { locale, t } = useI18n();
   const copy = sharedCopy(locale);
   const router = useRouter();
@@ -78,7 +90,7 @@ function LoginForm({ demoEnabled }: { demoEnabled: boolean }) {
           <p className="text-xs text-wgray mb-5">{t(demoEnabled ? "login.demoSubtitle" : "login.accessSubtitle")}</p>
           {demoEnabled ? (
             <div className="grid gap-3">
-              {PERSONAS.map((p) => (
+              {PERSONAS.filter((p) => p.id !== "admin" || adminEnabled).map((p) => (
               <button
                 key={p.id}
                 onClick={() => enter(p.id)}

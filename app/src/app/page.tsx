@@ -81,6 +81,7 @@ export default async function Home() {
   const user = await getSessionUser();
   const locale = await getLocale();
   const copy = getMarketingCopy(locale, "home");
+  const ui = investmentUi(locale);
   const rows = await prisma.listing.findMany({
     where: publicListingWhere,
     include: { org: true, images: true },
@@ -172,7 +173,9 @@ export default async function Home() {
               body={t(locale, "home.opportunitiesBody")}
             />
             <div className="shrink-0 border-l border-gold pl-5">
-              <p className="font-display text-2xl font-extrabold text-ink">{fmtUsd(totalProjectCapital)}</p>
+              <p className="font-display text-2xl font-extrabold text-ink">
+                {totalProjectCapital > 0 ? fmtUsd(totalProjectCapital) : ui.compare.notDisclosed}
+              </p>
               <p className="mt-1 text-xs font-bold text-slate">{copy.capitalRepresented}</p>
               <p className="mt-1 text-xs text-slate">{copy.sponsorFigures}</p>
             </div>
