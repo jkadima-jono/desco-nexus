@@ -8,6 +8,9 @@ env.DIRECT_URL ||= env.DATABASE_URL_UNPOOLED;
 
 const steps = [
   ["prisma", ["generate"]],
+  ...(env.VERCEL_ENV === "preview" && env.DATABASE_URL_UNPOOLED
+    ? [["prisma", ["migrate", "deploy"]]]
+    : []),
   ["node", ["--import", "tsx", "scripts/predeploy-check.ts"]],
   ["next", ["build"]],
 ];
