@@ -387,7 +387,9 @@ export const listings: Listing[] = [
     sectorColor: colorForSector("Infrastructure"),
     country: "DR Congo",
     flag: "🇨🇩",
-    raiseUsd: 14_635_509_000,
+    // The $14.64bn figure is a sponsor concept-level programme estimate,
+    // not a validated financing requirement or current capital ask.
+    raiseUsd: 0,
     instrument: "Public-private development and mortgage finance; structure to be completed",
     stage: "Sponsor concept and preliminary cost plan",
     irr: "Concept model assumes a 10% net margin per social housing unit; independent review required",

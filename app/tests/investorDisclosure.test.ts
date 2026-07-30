@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { isDescoRelatedOpportunity, listings } from "../src/lib/data";
+import { capitalPresentation, isDescoRelatedOpportunity, listings } from "../src/lib/data";
 import { getInvestmentEvidence, summarizeEvidence } from "../src/lib/investment-evidence";
 import { relatedPartyDisclosure } from "../src/lib/translations/investment-ui";
 import { getMarketingCopy } from "../src/lib/translations/marketing";
@@ -31,4 +31,12 @@ test("related-party and institutional risk disclosures are translated", () => {
     const controls = getMarketingCopy(locale, "trust").controls;
     assert.ok(controls.length >= 7, locale);
   }
+});
+
+test("concept programme estimates are not presented as current capital asks", () => {
+  const ldc = listings.find((listing) => listing.id === "ldc-integrated-housing-drc");
+  assert.ok(ldc);
+  assert.equal(ldc.raiseUsd, 0);
+  assert.equal(capitalPresentation(ldc).includeInProjectTotal, false);
+  assert.match(capitalPresentation(ldc).label, /not publicly disclosed/i);
 });
