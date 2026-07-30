@@ -38,6 +38,9 @@ export async function GET(
       { status: 404 }
     );
   }
+  if (doc.scanStatus !== "clean" && doc.scanStatus !== "not_required") {
+    return NextResponse.json({ error: "File is quarantined pending a clean scan result" }, { status: 423 });
+  }
   try {
     const blob = await get(doc.storageKey, { access: "private" });
     if (!blob) return NextResponse.json({ error: "File unavailable" }, { status: 404 });

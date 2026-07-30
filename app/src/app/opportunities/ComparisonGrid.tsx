@@ -40,8 +40,8 @@ export default function ComparisonGrid({ listings, locale }: { listings: Listing
         {listings.map((listing, index) => {
           const checked = selected.includes(listing.id);
           return (
-            <div key={listing.id} className="relative">
-              <label className="absolute right-3 top-3 z-10 flex min-h-11 cursor-pointer items-center gap-2 rounded-md bg-white/95 px-3 text-xs font-bold text-ink shadow">
+            <div key={listing.id} className="overflow-hidden rounded-xl border border-charcoal/10 bg-white">
+              <label className="flex min-h-11 cursor-pointer items-center justify-end gap-2 border-b border-charcoal/10 bg-mist px-4 text-sm font-bold text-ink">
                 <input
                   type="checkbox"
                   name="ids"
@@ -53,7 +53,9 @@ export default function ComparisonGrid({ listings, locale }: { listings: Listing
                 />
                 {ui.checkbox}
               </label>
-              <ProjectCard listing={listing} index={index} locale={locale} />
+              <div className="[&>article]:rounded-none [&>article]:border-0">
+                <ProjectCard listing={listing} index={index} locale={locale} />
+              </div>
             </div>
           );
         })}

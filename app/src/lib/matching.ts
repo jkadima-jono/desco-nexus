@@ -21,23 +21,37 @@ export type MandateCriteria = {
 export type MatchableListing = {
   sector: string;
   country: string;
-  raiseUsd: number;
+  currentCapitalAskUsd: number | null;
   instrument: string;
   governmentBacked: boolean;
   esgEvidenceAvailable: boolean;
 };
 
 export type MatchExplanation = {
-  metCriteria: string[];
-  partiallyMetCriteria: string[];
-  unmetCriteria: string[];
-  missingProjectData: string[];
-  hardExclusions: string[];
-  dataSources: string[];
+  metCriteria: MatchReason[];
+  partiallyMetCriteria: MatchReason[];
+  unmetCriteria: MatchReason[];
+  missingProjectData: MatchReason[];
+  hardExclusions: MatchReason[];
+  dataSources: MatchSource[];
   dataCompleteness: number; // 0-100 — how many of the mandate's own dimensions are actually set
   confidence: "high" | "medium" | "low" | "excluded";
   calculatedAt: string; // ISO timestamp — this is a point-in-time evaluation, not a live score
 };
+
+export type MatchReason = {
+  code:
+    | "excluded-sector" | "excluded-country"
+    | "missing-sector" | "sector-match" | "sector-mismatch"
+    | "missing-country" | "country-match" | "country-mismatch"
+    | "missing-capital" | "capital-match" | "capital-near" | "capital-mismatch"
+    | "missing-instrument" | "instrument-match" | "instrument-mismatch"
+    | "esg-disclosed" | "esg-missing"
+    | "government-match" | "government-mismatch";
+  values?: Record<string, string | number>;
+};
+
+export type MatchSource = "mandate" | "sector" | "country" | "capital" | "instrument" | "esg" | "government";
 
 const TICKET_PARTIAL_MARGIN = 0.15; // within 15% of range counts as "partially" met
 
@@ -45,62 +59,63 @@ export function computeMatchExplanation(
   mandate: MandateCriteria,
   listing: MatchableListing
 ): MatchExplanation {
-  const hardExclusions: string[] = [];
+  const hardExclusions: MatchReason[] = [];
   if (mandate.excludedSectors.includes(listing.sector)) {
-    hardExclusions.push(`Sector "${listing.sector}" is on your excluded-sectors list`);
+    hardExclusions.push({ code: "excluded-sector", values: { sector: listing.sector } });
   }
   if (mandate.excludedCountries.includes(listing.country)) {
-    hardExclusions.push(`Country "${listing.country}" is on your excluded-jurisdictions list`);
+    hardExclusions.push({ code: "excluded-country", values: { country: listing.country } });
   }
 
-  const metCriteria: string[] = [];
-  const partiallyMetCriteria: string[] = [];
-  const unmetCriteria: string[] = [];
-  const missingProjectData: string[] = [];
-  const dataSources = new Set<string>(["Your saved mandate (self-reported)"]);
+  const metCriteria: MatchReason[] = [];
+  const partiallyMetCriteria: MatchReason[] = [];
+  const unmetCriteria: MatchReason[] = [];
+  const missingProjectData: MatchReason[] = [];
+  const dataSources = new Set<MatchSource>(["mandate"]);
   let dimensionsSet = 0;
 
   if (mandate.sectors.length > 0) {
     dimensionsSet++;
     if (!listing.sector) {
-      missingProjectData.push("Listing has no sector recorded to compare against your target sectors");
+      missingProjectData.push({ code: "missing-sector" });
     } else if (mandate.sectors.includes(listing.sector)) {
-      metCriteria.push(`Sector "${listing.sector}" is in your target sectors`);
-      dataSources.add("Listing sector (sponsor-provided)");
+      metCriteria.push({ code: "sector-match", values: { sector: listing.sector } });
+      dataSources.add("sector");
     } else {
-      unmetCriteria.push(`Sector "${listing.sector}" is not in your target sectors (${mandate.sectors.join(", ")})`);
-      dataSources.add("Listing sector (sponsor-provided)");
+      unmetCriteria.push({ code: "sector-mismatch", values: { sector: listing.sector, targets: mandate.sectors.join(", ") } });
+      dataSources.add("sector");
     }
   }
 
   if (mandate.countries.length > 0) {
     dimensionsSet++;
     if (!listing.country) {
-      missingProjectData.push("Listing has no country recorded to compare against your target geography");
+      missingProjectData.push({ code: "missing-country" });
     } else if (mandate.countries.includes(listing.country)) {
-      metCriteria.push(`Country "${listing.country}" is in your target geography`);
-      dataSources.add("Listing country (sponsor-provided)");
+      metCriteria.push({ code: "country-match", values: { country: listing.country } });
+      dataSources.add("country");
     } else {
-      unmetCriteria.push(`Country "${listing.country}" is not in your target geography (${mandate.countries.join(", ")})`);
-      dataSources.add("Listing country (sponsor-provided)");
+      unmetCriteria.push({ code: "country-mismatch", values: { country: listing.country, targets: mandate.countries.join(", ") } });
+      dataSources.add("country");
     }
   }
 
   if (mandate.ticketMinUsd !== null || mandate.ticketMaxUsd !== null) {
     dimensionsSet++;
-    if (!listing.raiseUsd) {
-      missingProjectData.push("Listing has no capital-sought figure recorded to compare against your ticket-size range");
+    if (!listing.currentCapitalAskUsd) {
+      missingProjectData.push({ code: "missing-capital" });
     } else {
       const min = mandate.ticketMinUsd ?? 0;
       const max = mandate.ticketMaxUsd ?? Number.MAX_SAFE_INTEGER;
       const margin = (max === Number.MAX_SAFE_INTEGER ? min : max - min) * TICKET_PARTIAL_MARGIN;
-      dataSources.add("Listing capital sought (sponsor-provided)");
-      if (listing.raiseUsd >= min && listing.raiseUsd <= max) {
-        metCriteria.push(`Capital sought ($${Math.round(listing.raiseUsd / 1e6)}M) is within your ticket-size range`);
-      } else if (listing.raiseUsd >= min - margin && listing.raiseUsd <= max + margin) {
-        partiallyMetCriteria.push(`Capital sought ($${Math.round(listing.raiseUsd / 1e6)}M) is just outside your ticket-size range, within 15%`);
+      dataSources.add("capital");
+      const capitalM = Math.round(listing.currentCapitalAskUsd / 1e6);
+      if (listing.currentCapitalAskUsd >= min && listing.currentCapitalAskUsd <= max) {
+        metCriteria.push({ code: "capital-match", values: { capitalM } });
+      } else if (listing.currentCapitalAskUsd >= min - margin && listing.currentCapitalAskUsd <= max + margin) {
+        partiallyMetCriteria.push({ code: "capital-near", values: { capitalM } });
       } else {
-        unmetCriteria.push(`Capital sought ($${Math.round(listing.raiseUsd / 1e6)}M) is outside your ticket-size range`);
+        unmetCriteria.push({ code: "capital-mismatch", values: { capitalM } });
       }
     }
   }
@@ -108,16 +123,16 @@ export function computeMatchExplanation(
   if (mandate.instruments.length > 0) {
     dimensionsSet++;
     if (!listing.instrument) {
-      missingProjectData.push("Listing has no instrument recorded to compare against your preferred instruments");
+      missingProjectData.push({ code: "missing-instrument" });
     } else {
-      dataSources.add("Listing instrument (sponsor-provided)");
+      dataSources.add("instrument");
       const matched = mandate.instruments.some((i) =>
         listing.instrument.toLowerCase().includes(i.toLowerCase())
       );
       if (matched) {
-        metCriteria.push(`Instrument ("${listing.instrument}") matches one of your preferred instruments`);
+        metCriteria.push({ code: "instrument-match", values: { instrument: listing.instrument } });
       } else {
-        unmetCriteria.push(`Instrument ("${listing.instrument}") does not match your preferred instruments (${mandate.instruments.join(", ")})`);
+        unmetCriteria.push({ code: "instrument-mismatch", values: { instrument: listing.instrument, targets: mandate.instruments.join(", ") } });
       }
     }
   }
@@ -125,20 +140,20 @@ export function computeMatchExplanation(
   if (mandate.esgRequired) {
     dimensionsSet++;
     if (listing.esgEvidenceAvailable) {
-      partiallyMetCriteria.push("ESG information is disclosed, but requires investor review against your mandate");
-      dataSources.add("Listing ESG disclosure (sponsor-provided)");
+      partiallyMetCriteria.push({ code: "esg-disclosed" });
+      dataSources.add("esg");
     } else {
-      missingProjectData.push("No structured ESG evidence is publicly available to evaluate your ESG requirement");
+      missingProjectData.push({ code: "esg-missing" });
     }
   }
 
   if (mandate.govSupportRequired) {
     dimensionsSet++;
-    dataSources.add("Listing government-backing disclosure (sponsor-provided)");
+    dataSources.add("government");
     if (listing.governmentBacked) {
-      metCriteria.push("Has disclosed government backing, as your mandate requires");
+      metCriteria.push({ code: "government-match" });
     } else {
-      unmetCriteria.push("No disclosed government backing, which your mandate requires");
+      unmetCriteria.push({ code: "government-mismatch" });
     }
   }
 

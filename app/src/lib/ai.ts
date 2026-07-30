@@ -1,5 +1,6 @@
 import type { Listing } from "./data";
-import { fmtUsd } from "./data";
+import { capitalPresentation } from "./data";
+import { logOperationalEvent } from "./observability";
 
 // Shared low-level Claude call. Returns null on any failure (missing key,
 // network error, non-200, empty content) so every caller falls through to
@@ -7,30 +8,51 @@ import { fmtUsd } from "./data";
 async function callClaude(system: string, userContent: string): Promise<string | null> {
   const key = process.env.ANTHROPIC_API_KEY;
   if (!key) return null;
-  try {
-    const res = await fetch(
-      (process.env.ANTHROPIC_BASE_URL ?? "https://api.anthropic.com") + "/v1/messages",
-      {
-        method: "POST",
-        headers: {
-          "x-api-key": key,
-          "anthropic-version": "2023-06-01",
-          "content-type": "application/json",
+  const timeoutMs = Math.max(2_000, Number(process.env.AI_REQUEST_TIMEOUT_MS) || 8_000);
+  const model = process.env.ANTHROPIC_MODEL?.trim() || "claude-sonnet-5";
+  for (let attempt = 1; attempt <= 2; attempt += 1) {
+    const startedAt = Date.now();
+    try {
+      const res = await fetch(
+        (process.env.ANTHROPIC_BASE_URL ?? "https://api.anthropic.com") + "/v1/messages",
+        {
+          method: "POST",
+          headers: {
+            "x-api-key": key,
+            "anthropic-version": "2023-06-01",
+            "content-type": "application/json",
+          },
+          signal: AbortSignal.timeout(timeoutMs),
+          body: JSON.stringify({
+            model,
+            max_tokens: 1024,
+            system,
+            messages: [{ role: "user", content: userContent }],
+          }),
         },
-        body: JSON.stringify({
-          model: "claude-sonnet-5",
-          max_tokens: 1024,
-          system,
-          messages: [{ role: "user", content: userContent }],
-        }),
+      );
+      if (res.ok) {
+        const data = (await res.json()) as { content: { type: string; text?: string }[] };
+        logOperationalEvent("info", "ai.request.completed", { model, attempt, durationMs: Date.now() - startedAt });
+        return data.content.find((block) => block.type === "text")?.text ?? null;
       }
-    );
-    if (!res.ok) return null;
-    const data = (await res.json()) as { content: { type: string; text?: string }[] };
-    return data.content.find((b) => b.type === "text")?.text ?? null;
-  } catch {
-    return null;
+      const transient = res.status === 429 || res.status >= 500;
+      logOperationalEvent(transient ? "warn" : "error", "ai.request.rejected", {
+        model, attempt, status: res.status, durationMs: Date.now() - startedAt,
+      });
+      if (!transient || attempt === 2) return null;
+    } catch (error) {
+      logOperationalEvent("warn", "ai.request.failed", {
+        model,
+        attempt,
+        durationMs: Date.now() - startedAt,
+        errorType: error instanceof Error ? error.name : "unknown",
+      });
+      if (attempt === 2) return null;
+    }
+    await new Promise((resolve) => setTimeout(resolve, 250 * attempt));
   }
+  return null;
 }
 
 // Real Claude call when ANTHROPIC_API_KEY is set; deterministic template
@@ -47,10 +69,9 @@ export async function generateTeaser(l: Listing): Promise<{
         sponsor: l.org,
         sector: l.sector,
         country: l.country,
-        raise: fmtUsd(l.raiseUsd),
+        raise: capitalPresentation(l).value,
         instrument: l.instrument,
         stage: l.stage,
-        returnProfile: l.irr,
         summary: l.summary,
         highlights: l.highlights,
       })
@@ -66,8 +87,8 @@ export async function generateTeaser(l: Listing): Promise<{
     "**Investment highlights**",
     ...l.highlights.map((h) => "- " + h),
     "",
-    "**Terms sought.** " + fmtUsd(l.raiseUsd) + " via " + l.instrument +
-      " · Target return " + l.irr + " · Stage: " + l.stage + ".",
+    "**Terms sought.** " + capitalPresentation(l).value + " (" + capitalPresentation(l).label + ") via " + l.instrument +
+      " · Stage: " + l.stage + ". No public return projection is published.",
     "",
     "**Sponsor.** " + l.org + " (" + l.flag + " " + l.country + ")" +
       (l.verified ? " — a DESCO evidence review is recorded; inspect its scope and limitations." : "."),

@@ -17,6 +17,8 @@ export type Listing = {
   country: string;
   flag: string;
   raiseUsd: number;
+  estimatedProjectCostUsd?: number | null;
+  currentCapitalAskUsd?: number | null;
   instrument: string;
   stage: string;
   irr: string;
@@ -56,6 +58,8 @@ export type CapitalPresentation = {
   label: string;
   value: string;
   includeInProjectTotal: boolean;
+  amountUsd: number | null;
+  kind: "current_ask" | "estimated_cost" | "not_disclosed";
 };
 
 export function isDescoRelatedOpportunity(
@@ -64,40 +68,50 @@ export function isDescoRelatedOpportunity(
   return listing.relatedParty ?? /\bdesco global\b/i.test(listing.org);
 }
 
-export function capitalPresentation(listing: Pick<Listing, "id" | "raiseUsd">): CapitalPresentation {
-  if (listing.id === "comicordia-agri") {
+export function capitalPresentation(
+  listing: Pick<Listing, "id" | "raiseUsd"> &
+    Partial<Pick<Listing, "estimatedProjectCostUsd" | "currentCapitalAskUsd">>,
+): CapitalPresentation {
+  if (listing.currentCapitalAskUsd != null && listing.currentCapitalAskUsd > 0) {
     return {
-      label: "Programme allocation, not a project-specific ask",
-      value: fmtUsd(listing.raiseUsd),
-      includeInProjectTotal: false,
+      label: "Current capital sought",
+      value: fmtUsd(listing.currentCapitalAskUsd),
+      includeInProjectTotal: true,
+      amountUsd: listing.currentCapitalAskUsd,
+      kind: "current_ask",
     };
   }
-  if (listing.raiseUsd <= 0) {
+  if (listing.estimatedProjectCostUsd != null && listing.estimatedProjectCostUsd > 0) {
     return {
-      label: "Capital requirement not publicly disclosed",
-      value: "Not disclosed",
+      label: "Preliminary project cost; current capital ask not publicly disclosed",
+      value: fmtUsd(listing.estimatedProjectCostUsd),
       includeInProjectTotal: false,
+      amountUsd: listing.estimatedProjectCostUsd,
+      kind: "estimated_cost",
     };
   }
   return {
-    label: "Project capital sought",
-    value: fmtUsd(listing.raiseUsd),
-    includeInProjectTotal: true,
+    label: "Current capital ask not publicly disclosed",
+    value: "Not disclosed",
+    includeInProjectTotal: false,
+    amountUsd: null,
+    kind: "not_disclosed",
   };
 }
 
 export function returnPresentation(listing: Pick<Listing, "id" | "irr">) {
-  const labels: Record<string, string> = {
-    "port-de-ndomba": "Programme return target, not a project return",
-    "port-de-kasenga": "Programme return target, not a project return",
-    "comicordia-agri": "Programme return target, not a project return",
-    "manioc-plant": "Sponsor unit-economics illustration",
-    "phardesco-mbuji-mayi": "Sponsor operating forecast",
-    "sciress-kolwezi-12423": "Sponsor return illustration",
-  };
   return {
-    label: labels[listing.id] ?? "Return information",
-    value: listing.irr,
+    label: "Return information",
+    value: "No public return projection published",
+  };
+}
+
+export function sanitizePublicListing<T extends Listing>(listing: T): T {
+  return {
+    ...listing,
+    irr: returnPresentation(listing).value,
+    whyMatch: "",
+    docs: [],
   };
 }
 
@@ -122,7 +136,7 @@ export const listings: Listing[] = [
     raiseUsd: 85_000_000,
     instrument: "Project SPV — Desco majority ownership",
     stage: "Feasibility reported; evidence under review",
-    irr: "Part of Desco Global's 17.2% target Phase 1 program IRR",
+    irr: "No public return projection published",
     summary:
       "We are structuring a river-port opportunity on the Kasai River to connect Grand Kasaï with Kinshasa and export routes. The proposed scope includes a quay wall, dredging, berths, warehousing, silos, fuel services, customs facilities and a digital gate. Before advancing the opportunity, we require verified feasibility, rights, permits, demand, cost and delivery evidence.",
     verified: false,
@@ -148,7 +162,7 @@ export const listings: Listing[] = [
     raiseUsd: 65_000_000,
     instrument: "Project SPV — Desco majority ownership",
     stage: "Structuring",
-    irr: "Part of Desco Global's 17.2% target Phase 1 program IRR",
+    irr: "No public return projection published",
     summary:
       "We are structuring a Lake Mweru port opportunity to support trade with Zambia and connections towards Angola. The development targets annual throughput of 300,000 tonnes and a 40% reduction in border-clearance time. We require supporting demand, border, rights, cost and delivery studies before presenting these targets as validated.",
     verified: false,
@@ -174,7 +188,7 @@ export const listings: Listing[] = [
     raiseUsd: 0,
     instrument: "Proposed joint venture; public transaction terms not disclosed",
     stage: "Historical geology and concept-stage mine planning",
-    irr: "Not publicly disclosed",
+    irr: "No public return projection published",
     summary:
       "We are presenting Comicordia as a staged opportunity to move from artisanal activity to semi-mechanised gold and diamond recovery near Luiza and Musefu in Kasaï Central. The file includes a 2017 geological report for PR 13578, an October 2024 investment proposal and a concept-level operating-cost paper. Before investment, we require a current resource basis, confirmed title, mine-life work and independently reviewed economics.",
     verified: false,
@@ -200,7 +214,7 @@ export const listings: Listing[] = [
     raiseUsd: 225_000_000,
     instrument: "Agridesco pillar capital allocation (30% of Desco Global's $750M Phase 1 program)",
     stage: "Operating information supplied",
-    irr: "Part of Desco Global's 17.2% target Phase 1 program IRR",
+    irr: "No public return projection published",
     summary:
       "We are developing Agridesco as a standalone agricultural platform in central DRC, organising smallholders through input finance, shared mechanisation, post-harvest storage and processing for maize, cassava and soy. Our model is designed to connect participating farmers with transparent purchasing arrangements. We are validating farmer reach, land access, operating performance and offtake commitments.",
     verified: false,
@@ -226,7 +240,7 @@ export const listings: Listing[] = [
     raiseUsd: 4_483_170,
     instrument: "Equity + equipment finance",
     stage: "Pre-construction",
-    irr: "Project model: approximately $15,444 per batch based on a 2,000 kg input; assumptions require independent review",
+    irr: "No public return projection published",
     summary:
       "We are presenting a four-hectare freeze-drying facility near Kimwenza station, sourcing cassava leaves from growers in Mont Ngafula and Kongo Central. The model combines solar power, cold storage, water treatment and distribution through retail vendors and depots. Before investment, we require product testing, demand validation, site rights and independently reviewed unit economics.",
     verified: false,
@@ -252,7 +266,7 @@ export const listings: Listing[] = [
     raiseUsd: 10_000_000,
     instrument: "DFI + impact equity ($5M–$10M startup raise)",
     stage: "Pre-launch",
-    irr: "5-yr forecast: EBITDA breakeven Year 2, +$3.8M EBITDA by Year 5",
+    irr: "No public return projection published",
     summary:
       "We are developing the first Phardesco Pharmalab Hub as a solar-powered facility combining pharmaceutical retail, diagnostics, clean-water access and health education for Grand Kasaï. Available material reports roughly one pharmacist per 50,000 people against a cited WHO benchmark of 1 per 2,000; we require current, attributable market evidence before relying on that comparison.",
     verified: false,
@@ -276,9 +290,11 @@ export const listings: Listing[] = [
     country: "DR Congo",
     flag: "🇨🇩",
     raiseUsd: 12_000_000,
+    estimatedProjectCostUsd: 12_000_000,
+    currentCapitalAskUsd: null,
     instrument: "Proposed blended infrastructure and impact capital; final structure not disclosed",
     stage: "Concept design — scope requires reconciliation",
-    irr: "No project return disclosed; the current concept prioritises operating cost recovery",
+    irr: "No public return projection published",
     summary:
       "We are developing WaterDesco to provide clean-water infrastructure for underserved communities in Grand Kasaï. Our 2026 materials currently contain two configurations: 300 decentralised solar-powered WASH hubs with a $12 million budget, or 12 treatment stations with 500 km of network and 50,000 m³/day capacity. We will select a bankable configuration only after reconciling scope and completing site, water-source, permitting, procurement and financial work.",
     useOfFunds:
@@ -306,7 +322,7 @@ export const listings: Listing[] = [
     raiseUsd: 0,
     instrument: "Exploration capital requirement not publicly disclosed",
     stage: "Historical exploration data — permit renewal and current title status unverified",
-    irr: "Not publicly disclosed",
+    irr: "No public return projection published",
     summary:
       "We are presenting an early-stage copper-cobalt-gold prospect in Manono territory. A historical technical study records research permit 8252, granted in July 2007, and a 2010 geochemical campaign covering 933 soil samples. The work identified exploration anomalies and recommended mapping, trenching and drilling. We require current title, renewal and ownership confirmation before progressing the opportunity.",
     verified: false,
@@ -332,7 +348,7 @@ export const listings: Listing[] = [
     raiseUsd: 45_000_000,
     instrument: "Proposed equity, joint-venture or offtake financing, subject to diligence and final terms",
     stage: "Pre-resource exploration and proposed permit acquisition",
-    irr: "Project illustration: 35% target IRR; no compliant resource, feasibility study or independently reviewed model disclosed",
+    irr: "No public return projection published",
     summary:
       "We are presenting Scires Mining’s proposed acquisition and development of PE 12423, a cobalt-copper exploration project in Lualaba Province. December 2025 material describes historical drilling, trenching and soil sampling and a $45 million two-stage capital plan. Before investment, we require a compliant resource basis, permit-transfer confirmation, current title, verified technical data, feasibility work and independent financial review.",
     useOfFunds:
@@ -359,9 +375,11 @@ export const listings: Listing[] = [
     country: "DR Congo",
     flag: "🇨🇩",
     raiseUsd: 86_215_774,
+    estimatedProjectCostUsd: 86_215_774,
+    currentCapitalAskUsd: null,
     instrument: "Project finance; transaction structure to be defined",
     stage: "Technical proposal and budget dated August 2023",
-    irr: "Not publicly disclosed",
+    irr: "No public return projection published",
     summary:
       "We are presenting an energy-infrastructure opportunity that combines 50 MW of photovoltaic generation and battery storage with medium-voltage substations, distribution works and public lighting for Kasaji, Kisenge and surrounding communities. The 2023 technical proposal estimates total project cost at $86.2 million and an 11-month delivery period from contract signature and funding. Before advancing the opportunity, we require confirmation of land rights, permits, utility arrangements, demand, procurement pricing and the financial model.",
     useOfFunds:
@@ -390,9 +408,11 @@ export const listings: Listing[] = [
     // The $14.64bn figure is a sponsor concept-level programme estimate,
     // not a validated financing requirement or current capital ask.
     raiseUsd: 0,
+    estimatedProjectCostUsd: 14_635_509_000,
+    currentCapitalAskUsd: null,
     instrument: "Public-private development and mortgage finance; structure to be completed",
     stage: "Sponsor concept and preliminary cost plan",
-    irr: "Concept model assumes a 10% net margin per social housing unit; independent review required",
+    irr: "No public return projection published",
     summary:
       "We are presenting a large-scale urban development opportunity that brings together housing, roads, utilities, public facilities and industrial uses across three proposed sites in the DRC, with an initial focus on the housing and infrastructure pressure around Kinshasa. The concept-level cost estimate is $14.64 billion. We intend to evaluate the programme in phases, beginning with a reconciled scope, confirmed sites and land rights, tested household demand, bank participation and independently validated costs.",
     useOfFunds:
@@ -419,9 +439,10 @@ export const listings: Listing[] = [
     country: "DR Congo",
     flag: "🇨🇩",
     raiseUsd: 0,
+    currentCapitalAskUsd: null,
     instrument: "Exploration and appraisal financing; transaction terms not publicly disclosed",
     stage: "Pre-drilling opportunity requiring current title and approval confirmation",
-    irr: "Not publicly disclosed",
+    irr: "No public return projection published",
     summary:
       "We are presenting the Lotshi opportunity as an onshore exploration asset covering an area described as approximately 506 km² in Kongo Central, between Moanda and Lukula. Available materials identify seven prospects from historical seismic work and position Dallas as the first drilling target, at a planned depth of 1,500–2,300 metres. Before introducing financing, we require confirmation of current licence standing, ownership and transfer approvals, access to the underlying seismic and certification reports, an independently reviewed drilling budget and a complete environmental and safety plan.",
     useOfFunds:

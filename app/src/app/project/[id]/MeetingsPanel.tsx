@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { RESTRICTED_ACCESS_NOTICE_VERSION } from "@/lib/restricted-access";
 
 type Meeting = {
   id: string;
@@ -41,11 +42,18 @@ export default function MeetingsPanel({ listingId, canManage }: { listingId: str
   const submit = async () => {
     const proposedSlots = slots.map((s) => s.trim()).filter(Boolean).map((s) => new Date(s).toISOString());
     if (proposedSlots.length === 0) return;
+    if (!window.confirm("This is a non-binding meeting request. It is not an offer, commitment or grant of access. Continue and record this acknowledgement?")) return;
     setSubmitting(true);
     try {
       const res = await fetch("/api/meetings", {
         method: "POST", headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ listingId, proposedSlots, note }),
+        body: JSON.stringify({
+          listingId,
+          proposedSlots,
+          note,
+          acknowledgedRestrictedAccess: true,
+          noticeVersion: RESTRICTED_ACCESS_NOTICE_VERSION,
+        }),
       });
       if (res.ok) {
         setSlots(["", "", ""]);

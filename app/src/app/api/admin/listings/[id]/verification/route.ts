@@ -61,6 +61,13 @@ export async function PATCH(
 
   const history = JSON.parse(listing.verificationHistory || "[]") as HistoryEntry[];
   const note = body.note?.trim() ?? "";
+  const invalidatePublication = {
+    publicationStatus: "internal_review",
+    designation: "candidate",
+    publishedBy: null,
+    lastPublishedAt: null,
+    contentVersion: { increment: 1 },
+  } as const;
 
   if (body.action === "verify") {
     if (!note) return NextResponse.json({ error: "A verification note (evidence reviewed) is required" }, { status: 400 });
@@ -73,6 +80,7 @@ export async function PATCH(
         verifiedAt: new Date(),
         verificationNote: note,
         verificationHistory: JSON.stringify(history),
+        ...invalidatePublication,
       },
     });
     return NextResponse.json({ ok: true, listing: updated });
@@ -89,6 +97,7 @@ export async function PATCH(
         verifiedAt: null,
         verificationNote: "",
         verificationHistory: JSON.stringify(history),
+        ...invalidatePublication,
       },
     });
     return NextResponse.json({ ok: true, listing: updated });
@@ -104,7 +113,12 @@ export async function PATCH(
     history.push({ by: user.fullName, action: "gov_mechanism_updated", note, governmentBacked, govMechanism, at: new Date().toISOString() });
     const updated = await prisma.listing.update({
       where: { id },
-      data: { governmentBacked, govMechanism, verificationHistory: JSON.stringify(history) },
+      data: {
+        governmentBacked,
+        govMechanism,
+        verificationHistory: JSON.stringify(history),
+        ...invalidatePublication,
+      },
     });
     return NextResponse.json({ ok: true, listing: updated });
   }

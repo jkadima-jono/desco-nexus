@@ -28,15 +28,16 @@ export default async function DealWorkspace({
   });
   if (!deal) notFound();
 
-  // Same trust boundary as /deals: the sponsor's own org (or admin) always
-  // has access; anyone else needs a real engagement with this listing
-  // (recorded via MatchAction — save/interest/info-request/etc). 404, not
-  // 403, so an unrelated user can't tell a deal exists at all.
+  // A listing-level action is not authorization to another investor's deal.
   if (!canManageDeal(user, deal)) {
-    const engaged = await prisma.matchAction.findFirst({
-      where: { userId: user.id, listingId: deal.listingId },
-    });
-    if (!engaged) notFound();
+    const authorized =
+      (user.role === "investor" && deal.investorId === user.id) ||
+      (user.role === "advisor" &&
+        !!(await prisma.advisorDealAssignment.findFirst({
+          where: { advisorId: user.id, dealId: deal.id, revokedAt: null },
+          select: { id: true },
+        })));
+    if (!authorized) notFound();
   }
 
   const history = JSON.parse(deal.history || "[]") as {
@@ -45,8 +46,13 @@ export default async function DealWorkspace({
   const probability = deal.probability ?? STAGE_PROBABILITY[deal.stage as Stage] ?? 10;
   const weighted = Math.round((amountUsd(deal.amount) * probability) / 1e6 / 100);
   const related = deal.parent
-    ? [deal.parent, ...(await prisma.deal.findMany({ where: { parentId: deal.parentId!, id: { not: deal.id } } }))]
-    : deal.tranches;
+    ? [
+        ...(deal.parent.investorId === deal.investorId ? [deal.parent] : []),
+        ...(await prisma.deal.findMany({
+          where: { parentId: deal.parentId!, id: { not: deal.id }, investorId: deal.investorId },
+        })),
+      ]
+    : deal.tranches.filter((relatedDeal) => relatedDeal.investorId === deal.investorId);
 
   return (
     <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-6 lg:py-8">

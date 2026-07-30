@@ -67,7 +67,7 @@ export const PILLARS: Pillar[] = [
     thesis:
       "Frontier real-asset opportunities in the Grand Kasai region fail to attract capital not for lack of resources, but for lack of structure — unclear logistics, informal production, and absent enabling infrastructure. Investdesco absorbs that structuring risk first: securing access, building the port and logistics backbone, then introducing disciplined capital aligned with long-term value creation.",
     marketOpportunity:
-      "Desco Global's Phase 1 program targets a $750M raise (equity + debt) at a 17.2% risk-adjusted target IRR, 6-year payback, and 2.8–3.2x MOIC, anchored by two river-port gateways and a modernized mining-concession partnership.",
+      "Desco Global materials describe a proposed $750 million Phase 1 programme across infrastructure and operating projects. The allocation, financing structure, project rights, delivery sequence and independently reviewed financial model are not yet publicly established.",
     geography: ["DR Congo — Kasai River and Lake Mweru corridors", "Pan-African trade links to Zambia and Angola"],
     objectives: [
       "Develop Port de Ndomba and Port de Kasenga as the region's logistics backbone",
@@ -77,8 +77,6 @@ export const PILLARS: Pillar[] = [
     ],
     impact: [
       { label: "Phase 1 capital raise target ($M)", value: 750, suffix: "" },
-      { label: "Target Phase 1 program IRR", value: 17, suffix: ".2%" },
-      { label: "Target MOIC", value: 3, suffix: ".0x" },
       { label: "Projected jobs by 2035", value: 100000, suffix: "+" },
     ],
     milestones: [
@@ -111,7 +109,6 @@ export const PILLARS: Pillar[] = [
     impact: [
       { label: "Planned hubs by 2035", value: 50, suffix: "+" },
       { label: "Startup raise target ($M)", value: 5, suffix: "–10M" },
-      { label: "Year 5 forecast EBITDA ($M)", value: 3, suffix: ".8M" },
     ],
     milestones: [
       { year: "Months 1–2", label: "Legal incorporation and licensing in the DRC", done: false },

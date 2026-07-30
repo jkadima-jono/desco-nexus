@@ -1,4 +1,5 @@
 import type { Locale } from "@/lib/i18n";
+import type { CapitalPresentation } from "@/lib/data";
 
 type InvestmentUi = {
   opportunities: {
@@ -47,7 +48,7 @@ type InvestmentUi = {
     meetingLocked: string; actions: string; reviewEvidence: string; manageRoom: string; reviewMeetings: string;
     requested: string; requestInformation: string; saved: string; applyAccess: string; workspaceAccess: string;
     provenance: string; classification: string; sourceDate: string; reviewStatus: string; noSponsorHistory: string;
-    reviewEvidenceShort: string; manageRoomShort: string; meetings: string; requestInfo: string;
+    reviewEvidenceShort: string; manageRoomShort: string; meetings: string; requestInfo: string; reportInformation: string;
   };
 };
 
@@ -78,7 +79,7 @@ const en: InvestmentUi = {
     publicEvidence: "Public evidence", fieldsDisclosed: "fields disclosed", principalRisks: "Principal risks", categoriesDisclosed: "categories disclosed", evidenceDate: "Evidence date", projectRoom: "Project room", restrictedDocs: "Documents recorded · restricted", readinessNotPublic: "Readiness not public",
     thesis: "Investment thesis", figuresNote: "Sponsor-provided figures, not independently verified unless stated otherwise.", publicInvestmentEvidence: "Public investment evidence", missingVisible: "Missing fields remain visible so absent disclosure is not mistaken for a negative finding.", source: "Source", riskDisclosure: "Principal risk disclosure", riskNote: "These are required disclosure categories. “Not publicly disclosed” means the public record does not yet support an assessment.", financialStructure: "Financial structure", useOfFunds: "Use of funds", fundingSecured: "Funding already secured", sponsorContribution: "Sponsor contribution",
     roomEmpty: "Access is recorded, but the sponsor has not uploaded any documents to this project room.", roomLocked: "Confidential filenames and documents remain hidden until the sponsor grants data-room access.", roomLockedPublic: "Confidential filenames and documents remain hidden until workspace and project-specific access have been approved.", roomBullets: ["Sponsor-approved diligence documents", "Financial, legal, technical and impact evidence where supplied", "Access that the sponsor can grant or revoke"], demoDocument: "Demo document (no file)", download: "Download", meetingLocked: "Meeting requests become available after investor workspace access is approved.",
-    actions: "Actions", reviewEvidence: "Review project evidence", manageRoom: "Manage project room", reviewMeetings: "Review meeting requests", requested: "Requested", requestInformation: "Request information", saved: "Saved", applyAccess: "Apply for investor access", workspaceAccess: "An approved investor workspace adds mandate matching, project-specific access requests and sponsor meetings.", provenance: "Evidence provenance", classification: "Classification", sourceDate: "Source date", reviewStatus: "Review status", noSponsorHistory: "No response-time or transaction-history data has been collected for this sponsor.", reviewEvidenceShort: "Review evidence", manageRoomShort: "Manage room", meetings: "Meetings", requestInfo: "Request info",
+    actions: "Actions", reviewEvidence: "Review project evidence", manageRoom: "Manage project room", reviewMeetings: "Review meeting requests", requested: "Requested", requestInformation: "Request information", saved: "Saved", applyAccess: "Apply for investor access", workspaceAccess: "An approved investor workspace adds mandate matching, project-specific access requests and sponsor meetings.", provenance: "Evidence provenance", classification: "Classification", sourceDate: "Source date", reviewStatus: "Review status", noSponsorHistory: "No response-time or transaction-history data has been collected for this sponsor.", reviewEvidenceShort: "Review evidence", manageRoomShort: "Manage room", meetings: "Meetings", requestInfo: "Request info", reportInformation: "Report inaccurate project information",
   },
 };
 
@@ -135,6 +136,84 @@ export function investmentUi(locale: Locale): InvestmentUi {
   return { ...dictionary, project: { ...dictionary.project, ...projectFinanceLabels[locale] } };
 }
 
+const instrumentCategoryLabels: Record<Locale, Record<string, string>> = {
+  en: { "Equipment finance": "Equipment finance", "DFI / impact capital": "DFI / impact capital", "Programme allocation": "Programme allocation", "Project SPV equity": "Project SPV equity", "Project development capital": "Project development capital", Equity: "Equity", Debt: "Debt", Other: "Other" },
+  fr: { "Equipment finance": "Financement d’équipement", "DFI / impact capital": "IFD / capital d’impact", "Programme allocation": "Allocation de programme", "Project SPV equity": "Fonds propres de SPV projet", "Project development capital": "Capital de développement de projet", Equity: "Fonds propres", Debt: "Dette", Other: "Autre" },
+  es: { "Equipment finance": "Financiación de equipos", "DFI / impact capital": "IFD / capital de impacto", "Programme allocation": "Asignación de programa", "Project SPV equity": "Capital de SPV del proyecto", "Project development capital": "Capital de desarrollo del proyecto", Equity: "Capital", Debt: "Deuda", Other: "Otro" },
+  pt: { "Equipment finance": "Financiamento de equipamento", "DFI / impact capital": "IFD / capital de impacto", "Programme allocation": "Alocação de programa", "Project SPV equity": "Capital de SPV do projeto", "Project development capital": "Capital de desenvolvimento do projeto", Equity: "Capital próprio", Debt: "Dívida", Other: "Outro" },
+  zh: { "Equipment finance": "设备融资", "DFI / impact capital": "开发金融机构 / 影响力资本", "Programme allocation": "项目群资金分配", "Project SPV equity": "项目 SPV 股权", "Project development capital": "项目开发资本", Equity: "股权", Debt: "债务", Other: "其他" },
+};
+
+export function instrumentCategoryCopy(locale: Locale, category: string): string {
+  return instrumentCategoryLabels[locale][category] ?? category;
+}
+
+const imageManagementLabels: Record<Locale, {
+  uploadFailed: string; removeFailed: string; updateFailed: string; network: string;
+}> = {
+  en: { uploadFailed: "Upload failed. Please retry.", removeFailed: "Could not remove the image. Please retry.", updateFailed: "Could not update the cover image. Please retry.", network: "Network error. Please retry." },
+  fr: { uploadFailed: "Échec du téléversement. Réessayez.", removeFailed: "Impossible de supprimer l’image. Réessayez.", updateFailed: "Impossible de modifier l’image de couverture. Réessayez.", network: "Erreur réseau. Réessayez." },
+  es: { uploadFailed: "Error al cargar la imagen. Inténtelo de nuevo.", removeFailed: "No se pudo eliminar la imagen. Inténtelo de nuevo.", updateFailed: "No se pudo actualizar la portada. Inténtelo de nuevo.", network: "Error de red. Inténtelo de nuevo." },
+  pt: { uploadFailed: "Falha no carregamento. Tente novamente.", removeFailed: "Não foi possível remover a imagem. Tente novamente.", updateFailed: "Não foi possível atualizar a imagem de capa. Tente novamente.", network: "Erro de rede. Tente novamente." },
+  zh: { uploadFailed: "图片上传失败，请重试。", removeFailed: "无法删除图片，请重试。", updateFailed: "无法更新封面图片，请重试。", network: "网络错误，请重试。" },
+};
+
+export function imageManagementCopy(locale: Locale) {
+  return imageManagementLabels[locale];
+}
+
+const comparisonScrollHints: Record<Locale, string> = {
+  en: "On smaller screens, scroll horizontally to review every opportunity.",
+  fr: "Sur un petit écran, faites défiler horizontalement pour examiner chaque opportunité.",
+  es: "En pantallas pequeñas, desplácese horizontalmente para revisar cada oportunidad.",
+  pt: "Em ecrãs pequenos, desloque horizontalmente para analisar todas as oportunidades.",
+  zh: "在较小屏幕上，请横向滚动以查看所有项目。",
+};
+
+export function comparisonScrollHint(locale: Locale): string {
+  return comparisonScrollHints[locale];
+}
+
+const comparisonRegionLabels: Record<Locale, string> = {
+  en: "Opportunity comparison table",
+  fr: "Tableau de comparaison des opportunités",
+  es: "Tabla comparativa de oportunidades",
+  pt: "Tabela de comparação de oportunidades",
+  zh: "项目比较表",
+};
+
+export function comparisonRegionLabel(locale: Locale): string {
+  return comparisonRegionLabels[locale];
+}
+
+const capitalLabels: Record<Locale, Record<CapitalPresentation["kind"], string>> = {
+  en: { current_ask: "Current capital sought", estimated_cost: "Preliminary project cost; current capital ask not publicly disclosed", not_disclosed: "Current capital ask not publicly disclosed" },
+  fr: { current_ask: "Capital actuellement recherché", estimated_cost: "Coût préliminaire du projet; besoin actuel en capital non communiqué publiquement", not_disclosed: "Besoin actuel en capital non communiqué publiquement" },
+  es: { current_ask: "Capital solicitado actualmente", estimated_cost: "Coste preliminar del proyecto; necesidad actual de capital no divulgada públicamente", not_disclosed: "Necesidad actual de capital no divulgada públicamente" },
+  pt: { current_ask: "Capital atualmente procurado", estimated_cost: "Custo preliminar do projeto; necessidade atual de capital não divulgada publicamente", not_disclosed: "Necessidade atual de capital não divulgada publicamente" },
+  zh: { current_ask: "当前融资需求", estimated_cost: "项目初步成本；当前融资需求尚未公开披露", not_disclosed: "当前融资需求尚未公开披露" },
+};
+
+const returnValues: Record<Locale, string> = {
+  en: "No public return projection published",
+  fr: "Aucune projection publique de rendement publiée",
+  es: "No se ha publicado ninguna proyección pública de rentabilidad",
+  pt: "Não foi publicada qualquer projeção pública de retorno",
+  zh: "尚未公布公开回报预测",
+};
+
+export function localizedCapitalPresentation(locale: Locale, capital: CapitalPresentation) {
+  return {
+    ...capital,
+    label: capitalLabels[locale][capital.kind],
+    value: capital.kind === "not_disclosed" ? dictionaries[locale].compare.notDisclosed : capital.value,
+  };
+}
+
+export function localizedReturnValue(locale: Locale): string {
+  return returnValues[locale];
+}
+
 const relatedPartyDisclosures: Record<Locale, string> = {
   en: "DESCO is connected to the project sponsor or development platform. DESCO review is an internal completeness review, not independent verification.",
   fr: "DESCO est lié au porteur ou à la plateforme de développement du projet. L’examen DESCO porte sur l’exhaustivité interne et ne constitue pas une vérification indépendante.",
@@ -145,6 +224,18 @@ const relatedPartyDisclosures: Record<Locale, string> = {
 
 export function relatedPartyDisclosure(locale: Locale): string {
   return relatedPartyDisclosures[locale];
+}
+
+const inaccurateInformationLabels: Record<Locale, string> = {
+  en: "Report inaccurate project information",
+  fr: "Signaler une information de projet inexacte",
+  es: "Comunicar información inexacta del proyecto",
+  pt: "Comunicar informação incorreta do projeto",
+  zh: "报告不准确的项目信息",
+};
+
+export function inaccurateInformationLabel(locale: Locale): string {
+  return inaccurateInformationLabels[locale];
 }
 
 const evidenceCoverageLabels: Record<Locale, { fields: string; risks: string }> = {
@@ -159,14 +250,76 @@ export function evidenceCoverageCopy(locale: Locale) {
   return evidenceCoverageLabels[locale];
 }
 
+const disclosureStatusLabels: Record<
+  Locale,
+  { insufficient: string; partial: string; minimum: string }
+> = {
+  en: {
+    insufficient: "Insufficient public evidence",
+    partial: "Partial public evidence",
+    minimum: "Minimum public evidence available",
+  },
+  fr: {
+    insufficient: "Preuves publiques insuffisantes",
+    partial: "Preuves publiques partielles",
+    minimum: "Socle minimum de preuves publiques disponible",
+  },
+  es: {
+    insufficient: "Evidencia pública insuficiente",
+    partial: "Evidencia pública parcial",
+    minimum: "Evidencia pública mínima disponible",
+  },
+  pt: {
+    insufficient: "Evidência pública insuficiente",
+    partial: "Evidência pública parcial",
+    minimum: "Evidência pública mínima disponível",
+  },
+  zh: {
+    insufficient: "公开证据不足",
+    partial: "公开证据不完整",
+    minimum: "已提供最低限度公开证据",
+  },
+};
+
+export function disclosureStatusCopy(
+  locale: Locale,
+  status: keyof (typeof disclosureStatusLabels)["en"],
+): string {
+  return disclosureStatusLabels[locale][status];
+}
+
 const contactLegalAcknowledgements: Record<Locale, { acknowledgement: string; legalStatus: string }> = {
-  en: { acknowledgement: "I understand that DESCO Compass is a demonstration environment and that its full privacy notice and terms are pending legal review. See the", legalStatus: "current legal and privacy status" },
-  fr: { acknowledgement: "Je comprends que DESCO Compass est un environnement de démonstration et que sa politique de confidentialité complète et ses conditions restent en attente d’examen juridique. Consulter le", legalStatus: "statut juridique et de confidentialité actuel" },
-  es: { acknowledgement: "Entiendo que DESCO Compass es un entorno de demostración y que su aviso de privacidad completo y sus condiciones están pendientes de revisión jurídica. Consulte el", legalStatus: "estado jurídico y de privacidad actual" },
-  pt: { acknowledgement: "Compreendo que a DESCO Compass é um ambiente de demonstração e que o aviso de privacidade completo e os termos aguardam análise jurídica. Consulte o", legalStatus: "estado jurídico e de privacidade atual" },
-  zh: { acknowledgement: "我了解 DESCO Compass 是演示环境，完整隐私声明和使用条款仍待法律审查。请参阅", legalStatus: "当前法律及隐私状态" },
+  en: { acknowledgement: "I understand that DESCO will use the details I submit to review and respond to this enquiry. I will not submit confidential or sensitive information. See the", legalStatus: "current legal and privacy status" },
+  fr: { acknowledgement: "Je comprends que DESCO utilisera les informations transmises pour examiner cette demande et y répondre. Je ne transmettrai aucune information confidentielle ou sensible. Consulter le", legalStatus: "statut juridique et de confidentialité actuel" },
+  es: { acknowledgement: "Entiendo que DESCO utilizará los datos enviados para revisar y responder a esta consulta. No enviaré información confidencial ni sensible. Consulte el", legalStatus: "estado jurídico y de privacidad actual" },
+  pt: { acknowledgement: "Compreendo que a DESCO utilizará os dados enviados para analisar e responder a este pedido. Não enviarei informação confidencial nem sensível. Consulte o", legalStatus: "estado jurídico e de privacidade atual" },
+  zh: { acknowledgement: "我了解 DESCO 将使用我提交的资料审核并回复此项咨询。我不会提交机密或敏感信息。请参阅", legalStatus: "当前法律及隐私状态" },
 };
 
 export function contactLegalAcknowledgement(locale: Locale) {
   return contactLegalAcknowledgements[locale];
+}
+
+const contactCollectionPausedCopy: Record<Locale, string> = {
+  en: "Public enquiries are temporarily paused while DESCO Global completes legal review of the privacy notice, data-retention terms and contact-form controls.",
+  fr: "Les demandes publiques sont temporairement suspendues pendant que DESCO Global finalise l’examen juridique de la politique de confidentialité, des règles de conservation et des contrôles du formulaire.",
+  es: "Las consultas públicas están temporalmente suspendidas mientras DESCO Global completa la revisión jurídica del aviso de privacidad, la conservación de datos y los controles del formulario.",
+  pt: "Os pedidos públicos estão temporariamente suspensos enquanto a DESCO Global conclui a análise jurídica do aviso de privacidade, da retenção de dados e dos controlos do formulário.",
+  zh: "在 DESCO Global 完成隐私声明、数据保留条款及联系表单控制的法律审查期间，公开咨询暂时关闭。",
+};
+
+export function contactCollectionPaused(locale: Locale): string {
+  return contactCollectionPausedCopy[locale];
+}
+
+const contactEmailFallbackCopy: Record<Locale, string> = {
+  en: "Email DESCO Global",
+  fr: "Écrire à DESCO Global",
+  es: "Escribir a DESCO Global",
+  pt: "Contactar a DESCO Global",
+  zh: "发送邮件至 DESCO Global",
+};
+
+export function contactEmailFallback(locale: Locale): string {
+  return contactEmailFallbackCopy[locale];
 }

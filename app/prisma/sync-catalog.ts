@@ -7,15 +7,14 @@ import {
 } from "../src/lib/investment-evidence";
 import { projectDocumentSources } from "../src/lib/project-documents";
 import { relatedPartyMetadata } from "../src/lib/related-parties";
+import { publicationContentHash } from "../src/lib/publication-content";
 
 const prisma = new PrismaClient();
 const SOURCE_MANAGED_IDS = new Set(listings.map((listing) => listing.id));
-const CATALOG_IMPORT_VERSION = 2;
+const CATALOG_IMPORT_VERSION = 4;
 
-// Catalogue synchronisation for DESCO-managed public opportunities. Public
-// narrative and disclosure fields follow the reviewed source catalogue on
-// every deployment, while verification history and uploaded room material
-// remain untouched.
+// Catalogue synchronisation prepares DESCO-managed opportunities for review.
+// It never publishes them; publication is an explicit governed action.
 async function main() {
   let created = 0;
   let refreshed = 0;
@@ -24,10 +23,60 @@ async function main() {
     const conflict = relatedPartyMetadata(listing.id);
     const existing = await prisma.listing.findUnique({
       where: { id: listing.id },
-      select: { id: true, contentVersion: true },
+      include: {
+        sponsorConsents: true,
+        legalClearances: true,
+        relatedPartyReviews: true,
+        docs: {
+          where: {
+            lifecycle: "approved",
+            storageKey: { not: null },
+            sha256: { not: null },
+            approvedAt: { not: null },
+            approvedBy: { not: null },
+          },
+          select: { id: true },
+          take: 1,
+        },
+      },
     });
 
     if (existing) {
+      const currentContentHash = publicationContentHash(existing);
+      const governanceReady =
+        !!existing.sponsorApprovedAt &&
+        !!existing.legalClearedAt &&
+        !!existing.relatedPartyReviewedAt &&
+        existing.sponsorConsents.some(
+          (record) =>
+            record.contentVersion === existing.contentVersion &&
+            record.contentHash === currentContentHash &&
+            !record.revokedAt,
+        ) &&
+        existing.legalClearances.some(
+          (record) =>
+            record.contentVersion === existing.contentVersion &&
+            record.contentHash === currentContentHash &&
+            !record.revokedAt,
+        ) &&
+        existing.relatedPartyReviews.some(
+          (record) =>
+            record.contentVersion === existing.contentVersion &&
+            record.contentHash === currentContentHash &&
+            !record.revokedAt,
+        ) &&
+        existing.docs.length > 0;
+      if (existing.publicationStatus === "public_teaser" && !governanceReady) {
+        await prisma.listing.update({
+          where: { id: listing.id },
+          data: {
+            publicationStatus: "internal_review",
+            designation: "candidate",
+            publishedBy: null,
+            lastPublishedAt: null,
+          },
+        });
+      }
       // Once the reviewed import version has been applied, the database is
       // the source of truth. Deployments must not overwrite later editorial,
       // review or sponsor-approved changes with code literals.
@@ -55,6 +104,8 @@ async function main() {
             country: listing.country,
             flag: listing.flag,
             raiseUsd: listing.raiseUsd,
+            estimatedProjectCostUsd: listing.estimatedProjectCostUsd,
+            currentCapitalAskUsd: listing.currentCapitalAskUsd,
             instrument: listing.instrument,
             stage: normalizeStage(listing.stage),
             irr: listing.irr,
@@ -66,7 +117,11 @@ async function main() {
             risk: listing.scores.risk,
             highlights: JSON.stringify(normalizeHighlights(listing.highlights)),
             whyMatch: listing.whyMatch,
-            publicationStatus: "public_teaser",
+            // Imports prepare records for review. Only the publication API may
+            // make a financing opportunity public after its release gates pass.
+            publicationStatus: "internal_review",
+            publishedAt: null,
+            publishedBy: null,
             contentVersion: CATALOG_IMPORT_VERSION,
             ...conflict,
           },
@@ -102,6 +157,8 @@ async function main() {
         country: listing.country,
         flag: listing.flag,
         raiseUsd: listing.raiseUsd,
+        estimatedProjectCostUsd: listing.estimatedProjectCostUsd,
+        currentCapitalAskUsd: listing.currentCapitalAskUsd,
         instrument: listing.instrument,
         stage: normalizeStage(listing.stage),
         irr: listing.irr,
@@ -115,8 +172,8 @@ async function main() {
         risk: listing.scores.risk,
         highlights: JSON.stringify(normalizeHighlights(listing.highlights)),
         whyMatch: listing.whyMatch,
-        publicationStatus: "public_teaser",
-        publishedAt: new Date(),
+        publicationStatus: "internal_review",
+        publishedAt: null,
         contentVersion: CATALOG_IMPORT_VERSION,
         ...conflict,
       },

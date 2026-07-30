@@ -27,6 +27,15 @@ export async function POST(req: Request) {
   if (!user) {
     return NextResponse.json({ error: "Sign in required" }, { status: 401 });
   }
+  if (
+    process.env.CONFIDENTIAL_UPLOADS_ENABLED !== "true" ||
+    !process.env.DOCUMENT_SCANNER_PROVIDER?.trim()
+  ) {
+    return NextResponse.json(
+      { error: "Confidential uploads are unavailable until an approved malware-scanning service is configured." },
+      { status: 503 },
+    );
+  }
 
   const form = await req.formData().catch(() => null);
   if (!form) {
@@ -74,12 +83,6 @@ export async function POST(req: Request) {
   }
 
   const storageKey = `documents/${listingId}/${crypto.randomUUID()}${ext}`;
-  const blob = await put(storageKey, bytes, {
-    access: "private",
-    addRandomSuffix: false,
-    contentType: file.type || "application/octet-stream",
-  });
-
   const doc = await prisma.document.create({
     data: {
       listingId,
@@ -88,13 +91,35 @@ export async function POST(req: Request) {
       originalName: path.basename(file.name).slice(0, 200),
       size: fmtSize(file.size),
       folder,
-      storageKey: blob.pathname,
+      storageKey,
       mime: file.type || "application/octet-stream",
       visibility: "restricted",
-      lifecycle: "uploaded",
+      lifecycle: "quarantined",
       sha256,
-      reviewNote: "Uploaded by a project manager; approval and evidence classification are pending.",
+      scanStatus: "pending",
+      reviewNote: "Uploaded to quarantine; malware scan, approval and evidence classification are pending.",
     },
   });
-  return NextResponse.json({ ok: true, document: doc });
+  try {
+    const blob = await put(storageKey, bytes, {
+      access: "private",
+      addRandomSuffix: false,
+      contentType: file.type || "application/octet-stream",
+    });
+    const uploaded = await prisma.document.update({
+      where: { id: doc.id },
+      data: { storageKey: blob.pathname, blobUploadedAt: new Date() },
+    });
+    return NextResponse.json({ ok: true, document: uploaded }, { status: 202 });
+  } catch {
+    await prisma.document.update({
+      where: { id: doc.id },
+      data: {
+        lifecycle: "quarantined",
+        scanStatus: "error",
+        scanNote: "Upload completion was not confirmed. Maintenance reconciliation is required.",
+      },
+    }).catch(() => undefined);
+    return NextResponse.json({ error: "Upload could not be completed." }, { status: 503 });
+  }
 }

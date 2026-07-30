@@ -2,6 +2,7 @@ import ContactForm from "./ContactForm";
 import type { Metadata } from "next";
 import { getLocale } from "@/lib/i18n-server";
 import { investmentUi } from "@/lib/translations/investment-ui";
+import BrandMark from "@/components/BrandMark";
 
 export async function generateMetadata(): Promise<Metadata> {
   const ui = investmentUi(await getLocale()).contact;
@@ -20,12 +21,7 @@ export default async function ContactPage({
     <div className="min-h-screen bg-ink text-white">
       <div className="max-w-2xl mx-auto px-6 lg:px-8 py-16 lg:py-20">
         <div className="text-center mb-10">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src="/brand/desco-compass-logo.jpg"
-            alt="Official DESCO Compass logo"
-            className="mx-auto mb-5 h-24 w-24 rounded-full object-cover shadow-[0_8px_24px_rgb(184_149_61/0.4)]"
-          />
+          <div className="mb-5 flex justify-center"><BrandMark size={96} showName={false} /></div>
           <h1 style={{ fontFamily: "var(--font-serif)" }} className="font-semibold text-3xl lg:text-4xl tracking-tight">
             {ui.title}
           </h1>
@@ -33,7 +29,15 @@ export default async function ContactPage({
             {ui.intro}
           </p>
         </div>
-        <ContactForm initialTopic={topic} projectId={project} locale={locale} />
+        <ContactForm
+          initialTopic={topic}
+          projectId={project}
+          locale={locale}
+          collectionEnabled={
+            process.env.NODE_ENV !== "production" ||
+            process.env.ENABLE_PUBLIC_FORM_COLLECTION === "true"
+          }
+        />
         <div className="mt-6 rounded-xl border border-white/15 p-5 text-xs leading-6 text-white/65">
           {ui.notice}
         </div>

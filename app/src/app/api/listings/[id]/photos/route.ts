@@ -1,10 +1,11 @@
 import { NextResponse } from "next/server";
-import { put } from "@vercel/blob";
+import { del, put } from "@vercel/blob";
 import path from "path";
 import crypto from "crypto";
 import { prisma } from "@/lib/db";
 import { getSessionUser } from "@/lib/auth";
 import { canManageListing, forbidden } from "@/lib/authz";
+import { Prisma } from "@prisma/client";
 
 const MAX_BYTES = 10 * 1024 * 1024;
 const ALLOWED = new Set([".jpg", ".jpeg", ".png", ".webp"]);
@@ -43,9 +44,20 @@ export async function POST(
   const caption = String(form?.get("caption") ?? "").slice(0, 200) || null;
   const pathname = "listings/" + id + "/" + crypto.randomUUID() + ext;
   const blob = await put(pathname, file, { access: "public" });
-  const count = await prisma.listingImage.count({ where: { listingId: id } });
-  const image = await prisma.listingImage.create({
-    data: { listingId: id, storageKey: blob.url, caption, position: count },
-  });
-  return NextResponse.json({ ok: true, image });
+  try {
+    const image = await prisma.$transaction(async (tx) => {
+      const last = await tx.listingImage.findFirst({
+        where: { listingId: id },
+        orderBy: { position: "desc" },
+        select: { position: true },
+      });
+      return tx.listingImage.create({
+        data: { listingId: id, storageKey: blob.url, caption, position: (last?.position ?? -1) + 1 },
+      });
+    }, { isolationLevel: Prisma.TransactionIsolationLevel.Serializable });
+    return NextResponse.json({ ok: true, image });
+  } catch (error) {
+    await del(blob.url).catch(() => undefined);
+    throw error;
+  }
 }

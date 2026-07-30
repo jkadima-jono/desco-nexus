@@ -4,7 +4,14 @@ import { applyRateLimit, rejectUntrustedOrigin } from "@/lib/request-security";
 
 const EVENTS = new Set([
   "page_view",
+  "contact_started",
   "contact_submitted",
+  "contact_error",
+  "access_requested",
+  "inquiry_triaged",
+  "inquiry_qualified",
+  "inquiry_converted",
+  "inquiry_closed",
   "opportunity_viewed",
   "evidence_opened",
   "comparison_started",

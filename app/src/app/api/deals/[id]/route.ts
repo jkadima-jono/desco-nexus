@@ -3,8 +3,10 @@ import { prisma } from "@/lib/db";
 import { getSessionUser } from "@/lib/auth";
 import { STAGES, isValidTransition, requiresReason, type Stage } from "@/lib/deals";
 import { canManageDeal } from "@/lib/authz";
-import { notify } from "@/lib/notifications";
 import { projectHref } from "@/lib/project-slugs";
+import { enqueueOutbox } from "@/lib/outbox";
+import { processOutbox } from "@/lib/outbox-worker";
+import { logOperationalEvent } from "@/lib/observability";
 
 export async function PATCH(
   req: Request,
@@ -70,24 +72,43 @@ export async function PATCH(
     return NextResponse.json({ error: "Nothing to update" }, { status: 400 });
   }
 
-  const updated = await prisma.deal.update({ where: { id }, data });
-
-  if (data.stage) {
-    const engaged = await prisma.matchAction.findMany({
-      where: { listingId: deal.listingId, userId: { not: user.id } },
-      distinct: ["userId"],
-      select: { userId: true },
-    });
-    for (const { userId } of engaged) {
-      await notify(
-        userId,
-        "deal_stage",
-        "Stage updated",
-        "\"" + deal.title + "\" moved to \"" + data.stage + "\".",
-        projectHref(deal.listingId)
-      );
+  const updated = await prisma.$transaction(async (tx) => {
+    const changed = await tx.deal.updateMany({ where: { id, updatedAt: deal.updatedAt }, data });
+    if (changed.count !== 1) return null;
+    if (data.stage) {
+      const recipients = new Set<string>();
+      if (deal.investorId && deal.investorId !== user.id) recipients.add(deal.investorId);
+      const assignedAdvisors = await tx.advisorDealAssignment.findMany({
+        where: { dealId: deal.id, revokedAt: null, advisorId: { not: user.id } },
+        select: { advisorId: true },
+      });
+      assignedAdvisors.forEach(({ advisorId }) => recipients.add(advisorId));
+      for (const recipientId of recipients) {
+        await enqueueOutbox(tx, {
+          type: "notification.user",
+          aggregateId: deal.id,
+          eventKey: `deal:${deal.id}:${deal.updatedAt.toISOString()}:${data.stage}:${recipientId}`,
+          payload: {
+            userId: recipientId,
+            type: "deal_stage",
+            title: "Stage updated",
+            body: `"${deal.title}" moved to "${data.stage}".`,
+            link: projectHref(deal.listingId),
+          },
+        });
+      }
     }
+    return tx.deal.findUniqueOrThrow({ where: { id } });
+  });
+  if (!updated) {
+    return NextResponse.json({ error: "Deal was updated by another request. Refresh and retry." }, { status: 409 });
   }
+  await processOutbox(10).catch((error) => {
+    logOperationalEvent("warn", "outbox.opportunistic_processing_failed", {
+      source: "deal",
+      errorType: error instanceof Error ? error.name : "unknown",
+    });
+  });
 
   return NextResponse.json({ ok: true, deal: { id: updated.id, stage: updated.stage } });
 }

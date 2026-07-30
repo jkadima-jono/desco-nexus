@@ -2,6 +2,7 @@ import type { Listing } from "@/lib/data";
 import { exampleProjectImages } from "@/lib/example-project-images";
 import type { Locale } from "@/lib/i18n";
 import { investmentUi } from "@/lib/translations/investment-ui";
+import Image from "next/image";
 
 // Deterministic pattern pick per listing (brand: African-inspired geometric
 // library — circular unity, connected nodes, radial burst).
@@ -63,32 +64,32 @@ export default function HeroVisual({
   className = "",
   overlay = true,
   locale = "en",
+  priority = false,
 }: {
   listing: Listing;
   className?: string;
   overlay?: boolean;
   locale?: Locale;
+  priority?: boolean;
 }) {
   const ui = investmentUi(locale).images;
   const photo = listing.photos?.[0] ?? exampleProjectImages(listing.id)[0];
   if (photo) {
     return (
       <div className={"relative overflow-hidden " + className}>
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
+        <Image
           src={photo.url}
           alt=""
-          loading="lazy"
-          decoding="async"
-          width={1200}
-          height={600}
-          className="absolute inset-0 w-full h-full object-cover"
+          fill
+          priority={priority}
+          sizes={priority ? "100vw" : "(min-width: 1024px) 38rem, 100vw"}
+          className="object-cover"
         />
         {overlay && (
           <div className="absolute inset-0 bg-gradient-to-t from-ink/70 via-ink/10 to-transparent" />
         )}
         {photo.isExample && (
-          <span className="absolute right-3 top-3 rounded-full bg-ink/85 px-2.5 py-1 text-[9px] font-bold uppercase tracking-[0.12em] text-white">
+          <span className="absolute right-3 top-3 rounded-full bg-ink/85 px-2.5 py-1 text-xs font-bold uppercase tracking-[0.08em] text-white">
             {photo.kind === "regional" ? ui.regional : ui.example}
           </span>
         )}

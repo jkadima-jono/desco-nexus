@@ -7,11 +7,12 @@ const STAGES = [
 ];
 
 export default function StageWheel({ active }: { active: string }) {
+  const { t } = useI18n();
   return (
     <div
       className="flex items-center gap-1.5 overflow-x-auto pb-1"
       role="group"
-      aria-label="Investment lifecycle stage"
+      aria-label={t("stages.lifecycle")}
     >
       {STAGES.map((s, i) => {
         const isActive = s.key === active;
@@ -38,3 +39,6 @@ export default function StageWheel({ active }: { active: string }) {
     </div>
   );
 }
+"use client";
+
+import { useI18n } from "@/components/I18nProvider";

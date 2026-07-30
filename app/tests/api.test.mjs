@@ -5,6 +5,42 @@ import assert from "node:assert/strict";
 import { PrismaClient } from "@prisma/client";
 
 const BASE = process.env.BASE_URL ?? "http://localhost:3000";
+const TEST_DATABASE_URL = process.env.TEST_DATABASE_URL?.trim();
+const destructiveApproval = process.env.API_TEST_ALLOW_ISOLATED_DB === "I_UNDERSTAND_THIS_MUTATES_DATA";
+
+function assertIsolatedTestEnvironment() {
+  if (!TEST_DATABASE_URL || !destructiveApproval) {
+    throw new Error(
+      "API tests mutate data. Set TEST_DATABASE_URL and API_TEST_ALLOW_ISOLATED_DB=I_UNDERSTAND_THIS_MUTATES_DATA for an approved disposable database.",
+    );
+  }
+  let databaseUrl;
+  let baseUrl;
+  try {
+    databaseUrl = new URL(TEST_DATABASE_URL);
+    baseUrl = new URL(BASE);
+  } catch {
+    throw new Error("TEST_DATABASE_URL and BASE_URL must be valid URLs.");
+  }
+  if (!["postgres:", "postgresql:"].includes(databaseUrl.protocol)) {
+    throw new Error("TEST_DATABASE_URL must use an isolated Postgres database.");
+  }
+  const databaseIdentity = `${databaseUrl.hostname}${databaseUrl.pathname}`.toLowerCase();
+  if (/(^|[._/-])(prod|production|primary|live)([._/-]|$)/.test(databaseIdentity)) {
+    throw new Error("Refusing API tests: TEST_DATABASE_URL appears to identify a production database.");
+  }
+  if (!["localhost", "127.0.0.1", "::1"].includes(baseUrl.hostname)) {
+    throw new Error("Refusing API tests: BASE_URL must be a local server.");
+  }
+  if (process.env.DATABASE_URL?.trim() !== TEST_DATABASE_URL) {
+    throw new Error("DATABASE_URL must exactly match TEST_DATABASE_URL in the API-test process.");
+  }
+  if (process.env.TEST_DATABASE_ISOLATED !== "true") {
+    throw new Error("Set TEST_DATABASE_ISOLATED=true only after confirming the database is disposable and has no production traffic.");
+  }
+}
+
+assertIsolatedTestEnvironment();
 const prisma = new PrismaClient();
 
 async function demoLogin(persona) {
@@ -315,7 +351,7 @@ test("capital call creation is sponsor-only and cross-org denied", async () => {
     headers: { cookie: investor, "Content-Type": "application/json" },
     body: JSON.stringify({ amountUsd: 1000000, purpose: "test", dueDate: "2026-12-01" }),
   });
-  assert.equal(deniedNoDeal.status, 404); // deal id doesn't exist for this fixture
+  assert.equal(deniedNoDeal.status, 410);
 
   const owner = await demoLogin("owner"); // Comicordia Corporation
   const sanity = await fetch(BASE + "/api/portfolio", { headers: { cookie: owner } });
@@ -332,7 +368,7 @@ test("capital call rejects invalid amount and missing fields", async () => {
     headers: { cookie: owner, "Content-Type": "application/json" },
     body: JSON.stringify({ amountUsd: -5, purpose: "", dueDate: "not-a-date" }),
   });
-  assert.equal(res.status, 404); // nonexistent deal short-circuits before validation detail
+  assert.equal(res.status, 410);
 });
 
 test("sponsor investor CRM requires owner/admin role", async () => {
@@ -478,7 +514,12 @@ test("info_requested is a valid match action distinct from interested/pass/saved
   const investor = await demoLogin("investor");
   const res = await fetch(BASE + "/api/match", {
     method: "POST", headers: { cookie: investor, "Content-Type": "application/json" },
-    body: JSON.stringify({ listingId: "port-de-ndomba", action: "info_requested" }),
+    body: JSON.stringify({
+      listingId: "port-de-ndomba",
+      action: "info_requested",
+      acknowledgedRestrictedAccess: true,
+      noticeVersion: "restricted-access-2026-07-30",
+    }),
   });
   assert.equal(res.status, 200);
 
@@ -656,11 +697,37 @@ test("only investor/admin roles may trigger a data-room request", async () => {
   assert.equal(res.status, 403, "an owner-role user requesting data-room access on someone else's listing must be refused");
 });
 
+test("restricted information actions require the current explicit acknowledgement", async () => {
+  const investor = await demoLogin("investor");
+  const missing = await fetch(BASE + "/api/match", {
+    method: "POST",
+    headers: { cookie: investor, "Content-Type": "application/json" },
+    body: JSON.stringify({ listingId: "comicordia-agri", action: "dataroom_requested" }),
+  });
+  assert.equal(missing.status, 428);
+  const stale = await fetch(BASE + "/api/match", {
+    method: "POST",
+    headers: { cookie: investor, "Content-Type": "application/json" },
+    body: JSON.stringify({
+      listingId: "comicordia-agri",
+      action: "dataroom_requested",
+      acknowledgedRestrictedAccess: true,
+      noticeVersion: "stale-notice",
+    }),
+  });
+  assert.equal(stale.status, 428);
+});
+
 test("data-room access is request-then-grant, not automatic, and is per-investor", async () => {
   const investor = await demoLogin("investor");
   const requestRes = await fetch(BASE + "/api/match", {
     method: "POST", headers: { cookie: investor, "Content-Type": "application/json" },
-    body: JSON.stringify({ listingId: "comicordia-agri", action: "dataroom_requested" }),
+    body: JSON.stringify({
+      listingId: "comicordia-agri",
+      action: "dataroom_requested",
+      acknowledgedRestrictedAccess: true,
+      noticeVersion: "restricted-access-2026-07-30",
+    }),
   });
   assert.equal(requestRes.status, 200);
 
@@ -713,11 +780,21 @@ test("unauthenticated access to meeting endpoints is rejected", async () => {
 });
 
 test("meeting request → sponsor confirm cycle, with isolation and terminal-state guards", async () => {
+  await prisma.listing.update({
+    where: { id: "waterdesco-grand-kasai" },
+    data: { publicationStatus: "public_teaser" },
+  });
   const investor = await demoLogin("investor");
   const slot = "2027-03-15T14:00:00.000Z";
   const createRes = await fetch(BASE + "/api/meetings", {
     method: "POST", headers: { cookie: investor, "Content-Type": "application/json" },
-    body: JSON.stringify({ listingId: "comicordia-agri", proposedSlots: [slot, "2027-03-16T09:00:00.000Z"], note: "Kickoff call" }),
+    body: JSON.stringify({
+      listingId: "waterdesco-grand-kasai",
+      proposedSlots: [slot, "2027-03-16T09:00:00.000Z"],
+      note: "Kickoff call",
+      acknowledgedRestrictedAccess: true,
+      noticeVersion: "restricted-access-2026-07-30",
+    }),
   });
   assert.equal(createRes.status, 200);
   const { meeting } = await createRes.json();
@@ -725,7 +802,7 @@ test("meeting request → sponsor confirm cycle, with isolation and terminal-sta
 
   // An unrelated investor must not see this request in their own list.
   const outsider = await demoLogin("advisor");
-  const outsiderList = await (await fetch(BASE + "/api/meetings?listingId=comicordia-agri", { headers: { cookie: outsider } })).json();
+  const outsiderList = await (await fetch(BASE + "/api/meetings?listingId=waterdesco-grand-kasai", { headers: { cookie: outsider } })).json();
   assert.ok(!outsiderList.meetings.find((m) => m.id === meeting.id), "a non-sponsor, non-requester must not see another user's meeting request");
 
   // A non-sponsor cannot confirm it.
@@ -735,8 +812,8 @@ test("meeting request → sponsor confirm cycle, with isolation and terminal-sta
   });
   assert.equal(outsiderConfirm.status, 403);
 
-  const owner = await demoLogin("owner");
-  const ownerList = await (await fetch(BASE + "/api/meetings?listingId=comicordia-agri", { headers: { cookie: owner } })).json();
+  const owner = await demoLogin("admin");
+  const ownerList = await (await fetch(BASE + "/api/meetings?listingId=waterdesco-grand-kasai", { headers: { cookie: owner } })).json();
   assert.ok(ownerList.meetings.find((m) => m.id === meeting.id), "the sponsor must see the request");
 
   // Confirming with a slot that wasn't proposed must be rejected.
@@ -769,7 +846,7 @@ test("meeting request → sponsor confirm cycle, with isolation and terminal-sta
 // notes, amounts, due dates, decision notes). These tests prove that's
 // closed: an unrelated org/role no longer sees another sponsor's deals,
 // while the sponsor, the engaged investor, and admin still can.
-test("/deals only shows deals the viewer's org owns or is personally engaged with", async () => {
+test("/deals only shows sponsor-owned, investor-owned or explicitly assigned deals", async () => {
   const investor = await demoLogin("investor");
   await fetch(BASE + "/api/match", {
     method: "POST", headers: { cookie: investor, "Content-Type": "application/json" },
@@ -827,6 +904,50 @@ test("/deals/[id] 404s for a user with no relation to the deal (not a leaky 403)
 
   const adminRes = await fetch(BASE + "/deals/" + deal.id, { headers: { cookie: admin } });
   assert.equal(adminRes.status, 200, "admin must always be able to view a deal");
+});
+
+test("two investors engaging the same listing cannot see each other's deal records", async () => {
+  const firstCookie = await demoLogin("investor");
+  await fetch(BASE + "/api/match", {
+    method: "POST",
+    headers: { cookie: firstCookie, "Content-Type": "application/json" },
+    body: JSON.stringify({ listingId: "port-de-ndomba", action: "interested" }),
+  });
+  const firstUser = await prisma.user.findUniqueOrThrow({ where: { email: "investor@demo.invalid" } });
+
+  const secondCookie = await demoLogin("advisor");
+  const secondUser = await prisma.user.findUniqueOrThrow({ where: { email: "advisor@demo.invalid" } });
+  await prisma.user.update({ where: { id: secondUser.id }, data: { role: "investor" } });
+  const secondDeal = await prisma.deal.create({
+    data: {
+      listingId: "port-de-ndomba",
+      investorId: secondUser.id,
+      title: "SECOND INVESTOR PRIVATE RECORD",
+      flag: "🇨🇩",
+      amount: "Private",
+      stage: "Interested",
+      owner: "SI",
+      nextStep: "Private second-investor action",
+    },
+  });
+  try {
+    const firstBoard = await (await fetch(BASE + "/deals", { headers: { cookie: firstCookie } })).text();
+    assert.ok(!firstBoard.includes("SECOND INVESTOR PRIVATE RECORD"));
+    const firstDetail = await fetch(BASE + "/deals/" + secondDeal.id, { headers: { cookie: firstCookie } });
+    assert.equal(firstDetail.status, 404);
+
+    const secondBoard = await (await fetch(BASE + "/deals", { headers: { cookie: secondCookie } })).text();
+    assert.ok(secondBoard.includes("SECOND INVESTOR PRIVATE RECORD"));
+
+    const firstDeal = await prisma.deal.findFirstOrThrow({
+      where: { listingId: "port-de-ndomba", investorId: firstUser.id },
+    });
+    const secondCannotSeeFirst = await fetch(BASE + "/deals/" + firstDeal.id, { headers: { cookie: secondCookie } });
+    assert.equal(secondCannotSeeFirst.status, 404);
+  } finally {
+    await prisma.deal.delete({ where: { id: secondDeal.id } });
+    await prisma.user.update({ where: { id: secondUser.id }, data: { role: "advisor" } });
+  }
 });
 
 // ---------- Phase 7: verification workflow ----------

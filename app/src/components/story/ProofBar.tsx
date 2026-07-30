@@ -8,9 +8,9 @@ import { publicListingWhere } from "@/lib/public-listings";
 export default async function ProofBar() {
   const [listingCount, totalRaise] = await Promise.all([
     prisma.listing.count({ where: publicListingWhere }),
-    prisma.listing.aggregate({ where: publicListingWhere, _sum: { raiseUsd: true } }),
+    prisma.listing.aggregate({ where: publicListingWhere, _sum: { currentCapitalAskUsd: true } }),
   ]);
-  const totalRaiseM = Math.round((totalRaise._sum.raiseUsd ?? 0) / 1_000_000);
+  const totalRaiseM = Math.round((totalRaise._sum?.currentCapitalAskUsd ?? 0) / 1_000_000);
 
   return (
     <div className="text-white py-8" style={{ background: "linear-gradient(90deg, var(--color-ink-2) 0%, var(--color-navy) 100%)" }}>

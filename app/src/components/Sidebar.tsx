@@ -107,7 +107,7 @@ export default function Sidebar({ user }: { user: SidebarUser }) {
           </div>
         </div>
       </div>
-      <nav aria-label="Workspace navigation" className="min-h-0 flex-1 overflow-y-auto px-3 pb-3">
+      <nav aria-label={copy.workspaceNavigation} className="min-h-0 flex-1 overflow-y-auto px-3 pb-3">
         {navGroups.map((group, groupIndex) => (
           <div key={group.labelKey} className={groupIndex > 0 ? "mt-5 border-t border-white/8 pt-4" : ""}>
             <p className="mb-1 px-3 text-xs font-bold uppercase tracking-[0.14em] text-white/65">

@@ -1,5 +1,5 @@
 import { notFound, redirect } from "next/navigation";
-import { capitalPresentation, fmtUsd, isDescoRelatedOpportunity, returnPresentation } from "@/lib/data";
+import { capitalPresentation, fmtUsd, isDescoRelatedOpportunity } from "@/lib/data";
 import { prisma, toListing } from "@/lib/db";
 import { UploadDoc, TeaserGenerator } from "./RoomTools";
 import Comments from "./Comments";
@@ -20,12 +20,14 @@ import DataRoomAccessPanel from "./DataRoomAccessPanel";
 import MeetingsPanel from "./MeetingsPanel";
 import { hasDataRoomAccess } from "@/lib/dataroom";
 import type { Metadata } from "next";
-import { getInvestmentEvidence, normalizeStage, summarizeEvidence } from "@/lib/investment-evidence";
+import { evidenceDisclosureStatus, getInvestmentEvidence, normalizeStage, summarizeEvidence } from "@/lib/investment-evidence";
 import { sectorForeground } from "@/lib/theme";
-import { evidenceCoverageCopy, investmentUi, relatedPartyDisclosure } from "@/lib/translations/investment-ui";
+import { disclosureStatusCopy, inaccurateInformationLabel, investmentUi, localizedCapitalPresentation, localizedReturnValue, relatedPartyDisclosure } from "@/lib/translations/investment-ui";
 import { localizeInvestmentEvidence, localizeListing } from "@/lib/translations/listing-content";
+import { localizedMatchReason, matchPanelCopy } from "@/lib/translations/matching";
 import { internalProjectId, projectHref, publicProjectId } from "@/lib/project-slugs";
-import { PUBLIC_LISTING_STATUS } from "@/lib/public-listings";
+import { PUBLIC_LISTING_STATUS, isPublicOpportunityId, publicListingWhere } from "@/lib/public-listings";
+import { sharedCopy } from "@/lib/translations/shared";
 
 export const dynamic = "force-dynamic";
 
@@ -38,18 +40,24 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { id: requestedId } = await params;
   const id = internalProjectId(requestedId);
-  const metadataUi = investmentUi(await getLocale()).project;
-  const row = await prisma.listing.findFirst({ where: { id, publicationStatus: PUBLIC_LISTING_STATUS } });
+  const locale = await getLocale();
+  const metadataUi = investmentUi(locale).project;
+  if (!isPublicOpportunityId(id)) return {};
+  const row = await prisma.listing.findFirst({
+    where: { publicationStatus: PUBLIC_LISTING_STATUS, id },
+  });
   if (!row) return {};
-  const capital = row.raiseUsd > 0
-    ? `${fmtUsd(row.raiseUsd)} ${metadataUi.sought}`
+  const localized = localizeListing(toListing({ ...row, docs: [], images: [], org: { name: "" } }), locale);
+  const capital = localizedCapitalPresentation(locale, capitalPresentation(row));
+  const capitalDescription = capital.amountUsd != null
+    ? `${capital.value} — ${capital.label}`
     : metadataUi.capitalNotDisclosed;
-  const description = `${row.sector} ${metadataUi.opportunityIn} ${row.country} — ${capital} · ${row.instrument}. ${normalizeStage(row.stage)}.`;
+  const description = `${localized.sector} ${metadataUi.opportunityIn} ${localized.country} — ${capitalDescription} · ${localized.instrument}. ${localized.stage}.`;
   return {
-    title: row.title + " — DESCO Compass",
+    title: localized.title + " — DESCO Compass",
     description,
     alternates: { canonical: projectHref(row.id) },
-    openGraph: { title: row.title, description, url: projectHref(row.id), type: "website" },
+    openGraph: { title: localized.title, description, url: projectHref(row.id), type: "website" },
   };
 }
 
@@ -63,7 +71,8 @@ export default async function ProjectDetail({
   if (requestedId !== publicProjectId(id)) redirect(projectHref(id));
   const locale = await getLocale();
   const ui = investmentUi(locale).project;
-  const coverageUi = evidenceCoverageCopy(locale);
+  const shared = sharedCopy(locale);
+  const matchUi = matchPanelCopy(locale);
   const user = await getSessionUser();
   const row = await prisma.listing.findUnique({
     where: { id },
@@ -71,7 +80,7 @@ export default async function ProjectDetail({
   });
   if (!row) notFound();
   if (
-    row.publicationStatus !== PUBLIC_LISTING_STATUS &&
+    (row.publicationStatus !== PUBLIC_LISTING_STATUS || !isPublicOpportunityId(row.id)) &&
     !(user?.role === "admin" || (user?.role === "owner" && user.orgId === row.orgId))
   ) {
     notFound();
@@ -101,13 +110,10 @@ export default async function ProjectDetail({
   const localizedEvidence = localizeInvestmentEvidence(getInvestmentEvidence(l), locale);
   const evidence = { ...localizedEvidence, thesis: locale === "en" ? localizedEvidence.thesis : l.summary };
   const evidenceSummary = summarizeEvidence(evidence);
-  const capital = capitalPresentation(l);
-  const returns = returnPresentation(l);
-  const capitalLabel = l.id === "comicordia-agri"
-    ? ui.programmeAllocation
-    : l.raiseUsd > 0
-      ? ui.capitalSought
-      : ui.capitalNotDisclosed;
+  const disclosureStatus = disclosureStatusCopy(locale, evidenceDisclosureStatus(evidenceSummary));
+  const capital = localizedCapitalPresentation(locale, capitalPresentation(l));
+  const capitalValue = capital.value;
+  const capitalLabel = capital.label;
 
   const folders = [...new Set(docs.map((d) => d.folder))];
 
@@ -130,17 +136,22 @@ export default async function ProjectDetail({
           excludedSectors: parseJsonArray(activeMandate.excludedSectors),
           excludedCountries: parseJsonArray(activeMandate.excludedCountries),
         } satisfies MandateCriteria,
-        { sector: full.sector, country: full.country, raiseUsd: full.raiseUsd, instrument: full.instrument, governmentBacked: full.governmentBacked, esgEvidenceAvailable: false }
+        { sector: row.sector, country: row.country, currentCapitalAskUsd: row.currentCapitalAskUsd, instrument: row.instrument, governmentBacked: row.governmentBacked, esgEvidenceAvailable: false }
       )
     : null;
+  const matchReason = (reason: Parameters<typeof localizedMatchReason>[1]) =>
+    localizedMatchReason(locale, reason, { sector: l.sector, country: l.country, instrument: l.instrument });
 
   return (
     <div className="pb-24 lg:pb-0">
-      <OpportunityViewTracker listingId={l.id} sector={l.sector} />
+      <OpportunityViewTracker listingId={l.id} sector={sectorKey} />
       <div className="relative bg-ink text-white overflow-hidden">
-        <HeroVisual listing={l} className="absolute inset-0 opacity-40" overlay={false} locale={locale} />
+        <HeroVisual listing={l} className="absolute inset-0 opacity-40" overlay={false} locale={locale} priority />
         <div className="absolute inset-0 bg-gradient-to-r from-ink via-ink/80 to-ink/40" />
         <div className="relative max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8 lg:py-10">
+          <Link href="/opportunities" className="mb-5 inline-flex min-h-11 items-center text-sm font-semibold text-white/75 underline decoration-white/30 underline-offset-4 hover:text-gold">
+            ← {shared.backToOpportunities}
+          </Link>
           <div className="flex flex-wrap items-center gap-2 text-xs font-bold uppercase tracking-wider mb-3">
             <span
               className="px-2 py-0.5 rounded-full"
@@ -166,13 +177,13 @@ export default async function ProjectDetail({
             </div>
             <div className="text-left lg:text-right shrink-0">
               <div className="font-display font-extrabold text-4xl text-gold">
-                {capital.value}
+                {capitalValue}
               </div>
               <div className="mt-1 text-xs font-semibold text-white/70">{capitalLabel}</div>
               <div className="mt-2 text-xs text-white/65">
                 {l.instrument}
                 <br />
-                {ui.returnInformation}: {returns.value}
+                {ui.returnInformation}: {localizedReturnValue(locale)}
               </div>
               <div className="mt-1.5 text-xs text-white/65">{ui.sponsorFigures}</div>
             </div>
@@ -193,8 +204,8 @@ export default async function ProjectDetail({
       <section aria-label={ui.publicEvidence} className="border-b border-charcoal/10 bg-white">
         <div className="mx-auto grid max-w-5xl grid-cols-2 gap-px bg-charcoal/10 sm:grid-cols-4">
           {[
-            [ui.publicEvidence, `${evidenceSummary.supported}/${evidenceSummary.total} ${coverageUi.fields}`],
-            [ui.principalRisks, `${evidenceSummary.risksSupported}/${evidenceSummary.risksTotal} ${coverageUi.risks}`],
+            [ui.publicEvidence, disclosureStatus],
+            [ui.principalRisks, evidenceSummary.risksSupported > 0 ? ui.riskDisclosure : ui.readinessNotPublic],
             [ui.evidenceDate, evidence.provenance.sourceDate],
             [ui.projectRoom, approvedRestrictedDocs.length > 0 ? ui.restrictedDocs : ui.readinessNotPublic],
           ].map(([label, value]) => (
@@ -208,6 +219,11 @@ export default async function ProjectDetail({
 
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-6 lg:py-8 grid gap-6 lg:grid-cols-3">
         <div className="min-w-0 space-y-6 lg:col-span-2">
+          <div className="flex justify-end">
+            <Link href={`/contact?topic=inaccurate-information&project=${encodeURIComponent(publicProjectId(l.id))}`} className="inline-flex min-h-11 items-center text-sm font-semibold text-slate underline underline-offset-4 hover:text-ink">
+              {inaccurateInformationLabel(locale)}
+            </Link>
+          </div>
           <section id="investment-evidence" className="scroll-mt-6 bg-white rounded-2xl p-6 shadow-[0_1px_3px_rgb(44_62_80/0.08)]">
             <div className="mb-5 border-l-2 border-gold pl-4">
               <div className="text-xs font-bold uppercase tracking-[0.16em] text-gold">{ui.thesis}</div>
@@ -394,51 +410,51 @@ export default async function ProjectDetail({
             <section className={"rounded-2xl p-5 border-l-4 " + (matchExplanation.confidence === "excluded" ? "bg-brandred/5 border-brandred" : "bg-gold-soft border-gold")}>
               <div className="flex items-center justify-between text-[11px] font-bold uppercase tracking-wider mb-2">
                 <span className={matchExplanation.confidence === "excluded" ? "text-brandred" : "text-gold"}>
-                  ✦ Match vs. &ldquo;{activeMandate!.name}&rdquo;
+                  ✦ {matchUi.match} &ldquo;{activeMandate!.name}&rdquo;
                 </span>
                 <span className="text-wgray normal-case font-semibold">
-                  {matchExplanation.confidence} confidence · {matchExplanation.dataCompleteness}% of mandate dimensions configured
+                  {matchUi.confidence[matchExplanation.confidence]} · {matchUi.configured(matchExplanation.dataCompleteness)}
                 </span>
               </div>
               {matchExplanation.hardExclusions.length > 0 && (
                 <ul className="text-sm text-brandred space-y-1 mb-2">
-                  {matchExplanation.hardExclusions.map((x) => <li key={x}>⊘ {x}</li>)}
+                  {matchExplanation.hardExclusions.map((x, index) => <li key={x.code + index}>⊘ {matchReason(x)}</li>)}
                 </ul>
               )}
               {matchExplanation.metCriteria.length > 0 && (
                 <ul className="text-sm space-y-1 mb-2">
-                  {matchExplanation.metCriteria.map((x) => <li key={x} className="text-emerald-p">✓ {x}</li>)}
+                  {matchExplanation.metCriteria.map((x, index) => <li key={x.code + index} className="text-emerald-p">✓ {matchReason(x)}</li>)}
                 </ul>
               )}
               {matchExplanation.partiallyMetCriteria.length > 0 && (
                 <ul className="text-sm space-y-1 mb-2">
-                  {matchExplanation.partiallyMetCriteria.map((x) => <li key={x} className="text-gold">◐ {x}</li>)}
+                  {matchExplanation.partiallyMetCriteria.map((x, index) => <li key={x.code + index} className="text-gold">◐ {matchReason(x)}</li>)}
                 </ul>
               )}
               {matchExplanation.unmetCriteria.length > 0 && (
                 <ul className="text-sm space-y-1">
-                  {matchExplanation.unmetCriteria.map((x) => <li key={x} className="text-wgray">✕ {x}</li>)}
+                  {matchExplanation.unmetCriteria.map((x, index) => <li key={x.code + index} className="text-wgray">✕ {matchReason(x)}</li>)}
                 </ul>
               )}
               {matchExplanation.missingProjectData.length > 0 && (
                 <ul className="text-sm space-y-1 mt-2">
-                  {matchExplanation.missingProjectData.map((x) => <li key={x} className="text-wgray italic">? {x}</li>)}
+                  {matchExplanation.missingProjectData.map((x, index) => <li key={x.code + index} className="text-wgray italic">? {matchReason(x)}</li>)}
                 </ul>
               )}
-              <div className="text-[10px] text-wgray mt-3 pt-2 border-t border-charcoal/10">
-                <span className="font-bold">Sources:</span> {matchExplanation.dataSources.join(" · ")}
+              <div className="mt-3 border-t border-charcoal/10 pt-2 text-xs leading-5 text-wgray">
+                <span className="font-bold">{matchUi.sources}:</span> {matchExplanation.dataSources.map((source) => matchUi.source[source]).join(" · ")}
               </div>
-              <div className="text-[10px] text-wgray mt-1">
-                Calculated {new Date(matchExplanation.calculatedAt).toLocaleDateString()} · <Link href="/mandates" className="underline">edit this mandate</Link>
+              <div className="mt-1 text-xs leading-5 text-wgray">
+                {matchUi.calculated} {new Date(matchExplanation.calculatedAt).toLocaleDateString(locale)} · <Link href="/mandates" className="underline">{matchUi.edit}</Link>
               </div>
               <MatchFeedback listingId={l.id} mandateId={activeMandate!.id} />
             </section>
           )}
           {user && !matchExplanation && (
             <section className="rounded-2xl border-l-4 border-gold bg-gold-soft p-5">
-              <div className="text-[11px] font-bold uppercase tracking-wider text-gold">Mandate fit not calculated</div>
-              <p className="mt-2 text-sm leading-relaxed">Create an investment mandate to evaluate sector, geography, ticket size, instrument and stated ESG criteria against this opportunity.</p>
-              <Link href="/mandates" className="button-secondary mt-4">Create or select a mandate</Link>
+              <div className="text-xs font-bold uppercase tracking-wider text-gold">{matchUi.unavailable}</div>
+              <p className="mt-2 text-sm leading-relaxed">{matchUi.unavailableBody}</p>
+              <Link href="/mandates" className="button-secondary mt-4">{matchUi.create}</Link>
             </section>
           )}
 
@@ -463,24 +479,24 @@ export default async function ProjectDetail({
       </div>
 
       {/* Mobile bottom action bar */}
-      <div className="lg:hidden fixed inset-x-0 bottom-0 z-30 bg-white border-t border-charcoal/10 px-3 py-2.5 flex gap-2 pb-[calc(0.625rem+env(safe-area-inset-bottom))]">
+      <div className="fixed inset-x-0 bottom-0 z-30 grid grid-cols-2 gap-2 border-t border-charcoal/10 bg-white px-3 py-2.5 pb-[calc(0.625rem+env(safe-area-inset-bottom))] lg:hidden">
         {canManageListing ? (
           <>
             <a href="#investment-evidence" className="flex min-h-11 flex-1 items-center justify-center rounded-xl bg-gold px-2 text-center font-display text-xs font-bold text-ink">{ui.reviewEvidenceShort}</a>
             <a href="#data-room" className="flex min-h-11 flex-1 items-center justify-center rounded-xl border border-charcoal/15 px-2 text-center font-display text-xs font-semibold text-charcoal">{ui.manageRoomShort}</a>
-            <a href="#meetings" className="flex min-h-11 min-w-11 items-center justify-center rounded-xl border border-charcoal/15 px-2 text-center font-display text-xs font-semibold text-charcoal">{ui.meetings}</a>
+            <a href="#meetings" className="col-span-2 flex min-h-11 items-center justify-center rounded-xl border border-charcoal/15 px-2 text-center font-display text-xs font-semibold text-charcoal">{ui.meetings}</a>
           </>
         ) : user ? (
           <>
-            <RequestInfoButton listingId={l.id} action="dataroom_requested" className="flex-1 min-h-11 bg-gold text-ink font-display font-bold text-xs rounded-xl" label={t(locale, "project.requestRoom")} doneLabel="✓ Requested" />
-            <RequestInfoButton listingId={l.id} className="flex-1 min-h-11 border border-charcoal/15 text-charcoal font-display font-semibold text-xs rounded-xl" label={ui.requestInfo} />
-            <RequestInfoButton listingId={l.id} action="saved" className="min-w-11 min-h-11 border border-charcoal/15 rounded-xl" label="⌁" doneLabel="✓" ariaLabel={t(locale, "project.save")} />
+            <RequestInfoButton listingId={l.id} action="dataroom_requested" className="min-h-11 rounded-xl bg-gold px-2 font-display text-xs font-bold leading-4 text-ink" label={t(locale, "project.requestRoom")} doneLabel={"✓ " + ui.requested} />
+            <RequestInfoButton listingId={l.id} className="min-h-11 rounded-xl border border-charcoal/15 px-2 font-display text-xs font-semibold leading-4 text-charcoal" label={ui.requestInfo} />
+            <RequestInfoButton listingId={l.id} action="saved" className="col-span-2 min-h-11 rounded-xl border border-charcoal/15" label={"⌁ " + t(locale, "project.save")} doneLabel={"✓ " + ui.saved} ariaLabel={t(locale, "project.save")} />
           </>
         ) : (
-          <Link href={`/contact?topic=investor-access&project=${l.id}`} className="flex-1 min-h-11 flex items-center justify-center bg-gold text-ink font-display font-bold text-xs rounded-xl">{ui.applyAccess}</Link>
+          <Link href={`/contact?topic=investor-access&project=${l.id}`} className="col-span-2 flex min-h-11 items-center justify-center rounded-xl bg-gold px-3 text-center font-display text-xs font-bold text-ink">{ui.applyAccess}</Link>
         )}
       </div>
-      <div className="h-[calc(4rem+env(safe-area-inset-bottom))] lg:hidden" aria-hidden="true" />
+      <div className="h-[calc(7.5rem+env(safe-area-inset-bottom))] lg:hidden" aria-hidden="true" />
     </div>
   );
 }

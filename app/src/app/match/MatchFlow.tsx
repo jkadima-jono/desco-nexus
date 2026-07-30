@@ -1,16 +1,17 @@
 "use client";
 
 import { useState } from "react";
-import { fmtUsd, type Listing } from "@/lib/data";
+import { capitalPresentation, type Listing } from "@/lib/data";
 import { useI18n } from "@/components/I18nProvider";
 import HeroVisual from "@/components/HeroVisual";
 import SectorBadge from "@/components/SectorBadge";
-import { getInvestmentEvidence, summarizeEvidence } from "@/lib/investment-evidence";
+import { evidenceDisclosureStatus, getInvestmentEvidence, summarizeEvidence } from "@/lib/investment-evidence";
+import { disclosureStatusCopy } from "@/lib/translations/investment-ui";
 
 type Verdict = "interested" | "pass" | "saved";
 
 export default function MatchFlow({ queue }: { queue: Listing[] }) {
-  const { t } = useI18n();
+  const { locale, t } = useI18n();
   const [idx, setIdx] = useState(0);
   const [log, setLog] = useState<{ title: string; verdict: Verdict; deal?: boolean }[]>([]);
   const [leaving, setLeaving] = useState<Verdict | null>(null);
@@ -18,6 +19,10 @@ export default function MatchFlow({ queue }: { queue: Listing[] }) {
 
   const current = queue[idx];
   const evidence = current ? summarizeEvidence(getInvestmentEvidence(current)) : null;
+  const disclosureStatus = evidence
+    ? disclosureStatusCopy(locale, evidenceDisclosureStatus(evidence))
+    : "";
+  const capital = current ? capitalPresentation(current) : null;
 
   const act = async (verdict: Verdict) => {
     if (!current || leaving) return;
@@ -27,7 +32,7 @@ export default function MatchFlow({ queue }: { queue: Listing[] }) {
       const res = await fetch("/api/match", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ listingId: current.id, action: verdict }),
+        body: JSON.stringify({ listingId: current.id, action: verdict, requestKey: crypto.randomUUID() }),
       });
       if (!res.ok) throw new Error("Request failed: " + res.status);
       const data: { dealCreated?: boolean } = await res.json();
@@ -92,21 +97,18 @@ export default function MatchFlow({ queue }: { queue: Listing[] }) {
             <p className="text-sm text-charcoal/80 leading-relaxed">{current.summary}</p>
             <div className="mt-4 flex flex-wrap gap-2 text-[10px] font-bold uppercase tracking-wider text-slate">
               <span className="rounded-full border border-charcoal/15 bg-mist px-2.5 py-1">
-                Public evidence {evidence!.disclosed}/{evidence!.total}
-              </span>
-              <span className="rounded-full border border-charcoal/15 bg-mist px-2.5 py-1">
-                Risks disclosed {evidence!.risksDisclosed}/{evidence!.risksTotal}
+                {disclosureStatus}
               </span>
             </div>
             <div className="flex items-center gap-6 mt-5">
               <div>
                 <div className="font-display font-extrabold text-2xl">
-                  {fmtUsd(current.raiseUsd)}
+                  {capital?.value}
                 </div>
                 <div className="text-[11px] text-wgray">{current.instrument}</div>
               </div>
               <div className="text-[11px] text-wgray">
-                {current.irr} · {current.stage}
+                {current.stage}
                 {current.governmentBacked && " · ◆ Government involvement"}
               </div>
             </div>

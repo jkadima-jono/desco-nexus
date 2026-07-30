@@ -6,6 +6,7 @@ import { useCallback, useRef, useState } from "react";
 import LanguageSwitcher from "./LanguageSwitcher";
 import { useI18n } from "./I18nProvider";
 import { useModalFocus } from "./useModalFocus";
+import BrandMark from "./BrandMark";
 
 const LINKS = [
   ["/opportunities", "nav.opportunities"],
@@ -16,7 +17,7 @@ const LINKS = [
   ["/about", "nav.about"],
 ] as const;
 
-export default function PublicHeader() {
+export default function PublicHeader({ user }: { user?: { role?: string } | null }) {
   const { t } = useI18n();
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
@@ -24,6 +25,10 @@ export default function PublicHeader() {
   const closeButton = useRef<HTMLButtonElement>(null);
   const mobileNavigation = useRef<HTMLElement>(null);
   const closeMenu = useCallback(() => setOpen(false), []);
+  const workspaceHref = user
+    ? user.role === "owner" ? "/submit-project" : user.role === "admin" ? "/admin/verification" : "/match"
+    : "/contact?topic=investor-access";
+  const workspaceLabel = user ? t("nav.openWorkspace") : t("nav.enterWorkspace");
   useModalFocus({ open, container: mobileNavigation, initialFocus: closeButton, returnFocus: menuButton, onClose: closeMenu });
 
   const nav = (
@@ -50,18 +55,14 @@ export default function PublicHeader() {
   return (
     <>
       <header className="sticky top-0 z-40 border-b border-white/10 bg-ink text-white">
-        <div className="public-container flex h-16 items-center justify-between gap-6">
+        <div className="mx-auto flex h-16 w-[calc(100%-2rem)] max-w-[106rem] items-center justify-between gap-6 md:w-[calc(100%-3rem)]">
           <Link href="/" className="flex shrink-0 items-center gap-3" aria-label="DESCO Compass home">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/brand/desco-compass-logo.jpg" alt="" className="h-10 w-10 rounded-full object-cover" />
-            <span className="font-display text-base font-extrabold">
-              DESCO <span className="text-gold">Compass</span>
-            </span>
+            <BrandMark />
           </Link>
           <div className="hidden items-center gap-2 2xl:flex">
             {nav}
             <div className="w-32"><LanguageSwitcher /></div>
-            <Link href="/login" className="button-on-dark">{t("nav.enterWorkspace")}</Link>
+            <Link href={workspaceHref} className="button-on-dark">{workspaceLabel}</Link>
           </div>
           <button
             ref={menuButton}
@@ -103,8 +104,7 @@ export default function PublicHeader() {
             {nav}
             <div className="mt-auto space-y-3 border-t border-white/10 pt-5">
               <LanguageSwitcher />
-              <Link href="/login" onClick={() => setOpen(false)} className="button-primary w-full">{t("nav.enterWorkspace")}</Link>
-              <Link href="/contact?topic=investor-access" onClick={() => setOpen(false)} className="button-on-dark w-full">{t("nav.apply")}</Link>
+              <Link href={workspaceHref} onClick={() => setOpen(false)} className="button-on-dark w-full">{workspaceLabel}</Link>
             </div>
           </aside>
         </div>

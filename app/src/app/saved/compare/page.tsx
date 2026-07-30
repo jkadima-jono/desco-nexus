@@ -1,14 +1,14 @@
 import Link from "next/link";
 import { prisma } from "@/lib/db";
-import { fmtUsd } from "@/lib/data";
+import { capitalPresentation, returnPresentation } from "@/lib/data";
 import CompareExportButton from "./CompareExportButton";
 import { getInvestmentEvidence, normalizeStage } from "@/lib/investment-evidence";
 import type { Metadata } from "next";
 import { getLocale } from "@/lib/i18n-server";
-import { investmentUi } from "@/lib/translations/investment-ui";
+import { comparisonRegionLabel, comparisonScrollHint, investmentUi } from "@/lib/translations/investment-ui";
 import { localizeInvestmentEvidence, localizeListing } from "@/lib/translations/listing-content";
 import { projectHref } from "@/lib/project-slugs";
-import { PUBLIC_LISTING_STATUS } from "@/lib/public-listings";
+import { isPublicOpportunityId, publicListingWhere } from "@/lib/public-listings";
 
 export const dynamic = "force-dynamic";
 
@@ -38,7 +38,10 @@ type Row = {
 async function getListings(ids: string[]) {
   if (ids.length === 0) return [];
   const rows = await prisma.listing.findMany({
-    where: { id: { in: ids }, publicationStatus: PUBLIC_LISTING_STATUS },
+    where: {
+      ...publicListingWhere,
+      id: { in: ids.filter(isPublicOpportunityId) },
+    },
     include: { org: true },
   });
   const order = new Map(ids.map((id, index) => [id, index]));
@@ -46,15 +49,15 @@ async function getListings(ids: string[]) {
 }
 
 const ROWS: Row[] = [
-  { label: "Capital required", value: (l) => fmtUsd(l.raiseUsd) },
+  { label: "Capital required", value: (l) => capitalPresentation(l).value },
   { label: "Instrument", value: (l) => l.instrument },
   { label: "Geography", value: (l) => l.flag + " " + l.country },
   { label: "Stage", value: (l) => normalizeStage(l.stage) },
   { label: "Revenue model", value: () => NOT_DISCLOSED },
   { label: "Use of funds", value: (l) => l.useOfFunds || NOT_DISCLOSED },
-  { label: "Sponsor contribution", value: (l) => l.sponsorContributionUsd != null ? fmtUsd(l.sponsorContributionUsd) : NOT_DISCLOSED },
-  { label: "Funding secured", value: (l) => l.fundingSecuredUsd != null ? fmtUsd(l.fundingSecuredUsd) : NOT_DISCLOSED },
-  { label: "Return information", value: (l) => l.irr || NOT_DISCLOSED },
+  { label: "Sponsor contribution", value: (l) => l.sponsorContributionUsd != null ? `$${l.sponsorContributionUsd.toLocaleString("en-US")}` : NOT_DISCLOSED },
+  { label: "Funding secured", value: (l) => l.fundingSecuredUsd != null ? `$${l.fundingSecuredUsd.toLocaleString("en-US")}` : NOT_DISCLOSED },
+  { label: "Return information", value: (l) => returnPresentation(l).value },
   { label: "Timetable", value: () => NOT_DISCLOSED },
   { label: "Evidence review", value: (l) => (l.verified ? "DESCO evidence review recorded — inspect scope" : "Independent verification not recorded") },
   { label: "Principal risks", value: (l) => getInvestmentEvidence(l).risks.every((risk) => risk.status === "not-disclosed") ? NOT_DISCLOSED : "See public project disclosure" },
@@ -84,7 +87,7 @@ export default async function ComparePage({
       if (row.label === "Instrument") return listing.instrument;
       if (row.label === "Geography") return `${listing.flag} ${listing.country}`;
       if (row.label === "Stage") return listing.stage;
-      if (row.label === "Return information") return listing.irr;
+      if (row.label === "Return information") return returnPresentation(listing).value;
       if (row.label === "Evidence source date") return localizeInvestmentEvidence(getInvestmentEvidence(listing), locale).provenance.sourceDate;
       if (row.label === "Evidence review") return rawListings.find((item) => item.id === listing.id)!.verified ? valueCopy.reviewed : valueCopy.pending;
       if (row.label === "Principal risks" && value !== NOT_DISCLOSED) return valueCopy.risks;
@@ -118,15 +121,24 @@ export default async function ComparePage({
             {ui.truncated}
           </p>
         )}
-        <div className="mt-6 overflow-x-auto">
+        <p id="comparison-scroll-hint" className="mt-5 text-xs leading-5 text-wgray sm:hidden">
+          {comparisonScrollHint(locale)}
+        </p>
+        <div
+          className="mt-2 overflow-x-auto rounded-lg focus-visible:outline focus-visible:outline-2 focus-visible:outline-gold sm:mt-6"
+          role="region"
+          aria-label={comparisonRegionLabel(locale)}
+          aria-describedby="comparison-scroll-hint"
+          tabIndex={0}
+        >
           <table className="w-full text-sm border-collapse min-w-[640px]">
             <thead>
               <tr>
-                <th className="text-left p-3 border-b border-charcoal/10 text-[10px] font-bold uppercase tracking-wider text-wgray w-40">{ui.field}</th>
+                <th className="w-40 border-b border-charcoal/10 p-3 text-left text-xs font-bold uppercase tracking-wide text-wgray">{ui.field}</th>
                 {listings.map((l) => (
                   <th key={l.id} className="text-left p-3 border-b border-charcoal/10">
                     <Link href={projectHref(l.id)} className="font-display font-bold hover:underline">{l.title}</Link>
-                    <div className="text-[11px] text-wgray font-normal">{l.org}</div>
+                    <div className="text-xs font-normal text-wgray">{l.org}</div>
                   </th>
                 ))}
               </tr>

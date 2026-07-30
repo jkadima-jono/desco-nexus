@@ -104,7 +104,7 @@ export default function MessagesClient({ threads }: { threads: UiThread[] }) {
 
       <div className={(!mobileThreadOpen ? "hidden lg:flex " : "flex ") + "min-w-0 flex-1 flex-col bg-mist"}>
         <div className="bg-white border-b border-charcoal/10 px-4 sm:px-6 py-3 sm:py-4 flex items-center gap-3">
-          <button type="button" onClick={() => setMobileThreadOpen(false)} className="lg:hidden min-w-10 min-h-10 rounded-lg border border-charcoal/10" aria-label="Back to conversations">←</button>
+          <button type="button" onClick={() => setMobileThreadOpen(false)} className="lg:hidden min-w-10 min-h-10 rounded-lg border border-charcoal/10" aria-label={t("messages.backToConversations")}>←</button>
           <div><div className="font-display font-bold">{active.name}</div><div className="text-[11px] text-wgray">{active.org}</div></div>
         </div>
         <div className="flex-1 overflow-y-auto px-3 sm:px-6 py-5 space-y-3">
@@ -203,7 +203,7 @@ export default function MessagesClient({ threads }: { threads: UiThread[] }) {
               }
             }}
             className="min-w-11 min-h-11 rounded-xl border border-charcoal/10 text-gold font-bold"
-            aria-label="Draft with AI"
+            aria-label={t("messages.draftWithAi")}
           >
             ✦
           </button>

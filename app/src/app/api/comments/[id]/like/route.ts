@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
 import { getSessionUser } from "@/lib/auth";
+import { canParticipateInListing } from "@/lib/listing-participation";
 
 export async function POST(
   _req: Request,
@@ -13,6 +14,10 @@ export async function POST(
   const { id } = await params;
   const comment = await prisma.comment.findUnique({ where: { id } });
   if (!comment) {
+    return NextResponse.json({ error: "Comment not found" }, { status: 404 });
+  }
+  const listing = await prisma.listing.findUnique({ where: { id: comment.listingId } });
+  if (!listing || !(await canParticipateInListing(user, listing))) {
     return NextResponse.json({ error: "Comment not found" }, { status: 404 });
   }
   const key = { commentId_userId: { commentId: id, userId: user.id } };

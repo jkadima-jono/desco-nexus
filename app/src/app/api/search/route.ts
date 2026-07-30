@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { prisma, toListing } from "@/lib/db";
-import { getSessionUser } from "@/lib/auth";
 import type { Listing } from "@/lib/data";
+import { sanitizePublicListing } from "@/lib/data";
 import { publicListingWhere } from "@/lib/public-listings";
 
 // Matches Desco Global's real four pillars only (see lib/theme.ts
@@ -39,11 +39,8 @@ export async function GET(req: Request) {
     return NextResponse.json({ error: "q parameter required" }, { status: 400 });
   }
 
-  const user = await getSessionUser();
   const rows = await prisma.listing.findMany({ where: publicListingWhere, include: { org: true, images: true } });
-  let results: Listing[] = rows.map(toListing).map((l) =>
-    user ? l : { ...l, whyMatch: "", docs: [] }
-  );
+  let results: Listing[] = rows.map(toListing).map(sanitizePublicListing);
   const parts: string[] = [];
 
   const sectors = [...new Set(SECTOR_MAP.filter(([k]) => containsTerm(q, k)).map(([, v]) => v))];
@@ -55,10 +52,10 @@ export async function GET(req: Request) {
   const money = [...q.matchAll(/\$?\s?(\d+(?:\.\d+)?)\s?m/g)].map((m) => parseFloat(m[1]) * 1e6);
   if (money.length >= 2) {
     const [min, max] = [Math.min(...money), Math.max(...money)];
-    results = results.filter((l) => l.raiseUsd >= min && l.raiseUsd <= max);
+    results = results.filter((l) => l.currentCapitalAskUsd != null && l.currentCapitalAskUsd >= min && l.currentCapitalAskUsd <= max);
     parts.push("ticket: $" + min / 1e6 + "M–$" + max / 1e6 + "M");
   } else if (["under", "moins", "menos", "abaixo"].some((term) => containsTerm(q, term)) && money.length === 1) {
-    results = results.filter((l) => l.raiseUsd > 0 && l.raiseUsd <= money[0]);
+    results = results.filter((l) => l.currentCapitalAskUsd != null && l.currentCapitalAskUsd > 0 && l.currentCapitalAskUsd <= money[0]);
     parts.push("ticket: ≤$" + money[0] / 1e6 + "M");
   }
 

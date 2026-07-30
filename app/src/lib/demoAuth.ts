@@ -5,15 +5,20 @@ export type DemoAuthEnvironment = {
 };
 
 /**
- * Demo access is open by default only for local development and Vercel
- * previews. Production remains fail-closed unless the project owner sets
- * DEMO_AUTH_ENABLED=true for that environment.
+ * Demo access is limited to local development and Vercel previews.
+ * Production remains fail-closed even if a stale environment flag is present.
  */
 export function isDemoAuthEnabled({
   nodeEnv,
   vercelEnv,
-  explicitFlag,
 }: DemoAuthEnvironment): boolean {
-  if (explicitFlag === "true") return true;
+  if (vercelEnv === "production") return false;
   return nodeEnv !== "production" || vercelEnv === "preview";
+}
+
+export function isDemoAdminEnabled({
+  nodeEnv,
+  vercelEnv,
+}: DemoAuthEnvironment): boolean {
+  return nodeEnv !== "production" && !vercelEnv;
 }

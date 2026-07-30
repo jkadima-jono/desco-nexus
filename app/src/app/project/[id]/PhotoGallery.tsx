@@ -3,7 +3,8 @@
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useI18n } from "@/components/I18nProvider";
-import { investmentUi } from "@/lib/translations/investment-ui";
+import { imageManagementCopy, investmentUi } from "@/lib/translations/investment-ui";
+import Image from "next/image";
 
 type Photo = {
   id: string;
@@ -25,6 +26,7 @@ export default function PhotoGallery({
   const router = useRouter();
   const { t, locale } = useI18n();
   const imageUi = investmentUi(locale).images;
+  const managementUi = imageManagementCopy(locale);
   const fileRef = useRef<HTMLInputElement>(null);
   const [busy, setBusy] = useState(false);
   const [msg, setMsg] = useState<string | null>(null);
@@ -56,21 +58,20 @@ export default function PhotoGallery({
     setMsg(null);
     const form = new FormData();
     form.set("file", file);
-    form.set("caption", caption.trim() || "Sponsor-provided project image");
+    form.set("caption", caption.trim() || imageUi.sponsorImage);
     try {
       const res = await fetch("/api/listings/" + listingId + "/photos", {
         method: "POST",
         body: form,
       });
-      const data = await res.json();
       if (!res.ok) {
-        setMsg(data.error ?? "Upload failed");
+        setMsg(managementUi.uploadFailed);
       } else {
         setCaption("");
         router.refresh();
       }
     } catch {
-      setMsg("Network error — retry.");
+      setMsg(managementUi.network);
     } finally {
       setBusy(false);
       if (fileRef.current) fileRef.current.value = "";
@@ -83,13 +84,12 @@ export default function PhotoGallery({
     try {
       const res = await fetch("/api/listings/" + listingId + "/photos/" + photoId, { method: "DELETE" });
       if (!res.ok) {
-        const data = await res.json().catch(() => ({}));
-        setMsg(data.error ?? "Remove failed");
+        setMsg(managementUi.removeFailed);
       } else {
         router.refresh();
       }
     } catch {
-      setMsg("Network error — retry.");
+      setMsg(managementUi.network);
     } finally {
       setBusy(false);
     }
@@ -105,13 +105,12 @@ export default function PhotoGallery({
         body: JSON.stringify({ action: "set_cover" }),
       });
       if (!res.ok) {
-        const data = await res.json().catch(() => ({}));
-        setMsg(data.error ?? "Update failed");
+        setMsg(managementUi.updateFailed);
       } else {
         router.refresh();
       }
     } catch {
-      setMsg("Network error — retry.");
+      setMsg(managementUi.network);
     } finally {
       setBusy(false);
     }
@@ -131,7 +130,7 @@ export default function PhotoGallery({
       </div>
       {canUpload && (
         <div className="mb-4 rounded-xl border border-charcoal/10 bg-mist p-3">
-          <label htmlFor="project-image-caption" className="block text-[11px] font-bold uppercase tracking-wider text-slate">
+          <label htmlFor="project-image-caption" className="block text-xs font-bold uppercase tracking-wide text-slate">
             {imageUi.captionSource}
           </label>
           <input
@@ -157,7 +156,9 @@ export default function PhotoGallery({
           if (f) upload(f);
         }}
       />}
-      {msg && <div className="text-xs text-brandred mb-3">{msg}</div>}
+      <div aria-live="polite" aria-atomic="true">
+        {msg && <div role="alert" className="mb-3 text-xs text-brandred">{msg}</div>}
+      </div>
       {photos.length === 0 ? (
         <p className="text-sm text-wgray">
           {canUpload ? t("photos.empty") : imageUi.noApproved}
@@ -175,20 +176,22 @@ export default function PhotoGallery({
                 aria-label={imageUi.preview + " " + (p.caption || imageUi.sponsorImage)}
                 className="absolute inset-0 w-full h-full"
               >
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
+                <Image
                   src={p.url}
                   alt={p.caption ?? ""}
-                  className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                  fill
+                  sizes="(min-width: 640px) 14rem, 50vw"
+                  unoptimized={/^https?:\/\//.test(p.url)}
+                  className="object-cover transition-transform duration-300 group-hover:scale-105"
                 />
               </button>
               {i === 0 && (
-                <span className="absolute top-1.5 left-1.5 text-[9px] font-bold uppercase tracking-wider bg-ink/80 text-white px-2 py-0.5 rounded-full pointer-events-none">
+                <span className="pointer-events-none absolute left-1.5 top-1.5 rounded-full bg-ink/80 px-2 py-0.5 text-xs font-bold uppercase tracking-wide text-white">
                   {t("photos.cover")}
                 </span>
               )}
               {p.isExample && (
-                <span className="absolute bottom-1.5 left-1.5 rounded-full bg-ink/85 px-2 py-1 text-[9px] font-bold uppercase tracking-wider text-white pointer-events-none">
+                <span className="pointer-events-none absolute bottom-1.5 left-1.5 rounded-full bg-ink/85 px-2 py-1 text-xs font-bold uppercase tracking-wide text-white">
                   {p.kind === "regional" ? imageUi.regional : imageUi.example}
                 </span>
               )}
@@ -206,7 +209,7 @@ export default function PhotoGallery({
                   <button
                     disabled={busy}
                     onClick={() => removePhoto(p.id)}
-                    aria-label={t("photos.remove") + " " + (p.caption ?? "photo")}
+                    aria-label={t("photos.remove") + " " + (p.caption ?? imageUi.sponsorImage)}
                     className="min-h-11 px-1 text-[10px] font-bold text-white hover:text-brandred disabled:opacity-50"
                   >
                     {t("photos.remove")}
@@ -238,12 +241,16 @@ export default function PhotoGallery({
           >
             ×
           </button>
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src={lightbox.url}
-            alt={lightbox.caption ?? ""}
-            className="max-w-full max-h-full rounded-2xl shadow-2xl"
-          />
+          <div className="relative h-[min(78vh,48rem)] w-[min(90vw,72rem)]">
+            <Image
+              src={lightbox.url}
+              alt={lightbox.caption ?? ""}
+              fill
+              sizes="90vw"
+              unoptimized={/^https?:\/\//.test(lightbox.url)}
+              className="rounded-2xl object-contain shadow-2xl"
+            />
+          </div>
           {lightbox.caption && (
             <p className="absolute inset-x-8 bottom-4 rounded-lg bg-ink/85 px-4 py-2 text-center text-xs text-white">
               {lightbox.caption}

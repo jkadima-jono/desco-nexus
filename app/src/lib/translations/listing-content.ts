@@ -2,60 +2,71 @@ import type { Listing } from "@/lib/data";
 import type { EvidenceField, InvestmentEvidence } from "@/lib/investment-evidence";
 import type { Locale } from "@/lib/i18n";
 
-type ListingText = Pick<Listing, "sector" | "country" | "instrument" | "stage" | "irr" | "summary" | "highlights" | "whyMatch">;
+type ListingText =
+  Pick<Listing, "sector" | "country" | "instrument" | "stage" | "irr" | "summary" | "highlights" | "whyMatch"> &
+  Partial<Pick<Listing, "title">>;
 type ListingTranslations = Record<Exclude<Locale, "en">, Record<string, ListingText>>;
 
 const fr = {
   "port-de-ndomba": {
-    sector: "Infrastructure", country: "RDC", instrument: "SPV de projet — participation majoritaire de DESCO", stage: "Faisabilité déclarée par le porteur", irr: "Inclus dans l’objectif de TRI de 17,2 % du programme Phase 1 de DESCO Global",
+    title: "Port de Ndomba — porte d’entrée fluviale du Kasaï",
+    sector: "Infrastructure", country: "RDC", instrument: "SPV de projet — participation majoritaire de DESCO", stage: "Faisabilité déclarée par le porteur", irr: "Aucune projection publique de rendement n’est publiée",
     summary: "Nous structurons une opportunité portuaire sur la rivière Kasaï afin de relier le Grand Kasaï à Kinshasa et aux voies d’exportation. Le périmètre comprend quai, dragage, postes d’amarrage, entrepôts, silos, carburant, douanes et contrôle d’accès numérique. Avant d’avancer, nous exigeons des preuves vérifiées sur la faisabilité, les droits, permis, demande, coûts et calendrier.",
     highlights: ["Les documents disponibles indiquent une étude de faisabilité achevée ; elle reste en cours d’examen", "Objectif de développement : 1 200 emplois de construction et 450 emplois permanents", "Cadre proposé : normes IFC, plan biodiversité et pacte communautaire ; preuves en cours d’examen"],
     whyMatch: "Infrastructure logistique de la plateforme Kasaï de DESCO Global, destinée à faciliter les exportations des pôles agricole et minier.",
   },
   "port-de-kasenga": {
-    sector: "Infrastructure", country: "RDC", instrument: "SPV de projet — participation majoritaire de DESCO", stage: "Structuration", irr: "Inclus dans l’objectif de TRI de 17,2 % du programme Phase 1 de DESCO Global",
+    title: "Port de Kasenga — plateforme transfrontalière du lac Moero",
+    sector: "Infrastructure", country: "RDC", instrument: "SPV de projet — participation majoritaire de DESCO", stage: "Structuration", irr: "Aucune projection publique de rendement n’est publiée",
     summary: "Nous structurons une opportunité portuaire sur le lac Moero pour soutenir le commerce avec la Zambie et les liaisons vers l’Angola. Le développement vise 300 000 tonnes par an et une réduction de 40 % du délai de dédouanement. Nous exigeons les études de demande, droits, coûts et livraison avant de considérer ces objectifs comme validés.",
     highlights: ["Objectif de débit : 300 000 tonnes par an", "Liaison transfrontalière avec la Zambie (Copperbelt) et l’Angola", "Objectif du porteur : réduction de 40 % du délai de dédouanement ; étude non publique"],
     whyMatch: "Actif de corridor régional complémentaire au Port de Ndomba dans la plateforme logistique intégrée de DESCO Global.",
   },
   "comicordia-mining": {
+    title: "Projet minier de Luiza–Musefu — programme or et diamant",
     sector: "Mines", country: "RDC", instrument: "Coentreprise proposée ; conditions publiques non communiquées", stage: "Géologie historique et planification minière conceptuelle", irr: "Non communiqué publiquement",
     summary: "Nous présentons une transition progressive de l’activité artisanale vers une récupération semi-mécanisée d’or et de diamants près de Luiza et Musefu. Le dossier comprend un rapport géologique de 2017 sur PR 13578, une proposition d’octobre 2024 et une note conceptuelle de coûts. Avant d’avancer, nous exigeons une ressource actuelle, une durée de mine confirmée et une économie vérifiée indépendamment.",
     highlights: ["Le rapport 2017 couvre PR 13578, décrit comme huit carrés miniers sur environ 6,8 km²", "Les documents historiques évoquent un potentiel aurifère alluvial, éluvial et rocheux, ainsi qu’un potentiel diamantifère", "La note recommande un démarrage progressif et indique que la durée de la mine n’est pas confirmée"],
     whyMatch: "Opportunité Investdesco précoce pour des investisseurs capables de financer les diligences titre, géologie, faisabilité et environnement.",
   },
   "comicordia-agri": {
-    sector: "Agriculture", country: "RDC", instrument: "Allocation du pôle Agridesco (30 % du programme Phase 1 de 750 M$)", stage: "Informations d’exploitation fournies", irr: "Inclus dans l’objectif de TRI de 17,2 % du programme Phase 1 de DESCO Global",
+    title: "Projet agricole intégré Agridesco — Grand Kasaï",
+    sector: "Agriculture", country: "RDC", instrument: "Allocation du pôle Agridesco (30 % du programme Phase 1 de 750 M$)", stage: "Informations d’exploitation fournies", irr: "Aucune projection publique de rendement n’est publiée",
     summary: "Nous présentons une plateforme agricole au centre de la RDC qui organiserait les petits producteurs en réseaux avec crédit d’intrants, mécanisation partagée, stockage et transformation du maïs, du manioc et du soja. Avant d’avancer, nous exigeons la validation du foncier, de la participation des agriculteurs, des rendements, des achats et des résultats annoncés.",
     highlights: ["Déclaration du porteur : plus de 50 000 agriculteurs et 25 000 hectares ; preuves et date non publiques", "Déclaration : plus de 40 villages et hausse de revenu de 45 % ; méthode et date non publiques", "Emploi déclaré : 10 000 femmes ; preuve de mesure non publique"],
     whyMatch: "Opportunité agricole nécessitant de valider la portée auprès des agriculteurs, l’accès au foncier, les achats, les sauvegardes et l’impact déclaré.",
   },
   "manioc-plant": {
+    title: "Usine de transformation des feuilles de manioc — Kinshasa / Mont Ngafula",
     sector: "Agriculture", country: "RDC", instrument: "Fonds propres et financement d’équipements", stage: "Pré-construction", irr: "Modèle du porteur : environ 15 444 $ par lot de 2 000 kg ; hypothèses non examinées indépendamment",
     summary: "Nous présentons une usine de lyophilisation de quatre hectares près de Kimwenza, alimentée en feuilles de manioc de Mont Ngafula et du Kongo Central. Les documents indiquent une conservation d’environ dix ans et une distribution par vendeurs et dépôts. Nous exigeons des essais produit, une étude de la demande et une validation indépendante avant d’avancer.",
     highlights: ["Site de 4 hectares avec énergie solaire, chaîne du froid et traitement d’eau", "Produit lyophilisé annoncé stable environ 10 ans", "Distribution fondée sur des vendeuses de marché"],
     whyMatch: "Actif Agridesco de petite taille, avec plan de construction chiffré et canal de distribution identifié.",
   },
   "phardesco-mbuji-mayi": {
-    sector: "Santé", country: "RDC", instrument: "IFD et fonds propres à impact (levée initiale de 5 à 10 M$)", stage: "Pré-lancement", irr: "Prévision à 5 ans : seuil de rentabilité EBITDA en année 2 et +3,8 M$ en année 5",
+    title: "Centre Pharmalab Phardesco — Mbuji-Mayi",
+    sector: "Santé", country: "RDC", instrument: "IFD et fonds propres à impact (levée initiale de 5 à 10 M$)", stage: "Pré-lancement", irr: "Aucune projection publique de rendement n’est publiée",
     summary: "Nous présentons le premier Pharmalab Hub de Phardesco, un centre solaire réunissant pharmacie, diagnostic, eau potable et éducation sanitaire dans le Grand Kasaï. Les documents du porteur indiquent environ un pharmacien pour 50 000 habitants contre une référence OMS de 1 pour 2 000. Nous exigeons la validation de la demande, des autorisations, du modèle clinique et du financement.",
     highlights: ["Premier d’un réseau prévu de plus de 10 centres à moyen terme et de plus de 50 d’ici 2035", "Énergie solaire, chaîne du froid et production générique conforme aux BPF envisagée", "Des financeurs potentiels sont cités ; aucune participation ni engagement n’est confirmé"],
     whyMatch: "Plateforme d’accès aux soins en phase initiale, ancrant le pôle Phardesco dans sa région fondatrice.",
   },
   "waterdesco-grand-kasai": {
+    title: "WaterDesco — réseau d’eau potable du Grand Kasaï",
     sector: "Eau", country: "RDC", instrument: "Financement mixte d’infrastructure et d’impact proposé ; structure finale non communiquée", stage: "Conception — périmètre à réconcilier", irr: "Aucun rendement projet communiqué ; les documents privilégient la couverture des coûts d’exploitation",
     summary: "Nous présentons une opportunité d’eau potable pour les communautés mal desservies du Grand Kasaï. Un master deck 2026 décrit 300 centres WASH solaires et un budget de 12 M$ ; une autre présentation décrit 12 stations, 500 km de réseau et 50 000 m³/jour. Avant d’avancer, nous exigeons un périmètre réconcilié, des études de site, des analyses d’eau, les permis, un plan d’achat et un modèle financier examiné.",
     highlights: ["Concept du master deck : 300 centres WASH solaires et budget Phase 1 de 12 M$", "Autre concept : 12 stations, 500 km de réseau et 50 000 m³/jour", "Tarification à l’usage et abonnements décrits ; demande, accessibilité et recouvrement non prouvés"],
     whyMatch: "Concept Waterdesco précoce nécessitant des diligences techniques, environnementales, tarifaires et d’exécution avant le choix du réseau.",
   },
   "tilu-pepm-8252": {
+    title: "Tilu Mining — prospect cuivre-cobalt-or du permis 8252",
     sector: "Mines", country: "RDC", instrument: "Besoin en capital d’exploration non communiqué publiquement", stage: "Données historiques d’exploration — statut actuel du titre non vérifié", irr: "Non communiqué publiquement",
     summary: "Nous présentons un prospect cuivre-cobalt-or précoce dans le territoire de Manono. Une étude historique mentionne le permis de recherches 8252, accordé en juillet 2007, et une campagne géochimique de 2010 comprenant 933 échantillons de sol. Avant d’avancer, nous exigeons la confirmation des renouvellements, du titulaire actuel et de la validité du permis.",
     highlights: ["933 échantillons sur 24 lignes nord-sud couvrant environ 89 km²", "Valeurs rapportées jusqu’à 581 ppm de cuivre et 7 490 ppm de cobalt ; il ne s’agit pas d’une ressource", "Le permis de 2007 vise cuivre, cobalt et or ; renouvellement et validité actuels à confirmer"],
     whyMatch: "Opportunité minière Investdesco précoce pour des investisseurs capables d’évaluer les risques géologiques et de titre avant ressource.",
   },
   "sciress-kolwezi-12423": {
-    sector: "Mines", country: "RDC", instrument: "Fonds propres, coentreprise ou financement d’achat proposés, sous réserve de diligence et de conditions définitives", stage: "Exploration avant ressource et acquisition de permis proposée", irr: "Illustration du porteur : TRI cible de 35 % ; aucune ressource conforme, faisabilité ni modèle examiné indépendamment",
+    title: "Scires Mining — projet cobalt-cuivre PE 12423",
+    sector: "Mines", country: "RDC", instrument: "Fonds propres, coentreprise ou financement d’achat proposés, sous réserve de diligence et de conditions définitives", stage: "Exploration avant ressource et acquisition de permis proposée", irr: "Aucune projection publique de rendement n’est publiée",
     summary: "Nous présentons l’acquisition et le développement proposés de PE 12423, projet d’exploration cobalt-cuivre au Lualaba. Une présentation de décembre 2025 décrit des travaux historiques et un plan de 45 M$ en deux étapes. Avant d’avancer, nous exigeons la confirmation du transfert, du titre, des données techniques et du pouvoir de transaction, ainsi qu’une ressource conforme, une faisabilité et un modèle financier indépendant.",
     highlights: ["La présentation décrit six carrés miniers couvrant environ 5,066 km²", "Historique déclaré : quatre sondages carottés, 22 sondages RC, tranchées et 1 334 échantillons de sol", "Une anomalie cuivre de 500 m sur 300 m reste une cible de forage proposée ; aucune ressource conforme n’est communiquée"],
     whyMatch: "Opportunité Investdesco précoce en minerais critiques nécessitant des diligences progressives sur le titre, la ressource, la faisabilité, l’environnement et le commerce.",
@@ -154,15 +165,15 @@ const es = Object.fromEntries(Object.entries(fr).map(([id, x]) => [id, {
     "sciress-kolwezi-12423": "Exploración previa a recursos y adquisición de permiso propuesta",
   } as Record<string, string>)[id],
   irr: ({
-    "port-de-ndomba": "Incluido en el objetivo de TIR del 17,2 % del programa Fase 1 de DESCO Global",
-    "port-de-kasenga": "Incluido en el objetivo de TIR del 17,2 % del programa Fase 1 de DESCO Global",
+    "port-de-ndomba": "No se publica ninguna proyección pública de rentabilidad",
+    "port-de-kasenga": "No se publica ninguna proyección pública de rentabilidad",
     "comicordia-mining": "No divulgado públicamente",
-    "comicordia-agri": "Incluido en el objetivo de TIR del 17,2 % del programa Fase 1 de DESCO Global",
+    "comicordia-agri": "No se publica ninguna proyección pública de rentabilidad",
     "manioc-plant": "Modelo del promotor: unos 15.444 $ por lote de 2.000 kg; supuestos no revisados independientemente",
-    "phardesco-mbuji-mayi": "Previsión a 5 años: equilibrio EBITDA en el año 2 y +3,8 M$ en el año 5",
+    "phardesco-mbuji-mayi": "No se publica ninguna proyección pública de rentabilidad",
     "waterdesco-grand-kasai": "No se divulga rentabilidad del proyecto; los materiales priorizan cubrir costes operativos",
     "tilu-pepm-8252": "No divulgado públicamente",
-    "sciress-kolwezi-12423": "Ilustración del promotor: TIR objetivo del 35 %; sin recursos conformes, viabilidad ni modelo revisado independientemente",
+    "sciress-kolwezi-12423": "No se publica ninguna proyección pública de rentabilidad",
   } as Record<string, string>)[id],
   ...esCopy[id],
 }])) as Record<string, ListingText>;
@@ -191,15 +202,15 @@ const pt = Object.fromEntries(Object.entries(fr).map(([id, x]) => [id, {
     "sciress-kolwezi-12423": "Exploração pré-recurso e aquisição de licença proposta",
   } as Record<string, string>)[id],
   irr: ({
-    "port-de-ndomba": "Incluído no objetivo de TIR de 17,2% do programa Fase 1 da DESCO Global",
-    "port-de-kasenga": "Incluído no objetivo de TIR de 17,2% do programa Fase 1 da DESCO Global",
+    "port-de-ndomba": "Não é publicada qualquer projeção pública de retorno",
+    "port-de-kasenga": "Não é publicada qualquer projeção pública de retorno",
     "comicordia-mining": "Não divulgado publicamente",
-    "comicordia-agri": "Incluído no objetivo de TIR de 17,2% do programa Fase 1 da DESCO Global",
+    "comicordia-agri": "Não é publicada qualquer projeção pública de retorno",
     "manioc-plant": "Modelo do promotor: cerca de US$15.444 por lote de 2.000 kg; pressupostos não revistos independentemente",
-    "phardesco-mbuji-mayi": "Previsão a 5 anos: equilíbrio EBITDA no ano 2 e +US$3,8 M no ano 5",
+    "phardesco-mbuji-mayi": "Não é publicada qualquer projeção pública de retorno",
     "waterdesco-grand-kasai": "Sem retorno do projeto divulgado; os materiais priorizam a cobertura dos custos operacionais",
     "tilu-pepm-8252": "Não divulgado publicamente",
-    "sciress-kolwezi-12423": "Ilustração do promotor: TIR alvo de 35%; sem recurso conforme, viabilidade ou modelo revisto independentemente",
+    "sciress-kolwezi-12423": "Não é publicada qualquer projeção pública de retorno",
   } as Record<string, string>)[id],
   ...ptCopy[id],
 }])) as Record<string, ListingText>;
@@ -223,36 +234,47 @@ const zh = Object.fromEntries(Object.entries(fr).map(([id, x]) => [id, {
     "tilu-pepm-8252": "历史勘探数据，当前矿权状态未经核验", "sciress-kolwezi-12423": "资源量确定前勘探及拟议矿权收购",
   } as Record<string, string>)[id],
   irr: ({
-    "port-de-ndomba": "纳入 DESCO Global 第一阶段计划 17.2% 的目标内部收益率",
-    "port-de-kasenga": "纳入 DESCO Global 第一阶段计划 17.2% 的目标内部收益率",
+    "port-de-ndomba": "未公开发布任何回报预测",
+    "port-de-kasenga": "未公开发布任何回报预测",
     "comicordia-mining": "尚未公开披露",
-    "comicordia-agri": "纳入 DESCO Global 第一阶段计划 17.2% 的目标内部收益率",
+    "comicordia-agri": "未公开发布任何回报预测",
     "manioc-plant": "发起方模型：每批投入 2,000 公斤，约 15,444 美元；假设未经独立审阅",
-    "phardesco-mbuji-mayi": "五年预测：第 2 年 EBITDA 盈亏平衡，第 5 年 EBITDA 约 380 万美元",
+    "phardesco-mbuji-mayi": "未公开发布任何回报预测",
     "waterdesco-grand-kasai": "未披露项目回报；发起方资料以覆盖运营成本为重点",
     "tilu-pepm-8252": "尚未公开披露",
-    "sciress-kolwezi-12423": "发起方示例：目标内部收益率 35%；未披露合规资源量、可行性研究或独立审阅模型",
+    "sciress-kolwezi-12423": "未公开发布任何回报预测",
   } as Record<string, string>)[id],
   ...zhCopy[id],
 }])) as Record<string, ListingText>;
 
 const translations = { fr, es, pt, zh } satisfies ListingTranslations;
 
+const publicReturnCopy: Record<Locale, string> = {
+  en: "No public return projection published",
+  fr: "Aucune projection publique de rendement n’est publiée",
+  es: "No se publica ninguna proyección pública de rentabilidad",
+  pt: "Não é publicada qualquer projeção pública de retorno",
+  zh: "未公开发布任何回报预测",
+};
+
 const addedProjectTranslations: ListingTranslations = {
   fr: {
     "kasaji-kisenge-solar-50mw": {
+      title: "Projet solaire et réseau électrique de Kasaji–Kisenge — 50 MW",
       sector: "Énergie", country: "RDC", instrument: "Besoin de financement de projet décrit dans la proposition technique 2023 ; structure de transaction non communiquée", stage: "Proposition technique et budget datés d’août 2023", irr: "Non communiqué publiquement",
       summary: "Nous présentons une opportunité énergétique combinant 50 MW photovoltaïques, stockage, sous-stations moyenne tension, distribution et éclairage public pour Kasaji, Kisenge et les communautés voisines. La proposition technique 2023 estime le coût à 86,2 M$ et le délai à 11 mois après signature et financement. Avant d’avancer, nous exigeons la confirmation des droits fonciers, permis, accords avec l’opérateur, demande, prix d’achat et modèle financier.",
       highlights: ["Capacité conçue : 50 MW photovoltaïques avec stockage et travaux de réseau", "Budget 2023 : 86 215 774,30 $, taxes et coûts de projet inclus", "Délai proposé : 11 mois après signature et financement", "Zone de service cible : Kasaji, Kisenge et les communautés voisines ; demande et raccordements à valider"],
       whyMatch: "Nous considérons ce projet comme une opportunité énergétique potentielle pour Investdesco, sous réserve d’une validation technique, juridique, commerciale et financière actualisée.",
     },
     "ldc-integrated-housing-drc": {
+      title: "Programme LDC de logements et d’infrastructures urbaines en RDC",
       sector: "Infrastructure", country: "RDC", instrument: "Programme proposé en partenariat public-privé et crédit logement ; structure financière non finalisée", stage: "Concept du porteur et plan de coûts préliminaire", irr: "Hypothèse du porteur : marge nette de 10 % par logement social ; modèle non examiné indépendamment",
       summary: "Nous présentons une opportunité urbaine de grande ampleur réunissant logements, voirie, réseaux, équipements publics et activités industrielles sur trois sites proposés en RDC. Le coût conceptuel est estimé à 14,64 Md$. Nous envisageons une évaluation par phases, en commençant par un périmètre réconcilié, des sites et droits fonciers confirmés, une demande testée, la participation bancaire et des coûts validés indépendamment.",
       highlights: ["Concept portant sur trois sites et plusieurs catégories de logements résidentiels, économiques et publics", "Estimation préliminaire : 14,64 Md$, dont 5 % pour le suivi-évaluation", "Mécanisme proposé : apport initial de 20 %, puis remboursement sur 15 ans au maximum", "Quantités de logements et capacités d’eau et d’électricité incohérentes dans les documents"],
       whyMatch: "Nous y voyons une plateforme urbaine potentielle pour Investdesco, sous réserve de valider le périmètre, le foncier, l’urbanisme, la demande et le financement.",
     },
     "energulf-lotshi-block": {
+      title: "Bloc d’exploration terrestre EnerGulf Lotshi",
       sector: "Énergie", country: "RDC", instrument: "Financement d’exploration et d’évaluation ; conditions non communiquées publiquement", stage: "Avant forage — titre et autorisations actuels à confirmer", irr: "Non communiqué publiquement",
       summary: "Nous présentons Lotshi comme une opportunité d’exploration terrestre couvrant une zone décrite comme faisant environ 506 km² au Kongo Central, entre Moanda et Lukula. Les documents identifient sept prospects et placent Dallas comme première cible de forage, à 1 500–2 300 mètres. Avant toute mise en relation financière, nous exigeons la confirmation du titre, de la propriété et des autorisations, l’accès aux données techniques, un budget de forage indépendant et un plan environnemental et de sécurité complet.",
       highlights: ["Zone décrite : environ 506 km² au Kongo Central", "Programme historique : 202 km de sismique réalisés en 2010", "Sept prospects identifiés ; Dallas est la première cible de forage", "Profondeur prévue : 1 500 à 2 300 mètres ; logistique via Banana, Moanda et Ntala"],
@@ -322,11 +344,15 @@ const addedProjectTranslations: ListingTranslations = {
 };
 
 export function localizeListing<T extends Listing>(listing: T, locale: Locale): T {
-  if (locale === "en") return listing;
+  if (locale === "en") return { ...listing, irr: publicReturnCopy.en };
   const translated =
     addedProjectTranslations[locale][listing.id] ??
     (translations[locale] as Record<string, ListingText>)[listing.id];
-  return translated ? { ...listing, ...translated } : listing;
+  return {
+    ...listing,
+    ...(translated ?? {}),
+    irr: publicReturnCopy[locale],
+  };
 }
 
 const evidenceLabels: Record<Exclude<Locale, "en">, Record<string, string>> = {

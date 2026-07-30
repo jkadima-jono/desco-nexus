@@ -34,6 +34,16 @@ export function summarizeEvidence(evidence: InvestmentEvidence) {
   };
 }
 
+export type EvidenceDisclosureStatus = "insufficient" | "partial" | "minimum";
+
+export function evidenceDisclosureStatus(
+  summary: ReturnType<typeof summarizeEvidence>,
+): EvidenceDisclosureStatus {
+  if (summary.supported >= 5 && summary.risksSupported >= 3) return "minimum";
+  if (summary.supported >= 4) return "partial";
+  return "insufficient";
+}
+
 const NOT_DISCLOSED = "Not publicly disclosed";
 
 const COMMON_FIELDS: EvidenceField[] = [

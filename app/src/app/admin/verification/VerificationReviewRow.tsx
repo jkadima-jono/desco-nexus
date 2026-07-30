@@ -18,6 +18,10 @@ type Listing = {
   publishedAt: string | null;
   sourceCount: number;
   hasRelatedPartyReview: boolean;
+  governanceReady: boolean;
+  relatedParty: boolean;
+  relatedPartyType: string | null;
+  relatedPartyDisclosure: string;
 };
 
 export default function VerificationReviewRow({ listing }: { listing: Listing }) {
@@ -31,6 +35,19 @@ export default function VerificationReviewRow({ listing }: { listing: Listing })
   const [govMechanism, setGovMechanism] = useState(listing.govMechanism ?? GOV_MECHANISMS[0]);
   const [govNote, setGovNote] = useState("");
   const [publicationReason, setPublicationReason] = useState("");
+  const [sponsorApprovalNote, setSponsorApprovalNote] = useState("");
+  const [sponsorSignatoryName, setSponsorSignatoryName] = useState("");
+  const [sponsorSignatoryCapacity, setSponsorSignatoryCapacity] = useState("");
+  const [sponsorApprovalEvidenceRef, setSponsorApprovalEvidenceRef] = useState("");
+  const [legalClearanceScope, setLegalClearanceScope] = useState("");
+  const [legalCounselName, setLegalCounselName] = useState("");
+  const [legalJurisdiction, setLegalJurisdiction] = useState("");
+  const [legalApprovalEvidenceRef, setLegalApprovalEvidenceRef] = useState("");
+  const [relatedPartyReviewerName, setRelatedPartyReviewerName] = useState("");
+  const [relatedPartyReviewerIndependence, setRelatedPartyReviewerIndependence] = useState("");
+  const [relatedParty, setRelatedParty] = useState(listing.relatedParty);
+  const [relatedPartyType, setRelatedPartyType] = useState(listing.relatedPartyType ?? "");
+  const [relatedPartyDisclosure, setRelatedPartyDisclosure] = useState(listing.relatedPartyDisclosure);
 
   const patch = async (body: Record<string, unknown>) => {
     setBusy(true);
@@ -50,7 +67,7 @@ export default function VerificationReviewRow({ listing }: { listing: Listing })
     router.refresh();
   };
 
-  const patchPublication = async (action: "publish" | "pause" | "withdraw" | "archive") => {
+  const patchPublication = async (action: "record_clearance" | "publish" | "pause" | "withdraw" | "archive") => {
     setBusy(true);
     setError(null);
     const res = await fetch("/api/admin/listings/" + listing.id + "/publication", {
@@ -58,6 +75,21 @@ export default function VerificationReviewRow({ listing }: { listing: Listing })
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         action,
+        ...(action === "record_clearance" ? {
+          sponsorApprovalNote,
+          sponsorSignatoryName,
+          sponsorSignatoryCapacity,
+          sponsorApprovalEvidenceRef,
+          legalClearanceScope,
+          legalCounselName,
+          legalJurisdiction,
+          legalApprovalEvidenceRef,
+          relatedPartyReviewerName,
+          relatedPartyReviewerIndependence,
+          relatedParty,
+          relatedPartyType,
+          relatedPartyDisclosure,
+        } : {}),
         ...(action === "publish" ? {} : { reason: publicationReason }),
       }),
     });
@@ -108,13 +140,36 @@ export default function VerificationReviewRow({ listing }: { listing: Listing })
           </span>
         </div>
         {listing.publicationStatus !== "public_teaser" ? (
-          <button
-            disabled={busy || listing.sourceCount === 0 || !listing.hasRelatedPartyReview}
-            onClick={() => patchPublication("publish")}
-            className="mt-3 px-3 py-1.5 rounded-lg bg-charcoal text-white text-xs font-semibold disabled:opacity-40"
-          >
-            Publish reviewed teaser
-          </button>
+          <div className="mt-3 space-y-3">
+            {!listing.governanceReady && (
+              <div className="space-y-2 rounded-xl bg-mist p-3">
+                <div className="text-[11px] font-bold uppercase tracking-wider text-wgray">Sponsor consent</div>
+                <input value={sponsorSignatoryName} onChange={(event) => setSponsorSignatoryName(event.target.value)} placeholder="Sponsor signatory name" className="w-full rounded-lg border border-charcoal/10 bg-white px-3 py-2 text-xs" />
+                <input value={sponsorSignatoryCapacity} onChange={(event) => setSponsorSignatoryCapacity(event.target.value)} placeholder="Signatory capacity or authority" className="w-full rounded-lg border border-charcoal/10 bg-white px-3 py-2 text-xs" />
+                <input value={sponsorApprovalEvidenceRef} onChange={(event) => setSponsorApprovalEvidenceRef(event.target.value)} placeholder="Approval evidence reference" className="w-full rounded-lg border border-charcoal/10 bg-white px-3 py-2 text-xs" />
+                <textarea rows={2} value={sponsorApprovalNote} onChange={(event) => setSponsorApprovalNote(event.target.value)} placeholder="Sponsor approval evidence and approved content version" className="w-full rounded-lg border border-charcoal/10 bg-white px-3 py-2 text-xs" />
+                <div className="text-[11px] font-bold uppercase tracking-wider text-wgray">Legal clearance</div>
+                <input value={legalCounselName} onChange={(event) => setLegalCounselName(event.target.value)} placeholder="Reviewing counsel name" className="w-full rounded-lg border border-charcoal/10 bg-white px-3 py-2 text-xs" />
+                <input value={legalJurisdiction} onChange={(event) => setLegalJurisdiction(event.target.value)} placeholder="Jurisdiction reviewed" className="w-full rounded-lg border border-charcoal/10 bg-white px-3 py-2 text-xs" />
+                <input value={legalApprovalEvidenceRef} onChange={(event) => setLegalApprovalEvidenceRef(event.target.value)} placeholder="Legal opinion or approval reference" className="w-full rounded-lg border border-charcoal/10 bg-white px-3 py-2 text-xs" />
+                <textarea rows={2} value={legalClearanceScope} onChange={(event) => setLegalClearanceScope(event.target.value)} placeholder="Legal clearance scope and jurisdictions reviewed" className="w-full rounded-lg border border-charcoal/10 bg-white px-3 py-2 text-xs" />
+                <div className="text-[11px] font-bold uppercase tracking-wider text-wgray">Related-party review</div>
+                <input value={relatedPartyReviewerName} onChange={(event) => setRelatedPartyReviewerName(event.target.value)} placeholder="Related-party reviewer name" className="w-full rounded-lg border border-charcoal/10 bg-white px-3 py-2 text-xs" />
+                <input value={relatedPartyReviewerIndependence} onChange={(event) => setRelatedPartyReviewerIndependence(event.target.value)} placeholder="Reviewer independence and conflicts statement" className="w-full rounded-lg border border-charcoal/10 bg-white px-3 py-2 text-xs" />
+                <label className="flex items-center gap-2 text-xs"><input type="checkbox" checked={relatedParty} onChange={(event) => setRelatedParty(event.target.checked)} />DESCO related party, mandate or advisory relationship</label>
+                {relatedParty && <input value={relatedPartyType} onChange={(event) => setRelatedPartyType(event.target.value)} placeholder="Relationship type" className="w-full rounded-lg border border-charcoal/10 bg-white px-3 py-2 text-xs" />}
+                <textarea rows={2} value={relatedPartyDisclosure} onChange={(event) => setRelatedPartyDisclosure(event.target.value)} placeholder="Concluded public related-party disclosure, or explicit no-relationship conclusion" className="w-full rounded-lg border border-charcoal/10 bg-white px-3 py-2 text-xs" />
+                <button disabled={busy} onClick={() => patchPublication("record_clearance")} className="px-3 py-1.5 rounded-lg border border-charcoal/20 bg-white text-xs font-semibold disabled:opacity-40">Record release clearances</button>
+              </div>
+            )}
+            <button
+              disabled={busy || listing.sourceCount === 0 || !listing.governanceReady}
+              onClick={() => patchPublication("publish")}
+              className="px-3 py-1.5 rounded-lg bg-charcoal text-white text-xs font-semibold disabled:opacity-40"
+            >
+              Publish reviewed teaser
+            </button>
+          </div>
         ) : (
           <div className="mt-3 space-y-2">
             <textarea
@@ -131,9 +186,9 @@ export default function VerificationReviewRow({ listing }: { listing: Listing })
             </div>
           </div>
         )}
-        {(listing.sourceCount === 0 || !listing.hasRelatedPartyReview) && listing.publicationStatus !== "public_teaser" && (
+        {(listing.sourceCount === 0 || !listing.governanceReady) && listing.publicationStatus !== "public_teaser" && (
           <p className="mt-2 text-xs text-wgray">
-            Publication requires an indexed source and a completed related-party review.
+            Publication requires a reviewed source, current sponsor approval, legal clearance and a concluded related-party review.
           </p>
         )}
       </div>

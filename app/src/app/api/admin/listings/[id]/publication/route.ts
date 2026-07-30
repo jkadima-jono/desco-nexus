@@ -1,8 +1,9 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
 import { getSessionUser } from "@/lib/auth";
+import { publicationContentHash } from "@/lib/publication-content";
 
-type PublicationAction = "publish" | "pause" | "withdraw" | "archive";
+type PublicationAction = "record_clearance" | "publish" | "pause" | "withdraw" | "archive";
 
 function appendHistory(
   historyJson: string,
@@ -25,22 +26,207 @@ export async function PATCH(
   if (user.role !== "admin") return NextResponse.json({ error: "Administrator required" }, { status: 403 });
 
   const { id } = await params;
-  const listing = await prisma.listing.findUnique({ where: { id }, include: { docs: true } });
+  const listing = await prisma.listing.findUnique({
+    where: { id },
+    include: { docs: true, sponsorConsents: true, legalClearances: true, relatedPartyReviews: true },
+  });
   if (!listing) return NextResponse.json({ error: "Listing not found" }, { status: 404 });
 
-  let body: { action?: PublicationAction; reason?: string };
+  let body: {
+    action?: PublicationAction;
+    reason?: string;
+    sponsorApprovalNote?: string;
+    legalClearanceScope?: string;
+    relatedPartyDisclosure?: string;
+    relatedPartyType?: string | null;
+    relatedParty?: boolean;
+    sponsorSignatoryName?: string;
+    sponsorSignatoryCapacity?: string;
+    sponsorApprovalEvidenceRef?: string;
+    legalCounselName?: string;
+    legalJurisdiction?: string;
+    legalApprovalEvidenceRef?: string;
+    relatedPartyReviewerName?: string;
+    relatedPartyReviewerIndependence?: string;
+  };
   try {
     body = await req.json();
   } catch {
     return NextResponse.json({ error: "Invalid JSON body" }, { status: 400 });
   }
 
+  if (body.action === "record_clearance") {
+    const sponsorApprovalNote = body.sponsorApprovalNote?.trim() ?? "";
+    const legalClearanceScope = body.legalClearanceScope?.trim() ?? "";
+    const relatedPartyDisclosure = body.relatedPartyDisclosure?.trim() ?? "";
+    const sponsorSignatoryName = body.sponsorSignatoryName?.trim() ?? "";
+    const sponsorSignatoryCapacity = body.sponsorSignatoryCapacity?.trim() ?? "";
+    const sponsorApprovalEvidenceRef = body.sponsorApprovalEvidenceRef?.trim() ?? "";
+    const legalCounselName = body.legalCounselName?.trim() ?? "";
+    const legalJurisdiction = body.legalJurisdiction?.trim() ?? "";
+    const legalApprovalEvidenceRef = body.legalApprovalEvidenceRef?.trim() ?? "";
+    const relatedPartyReviewerName = body.relatedPartyReviewerName?.trim() ?? "";
+    const relatedPartyReviewerIndependence = body.relatedPartyReviewerIndependence?.trim() ?? "";
+    if (
+      !sponsorApprovalNote ||
+      !legalClearanceScope ||
+      !relatedPartyDisclosure ||
+      !sponsorSignatoryName ||
+      !sponsorSignatoryCapacity ||
+      !sponsorApprovalEvidenceRef ||
+      !legalCounselName ||
+      !legalJurisdiction ||
+      !legalApprovalEvidenceRef ||
+      !relatedPartyReviewerName ||
+      !relatedPartyReviewerIndependence
+    ) {
+      return NextResponse.json(
+        { error: "Separate sponsor, legal and related-party reviewer identities, scope and evidence references are required" },
+        { status: 400 },
+      );
+    }
+    const reviewerIdentities = [
+      sponsorSignatoryName.toLowerCase(),
+      legalCounselName.toLowerCase(),
+      relatedPartyReviewerName.toLowerCase(),
+    ];
+    if (
+      new Set(reviewerIdentities).size !== reviewerIdentities.length ||
+      reviewerIdentities.includes(user.fullName.trim().toLowerCase())
+    ) {
+      return NextResponse.json(
+        { error: "Sponsor, counsel and related-party reviewer must be distinct from each other and from the recording administrator" },
+        { status: 409 },
+      );
+    }
+    const at = new Date();
+    const contentHash = publicationContentHash({
+      ...listing,
+      relatedParty: body.relatedParty === true,
+      relatedPartyType: body.relatedParty === true ? body.relatedPartyType?.trim() || "Relationship disclosed" : null,
+      relatedPartyDisclosure,
+    });
+    const updated = await prisma.$transaction(async (tx) => {
+      await tx.sponsorConsent.updateMany({
+        where: { listingId: id, contentVersion: listing.contentVersion, revokedAt: null },
+        data: { revokedAt: at },
+      });
+      await tx.legalClearance.updateMany({
+        where: { listingId: id, contentVersion: listing.contentVersion, revokedAt: null },
+        data: { revokedAt: at },
+      });
+      await tx.relatedPartyReview.updateMany({
+        where: { listingId: id, contentVersion: listing.contentVersion, revokedAt: null },
+        data: { revokedAt: at },
+      });
+      await tx.sponsorConsent.create({
+        data: {
+          listingId: id,
+          contentVersion: listing.contentVersion,
+          contentHash,
+          signatoryName: sponsorSignatoryName,
+          signatoryCapacity: sponsorSignatoryCapacity,
+          approvalEvidenceRef: sponsorApprovalEvidenceRef,
+          recordedBy: user.id,
+          approvedAt: at,
+        },
+      });
+      await tx.legalClearance.create({
+        data: {
+          listingId: id,
+          contentVersion: listing.contentVersion,
+          contentHash,
+          jurisdiction: legalJurisdiction,
+          scope: legalClearanceScope,
+          counselName: legalCounselName,
+          approvalEvidenceRef: legalApprovalEvidenceRef,
+          recordedBy: user.id,
+          clearedAt: at,
+        },
+      });
+      await tx.relatedPartyReview.create({
+        data: {
+          listingId: id,
+          contentVersion: listing.contentVersion,
+          contentHash,
+          relatedParty: body.relatedParty === true,
+          relationshipType: body.relatedParty === true ? body.relatedPartyType?.trim() || "Relationship disclosed" : null,
+          publicDisclosure: relatedPartyDisclosure,
+          reviewerName: relatedPartyReviewerName,
+          reviewerIndependence: relatedPartyReviewerIndependence,
+          recordedBy: user.id,
+          reviewedAt: at,
+        },
+      });
+      return tx.listing.update({
+        where: { id },
+        data: {
+          sponsorApprovedAt: at,
+          sponsorApprovedBy: user.id,
+          sponsorApprovalVersion: listing.contentVersion,
+          sponsorApprovalNote,
+          legalClearedAt: at,
+          legalClearedBy: user.id,
+          legalClearanceScope,
+          relatedParty: body.relatedParty === true,
+          relatedPartyType: body.relatedParty === true ? body.relatedPartyType?.trim() || "Relationship disclosed" : null,
+          relatedPartyDisclosure,
+          relatedPartyReviewedAt: at,
+          relatedPartyReviewedBy: user.id,
+          publicationHistory: appendHistory(listing.publicationHistory, {
+            by: user.id,
+            action: "record_clearance",
+            reason: "Separate sponsor approval, legal clearance and related-party review records created",
+            at: at.toISOString(),
+          }),
+        },
+      });
+    });
+    return NextResponse.json({ ok: true, listing: updated });
+  }
+
   if (body.action === "publish") {
-    if (!listing.relatedPartyDisclosure.trim()) {
+    const currentContentHash = publicationContentHash(listing);
+    const hasCurrentSponsorConsent = listing.sponsorConsents.some(
+      (approval) =>
+        approval.contentVersion === listing.contentVersion &&
+        approval.contentHash === currentContentHash &&
+        !approval.revokedAt,
+    );
+    const hasCurrentLegalClearance = listing.legalClearances.some(
+      (approval) =>
+        approval.contentVersion === listing.contentVersion &&
+        approval.contentHash === currentContentHash &&
+        !approval.revokedAt,
+    );
+    const hasCurrentRelatedPartyReview = listing.relatedPartyReviews.some(
+      (approval) =>
+        approval.contentVersion === listing.contentVersion &&
+        approval.contentHash === currentContentHash &&
+        !approval.revokedAt,
+    );
+    if (!hasCurrentSponsorConsent || !hasCurrentLegalClearance || !hasCurrentRelatedPartyReview) {
+      return NextResponse.json({ error: "Current separate sponsor, legal and related-party approval records are required" }, { status: 409 });
+    }
+    if (!listing.relatedPartyReviewedAt || !listing.relatedPartyReviewedBy || !listing.relatedPartyDisclosure.trim()) {
       return NextResponse.json({ error: "Related-party review is required before publication" }, { status: 409 });
     }
-    if (listing.docs.length === 0) {
-      return NextResponse.json({ error: "At least one indexed source document is required before publication" }, { status: 409 });
+    if (!listing.sponsorApprovedAt || !listing.sponsorApprovedBy || listing.sponsorApprovalVersion !== listing.contentVersion) {
+      return NextResponse.json({ error: "Sponsor approval for the current content version is required before publication" }, { status: 409 });
+    }
+    if (!listing.legalClearedAt || !listing.legalClearedBy || !listing.legalClearanceScope.trim()) {
+      return NextResponse.json({ error: "Legal clearance with a recorded scope is required before publication" }, { status: 409 });
+    }
+    const hasUsableSource = listing.docs.some(
+      (document) =>
+        document.lifecycle === "approved" &&
+        !!document.storageKey &&
+        !!document.sha256 &&
+        !!document.approvedAt &&
+        !!document.approvedBy,
+    );
+    if (!hasUsableSource) {
+      return NextResponse.json({ error: "At least one controlled, checksummed and approved source document is required before publication" }, { status: 409 });
     }
     const at = new Date();
     const updated = await prisma.listing.update({
@@ -48,9 +234,9 @@ export async function PATCH(
       data: {
         publicationStatus: "public_teaser",
         designation: listing.designation === "removed" ? "candidate" : listing.designation,
-        publishedAt: at,
+        publishedAt: listing.publishedAt ?? at,
+        lastPublishedAt: at,
         publishedBy: user.id,
-        contentVersion: { increment: 1 },
         publicationHistory: appendHistory(listing.publicationHistory, {
           by: user.id,
           action: "publish",
@@ -84,5 +270,5 @@ export async function PATCH(
     return NextResponse.json({ ok: true, reason, listing: updated });
   }
 
-  return NextResponse.json({ error: "action must be publish|pause|withdraw|archive" }, { status: 400 });
+  return NextResponse.json({ error: "action must be record_clearance|publish|pause|withdraw|archive" }, { status: 400 });
 }

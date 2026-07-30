@@ -3,6 +3,10 @@ import { prisma } from "@/lib/db";
 import { getSessionUser } from "@/lib/auth";
 import { STAGES, type Stage } from "@/lib/deals";
 import { canRequestDataRoom, forbidden } from "@/lib/authz";
+import { isPublicOpportunityId, PUBLIC_LISTING_STATUS } from "@/lib/public-listings";
+import { institutionalAccessDecision } from "@/lib/institutional-access";
+import { DEMO_NDA_HASH, DEMO_NDA_VERSION, RESTRICTED_ACCESS_NOTICE_VERSION } from "@/lib/restricted-access";
+import { Prisma } from "@prisma/client";
 
 const ACTIONS = new Set(["interested", "pass", "saved", "follow", "info_requested", "dataroom_requested"]);
 
@@ -23,7 +27,7 @@ export async function POST(req: Request) {
   if (!user) {
     return NextResponse.json({ error: "Sign in required" }, { status: 401 });
   }
-  let body: { listingId?: string; action?: string };
+  let body: { listingId?: string; action?: string; requestKey?: string; acknowledgedRestrictedAccess?: boolean; noticeVersion?: string };
   try {
     body = await req.json();
   } catch {
@@ -36,48 +40,98 @@ export async function POST(req: Request) {
       { status: 400 }
     );
   }
+  const requestKey = body.requestKey?.trim();
+  if (!requestKey || requestKey.length < 16 || requestKey.length > 100) {
+    return NextResponse.json({ error: "A valid requestKey is required." }, { status: 400 });
+  }
 
   if (action === "dataroom_requested" && !canRequestDataRoom(user)) {
     return forbidden();
   }
 
-  const listing = await prisma.listing.findUnique({ where: { id: listingId } });
+  if (!isPublicOpportunityId(listingId)) {
+    return NextResponse.json({ error: "Public opportunity not found" }, { status: 404 });
+  }
+  const listing = await prisma.listing.findFirst({
+    where: { id: listingId, publicationStatus: PUBLIC_LISTING_STATUS },
+  });
   if (!listing) {
     return NextResponse.json({ error: "Listing not found" }, { status: 404 });
   }
 
-  await prisma.matchAction.create({
-    data: {
-      userId: user.id,
-      listingId,
-      action,
-      matchScore: listing.matchScore,
-    },
-  });
-
-  // "saved" also upserts the Phase 3 enrichment record (collection/notes/
-  // tags). MatchAction above stays the append-only log; SavedOpportunity
-  // is the current-state row a user can edit or remove ("unsave").
-  if (action === "saved") {
-    await prisma.savedOpportunity.upsert({
-      where: { userId_listingId: { userId: user.id, listingId } },
-      update: {},
-      create: { userId: user.id, listingId },
-    });
+  let restrictedDecision: Awaited<ReturnType<typeof institutionalAccessDecision>> | null = null;
+  if (action === "dataroom_requested" || action === "info_requested") {
+    if (
+      body.acknowledgedRestrictedAccess !== true ||
+      body.noticeVersion !== RESTRICTED_ACCESS_NOTICE_VERSION
+    ) {
+      return NextResponse.json(
+        { error: "Current restricted-access acknowledgement is required." },
+        { status: 428 },
+      );
+    }
+    restrictedDecision = await institutionalAccessDecision(user.id);
+    if (!restrictedDecision.eligible) {
+      return NextResponse.json({ error: restrictedDecision.reason }, { status: 403 });
+    }
   }
 
-  let dealCreated = false;
-  const targetStage = ACTION_STAGE[action];
-  if (targetStage) {
-    const amount = "$" + Math.round(listing.raiseUsd / 1_000_000) + "M";
-    const existing = await prisma.deal.findUnique({
-      where: { listingId_title: { listingId, title: listing.title } },
+  const dealCreated = await prisma.$transaction(async (tx) => {
+    const prior = await tx.matchAction.findUnique({ where: { requestKey }, select: { id: true } });
+    if (prior) return false;
+    if (restrictedDecision?.eligible) {
+      await tx.accessAcknowledgement.create({
+        data: {
+          userId: user.id,
+          listingId,
+          action: action === "dataroom_requested" ? "data_room_request" : "information_request",
+          noticeVersion: RESTRICTED_ACCESS_NOTICE_VERSION,
+          jurisdiction: restrictedDecision.profile.classificationJurisdiction!,
+          classification: restrictedDecision.profile.investorClassification,
+        },
+      });
+      const demoStatusAllowed = process.env.NODE_ENV === "development" || process.env.VERCEL_ENV === "preview";
+      if (action === "dataroom_requested" && demoStatusAllowed && restrictedDecision.profile.kybStatus === "demo_verified") {
+        const existingDemoNda = await tx.ndaExecution.findFirst({
+          where: { userId: user.id, listingId, termsVersion: DEMO_NDA_VERSION, status: "demo_executed", revokedAt: null },
+          select: { id: true },
+        });
+        if (!existingDemoNda) {
+          await tx.ndaExecution.create({
+            data: {
+              userId: user.id, listingId, termsVersion: DEMO_NDA_VERSION, termsHash: DEMO_NDA_HASH,
+              signatoryName: user.fullName, signatoryCapacity: "Fictional demo persona",
+              status: "demo_executed", executionRef: "demo-environment", executedAt: new Date(),
+            },
+          });
+        }
+      }
+    }
+    await tx.matchAction.create({
+      data: { requestKey, userId: user.id, listingId, action, matchScore: listing.matchScore },
+    });
+    if (action === "saved") {
+      await tx.savedOpportunity.upsert({
+        where: { userId_listingId: { userId: user.id, listingId } },
+        update: {},
+        create: { userId: user.id, listingId },
+      });
+    }
+
+    const targetStage = ACTION_STAGE[action];
+    if (!targetStage) return false;
+    const amount = listing.currentCapitalAskUsd != null && listing.currentCapitalAskUsd > 0
+      ? "$" + Math.round(listing.currentCapitalAskUsd / 1_000_000) + "M"
+      : "Not disclosed";
+    const existing = await tx.deal.findUnique({
+      where: { investorId_listingId_title: { investorId: user.id, listingId, title: listing.title } },
     });
     const targetIdx = STAGES.indexOf(targetStage);
     if (!existing) {
-      await prisma.deal.create({
+      await tx.deal.create({
         data: {
           listingId,
+          investorId: user.id,
           title: listing.title,
           flag: listing.flag,
           amount,
@@ -87,7 +141,7 @@ export async function POST(req: Request) {
           history: JSON.stringify([{ from: null, to: targetStage, by: user.fullName, reason: null, at: new Date().toISOString() }]),
         },
       });
-      dealCreated = true;
+      return true;
     } else {
       // Only ever advance forward via this investor-driven path — never
       // regress a deal that's already further along, and never overwrite
@@ -97,13 +151,14 @@ export async function POST(req: Request) {
       if (!isTerminal && targetIdx > currentIdx) {
         const history = JSON.parse(existing.history || "[]") as unknown[];
         history.push({ from: existing.stage, to: targetStage, by: user.fullName, reason: null, at: new Date().toISOString() });
-        await prisma.deal.update({
-          where: { id: existing.id },
+        await tx.deal.updateMany({
+          where: { id: existing.id, updatedAt: existing.updatedAt },
           data: { stage: targetStage, history: JSON.stringify(history) },
         });
       }
     }
-  }
+    return false;
+  }, { isolationLevel: Prisma.TransactionIsolationLevel.Serializable });
 
   return NextResponse.json({ ok: true, dealCreated });
 }

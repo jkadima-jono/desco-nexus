@@ -11,7 +11,13 @@ export default async function AdminVerification() {
   if (user.role !== "admin") redirect("/");
 
   const listings = await prisma.listing.findMany({
-    include: { org: true, _count: { select: { docs: true } } },
+    include: {
+      org: true,
+      sponsorConsents: true,
+      legalClearances: true,
+      relatedPartyReviews: true,
+      _count: { select: { docs: true } },
+    },
     orderBy: [{ verified: "asc" }, { createdAt: "asc" }],
   });
 
@@ -46,6 +52,18 @@ export default async function AdminVerification() {
                 publishedAt: l.publishedAt ? l.publishedAt.toISOString() : null,
                 sourceCount: l._count.docs,
                 hasRelatedPartyReview: Boolean(l.relatedPartyDisclosure.trim()),
+                governanceReady: Boolean(
+                  l.sponsorApprovedAt &&
+                  l.legalClearedAt &&
+                  l.relatedPartyReviewedAt &&
+                  l.sponsorApprovalVersion === l.contentVersion &&
+                  l.sponsorConsents.some((record) => record.contentVersion === l.contentVersion && !record.revokedAt) &&
+                  l.legalClearances.some((record) => record.contentVersion === l.contentVersion && !record.revokedAt) &&
+                  l.relatedPartyReviews.some((record) => record.contentVersion === l.contentVersion && !record.revokedAt),
+                ),
+                relatedParty: l.relatedParty,
+                relatedPartyType: l.relatedPartyType,
+                relatedPartyDisclosure: l.relatedPartyDisclosure,
               }}
             />
           ))}

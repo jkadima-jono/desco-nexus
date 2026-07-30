@@ -34,10 +34,10 @@ export default async function MandatesPage() {
       <div className={"mt-4 rounded-xl px-4 py-2.5 text-xs font-semibold flex items-center justify-between gap-3 " + (atLimit ? "bg-brandred/10 text-brandred" : "bg-mist text-wgray")}>
         <span>
           {plan.maxActiveMandates === null
-            ? plan.name + " plan — unlimited active mandates"
-            : activeCount + " of " + plan.maxActiveMandates + " active mandates used (" + plan.name + " plan)"}
+            ? "Current organization access — unlimited active mandates"
+            : activeCount + " of " + plan.maxActiveMandates + " active mandates used under current organization access"}
         </span>
-        {atLimit && <Link href="/pricing" className="underline shrink-0">Upgrade</Link>}
+        {atLimit && <Link href="/contact?topic=commercial-model" className="underline shrink-0">Request expanded access</Link>}
       </div>
       <MandateManager />
     </div>

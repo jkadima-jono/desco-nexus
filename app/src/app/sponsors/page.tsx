@@ -24,7 +24,7 @@ export default async function SponsorsPage() {
         eyebrow={hero.eyebrow}
         title={hero.title}
         body={hero.body}
-        primary={{ href: "/submit-project", label: hero.primary }}
+        primary={{ href: "/contact?topic=project-submission", label: hero.primary }}
         secondary={{ href: "/contact?topic=project-submission", label: hero.secondary }}
         aside={
           <div className="briefing-card">
@@ -56,7 +56,7 @@ export default async function SponsorsPage() {
           </div>
           <div className="mt-10"><NumberedProcess items={copy.process} /></div>
           <div className="mt-8"><QuietNotice>{copy.notice}</QuietNotice></div>
-          <Link href="/submit-project" className="button-primary mt-8">{copy.startCta}</Link>
+          <Link href="/contact?topic=project-submission" className="button-primary mt-8">{copy.startCta}</Link>
         </div>
       </section>
     </>

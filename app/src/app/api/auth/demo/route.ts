@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
 import { createSessionToken, SESSION_COOKIE } from "@/lib/auth";
-import { isDemoAuthEnabled } from "@/lib/demoAuth";
+import { isDemoAdminEnabled, isDemoAuthEnabled } from "@/lib/demoAuth";
 
 // Clearly fictional, isolated demo identities. This endpoint is available only
 // in development, preview deployments, or when explicitly enabled.
@@ -59,6 +59,15 @@ export async function POST(req: Request) {
       { status: 400 }
     );
   }
+  if (
+    body.persona === "admin" &&
+    !isDemoAdminEnabled({
+      nodeEnv: process.env.NODE_ENV,
+      vercelEnv: process.env.VERCEL_ENV,
+    })
+  ) {
+    return NextResponse.json({ error: "Administrator demo is available only in local development" }, { status: 404 });
+  }
   const org = p.org
     ? await prisma.organization.findUnique({ where: { name: p.org } })
     : null;
@@ -73,6 +82,36 @@ export async function POST(req: Request) {
       orgId: org?.id ?? null,
     },
   });
+  if (body.persona === "investor") {
+    await prisma.institutionalAccessProfile.upsert({
+      where: { userId: user.id },
+      update: {
+        authorizedRepresentativeStatus: "demo_verified",
+        kybStatus: "demo_verified",
+        kycStatus: "demo_verified",
+        screeningStatus: "demo_clear",
+        investorClassification: "institutional",
+        classificationJurisdiction: "DEMO",
+        riskRating: "low",
+        reviewedBy: "demo-environment",
+        reviewedAt: new Date(),
+      },
+      create: {
+        userId: user.id,
+        legalEntityName: "Fictional demo institution",
+        jurisdiction: "DEMO",
+        authorizedRepresentativeStatus: "demo_verified",
+        kybStatus: "demo_verified",
+        kycStatus: "demo_verified",
+        screeningStatus: "demo_clear",
+        investorClassification: "institutional",
+        classificationJurisdiction: "DEMO",
+        riskRating: "low",
+        reviewedBy: "demo-environment",
+        reviewedAt: new Date(),
+      },
+    });
+  }
   const token = await createSessionToken(user.id);
   const res = NextResponse.json({ ok: true, role: user.role });
   res.cookies.set(SESSION_COOKIE, token, {

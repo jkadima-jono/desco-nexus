@@ -10,5 +10,9 @@ export async function GET() {
     include: { listing: { include: { org: true } }, collection: true },
     orderBy: { createdAt: "desc" },
   });
-  return NextResponse.json({ saved });
+  const publicSafeSaved = saved.map((item) => {
+    const { irr: _irr, whyMatch: _whyMatch, ...publicListing } = item.listing;
+    return { ...item, listing: publicListing };
+  });
+  return NextResponse.json({ saved: publicSafeSaved });
 }

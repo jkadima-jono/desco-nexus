@@ -2,11 +2,10 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { PageHero, QuietNotice, SectionHeading } from "@/components/public/PublicPrimitives";
 import { prisma, toListing } from "@/lib/db";
-import { listings as sourceListings } from "@/lib/data";
 import { getLocale } from "@/lib/i18n-server";
 import { getPublicHero } from "@/lib/public-copy";
 import ComparisonGrid from "./ComparisonGrid";
-import { investmentUi } from "@/lib/translations/investment-ui";
+import { instrumentCategoryCopy, investmentUi } from "@/lib/translations/investment-ui";
 import { localizeListing } from "@/lib/translations/listing-content";
 import { publicListingWhere } from "@/lib/public-listings";
 
@@ -34,7 +33,9 @@ function optionValues(values: string[]) {
   return ["All", ...Array.from(new Set(values)).sort()];
 }
 
-function matchesCapital(value: number, band: string) {
+function matchesCapital(value: number | null | undefined, band: string) {
+  if (band === "All") return true;
+  if (!value) return false;
   if (band !== "All" && value <= 0) return false;
   if (band === "under-10") return value < 10_000_000;
   if (band === "10-50") return value >= 10_000_000 && value < 50_000_000;
@@ -95,13 +96,11 @@ export default async function Opportunities({ searchParams }: { searchParams: Pr
     },
     orderBy: { updatedAt: "desc" },
   });
-  const allListings = rows.length > 0
-    ? rows.map((row) => ({
+  const allListings = rows.map((row) => ({
         ...toListing({ ...row, docs: [] }),
         // Public pages receive readiness only, never confidential filenames.
         docs: row.docs.length > 0 ? [{ name: "", size: "", folder: "" }] : [],
-      }))
-    : sourceListings;
+      }));
   const sectors = optionValues(allListings.map((item) => item.sector));
   const countries = optionValues(allListings.map((item) => item.country));
   const stages = optionValues(allListings.map((item) => item.stage));
@@ -115,7 +114,7 @@ export default async function Opportunities({ searchParams }: { searchParams: Pr
     if (instrument !== "All" && instrumentCategory(item.instrument) !== instrument) return false;
     if (sponsor !== "All" && item.org !== sponsor) return false;
     if (!matchesUpdated(item.updatedAt, updated)) return false;
-    if (!matchesCapital(item.raiseUsd, capital)) return false;
+    if (!matchesCapital(item.currentCapitalAskUsd, capital)) return false;
     if (disclosure === "reviewed" && !item.verified) return false;
     if (disclosure === "pending" && item.verified) return false;
     if (dataroom === "prepared" && item.docs.length === 0) return false;
@@ -123,13 +122,14 @@ export default async function Opportunities({ searchParams }: { searchParams: Pr
     return true;
   });
 
-  if (sort === "capital") listings = [...listings].sort((a, b) => b.raiseUsd - a.raiseUsd);
+  if (sort === "capital") listings = [...listings].sort((a, b) => (b.currentCapitalAskUsd ?? -1) - (a.currentCapitalAskUsd ?? -1));
   if (sort === "updated") listings = [...listings].sort((a, b) => Number(b.updatedAt ?? 0) - Number(a.updatedAt ?? 0));
   if (sort === "stage") listings = [...listings].sort((a, b) => a.stage.localeCompare(b.stage));
   const localizedListings = listings.map((listing) => localizeListing(listing, locale));
 
   function localizedOption(name: string, option: string) {
     if (option === "All") return ui.all;
+    if (name === "instrument") return instrumentCategoryCopy(locale, option);
     const source = allListings.find((listing) => {
       if (name === "sector") return listing.sector === option;
       if (name === "country") return listing.country === option;
@@ -146,7 +146,7 @@ export default async function Opportunities({ searchParams }: { searchParams: Pr
   }
 
   const selectClass = "min-h-11 w-full rounded-md border border-ink/15 bg-white px-3 py-2 text-sm text-ink focus:border-gold";
-  const labelClass = "mb-1 block text-[10px] font-bold uppercase tracking-wider text-slate";
+  const labelClass = "mb-1 block text-xs font-bold uppercase tracking-wide text-slate";
 
   return (
     <>

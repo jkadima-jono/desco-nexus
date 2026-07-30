@@ -1,8 +1,9 @@
 import { NextResponse } from "next/server";
-import { del } from "@vercel/blob";
 import { prisma } from "@/lib/db";
 import { getSessionUser } from "@/lib/auth";
 import { canManageListing, unauthorized, forbidden } from "@/lib/authz";
+import { enqueueOutbox } from "@/lib/outbox";
+import { Prisma } from "@prisma/client";
 
 async function loadAuthorized(id: string, photoId: string) {
   const user = await getSessionUser();
@@ -28,18 +29,21 @@ export async function DELETE(
   const result = await loadAuthorized(id, photoId);
   if ("error" in result) return result.error;
 
-  await del(result.image.storageKey).catch(() => {});
-  await prisma.listingImage.delete({ where: { id: photoId } });
-
-  const remaining = await prisma.listingImage.findMany({
-    where: { listingId: id },
-    orderBy: { position: "asc" },
-  });
-  await Promise.all(
-    remaining.map((img, i) =>
-      img.position === i ? null : prisma.listingImage.update({ where: { id: img.id }, data: { position: i } })
-    )
-  );
+  await prisma.$transaction(async (tx) => {
+    await tx.listingImage.delete({ where: { id: photoId } });
+    const remaining = await tx.listingImage.findMany({ where: { listingId: id }, orderBy: { position: "asc" } });
+    for (let i = 0; i < remaining.length; i += 1) {
+      if (remaining[i].position !== i) {
+        await tx.listingImage.update({ where: { id: remaining[i].id }, data: { position: i } });
+      }
+    }
+    await enqueueOutbox(tx, {
+      type: "blob.delete",
+      aggregateId: photoId,
+      eventKey: `listing-image:${photoId}:delete`,
+      payload: { storageKey: result.image.storageKey },
+    });
+  }, { isolationLevel: Prisma.TransactionIsolationLevel.Serializable });
   return NextResponse.json({ ok: true });
 }
 
@@ -63,11 +67,14 @@ export async function PATCH(
     return NextResponse.json({ error: "action must be set_cover" }, { status: 400 });
   }
   if (result.image.position !== 0) {
-    const cover = await prisma.listingImage.findFirst({ where: { listingId: id, position: 0 } });
-    if (cover) {
-      await prisma.listingImage.update({ where: { id: cover.id }, data: { position: result.image.position } });
-    }
-    await prisma.listingImage.update({ where: { id: photoId }, data: { position: 0 } });
+    await prisma.$transaction(async (tx) => {
+      const current = await tx.listingImage.findUnique({ where: { id: photoId } });
+      if (!current || current.listingId !== id || current.position === 0) return;
+      const cover = await tx.listingImage.findFirst({ where: { listingId: id, position: 0 } });
+      await tx.listingImage.update({ where: { id: photoId }, data: { position: -1 } });
+      if (cover) await tx.listingImage.update({ where: { id: cover.id }, data: { position: current.position } });
+      await tx.listingImage.update({ where: { id: photoId }, data: { position: 0 } });
+    }, { isolationLevel: Prisma.TransactionIsolationLevel.Serializable });
   }
   return NextResponse.json({ ok: true });
 }

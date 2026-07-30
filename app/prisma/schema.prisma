@@ -9,36 +9,41 @@ datasource db {
 }
 
 model User {
-  id                    String              @id @default(cuid())
-  email                 String              @unique
-  fullName              String
-  title                 String?
-  role                  String              @default("investor") // investor|owner|advisor|admin
-  orgId                 String?
-  organization          Organization?       @relation(fields: [orgId], references: [id])
-  planId                String?
-  plan                  Plan?               @relation(fields: [planId], references: [id])
-  matchActions          MatchAction[]
-  matchFeedback         MatchFeedback[]
-  mandates              StandingMandate[]
-  submissions           ProjectSubmission[]
-  collections           Collection[]
-  savedOpportunities    SavedOpportunity[]
-  dataRoomAccess        DataRoomAccess[]
-  documentDownloads     DocumentAccessLog[]
-  meetingRequests       Meeting[]
-  aiGenerations         AiGenerationLog[]
-  notifications         Notification[]
-  sessions              Session[]
-  threads               Thread[]
-  crmOwnedContacts      CrmContact[]        @relation("CrmContactOwner")
-  crmOwnedOpportunities CrmOpportunity[]    @relation("CrmOpportunityOwner")
-  crmCreatedActivities  CrmActivity[]       @relation("CrmActivityActor")
-  crmAssignedTasks      CrmTask[]           @relation("CrmTaskAssignee")
-  crmCreatedTasks       CrmTask[]           @relation("CrmTaskCreator")
+  id                     String                      @id @default(cuid())
+  email                  String                      @unique
+  fullName               String
+  title                  String?
+  role                   String                      @default("investor") // investor|owner|advisor|admin
+  orgId                  String?
+  organization           Organization?               @relation(fields: [orgId], references: [id])
+  planId                 String?
+  plan                   Plan?                       @relation(fields: [planId], references: [id])
+  matchActions           MatchAction[]
+  matchFeedback          MatchFeedback[]
+  mandates               StandingMandate[]
+  submissions            ProjectSubmission[]
+  collections            Collection[]
+  savedOpportunities     SavedOpportunity[]
+  dataRoomAccess         DataRoomAccess[]
+  documentDownloads      DocumentAccessLog[]
+  meetingRequests        Meeting[]
+  aiGenerations          AiGenerationLog[]
+  investorDeals          Deal[]                      @relation("InvestorDeals")
+  advisorDealAssignments AdvisorDealAssignment[]
+  institutionalAccess    InstitutionalAccessProfile?
+  accessAcknowledgements AccessAcknowledgement[]
+  ndaExecutions          NdaExecution[]
+  notifications          Notification[]
+  sessions               Session[]
+  threads                Thread[]
+  crmOwnedContacts       CrmContact[]                @relation("CrmContactOwner")
+  crmOwnedOpportunities  CrmOpportunity[]            @relation("CrmOpportunityOwner")
+  crmCreatedActivities   CrmActivity[]               @relation("CrmActivityActor")
+  crmAssignedTasks       CrmTask[]                   @relation("CrmTaskAssignee")
+  crmCreatedTasks        CrmTask[]                   @relation("CrmTaskCreator")
   // Null until the address is proven by consuming a login link. Never set
   // by registration alone — see lib/loginToken.ts.
-  emailVerifiedAt       DateTime?
+  emailVerifiedAt        DateTime?
 }
 
 // Single-use, short-lived email sign-in link. Keyed by email rather than
@@ -103,17 +108,18 @@ model Plan {
 }
 
 model Organization {
-  id               String               @id @default(cuid())
-  name             String               @unique
-  type             String // investor|seeker|advisor|government
-  country          String
-  listings         Listing[]
-  users            User[]
-  contracts        CommercialContract[]
-  crmContacts      CrmContact[]
-  crmOpportunities CrmOpportunity[]
-  crmActivities    CrmActivity[]
-  crmTasks         CrmTask[]
+  id                          String                       @id @default(cuid())
+  name                        String                       @unique
+  type                        String // investor|seeker|advisor|government
+  country                     String
+  listings                    Listing[]
+  users                       User[]
+  contracts                   CommercialContract[]
+  crmContacts                 CrmContact[]
+  crmOpportunities            CrmOpportunity[]
+  crmActivities               CrmActivity[]
+  crmTasks                    CrmTask[]
+  institutionalAccessProfiles InstitutionalAccessProfile[]
 }
 
 // Sales-assisted organization agreement. It records the approved commercial
@@ -143,59 +149,76 @@ model CommercialContract {
 }
 
 model Listing {
-  id                     String             @id // slug
-  orgId                  String
-  org                    Organization       @relation(fields: [orgId], references: [id])
-  title                  String
-  sector                 String
-  sectorColor            String
-  country                String
-  flag                   String
-  raiseUsd               Int
-  instrument             String
-  stage                  String
-  irr                    String
-  summary                String
-  useOfFunds             String? // carried from ProjectSubmission at publish time
-  fundingSecuredUsd      Int? // carried from ProjectSubmission at publish time
-  sponsorContributionUsd Int? // carried from ProjectSubmission at publish time
-  // Publication is fail-closed for newly approved submissions. Catalogue
-  // imports explicitly set public_teaser after their reviewed source packet
-  // and disclosure metadata have been attached.
-  publicationStatus      String             @default("internal_review") // draft|internal_review|public_teaser|paused|withdrawn|archived
-  designation            String             @default("candidate") // candidate|flagship_ready|paused|removed
-  publishedAt            DateTime?
-  publishedBy            String?
-  contentVersion         Int                @default(1)
-  publicationHistory     String             @default("[]") // [{by,action,reason?,at}]
-  sourceSubmissionId     String?
-  relatedParty           Boolean            @default(false)
-  relatedPartyType       String?
-  relatedPartyDisclosure String             @default("")
-  verified               Boolean            @default(false)
-  verifiedBy             String? // admin fullName — real reviewer, not a fabricated vendor
-  verifiedAt             DateTime?
-  verificationNote       String             @default("") // evidence description recorded at verify/unverify time
-  verificationHistory    String             @default("[]") // [{by,action,note,governmentBacked?,govMechanism?,at}]
-  governmentBacked       Boolean            @default(false)
-  govMechanism           String? // guarantee|concession|ppa|grant|letter|first-loss|tax|other
-  matchScore             Int
-  readiness              Int
-  esg                    Int
-  risk                   Int
-  highlights             String // JSON array
-  whyMatch               String
-  docs                   Document[]
-  images                 ListingImage[]
-  matchActions           MatchAction[]
-  matchFeedback          MatchFeedback[]
-  deals                  Deal[]
-  savedBy                SavedOpportunity[]
-  dataRoomAccess         DataRoomAccess[]
-  meetings               Meeting[]
-  crmOpportunities       CrmOpportunity[]
-  createdAt              DateTime           @default(now())
-  updatedAt              DateTime           @default(now()) @updatedAt
+  id                      String                  @id // slug
+  orgId                   String
+  org                     Organization            @relation(fields: [orgId], references: [id])
+  title                   String
+  sector                  String
+  sectorColor             String
+  country                 String
+  flag                    String
+  raiseUsd                Int
+  instrument              String
+  stage                   String
+  irr                     String
+  summary                 String
+  useOfFunds              String? // carried from ProjectSubmission at publish time
+  fundingSecuredUsd       Int? // carried from ProjectSubmission at publish time
+  sponsorContributionUsd  Int? // carried from ProjectSubmission at publish time
+  estimatedProjectCostUsd Int? // sponsor estimate; never presented as a current financing ask
+  currentCapitalAskUsd    Int? // current sponsor-approved financing ask; null means not disclosed
+  // Publication is fail-closed. Catalogue imports always prepare records for
+  // internal review; only the governed publication API can publish a teaser.
+  publicationStatus       String                  @default("internal_review") // draft|internal_review|public_teaser|paused|withdrawn|archived
+  designation             String                  @default("candidate") // candidate|flagship_ready|paused|removed
+  publishedAt             DateTime?
+  lastPublishedAt         DateTime?
+  publishedBy             String?
+  contentVersion          Int                     @default(1)
+  publicationHistory      String                  @default("[]") // [{by,action,reason?,at}]
+  sourceSubmissionId      String?
+  relatedParty            Boolean                 @default(false)
+  relatedPartyType        String?
+  relatedPartyDisclosure  String                  @default("")
+  contactInquiries        ContactInquiry[]
+  relatedPartyReviewedAt  DateTime?
+  relatedPartyReviewedBy  String?
+  sponsorApprovedAt       DateTime?
+  sponsorApprovedBy       String?
+  sponsorApprovalVersion  Int?
+  sponsorApprovalNote     String                  @default("")
+  legalClearedAt          DateTime?
+  legalClearedBy          String?
+  legalClearanceScope     String                  @default("")
+  verified                Boolean                 @default(false)
+  verifiedBy              String? // admin fullName — real reviewer, not a fabricated vendor
+  verifiedAt              DateTime?
+  verificationNote        String                  @default("") // evidence description recorded at verify/unverify time
+  verificationHistory     String                  @default("[]") // [{by,action,note,governmentBacked?,govMechanism?,at}]
+  governmentBacked        Boolean                 @default(false)
+  govMechanism            String? // guarantee|concession|ppa|grant|letter|first-loss|tax|other
+  matchScore              Int
+  readiness               Int
+  esg                     Int
+  risk                    Int
+  highlights              String // JSON array
+  whyMatch                String
+  docs                    Document[]
+  images                  ListingImage[]
+  matchActions            MatchAction[]
+  matchFeedback           MatchFeedback[]
+  deals                   Deal[]
+  savedBy                 SavedOpportunity[]
+  dataRoomAccess          DataRoomAccess[]
+  meetings                Meeting[]
+  crmOpportunities        CrmOpportunity[]
+  sponsorConsents         SponsorConsent[]
+  legalClearances         LegalClearance[]
+  relatedPartyReviews     RelatedPartyReview[]
+  accessAcknowledgements  AccessAcknowledgement[]
+  ndaExecutions           NdaExecution[]
+  createdAt               DateTime                @default(now())
+  updatedAt               DateTime                @default(now()) @updatedAt
 }
 
 model Document {
@@ -220,6 +243,11 @@ model Document {
   sha256           String?
   pageCount        Int?
   reviewNote       String              @default("")
+  scanStatus       String              @default("pending") // pending|clean|infected|error|not_required
+  scanProviderRef  String?
+  scanCheckedAt    DateTime?
+  scanNote         String              @default("")
+  blobUploadedAt   DateTime?
   approvedBy       String?
   approvedAt       DateTime?
   receivedAt       DateTime            @default(now())
@@ -230,23 +258,116 @@ model Document {
   @@index([listingId, visibility, lifecycle])
 }
 
-// Explicit per-investor data-room grant (Phase 5). Deliberately separate
-// from Deal.stage: a Deal is one row per listing (the sponsor's internal
-// pipeline entry) and cannot represent per-investor authorization. This
-// table is the actual security boundary for confidential documents; the
-// "Data-Room Requested"/"Data-Room Granted" Deal stages remain a coarse
-// pipeline/forecast signal, unchanged by this table.
+model OutboxEvent {
+  id          String    @id @default(cuid())
+  eventKey    String?   @unique
+  type        String
+  aggregateId String?
+  payload     String    @default("{}")
+  status      String    @default("pending") // pending|processing|completed|failed
+  attempts    Int       @default(0)
+  availableAt DateTime  @default(now())
+  lockedAt    DateTime?
+  processedAt DateTime?
+  lastError   String    @default("")
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @default(now()) @updatedAt
+
+  @@index([status, availableAt])
+  @@index([type, createdAt])
+}
+
+model MaintenanceRun {
+  id          String    @id @default(cuid())
+  kind        String
+  status      String
+  summary     String    @default("{}")
+  startedAt   DateTime  @default(now())
+  completedAt DateTime?
+
+  @@index([kind, startedAt])
+}
+
+// Explicit per-investor data-room grant. Deliberately separate from the
+// per-investor Deal pipeline: this table is the security boundary for
+// confidential documents and remains independently revocable.
 model DataRoomAccess {
-  id        String    @id @default(cuid())
-  listingId String
-  listing   Listing   @relation(fields: [listingId], references: [id])
-  userId    String
-  user      User      @relation(fields: [userId], references: [id])
-  grantedBy String // fullName of the sponsor/admin who granted access
-  createdAt DateTime  @default(now())
-  revokedAt DateTime?
+  id             String        @id @default(cuid())
+  listingId      String
+  listing        Listing       @relation(fields: [listingId], references: [id])
+  userId         String
+  user           User          @relation(fields: [userId], references: [id])
+  ndaExecutionId String?
+  ndaExecution   NdaExecution? @relation(fields: [ndaExecutionId], references: [id])
+  grantedBy      String // fullName of the sponsor/admin who granted access
+  createdAt      DateTime      @default(now())
+  revokedAt      DateTime?
 
   @@unique([listingId, userId])
+}
+
+// Institutional access is deliberately fail-closed. These records describe
+// review state; their presence never means that a review has been completed.
+model InstitutionalAccessProfile {
+  id                             String        @id @default(cuid())
+  userId                         String        @unique
+  user                           User          @relation(fields: [userId], references: [id])
+  organizationId                 String?
+  organization                   Organization? @relation(fields: [organizationId], references: [id])
+  legalEntityName                String?
+  registrationNumber             String?
+  jurisdiction                   String?
+  authorizedRepresentativeStatus String        @default("pending") // pending|verified|demo_verified|rejected|expired
+  kybStatus                      String        @default("pending") // pending|in_review|verified|demo_verified|rejected|expired
+  kycStatus                      String        @default("pending") // pending|in_review|verified|demo_verified|rejected|expired
+  screeningStatus                String        @default("pending") // pending|in_review|clear|demo_clear|review_required|rejected|expired
+  investorClassification         String        @default("unclassified") // unclassified|institutional|professional|accredited|eligible_counterparty|not_eligible
+  classificationJurisdiction     String?
+  riskRating                     String        @default("unrated") // unrated|low|medium|high|prohibited
+  providerReference              String?
+  reviewedBy                     String?
+  reviewedAt                     DateTime?
+  expiresAt                      DateTime?
+  createdAt                      DateTime      @default(now())
+  updatedAt                      DateTime      @default(now()) @updatedAt
+
+  @@index([organizationId, kybStatus, screeningStatus])
+}
+
+model AccessAcknowledgement {
+  id             String   @id @default(cuid())
+  userId         String
+  user           User     @relation(fields: [userId], references: [id])
+  listingId      String
+  listing        Listing  @relation(fields: [listingId], references: [id])
+  action         String // information_request|data_room_request
+  noticeVersion  String
+  jurisdiction   String
+  classification String
+  acknowledgedAt DateTime @default(now())
+
+  @@index([userId, listingId, action])
+}
+
+model NdaExecution {
+  id                String           @id @default(cuid())
+  userId            String
+  user              User             @relation(fields: [userId], references: [id])
+  listingId         String
+  listing           Listing          @relation(fields: [listingId], references: [id])
+  termsVersion      String
+  termsHash         String
+  signatoryName     String
+  signatoryCapacity String
+  status            String           @default("pending") // pending|executed|demo_executed|revoked|expired
+  executionRef      String?
+  executedAt        DateTime?
+  expiresAt         DateTime?
+  revokedAt         DateTime?
+  createdAt         DateTime         @default(now())
+  dataRoomGrants    DataRoomAccess[]
+
+  @@index([userId, listingId, status])
 }
 
 // Audit trail of confidential document downloads — who accessed what and
@@ -262,6 +383,7 @@ model DocumentAccessLog {
 
 model MatchAction {
   id         String   @id @default(cuid())
+  requestKey String?  @unique
   userId     String
   user       User     @relation(fields: [userId], references: [id])
   listingId  String
@@ -349,30 +471,104 @@ model AiGenerationLog {
 }
 
 model Deal {
-  id            String            @id @default(cuid())
-  listingId     String
-  listing       Listing           @relation(fields: [listingId], references: [id])
-  capitalCalls  CapitalCall[]
-  distributions Distribution[]
-  updates       PortfolioUpdate[]
-  title         String
-  flag          String
-  amount        String
-  stage         String // see lib/deals.ts STAGES — 12-stage lifecycle
-  parentId      String?
-  parent        Deal?             @relation("Tranches", fields: [parentId], references: [id])
-  tranches      Deal[]            @relation("Tranches")
-  kind          String            @default("opportunity") // opportunity|equity-tranche|debt-tranche|workstream
-  history       String            @default("[]") // [{from,to,by,reason,at}]
-  probability   Int? // override, else stage default
-  owner         String
-  nextStep      String
-  dueDate       DateTime?
-  decisionNotes String            @default("[]") // [{by,note,at}]
-  createdAt     DateTime          @default(now())
-  updatedAt     DateTime          @default(now()) @updatedAt
+  id                 String                  @id @default(cuid())
+  listingId          String
+  listing            Listing                 @relation(fields: [listingId], references: [id])
+  investorId         String?
+  investor           User?                   @relation("InvestorDeals", fields: [investorId], references: [id])
+  advisorAssignments AdvisorDealAssignment[]
+  capitalCalls       CapitalCall[]
+  distributions      Distribution[]
+  updates            PortfolioUpdate[]
+  title              String
+  flag               String
+  amount             String
+  stage              String // see lib/deals.ts STAGES — 12-stage lifecycle
+  parentId           String?
+  parent             Deal?                   @relation("Tranches", fields: [parentId], references: [id])
+  tranches           Deal[]                  @relation("Tranches")
+  kind               String                  @default("opportunity") // opportunity|equity-tranche|debt-tranche|workstream
+  history            String                  @default("[]") // [{from,to,by,reason,at}]
+  probability        Int? // override, else stage default
+  owner              String
+  nextStep           String
+  dueDate            DateTime?
+  decisionNotes      String                  @default("[]") // [{by,note,at}]
+  createdAt          DateTime                @default(now())
+  updatedAt          DateTime                @default(now()) @updatedAt
 
-  @@unique([listingId, title])
+  @@unique([investorId, listingId, title])
+  @@index([listingId])
+}
+
+model AdvisorDealAssignment {
+  id         String    @id @default(cuid())
+  advisorId  String
+  advisor    User      @relation(fields: [advisorId], references: [id])
+  dealId     String
+  deal       Deal      @relation(fields: [dealId], references: [id])
+  assignedBy String
+  createdAt  DateTime  @default(now())
+  revokedAt  DateTime?
+
+  @@unique([advisorId, dealId])
+  @@index([dealId, revokedAt])
+}
+
+model SponsorConsent {
+  id                   String    @id @default(cuid())
+  listingId            String
+  listing              Listing   @relation(fields: [listingId], references: [id])
+  contentVersion       Int
+  contentHash          String
+  signatoryName        String
+  signatoryCapacity    String
+  approvalEvidenceRef  String
+  approvalEvidenceHash String?
+  recordedBy           String
+  approvedAt           DateTime
+  revokedAt            DateTime?
+  createdAt            DateTime  @default(now())
+
+  @@index([listingId, contentVersion, revokedAt])
+}
+
+model LegalClearance {
+  id                   String    @id @default(cuid())
+  listingId            String
+  listing              Listing   @relation(fields: [listingId], references: [id])
+  contentVersion       Int
+  contentHash          String
+  jurisdiction         String
+  scope                String
+  counselName          String
+  approvalEvidenceRef  String
+  approvalEvidenceHash String?
+  recordedBy           String
+  clearedAt            DateTime
+  revokedAt            DateTime?
+  createdAt            DateTime  @default(now())
+
+  @@index([listingId, contentVersion, revokedAt])
+}
+
+model RelatedPartyReview {
+  id                   String    @id @default(cuid())
+  listingId            String
+  listing              Listing   @relation(fields: [listingId], references: [id])
+  contentVersion       Int
+  contentHash          String
+  relatedParty         Boolean
+  relationshipType     String?
+  publicDisclosure     String
+  reviewerName         String
+  reviewerIndependence String
+  recordedBy           String
+  reviewedAt           DateTime
+  revokedAt            DateTime?
+  createdAt            DateTime  @default(now())
+
+  @@index([listingId, contentVersion, revokedAt])
 }
 
 model Thread {
@@ -466,6 +662,8 @@ model ListingImage {
   caption    String?
   position   Int      @default(0)
   createdAt  DateTime @default(now())
+
+  @@unique([listingId, position])
 }
 
 model StandingMandate {
@@ -544,14 +742,34 @@ model InvestorEngagement {
 }
 
 model ContactInquiry {
-  id           String   @id @default(cuid())
-  name         String
-  email        String
-  organization String?
-  topic        String   @default("general") // general|investor-access|project-submission|data-room|institutional-partnership|government-dfi|inaccurate-information|technical-support
-  message      String
-  status       String   @default("new") // new|read
-  createdAt    DateTime @default(now())
+  id                   String          @id @default(cuid())
+  requestKey           String?         @unique
+  name                 String
+  email                String
+  organization         String?
+  topic                String          @default("general") // general|investor-access|project-submission|data-room|institutional-partnership|commercial-model|government-dfi|inaccurate-information|technical-support
+  message              String
+  status               String          @default("new") // new|read|triaged|qualified|converted|closed|spam
+  locale               String          @default("en")
+  projectId            String?
+  project              Listing?        @relation(fields: [projectId], references: [id], onDelete: SetNull)
+  sourcePath           String          @default("/contact")
+  referrer             String?
+  campaignSource       String?
+  campaignMedium       String?
+  campaignName         String?
+  acknowledgedAt       DateTime?
+  contactNoticeVersion String?
+  retentionEndsAt      DateTime?
+  crmContactId         String?
+  crmContact           CrmContact?     @relation(fields: [crmContactId], references: [id], onDelete: SetNull)
+  crmOpportunityId     String?
+  crmOpportunity       CrmOpportunity? @relation(fields: [crmOpportunityId], references: [id], onDelete: SetNull)
+  createdAt            DateTime        @default(now())
+  updatedAt            DateTime        @default(now()) @updatedAt
+
+  @@index([status, createdAt])
+  @@index([email])
 }
 
 // Privacy-minimised product telemetry. Events intentionally omit names,
@@ -596,6 +814,7 @@ model CrmContact {
   opportunities  CrmOpportunity[]
   activities     CrmActivity[]
   tasks          CrmTask[]
+  inquiries      ContactInquiry[]
   createdAt      DateTime         @default(now())
   updatedAt      DateTime         @default(now()) @updatedAt
 
@@ -605,28 +824,29 @@ model CrmContact {
 }
 
 model CrmOpportunity {
-  id              String        @id @default(cuid())
+  id              String           @id @default(cuid())
   name            String
   organizationId  String?
-  organization    Organization? @relation(fields: [organizationId], references: [id])
+  organization    Organization?    @relation(fields: [organizationId], references: [id])
   contactId       String?
-  contact         CrmContact?   @relation(fields: [contactId], references: [id])
+  contact         CrmContact?      @relation(fields: [contactId], references: [id])
   listingId       String?
-  listing         Listing?      @relation(fields: [listingId], references: [id])
+  listing         Listing?         @relation(fields: [listingId], references: [id])
   ownerId         String?
-  owner           User?         @relation("CrmOpportunityOwner", fields: [ownerId], references: [id])
-  stage           String        @default("identified")
-  status          String        @default("open")
-  valueUsd        Decimal?      @db.Decimal(18, 2)
-  currency        String        @default("USD")
-  probability     Int           @default(10)
-  nextStep        String        @default("")
+  owner           User?            @relation("CrmOpportunityOwner", fields: [ownerId], references: [id])
+  stage           String           @default("identified")
+  status          String           @default("open")
+  valueUsd        Decimal?         @db.Decimal(18, 2)
+  currency        String           @default("USD")
+  probability     Int              @default(10)
+  nextStep        String           @default("")
   expectedCloseAt DateTime?
-  history         String        @default("[]")
+  history         String           @default("[]")
   activities      CrmActivity[]
   tasks           CrmTask[]
-  createdAt       DateTime      @default(now())
-  updatedAt       DateTime      @default(now()) @updatedAt
+  inquiries       ContactInquiry[]
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @default(now()) @updatedAt
 
   @@index([stage, status])
   @@index([ownerId, status])

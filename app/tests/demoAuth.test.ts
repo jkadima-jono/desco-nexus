@@ -1,6 +1,6 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { isDemoAuthEnabled } from "../src/lib/demoAuth";
+import { isDemoAdminEnabled, isDemoAuthEnabled } from "../src/lib/demoAuth";
 
 test("demo authentication is available in development and preview", () => {
   assert.equal(isDemoAuthEnabled({ nodeEnv: "development" }), true);
@@ -25,13 +25,19 @@ test("production demo authentication stays disabled without explicit approval", 
   );
 });
 
-test("the explicit flag activates demo personas in production", () => {
+test("an explicit flag cannot activate demo personas in production", () => {
   assert.equal(
     isDemoAuthEnabled({
       nodeEnv: "production",
       vercelEnv: "production",
       explicitFlag: "true",
     }),
-    true
+    false
   );
+});
+
+test("the administrator persona is local-only", () => {
+  assert.equal(isDemoAdminEnabled({ nodeEnv: "development" }), true);
+  assert.equal(isDemoAdminEnabled({ nodeEnv: "production", vercelEnv: "preview" }), false);
+  assert.equal(isDemoAdminEnabled({ nodeEnv: "production", vercelEnv: "production" }), false);
 });

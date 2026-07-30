@@ -2,6 +2,7 @@ import Link from "next/link";
 import type { Pillar } from "@/lib/pillars";
 import { pillarIcon } from "@/lib/theme";
 import Reveal from "./Reveal";
+import Image from "next/image";
 
 export default function PillarCard({ pillar, index = 0, learnMore = "Learn more" }: { pillar: Pillar; index?: number; learnMore?: string }) {
   return (
@@ -11,14 +12,16 @@ export default function PillarCard({ pillar, index = 0, learnMore = "Learn more"
         className="group block bg-white rounded-2xl p-6 h-full shadow-[0_1px_3px_rgb(44_62_80/0.08)] hover:shadow-[0_12px_32px_rgb(44_62_80/0.14)] transition-shadow focus-visible:ring-2 focus-visible:ring-gold"
       >
         <div
-          className="w-12 h-12 rounded-full flex items-center justify-center mb-4 p-1.5"
+          className="relative mb-4 flex h-12 w-12 items-center justify-center overflow-hidden rounded-full p-1.5"
           style={{ background: pillar.color }}
         >
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
+          <Image
             src={pillarIcon(pillar.slug)}
             alt=""
-            className="w-full h-full rounded-full object-cover bg-white"
+            width={48}
+            height={48}
+            sizes="48px"
+            className="h-full w-full rounded-full bg-white object-cover"
           />
         </div>
         <h3 className="font-display font-bold text-lg mb-1.5">{pillar.name}</h3>

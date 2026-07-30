@@ -1,4 +1,9 @@
-export default function Loading() {
+import { getLocale } from "@/lib/i18n-server";
+
+const loadingCopy = { en: "Loading page", fr: "Chargement de la page", es: "Cargando la página", pt: "A carregar a página", zh: "页面加载中" } as const;
+
+export default async function Loading() {
+  const locale = await getLocale();
   return (
     <div role="status" aria-live="polite" className="min-h-[55vh] bg-ivory">
       <div className="public-container py-12">
@@ -9,7 +14,7 @@ export default function Loading() {
           <div className="h-48 animate-pulse rounded-xl border border-charcoal/8 bg-white" />
           <div className="h-48 animate-pulse rounded-xl border border-charcoal/8 bg-white" />
         </div>
-        <span className="sr-only">Loading page</span>
+        <span className="sr-only">{loadingCopy[locale]}</span>
       </div>
     </div>
   );

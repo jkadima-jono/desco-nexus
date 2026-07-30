@@ -2,7 +2,8 @@ import { redirect } from "next/navigation";
 import { prisma, toListing } from "@/lib/db";
 import { getSessionUser } from "@/lib/auth";
 import MatchFlow from "./MatchFlow";
-import { PUBLIC_LISTING_STATUS } from "@/lib/public-listings";
+import { publicListingWhere } from "@/lib/public-listings";
+import { sanitizePublicListing } from "@/lib/data";
 
 export const dynamic = "force-dynamic";
 
@@ -16,11 +17,11 @@ export default async function Match() {
   const actedIds = acted.map((a) => a.listingId);
   const rows = await prisma.listing.findMany({
     where: {
-      publicationStatus: PUBLIC_LISTING_STATUS,
-      ...(actedIds.length ? { id: { notIn: actedIds } } : {}),
+      ...publicListingWhere,
+      ...(actedIds.length ? { id: { in: publicListingWhere.id.in.filter((id) => !actedIds.includes(id)) } } : {}),
     },
     include: { org: true, images: true },
     orderBy: { updatedAt: "desc" },
   });
-  return <MatchFlow queue={rows.map(toListing)} />;
+  return <MatchFlow queue={rows.map(toListing).map(sanitizePublicListing)} />;
 }

@@ -144,7 +144,7 @@ export default async function PillarsIndex() {
       <section className="bg-mist py-16 lg:py-20">
         <div className="max-w-4xl mx-auto px-6 lg:px-8 grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
           <Reveal><StatCounter value={750} suffix="M" label={copy.stats[0]} /></Reveal>
-          <Reveal delay={80}><StatCounter value={17} suffix=".2%" label={copy.stats[1]} /></Reveal>
+          <Reveal delay={80}><StatCounter value={4} label={copy.stats[1]} /></Reveal>
           <Reveal delay={160}><StatCounter value={100000} suffix="+" label={copy.stats[2]} /></Reveal>
           <Reveal delay={240}><StatCounter value={2500000} label={copy.stats[3]} /></Reveal>
         </div>

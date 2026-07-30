@@ -4,6 +4,7 @@ const required = [
   "SESSION_SECRET",
   "BLOB_READ_WRITE_TOKEN",
   "NEXT_PUBLIC_SITE_URL",
+  "CRON_SECRET",
 ] as const;
 
 const missing = required.filter((name) => !process.env[name]?.trim());
@@ -23,8 +24,14 @@ if (siteUrl.hostname === "desco.global" || siteUrl.hostname === "www.desco.globa
   throw new Error("NEXT_PUBLIC_SITE_URL must use the Compass application domain, not the corporate website.");
 }
 
-if (process.env.VERCEL_ENV === "production" && process.env.DEMO_AUTH_ENABLED !== "true") {
-  throw new Error("Production has no usable sign-in path. Set DEMO_AUTH_ENABLED=true until verified email sign-in is approved.");
+if (process.env.VERCEL_ENV === "production" && process.env.DEMO_AUTH_ENABLED === "true") {
+  throw new Error("DEMO_AUTH_ENABLED must not be true in production.");
+}
+if (
+  process.env.CONFIDENTIAL_UPLOADS_ENABLED === "true" &&
+  !process.env.DOCUMENT_SCANNER_PROVIDER?.trim()
+) {
+  throw new Error("Confidential uploads require a configured DOCUMENT_SCANNER_PROVIDER.");
 }
 
 console.log(`Production configuration verified for ${siteUrl.origin}.`);

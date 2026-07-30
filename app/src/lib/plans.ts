@@ -1,14 +1,14 @@
 import type { User, Plan } from "@prisma/client";
 import { prisma } from "./db";
 
-// Product-defined pricing tiers. Seeded once via scripts/seed-plans.ts,
-// never created through the UI.
+// Legacy entitlement profiles. Commercial terms live on organization
+// contracts; these records define limits only and are not public prices.
 export const PLAN_SEED = [
   { name: "Free", priceUsdPerMonth: 0, maxActiveMandates: 3, maxCollections: 1, sortOrder: 0,
     description: "Discover opportunities, up to 3 active mandates, 1 saved collection." },
-  { name: "Professional", priceUsdPerMonth: 199, maxActiveMandates: 20, maxCollections: 10, sortOrder: 1,
+  { name: "Professional", priceUsdPerMonth: 0, maxActiveMandates: 20, maxCollections: 10, sortOrder: 1,
     description: "Higher mandate and collection limits for active investors." },
-  { name: "Institutional", priceUsdPerMonth: 999, maxActiveMandates: null, maxCollections: null, sortOrder: 2,
+  { name: "Institutional", priceUsdPerMonth: 0, maxActiveMandates: null, maxCollections: null, sortOrder: 2,
     description: "Unlimited mandates and collections for institutional teams." },
 ] as const;
 

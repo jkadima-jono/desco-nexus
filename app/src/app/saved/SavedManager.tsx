@@ -11,7 +11,7 @@ type SavedItem = {
   notes: string;
   tags: string;
   collectionId: string | null;
-  listing: { title: string; sector: string; country: string; flag: string; raiseUsd: number; instrument: string; org: { name: string } };
+  listing: { title: string; sector: string; country: string; flag: string; currentCapitalAskUsd: number | null; instrument: string; org: { name: string } };
 };
 type Collection = { id: string; name: string };
 
@@ -108,7 +108,7 @@ export default function SavedManager() {
                 <div className="flex-1 min-w-0">
                   <a href={projectHref(s.listingId)} className="font-display font-bold hover:underline">{s.listing.title}</a>
                   <div className="text-xs text-wgray mt-0.5">
-                    {s.listing.flag} {s.listing.country} · {s.listing.sector} · {fmtUsd(s.listing.raiseUsd)} · {s.listing.org.name}
+                    {s.listing.flag} {s.listing.country} · {s.listing.sector} · {s.listing.currentCapitalAskUsd ? fmtUsd(s.listing.currentCapitalAskUsd) : "Current ask not disclosed"} · {s.listing.org.name}
                   </div>
 
                   <div className="grid sm:grid-cols-2 gap-3 mt-3">

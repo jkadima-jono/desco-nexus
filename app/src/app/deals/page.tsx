@@ -35,28 +35,20 @@ const daysIn = (since: Date) =>
 // role can see:
 //   admin   — everything (correct today, unchanged)
 //   owner   — only deals for listings their own org owns
-//   investor/advisor — only deals for listings they've personally engaged
-//     with (derived from MatchAction, since Deal has no investorId — it's
-//     one row per listing, the sponsor's internal pipeline entry, not a
-//     per-investor engagement record)
-// "advisor" specifically has no real data-model link to specific deals
-// anywhere in the schema; reusing the investor-engagement query is a
-// deliberate, safe-by-default interim (see none-by-default fallback
-// below) rather than a confirmed product rule — flagging for follow-up.
+//   investor — only their own per-investor deal records
+//   advisor — only deals assigned explicitly to them; no assignment means
+//     no access. Listing-level engagement is never a deal authorization.
 async function visibleDealsWhere(user: User): Promise<Prisma.DealWhereInput> {
   if (user.role === "admin") return {};
   if (user.role === "owner") {
     if (!user.orgId) return { id: "__none__" };
     return { listing: { orgId: user.orgId } };
   }
-  const engaged = await prisma.matchAction.findMany({
-    where: { userId: user.id },
-    select: { listingId: true },
-    distinct: ["listingId"],
-  });
-  const listingIds = engaged.map((e) => e.listingId);
-  if (listingIds.length === 0) return { id: "__none__" };
-  return { listingId: { in: listingIds } };
+  if (user.role === "investor") return { investorId: user.id };
+  if (user.role === "advisor") {
+    return { advisorAssignments: { some: { advisorId: user.id, revokedAt: null } } };
+  }
+  return { id: "__none__" };
 }
 
 export default async function Deals() {
@@ -64,11 +56,6 @@ export default async function Deals() {
   if (!user) redirect("/login?next=/deals");
   const locale = await getLocale();
   const deals = await prisma.deal.findMany({ where: await visibleDealsWhere(user), orderBy: { createdAt: "asc" } });
-  const totalM = deals.reduce(
-    (a, d) => a + (parseInt(d.amount.replace(/[^0-9]/g, ""), 10) || 0),
-    0
-  );
-
   return (
     <div className="px-4 sm:px-6 lg:px-8 py-6 lg:py-8">
       <div className="flex items-end justify-between mb-6 max-w-7xl">
@@ -77,16 +64,8 @@ export default async function Deals() {
             {t(locale, "deals.title")}
           </h1>
           <p className="text-wgray text-sm mt-1">
-            {deals.length} {t(locale, "deals.active")} · ${totalM}M {t(locale, "deals.inMotion")}
+            {deals.length} {t(locale, "deals.active")} {t(locale, "deals.inMotion")}
           </p>
-        </div>
-        <div className="flex gap-6 text-right">
-          <div>
-            <div className="font-display font-extrabold text-2xl text-gold">
-              ${Math.round(totalM * 0.32)}M
-            </div>
-            <div className="text-[11px] text-wgray uppercase tracking-wider font-bold">{t(locale, "deals.forecast")}</div>
-          </div>
         </div>
       </div>
 

@@ -28,6 +28,8 @@ export function toListing(
     country: row.country,
     flag: row.flag,
     raiseUsd: row.raiseUsd,
+    estimatedProjectCostUsd: row.estimatedProjectCostUsd,
+    currentCapitalAskUsd: row.currentCapitalAskUsd,
     instrument: row.instrument,
     stage: normalizeStage(row.stage),
     irr: row.irr,

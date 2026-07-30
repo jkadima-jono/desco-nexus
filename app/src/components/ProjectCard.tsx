@@ -3,10 +3,10 @@ import type { Listing } from "@/lib/data";
 import { capitalPresentation, isDescoRelatedOpportunity } from "@/lib/data";
 import HeroVisual from "./HeroVisual";
 import SectorBadge from "./SectorBadge";
-import { getInvestmentEvidence, summarizeEvidence } from "@/lib/investment-evidence";
+import { evidenceDisclosureStatus, getInvestmentEvidence, summarizeEvidence } from "@/lib/investment-evidence";
 import { sectorForeground } from "@/lib/theme";
 import type { Locale } from "@/lib/i18n";
-import { investmentUi } from "@/lib/translations/investment-ui";
+import { disclosureStatusCopy, investmentUi, localizedCapitalPresentation } from "@/lib/translations/investment-ui";
 import { localizeListing } from "@/lib/translations/listing-content";
 import { projectHref } from "@/lib/project-slugs";
 
@@ -30,13 +30,15 @@ export default function ProjectCard({
   const verificationScope = listing.verified
     ? ui.reviewed
     : ui.pending;
-  const capital = capitalPresentation(listing);
+  const capital = localizedCapitalPresentation(locale, capitalPresentation(listing));
+  const capitalValue = capital.value;
   const accessibleName = [
     listing.title,
     listing.country,
-    `${listing.raiseUsd > 0 ? ui.capitalSought : ui.capitalNotDisclosed}: ${capital.value}`,
+    `${capital.label}: ${capital.value}`,
   ].filter(Boolean).join(", ");
   const evidence = summarizeEvidence(getInvestmentEvidence(listing));
+  const disclosureStatus = disclosureStatusCopy(locale, evidenceDisclosureStatus(evidence));
 
   return (
     <Link
@@ -67,31 +69,31 @@ export default function ProjectCard({
       </div>
 
       <div className="p-4 sm:p-5 sm:pt-4">
-        <div className="flex items-center gap-2 text-[11px] font-bold uppercase tracking-wider text-wgray mb-2">
-          <span>{listing.stage}</span>
+        <div className="mb-2 flex min-h-9 items-start gap-2 text-[11px] font-bold uppercase leading-4 tracking-wider text-wgray">
+          <span className="break-words">{listing.stage}</span>
         </div>
 
         <p className="line-clamp-2 text-sm leading-relaxed text-wgray">{listing.summary}</p>
 
-        <div className="mt-4 flex items-end justify-between gap-4">
-          <div>
-            <div className="font-display font-extrabold text-2xl leading-none">
-              {capital.value}
+        <div className="mt-4 grid gap-4 sm:grid-cols-[minmax(0,1fr)_minmax(8rem,auto)] sm:items-end">
+          <div className="min-w-0">
+            <div className="break-words font-display text-2xl font-extrabold leading-tight">
+              {capitalValue}
             </div>
-            <div className="mt-1 text-xs font-semibold text-slate">{listing.raiseUsd > 0 ? ui.capitalSought : ui.capitalNotDisclosed}</div>
+            <div className="mt-1 text-xs font-semibold text-slate">{capital.label}</div>
             <div className="mt-1 line-clamp-1 text-xs text-wgray">{listing.instrument}</div>
           </div>
-          <div className="text-right text-[11px] text-wgray">
-            <div className="font-semibold text-charcoal">{listing.org}</div>
+          <div className="min-w-0 text-left text-[11px] text-wgray sm:text-right">
+            <div className="break-words font-semibold text-charcoal">{listing.org}</div>
             <div>{ui.sponsor}</div>
           </div>
         </div>
 
-        <div className="mt-4 flex items-center justify-between border-t border-charcoal/10 pt-3 text-xs text-wgray">
-          <span className={`line-clamp-1 ${listing.verified ? "text-gold font-semibold" : ""}`}>
+        <div className="mt-4 grid gap-1 border-t border-charcoal/10 pt-3 text-xs text-wgray sm:grid-cols-[minmax(0,1fr)_auto] sm:gap-3">
+          <span className={listing.verified ? "font-semibold text-gold" : ""}>
             {listing.verified && "✓ "}{verificationScope}
           </span>
-          <span>{ui.updated} {formatUpdated(listing.updatedAt, locale)}</span>
+          <span className="sm:text-right">{ui.updated} {formatUpdated(listing.updatedAt, locale)}</span>
         </div>
 
         {isDescoRelatedOpportunity(listing) && (
@@ -100,9 +102,9 @@ export default function ProjectCard({
           </div>
         )}
 
-        <div className="mt-3 flex items-center justify-between gap-3">
-          <span className="line-clamp-1 rounded-full border border-charcoal/15 bg-mist px-2.5 py-1 text-xs font-bold text-slate">
-            {ui.evidence} {evidence.supported}/{evidence.total} · {ui.risks} {evidence.risksSupported}/{evidence.risksTotal}
+        <div className="mt-3 flex flex-col items-start justify-between gap-3 sm:flex-row sm:items-center">
+          <span className="rounded-full border border-charcoal/15 bg-mist px-2.5 py-1 text-xs font-bold leading-5 text-slate">
+            {disclosureStatus}
           </span>
           <span className="flex items-center gap-1.5 text-sm font-bold text-charcoal group-hover:text-gold">
             {ui.review} <span aria-hidden="true">→</span>

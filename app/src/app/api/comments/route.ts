@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
 import { getSessionUser } from "@/lib/auth";
+import { canParticipateInListing } from "@/lib/listing-participation";
 
 export async function GET(req: Request) {
   const listingId = new URL(req.url).searchParams.get("listingId");
@@ -11,8 +12,9 @@ export async function GET(req: Request) {
   if (!user) {
     return NextResponse.json({ error: "Sign in required" }, { status: 401 });
   }
-  if (!user) {
-    return NextResponse.json({ error: "Sign in required" }, { status: 401 });
+  const listing = await prisma.listing.findUnique({ where: { id: listingId } });
+  if (!listing || !(await canParticipateInListing(user, listing))) {
+    return NextResponse.json({ error: "Listing not found" }, { status: 404 });
   }
   const comments = await prisma.comment.findMany({
     where: { listingId, parentId: null },
@@ -68,7 +70,7 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "Comment too long (max 2000)" }, { status: 400 });
   }
   const listing = await prisma.listing.findUnique({ where: { id: body.listingId } });
-  if (!listing) {
+  if (!listing || !(await canParticipateInListing(user, listing))) {
     return NextResponse.json({ error: "Listing not found" }, { status: 404 });
   }
   if (body.parentId) {

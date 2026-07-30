@@ -24,6 +24,13 @@ test("every public listing has a translated summary in every supported locale", 
   }
 });
 
+test("every public listing has a French presentation title", () => {
+  for (const listing of listings) {
+    const localized = localizeListing(listing, "fr");
+    assert.notEqual(localized.title, listing.title, `${listing.id} must have a French title`);
+  }
+});
+
 test("English project summaries use DESCO voice instead of detached promoter copy", () => {
   const detachedVoice = /\b(the sponsor proposes|sponsor materials describe|sponsor proposes)\b/i;
   for (const listing of listings) {

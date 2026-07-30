@@ -32,7 +32,7 @@ export async function POST(req: Request) {
     const count = await prisma.collection.count({ where: { userId: user.id } });
     if (count >= plan.maxCollections) {
       return NextResponse.json(
-        { error: "Your " + plan.name + " plan allows up to " + plan.maxCollections + " collection(s). Upgrade to create another." },
+        { error: "Your current workspace allowance supports up to " + plan.maxCollections + " collection(s). Request expanded access to create another." },
         { status: 402 }
       );
     }

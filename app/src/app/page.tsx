@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import ProjectCard from "@/components/ProjectCard";
 import { prisma, toListing } from "@/lib/db";
-import { capitalPresentation, fmtUsd, listings as sourceListings, type Listing } from "@/lib/data";
+import { capitalPresentation, fmtUsd, type Listing } from "@/lib/data";
 import { getSessionUser } from "@/lib/auth";
 import { getLocale } from "@/lib/i18n-server";
 import { t } from "@/lib/i18n";
@@ -15,7 +15,9 @@ import {
   SectionHeading,
 } from "@/components/public/PublicPrimitives";
 import { projectHref } from "@/lib/project-slugs";
-import { publicListingWhere } from "@/lib/public-listings";
+import { orderPublicOpportunities, publicListingWhere } from "@/lib/public-listings";
+import { localizeListing } from "@/lib/translations/listing-content";
+import { investmentUi, localizedCapitalPresentation } from "@/lib/translations/investment-ui";
 
 export const dynamic = "force-dynamic";
 
@@ -24,8 +26,10 @@ export async function generateMetadata(): Promise<Metadata> {
   return { ...metadata, alternates: { canonical: "/" } };
 }
 
-function FeaturedBrief({ listing, copy }: { listing: Listing; copy: HomeMarketingCopy }) {
-  const capital = capitalPresentation(listing);
+function FeaturedBrief({ listing, copy, locale }: { listing: Listing; copy: HomeMarketingCopy; locale: Awaited<ReturnType<typeof getLocale>> }) {
+  const capital = localizedCapitalPresentation(locale, capitalPresentation(listing));
+  const ui = investmentUi(locale);
+  const capitalValue = capital.amountUsd != null ? capital.value : ui.compare.notDisclosed;
   return (
     <div className="overflow-hidden rounded-xl border border-white/14 bg-white text-ink shadow-2xl shadow-black/25">
       <div className="bg-gradient-to-br from-ink to-navy p-5 text-white">
@@ -39,7 +43,7 @@ function FeaturedBrief({ listing, copy }: { listing: Listing; copy: HomeMarketin
       <div className="grid grid-cols-2 border-b border-ink/10">
         <div className="border-r border-ink/10 p-4">
           <p className="text-xs font-bold text-slate">{capital.includeInProjectTotal ? copy.capitalSought : capital.label}</p>
-          <p className="mt-1 font-display text-2xl font-extrabold">{capital.value}</p>
+          <p className="mt-1 break-words font-display text-2xl font-extrabold">{capitalValue}</p>
         </div>
         <div className="p-4">
           <p className="text-[10px] font-bold uppercase tracking-wider text-slate">{copy.projectStage}</p>
@@ -83,10 +87,14 @@ export default async function Home() {
     orderBy: { updatedAt: "desc" },
     take: 6,
   });
-  const listings = rows.length > 0 ? rows.map(toListing) : sourceListings;
-  const featured = listings.slice(0, 6);
+  const listings = rows.map(toListing);
+  const featured = orderPublicOpportunities(listings).slice(0, 4);
+  const localizedFeatured = featured.map((listing) => localizeListing(listing, locale));
   const totalProjectCapital = featured.reduce(
-    (sum, listing) => sum + (capitalPresentation(listing).includeInProjectTotal ? listing.raiseUsd : 0),
+    (sum, listing) => {
+      const capital = capitalPresentation(listing);
+      return sum + (capital.includeInProjectTotal ? (capital.amountUsd ?? 0) : 0);
+    },
     0,
   );
 
@@ -106,13 +114,13 @@ export default async function Home() {
                 </p>
                 <div className="mt-8 flex flex-wrap gap-3">
                   <Link href="/opportunities" className="button-primary">{t(locale, "home.review")}</Link>
-                  <Link href="/submit-project" className="button-on-dark">{t(locale, "nav.submitProject")}</Link>
+                  <Link href="/contact?topic=project-submission" className="button-on-dark">{t(locale, "nav.submitProject")}</Link>
                 </div>
                 <Link href="/diligence" className="mt-4 inline-flex min-h-11 items-center text-sm font-semibold text-white/70 underline decoration-white/25 underline-offset-4 hover:text-gold">
                   {t(locale, "home.diligence")}
                 </Link>
               </div>
-              <FeaturedBrief listing={featured[0]} copy={copy} />
+              {localizedFeatured[0] && <FeaturedBrief listing={localizedFeatured[0]} copy={copy} locale={locale} />}
             </div>
           </section>
 
@@ -171,7 +179,7 @@ export default async function Home() {
           </div>
 
           <div className="mt-10 grid gap-5 lg:grid-cols-2">
-            {featured.map((listing, index) => (
+            {localizedFeatured.map((listing, index) => (
               <ProjectCard key={listing.id} listing={listing} index={index} locale={locale} />
             ))}
           </div>

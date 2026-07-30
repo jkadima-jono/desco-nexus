@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { trackProductEvent } from "@/components/ProductAnalytics";
+import { RESTRICTED_ACCESS_NOTICE_VERSION } from "@/lib/restricted-access";
 
 export default function RequestInfoButton({
   listingId,
@@ -21,12 +22,31 @@ export default function RequestInfoButton({
   const [state, setState] = useState<"idle" | "busy" | "done">("idle");
 
   const send = async () => {
+    const restrictedAction = action === "dataroom_requested" || action === "info_requested";
+    if (
+      restrictedAction &&
+      !window.confirm(
+        "This is a non-binding request for controlled information. It is not an offer, investment commitment or grant of access. Continue and record this acknowledgement?",
+      )
+    ) {
+      return;
+    }
     setState("busy");
     try {
       const res = await fetch("/api/match", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ listingId, action }),
+        body: JSON.stringify({
+          listingId,
+          action,
+          requestKey: crypto.randomUUID(),
+          ...(restrictedAction
+            ? {
+                acknowledgedRestrictedAccess: true,
+                noticeVersion: RESTRICTED_ACCESS_NOTICE_VERSION,
+              }
+            : {}),
+        }),
       });
       if (res.ok) {
         const event = action === "dataroom_requested"

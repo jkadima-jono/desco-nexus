@@ -2,8 +2,10 @@ import { NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
 import { getSessionUser } from "@/lib/auth";
 import { canManageListing, unauthorized, forbidden } from "@/lib/authz";
-import { notify, notifyOrg } from "@/lib/notifications";
 import { projectHref } from "@/lib/project-slugs";
+import { enqueueOutbox } from "@/lib/outbox";
+import { processOutbox } from "@/lib/outbox-worker";
+import { logOperationalEvent } from "@/lib/observability";
 
 // Sponsor/admin confirm a proposed slot (or decline); the requester may
 // cancel their own request while it's still pending.
@@ -46,22 +48,38 @@ export async function PATCH(
     }
   }
 
-  const updated = await prisma.meeting.update({
-    where: { id },
-    data: {
-      status: body.status,
-      confirmedSlot: body.status === "confirmed" ? new Date(body.confirmedSlot!) : null,
-    },
-  });
-
   const link = projectHref(meeting.listingId) + "#meetings";
-  if (body.status === "confirmed") {
-    await notify(meeting.requesterId, "meeting_confirmed", "Meeting confirmed", "Your meeting request for \"" + meeting.listing.title + "\" was confirmed.", link);
-  } else if (body.status === "declined") {
-    await notify(meeting.requesterId, "meeting_declined", "Meeting declined", "Your meeting request for \"" + meeting.listing.title + "\" was declined.", link);
-  } else if (body.status === "cancelled") {
-    await notifyOrg(meeting.listing.orgId, user.id, "meeting_cancelled", "Meeting request cancelled", meeting.listing.title + ": the requester cancelled their meeting request.", link);
+  const updated = await prisma.$transaction(async (tx) => {
+    const changed = await tx.meeting.updateMany({
+      where: { id, status: "requested" },
+      data: {
+        status: body.status,
+        confirmedSlot: body.status === "confirmed" ? new Date(body.confirmedSlot!) : null,
+      },
+    });
+    if (changed.count !== 1) return null;
+    const common = { type: "", title: "", body: "", link };
+    if (body.status === "confirmed") {
+      Object.assign(common, { type: "meeting_confirmed", title: "Meeting confirmed", body: `Your meeting request for "${meeting.listing.title}" was confirmed.` });
+      await enqueueOutbox(tx, { type: "notification.user", aggregateId: id, eventKey: `meeting:${id}:confirmed`, payload: { ...common, userId: meeting.requesterId } });
+    } else if (body.status === "declined") {
+      Object.assign(common, { type: "meeting_declined", title: "Meeting declined", body: `Your meeting request for "${meeting.listing.title}" was declined.` });
+      await enqueueOutbox(tx, { type: "notification.user", aggregateId: id, eventKey: `meeting:${id}:declined`, payload: { ...common, userId: meeting.requesterId } });
+    } else {
+      Object.assign(common, { type: "meeting_cancelled", title: "Meeting request cancelled", body: `${meeting.listing.title}: the requester cancelled their meeting request.` });
+      await enqueueOutbox(tx, { type: "notification.org", aggregateId: id, eventKey: `meeting:${id}:cancelled`, payload: { ...common, orgId: meeting.listing.orgId, excludeUserId: user.id } });
+    }
+    return tx.meeting.findUniqueOrThrow({ where: { id } });
+  });
+  if (!updated) {
+    return NextResponse.json({ error: "Meeting was updated by another request. Refresh and retry." }, { status: 409 });
   }
+  await processOutbox(10).catch((error) => {
+    logOperationalEvent("warn", "outbox.opportunistic_processing_failed", {
+      source: "meeting",
+      errorType: error instanceof Error ? error.name : "unknown",
+    });
+  });
 
   return NextResponse.json({ ok: true, meeting: updated });
 }

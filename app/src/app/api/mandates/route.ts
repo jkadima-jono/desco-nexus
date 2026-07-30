@@ -100,7 +100,7 @@ export async function POST(req: Request) {
     const activeCount = await prisma.standingMandate.count({ where: { userId: user.id, active: true } });
     if (activeCount >= plan.maxActiveMandates) {
       return NextResponse.json(
-        { error: "Your " + plan.name + " plan allows up to " + plan.maxActiveMandates + " active mandates. Upgrade or deactivate one to add another." },
+        { error: "Your current workspace allowance supports up to " + plan.maxActiveMandates + " active mandates. Request expanded access or deactivate one to add another." },
         { status: 402 }
       );
     }
@@ -190,7 +190,7 @@ export async function PATCH(req: Request) {
       const activeCount = await prisma.standingMandate.count({ where: { userId: user.id, active: true } });
       if (activeCount >= plan.maxActiveMandates) {
         return NextResponse.json(
-          { error: "Your " + plan.name + " plan allows up to " + plan.maxActiveMandates + " active mandates. Upgrade or deactivate one to reactivate this one." },
+          { error: "Your current workspace allowance supports up to " + plan.maxActiveMandates + " active mandates. Request expanded access or deactivate one to reactivate this one." },
           { status: 402 }
         );
       }

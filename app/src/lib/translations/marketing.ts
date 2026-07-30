@@ -137,7 +137,7 @@ const en: MarketingCopy = {
     sponsorProvided: "Sponsor-provided", dataRoom: "Data room", readinessNotPublic: "Readiness not public",
     reviewOpportunity: "Review opportunity", investorBenefits: ["Review structured public opportunities", "Match opportunities against your mandate", "Request deeper due diligence only when justified"],
     sponsorBenefits: ["Prepare an institutional listing", "Control access to confidential information", "Coordinate qualified investor engagement"],
-    capitalRepresented: "Capital represented in displayed teasers", sponsorFigures: "Sponsor-provided figures",
+    capitalRepresented: "Total disclosed project capital across published opportunities", sponsorFigures: "Sponsor-provided figures",
     processEyebrow: "Investor due diligence pathway", processTitle: "A controlled path from screening to deeper review.",
     processBody: "We support screening, information exchange and engagement. Investors remain responsible for their own legal, financial, technical and commercial due diligence.",
     process: [
@@ -308,7 +308,7 @@ const fr: MarketingCopy = {
     featured: "Présentation d’une opportunité", publicTeaser: "Présentation publique", capitalSought: "Capital recherché", projectStage: "Stade du projet", sector: "Secteur", location: "Localisation", disclosure: "Divulgation", sponsorProvided: "Fourni par le porteur", dataRoom: "Data room", readinessNotPublic: "État de préparation non public", reviewOpportunity: "Examiner l’opportunité",
     investorBenefits: ["Examiner les opportunités publiques structurées", "Comparer les opportunités à votre mandat", "Demander une diligence approfondie uniquement lorsqu’elle est justifiée"],
     sponsorBenefits: ["Préparer un dossier institutionnel", "Contrôler l’accès aux informations confidentielles", "Coordonner les échanges avec des investisseurs qualifiés"],
-    capitalRepresented: "Capital présenté dans les fiches affichées", sponsorFigures: "Chiffres fournis par les porteurs",
+    capitalRepresented: "Capital total communiqué pour les opportunités publiées", sponsorFigures: "Chiffres fournis par les porteurs",
     processEyebrow: "Parcours de diligence investisseur", processTitle: "Un parcours contrôlé, du filtrage à l’examen approfondi.", processBody: "Nous organisons le filtrage, l’échange d’informations et les prises de contact. Les investisseurs restent responsables de leur propre diligence juridique, financière, technique et commerciale.",
     process: [
       { title: "Examiner la présentation publique", body: "Évaluer la thèse, le besoin en capital, le porteur, le stade, les risques et le niveau de divulgation." },
@@ -468,7 +468,7 @@ function completeTranslation(locale: "es" | "pt" | "zh"): MarketingCopy {
         tr("Controlar el acceso a la información confidencial", "Controlar o acesso à informação confidencial", "控制保密信息访问"),
         tr("Coordinar la relación con inversores cualificados", "Coordenar o contacto com investidores qualificados", "协调与合格投资者的沟通"),
       ],
-      capitalRepresented: tr("Capital de proyecto incluido en las fichas mostradas", "Capital de projeto incluído nas fichas apresentadas", "所展示项目简介中的项目融资需求"),
+      capitalRepresented: tr("Capital total divulgado de las oportunidades publicadas", "Capital total divulgado das oportunidades publicadas", "已发布机会披露的项目融资总额"),
       sponsorFigures: tr("Cifras proporcionadas por los promotores", "Valores fornecidos pelos promotores", "项目发起方提供的数据"),
       processEyebrow: tr("Proceso de diligencia del inversor", "Processo de diligência do investidor", "投资者尽调流程"),
       processTitle: tr("Un proceso controlado desde la selección hasta la revisión detallada.", "Um processo controlado desde a seleção até à análise aprofundada.", "从初步筛选到深入审查的受控流程。"),

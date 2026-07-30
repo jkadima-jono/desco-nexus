@@ -4,7 +4,13 @@ import { useState } from "react";
 import Link from "next/link";
 import { trackProductEvent } from "@/components/ProductAnalytics";
 import type { Locale } from "@/lib/i18n";
-import { contactLegalAcknowledgement, investmentUi } from "@/lib/translations/investment-ui";
+import { CONTACT_NOTICE_VERSION } from "@/lib/legal-consent";
+import {
+  contactCollectionPaused,
+  contactEmailFallback,
+  contactLegalAcknowledgement,
+  investmentUi,
+} from "@/lib/translations/investment-ui";
 
 const TOPICS = [
   { value: "general", label: "General inquiry" },
@@ -18,7 +24,17 @@ const TOPICS = [
   { value: "technical-support", label: "Technical support" },
 ];
 
-export default function ContactForm({ initialTopic = "general", projectId, locale }: { initialTopic?: string; projectId?: string; locale: Locale }) {
+export default function ContactForm({
+  initialTopic = "general",
+  projectId,
+  locale,
+  collectionEnabled,
+}: {
+  initialTopic?: string;
+  projectId?: string;
+  locale: Locale;
+  collectionEnabled: boolean;
+}) {
   const ui = investmentUi(locale).contact;
   const legalUi = contactLegalAcknowledgement(locale);
   const [name, setName] = useState("");
@@ -30,6 +46,31 @@ export default function ContactForm({ initialTopic = "general", projectId, local
   const [error, setError] = useState<string | null>(null);
   const [sent, setSent] = useState(false);
   const [acknowledged, setAcknowledged] = useState(false);
+  const [started, setStarted] = useState(false);
+  const [requestKey] = useState(() => crypto.randomUUID());
+
+  const markStarted = () => {
+    if (started) return;
+    setStarted(true);
+    trackProductEvent("contact_started", { topic, locale, hasProject: Boolean(projectId) });
+  };
+
+  if (!collectionEnabled) {
+    return (
+      <div className="rounded-3xl border border-gold/30 bg-white p-8 text-charcoal shadow-[0_12px_32px_rgb(0_0_0/0.35)]">
+        <p className="text-sm leading-7">{contactCollectionPaused(locale)}</p>
+        <a
+          href={`mailto:support@desco.global?subject=${encodeURIComponent(ui.topics[topic] ?? ui.topics.general)}${projectId ? `&body=${encodeURIComponent(`Project: ${projectId}`)}` : ""}`}
+          className="button-primary mt-6"
+        >
+          {contactEmailFallback(locale)}
+        </a>
+        <Link href="/legal" className="button-secondary mt-6">
+          {legalUi.legalStatus}
+        </Link>
+      </div>
+    );
+  }
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -39,17 +80,38 @@ export default function ContactForm({ initialTopic = "general", projectId, local
       const res = await fetch("/api/contact", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, email, organization, topic, message: projectId ? `[Project: ${projectId}]\n${message}` : message }),
+        body: JSON.stringify({
+          name,
+          email,
+          organization,
+          topic,
+          message,
+          projectId,
+          locale,
+          sourcePath: window.location.pathname,
+          referrer: document.referrer,
+          campaignSource: new URLSearchParams(window.location.search).get("utm_source"),
+          campaignMedium: new URLSearchParams(window.location.search).get("utm_medium"),
+          campaignName: new URLSearchParams(window.location.search).get("utm_campaign"),
+          requestKey,
+          acknowledgedContactNotice: acknowledged,
+          contactNoticeVersion: CONTACT_NOTICE_VERSION,
+        }),
       });
       const data = await res.json();
       if (!res.ok) {
-        setError(data.error ?? ui.retry);
+        setError(data.code === "RATE_LIMITED" ? ui.retry : ui.retry);
+        trackProductEvent("contact_error", { topic, locale, status: res.status });
         return;
       }
-      trackProductEvent("contact_submitted", { topic });
+      trackProductEvent("contact_submitted", { topic, locale, hasProject: Boolean(projectId) });
+      if (topic === "investor-access" || topic === "data-room") {
+        trackProductEvent("access_requested", { topic, locale, hasProject: Boolean(projectId) });
+      }
       setSent(true);
     } catch {
       setError(ui.network);
+      trackProductEvent("contact_error", { topic, locale, status: "network" });
     } finally {
       setBusy(false);
     }
@@ -70,14 +132,16 @@ export default function ContactForm({ initialTopic = "general", projectId, local
   }
 
   return (
-    <form onSubmit={submit} className="bg-white rounded-3xl p-8 shadow-[0_12px_32px_rgb(0_0_0/0.35)] space-y-4">
+    <form onSubmit={submit} onFocus={markStarted} className="bg-white rounded-3xl p-8 shadow-[0_12px_32px_rgb(0_0_0/0.35)] space-y-4">
       <div className="grid sm:grid-cols-2 gap-4">
         <div>
-          <label htmlFor="name" className="block text-[11px] font-bold uppercase tracking-wider text-wgray mb-1.5">
+          <label htmlFor="name" className="block text-xs font-bold uppercase tracking-wider text-wgray mb-1.5">
             {ui.fullName}
           </label>
           <input
             id="name"
+            name="name"
+            autoComplete="name"
             required
             value={name}
             onChange={(e) => setName(e.target.value)}
@@ -85,11 +149,13 @@ export default function ContactForm({ initialTopic = "general", projectId, local
           />
         </div>
         <div>
-          <label htmlFor="email" className="block text-[11px] font-bold uppercase tracking-wider text-wgray mb-1.5">
+          <label htmlFor="email" className="block text-xs font-bold uppercase tracking-wider text-wgray mb-1.5">
             {ui.email}
           </label>
           <input
             id="email"
+            name="email"
+            autoComplete="email"
             type="email"
             required
             value={email}
@@ -99,18 +165,20 @@ export default function ContactForm({ initialTopic = "general", projectId, local
         </div>
       </div>
       <div>
-        <label htmlFor="organization" className="block text-[11px] font-bold uppercase tracking-wider text-wgray mb-1.5">
+        <label htmlFor="organization" className="block text-xs font-bold uppercase tracking-wider text-wgray mb-1.5">
           {ui.organization} <span className="normal-case font-normal text-wgray/70">({ui.optional})</span>
         </label>
         <input
           id="organization"
+          name="organization"
+          autoComplete="organization"
           value={organization}
           onChange={(e) => setOrganization(e.target.value)}
           className="w-full bg-mist rounded-xl px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-gold"
         />
       </div>
       <div>
-        <label htmlFor="topic" className="block text-[11px] font-bold uppercase tracking-wider text-wgray mb-1.5">
+        <label htmlFor="topic" className="block text-xs font-bold uppercase tracking-wider text-wgray mb-1.5">
           {ui.topic}
         </label>
         <select
@@ -125,7 +193,7 @@ export default function ContactForm({ initialTopic = "general", projectId, local
         </select>
       </div>
       <div>
-        <label htmlFor="message" className="block text-[11px] font-bold uppercase tracking-wider text-wgray mb-1.5">
+        <label htmlFor="message" className="block text-xs font-bold uppercase tracking-wider text-wgray mb-1.5">
           {ui.message}
         </label>
         <textarea

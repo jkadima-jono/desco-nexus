@@ -8,6 +8,7 @@ import StatCounter from "@/components/story/StatCounter";
 import Timeline from "@/components/story/Timeline";
 import { getLocale } from "@/lib/i18n-server";
 import { getPillarsLegal } from "@/lib/translations/pillars-legal";
+import Image from "next/image";
 
 export function generateStaticParams() {
   return PILLARS.map((p) => ({ slug: p.slug }));
@@ -61,11 +62,13 @@ export default async function PillarPage({
           <Reveal>
             <div className="flex items-center gap-3 mb-4">
               <div className="w-14 h-14 rounded-full bg-white p-1.5 shadow-[0_4px_16px_rgb(0_0_0/0.25)]">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
+                <Image
                   src={pillarIcon(pillar.slug)}
                   alt=""
-                  className="w-full h-full rounded-full object-cover"
+                  width={56}
+                  height={56}
+                  sizes="56px"
+                  className="h-full w-full rounded-full object-cover"
                 />
               </div>
               <p className="font-bold text-xs uppercase tracking-[0.2em] text-white/80">
@@ -181,7 +184,7 @@ export default async function PillarPage({
                 {copy.detail.engageBody}
               </p>
               <Link
-                href="/login"
+                href="/contact?topic=institutional-partnership"
                 className="block text-center bg-gold text-ink font-display font-bold text-sm py-3 rounded-xl hover:brightness-110"
               >
                 {copy.detail.signIn}

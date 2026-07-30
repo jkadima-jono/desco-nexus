@@ -11,6 +11,10 @@ const routes = [
   "/opportunities",
   "/project/agridesco-grand-kasai",
   "/login",
+  "/api/health/live",
+  "/api/health/ready",
+  "/legal",
+  "/contact",
   "/sitemap.xml",
 ];
 
@@ -38,9 +42,26 @@ for (const route of routes) {
     if (route === "/project/agridesco-grand-kasai" && !body.includes("Agridesco")) {
       failures.push(`${route}: Agridesco project content missing`);
     }
+    if (route === "/api/health/live" && !body.includes('"status":"live"')) {
+      failures.push(`${route}: liveness contract missing`);
+    }
+    if (route === "/api/health/ready" && !body.includes('"status":"ready"')) {
+      failures.push(`${route}: readiness contract missing`);
+    }
   } catch (error) {
     failures.push(`${route}: ${error instanceof Error ? error.message : "request failed"}`);
   }
+}
+
+try {
+  const response = await fetch(new URL("/api/auth/demo", baseUrl), {
+    method: "POST",
+    headers: { "content-type": "application/json", "user-agent": "DESCO-Compass-release-check/1.0" },
+    body: JSON.stringify({ persona: "admin" }),
+  });
+  if (response.status !== 404) failures.push(`/api/auth/demo: administrator demo returned HTTP ${response.status}, expected 404`);
+} catch (error) {
+  failures.push(`/api/auth/demo: ${error instanceof Error ? error.message : "request failed"}`);
 }
 
 if (failures.length > 0) {

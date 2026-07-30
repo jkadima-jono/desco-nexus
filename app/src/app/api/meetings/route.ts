@@ -4,6 +4,9 @@ import { getSessionUser } from "@/lib/auth";
 import { canManageListing, unauthorized } from "@/lib/authz";
 import { notifyOrg } from "@/lib/notifications";
 import { projectHref } from "@/lib/project-slugs";
+import { institutionalAccessDecision } from "@/lib/institutional-access";
+import { RESTRICTED_ACCESS_NOTICE_VERSION } from "@/lib/restricted-access";
+import { isPublicOpportunityId, PUBLIC_LISTING_STATUS } from "@/lib/public-listings";
 
 const MAX_SLOTS = 5;
 
@@ -41,7 +44,13 @@ export async function GET(req: Request) {
 export async function POST(req: Request) {
   const user = await getSessionUser();
   if (!user) return unauthorized();
-  let body: { listingId?: string; proposedSlots?: string[]; note?: string };
+  let body: {
+    listingId?: string;
+    proposedSlots?: string[];
+    note?: string;
+    acknowledgedRestrictedAccess?: boolean;
+    noticeVersion?: string;
+  };
   try {
     body = await req.json();
   } catch {
@@ -49,8 +58,26 @@ export async function POST(req: Request) {
   }
   const { listingId } = body;
   if (!listingId) return NextResponse.json({ error: "listingId required" }, { status: 400 });
-  const listing = await prisma.listing.findUnique({ where: { id: listingId } });
+  if (user.role !== "investor") {
+    return NextResponse.json({ error: "Approved investor workspace access is required" }, { status: 403 });
+  }
+  const listing = await prisma.listing.findFirst({
+    where: { id: listingId, publicationStatus: PUBLIC_LISTING_STATUS },
+  });
+  if (!isPublicOpportunityId(listingId)) {
+    return NextResponse.json({ error: "Listing not found" }, { status: 404 });
+  }
   if (!listing) return NextResponse.json({ error: "Listing not found" }, { status: 404 });
+  if (
+    body.acknowledgedRestrictedAccess !== true ||
+    body.noticeVersion !== RESTRICTED_ACCESS_NOTICE_VERSION
+  ) {
+    return NextResponse.json({ error: "Current non-binding introduction acknowledgement is required" }, { status: 428 });
+  }
+  const decision = await institutionalAccessDecision(user.id);
+  if (!decision.eligible) {
+    return NextResponse.json({ error: decision.reason }, { status: 403 });
+  }
 
   const slots = (body.proposedSlots ?? [])
     .filter((s) => typeof s === "string" && !isNaN(Date.parse(s)))
@@ -65,6 +92,16 @@ export async function POST(req: Request) {
       requesterId: user.id,
       proposedSlots: JSON.stringify(slots),
       note: (body.note ?? "").trim().slice(0, 500),
+    },
+  });
+  await prisma.accessAcknowledgement.create({
+    data: {
+      userId: user.id,
+      listingId,
+      action: "meeting_request",
+      noticeVersion: RESTRICTED_ACCESS_NOTICE_VERSION,
+      jurisdiction: decision.profile.classificationJurisdiction!,
+      classification: decision.profile.investorClassification,
     },
   });
   if (listing.orgId) {
