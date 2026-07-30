@@ -12,6 +12,7 @@ export type Listing = {
   title: string;
   org: string;
   sector: string;
+  sectorKey?: string;
   sectorColor: string;
   country: string;
   flag: string;
@@ -44,6 +45,11 @@ export type Listing = {
   // insert via @default(now())/@updatedAt); always present once loaded
   // through toListing() from the database.
   updatedAt?: Date;
+  publicationStatus?: string;
+  designation?: string;
+  relatedParty?: boolean;
+  relatedPartyType?: string | null;
+  relatedPartyDisclosure?: string;
 };
 
 export type CapitalPresentation = {
@@ -51,6 +57,12 @@ export type CapitalPresentation = {
   value: string;
   includeInProjectTotal: boolean;
 };
+
+export function isDescoRelatedOpportunity(
+  listing: Pick<Listing, "org"> & Partial<Pick<Listing, "relatedParty">>,
+): boolean {
+  return listing.relatedParty ?? /\bdesco global\b/i.test(listing.org);
+}
 
 export function capitalPresentation(listing: Pick<Listing, "id" | "raiseUsd">): CapitalPresentation {
   if (listing.id === "comicordia-agri") {

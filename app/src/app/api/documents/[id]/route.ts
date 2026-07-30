@@ -3,7 +3,7 @@ import { get } from "@vercel/blob";
 import { prisma } from "@/lib/db";
 import { getSessionUser } from "@/lib/auth";
 import { hasDataRoomAccess } from "@/lib/dataroom";
-import { forbidden } from "@/lib/authz";
+import { canManageListing, forbidden } from "@/lib/authz";
 
 export async function GET(
   _req: Request,
@@ -22,7 +22,14 @@ export async function GET(
   // listing's own org, admin, or an explicit DataRoomAccess grant. This
   // replaces a prior gap where any authenticated user could download any
   // listing's confidential documents.
-  if (!(await hasDataRoomAccess(user, doc.listing))) {
+  const manager = canManageListing(user, doc.listing);
+  if (doc.visibility === "internal" && !manager) {
+    return forbidden();
+  }
+  if (doc.lifecycle !== "approved" && !manager) {
+    return forbidden();
+  }
+  if (!manager && !(await hasDataRoomAccess(user, doc.listing))) {
     return forbidden();
   }
   if (!doc.storageKey) {

@@ -1,6 +1,8 @@
 import { PrismaClient } from "@prisma/client";
 import { listings } from "../src/lib/data";
 import { normalizeHighlights, normalizeStage, normalizeSummary } from "../src/lib/investment-evidence";
+import { projectDocumentSources } from "../src/lib/project-documents";
+import { relatedPartyMetadata } from "../src/lib/related-parties";
 
 const prisma = new PrismaClient();
 
@@ -25,6 +27,7 @@ async function main() {
   await prisma.user.deleteMany();
 
   for (const l of listings) {
+    const conflict = relatedPartyMetadata(l.id);
     const org = await prisma.organization.upsert({
       where: { name: l.org },
       update: {},
@@ -56,6 +59,31 @@ async function main() {
         risk: l.scores.risk,
         highlights: JSON.stringify(normalizeHighlights(l.highlights)),
         whyMatch: l.whyMatch,
+        publicationStatus: "public_teaser",
+        publishedAt: new Date(),
+        ...conflict,
+      },
+    });
+  }
+
+  for (const source of projectDocumentSources) {
+    await prisma.document.create({
+      data: {
+        listingId: source.listingId,
+        sourceRef: source.sourceRef,
+        name: source.name,
+        originalName: source.sourceRef.split("/").at(-1) ?? source.name,
+        size: "Source indexed",
+        folder: source.folder,
+        visibility: source.visibility,
+        lifecycle: "reviewed",
+        documentType: source.documentType,
+        evidenceCategory: source.evidenceCategory,
+        issuer: source.issuer,
+        sourceDate: source.sourceDate ? new Date(`${source.sourceDate}T00:00:00.000Z`) : null,
+        version: source.version,
+        language: source.language ?? "en",
+        reviewNote: source.reviewNote,
       },
     });
   }

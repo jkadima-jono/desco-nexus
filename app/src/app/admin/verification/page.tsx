@@ -11,7 +11,7 @@ export default async function AdminVerification() {
   if (user.role !== "admin") redirect("/");
 
   const listings = await prisma.listing.findMany({
-    include: { org: true },
+    include: { org: true, _count: { select: { docs: true } } },
     orderBy: [{ verified: "asc" }, { createdAt: "asc" }],
   });
 
@@ -42,6 +42,10 @@ export default async function AdminVerification() {
                 verificationNote: l.verificationNote,
                 governmentBacked: l.governmentBacked,
                 govMechanism: l.govMechanism,
+                publicationStatus: l.publicationStatus,
+                publishedAt: l.publishedAt ? l.publishedAt.toISOString() : null,
+                sourceCount: l._count.docs,
+                hasRelatedPartyReview: Boolean(l.relatedPartyDisclosure.trim()),
               }}
             />
           ))}

@@ -15,6 +15,7 @@ import {
   SectionHeading,
 } from "@/components/public/PublicPrimitives";
 import { projectHref } from "@/lib/project-slugs";
+import { publicListingWhere } from "@/lib/public-listings";
 
 export const dynamic = "force-dynamic";
 
@@ -77,6 +78,7 @@ export default async function Home() {
   const locale = await getLocale();
   const copy = getMarketingCopy(locale, "home");
   const rows = await prisma.listing.findMany({
+    where: publicListingWhere,
     include: { org: true, images: true },
     orderBy: { updatedAt: "desc" },
     take: 6,

@@ -1,5 +1,5 @@
 import { notFound, redirect } from "next/navigation";
-import { capitalPresentation, fmtUsd, returnPresentation } from "@/lib/data";
+import { capitalPresentation, fmtUsd, isDescoRelatedOpportunity, returnPresentation } from "@/lib/data";
 import { prisma, toListing } from "@/lib/db";
 import { UploadDoc, TeaserGenerator } from "./RoomTools";
 import Comments from "./Comments";
@@ -22,9 +22,10 @@ import { hasDataRoomAccess } from "@/lib/dataroom";
 import type { Metadata } from "next";
 import { getInvestmentEvidence, normalizeStage, summarizeEvidence } from "@/lib/investment-evidence";
 import { sectorForeground } from "@/lib/theme";
-import { investmentUi } from "@/lib/translations/investment-ui";
+import { evidenceCoverageCopy, investmentUi, relatedPartyDisclosure } from "@/lib/translations/investment-ui";
 import { localizeInvestmentEvidence, localizeListing } from "@/lib/translations/listing-content";
 import { internalProjectId, projectHref, publicProjectId } from "@/lib/project-slugs";
+import { PUBLIC_LISTING_STATUS } from "@/lib/public-listings";
 
 export const dynamic = "force-dynamic";
 
@@ -38,7 +39,7 @@ export async function generateMetadata({
   const { id: requestedId } = await params;
   const id = internalProjectId(requestedId);
   const metadataUi = investmentUi(await getLocale()).project;
-  const row = await prisma.listing.findUnique({ where: { id } });
+  const row = await prisma.listing.findFirst({ where: { id, publicationStatus: PUBLIC_LISTING_STATUS } });
   if (!row) return {};
   const capital = row.raiseUsd > 0
     ? `${fmtUsd(row.raiseUsd)} ${metadataUi.sought}`
@@ -62,25 +63,51 @@ export default async function ProjectDetail({
   if (requestedId !== publicProjectId(id)) redirect(projectHref(id));
   const locale = await getLocale();
   const ui = investmentUi(locale).project;
+  const coverageUi = evidenceCoverageCopy(locale);
   const user = await getSessionUser();
   const row = await prisma.listing.findUnique({
     where: { id },
     include: { docs: true, org: true, images: true },
   });
   if (!row) notFound();
+  if (
+    row.publicationStatus !== PUBLIC_LISTING_STATUS &&
+    !(user?.role === "admin" || (user?.role === "owner" && user.orgId === row.orgId))
+  ) {
+    notFound();
+  }
   const canManageListing = canManage(user, row);
   // Presentation object: confidential fields never leave the server for
   // unauthenticated visitors, and docs/whyMatch are never serialized into
   // client-component props regardless of session (rendered server-side only).
   const full = localizeListing(toListing(row), locale);
+  const sectorKey = full.sectorKey ?? row.sector;
   const l = { ...full, docs: [], whyMatch: "" };
-  const docs = row.docs;
+  const docs = canManageListing
+    ? row.docs
+    : row.docs.filter(
+        (document) =>
+          document.visibility === "restricted" &&
+          document.lifecycle === "approved" &&
+          !!document.storageKey,
+      );
+  const approvedRestrictedDocs = row.docs.filter(
+    (document) =>
+      document.visibility === "restricted" &&
+      document.lifecycle === "approved" &&
+      !!document.storageKey,
+  );
   const roomAccess = await hasDataRoomAccess(user, row);
   const localizedEvidence = localizeInvestmentEvidence(getInvestmentEvidence(l), locale);
   const evidence = { ...localizedEvidence, thesis: locale === "en" ? localizedEvidence.thesis : l.summary };
   const evidenceSummary = summarizeEvidence(evidence);
   const capital = capitalPresentation(l);
   const returns = returnPresentation(l);
+  const capitalLabel = l.id === "comicordia-agri"
+    ? ui.programmeAllocation
+    : l.raiseUsd > 0
+      ? ui.capitalSought
+      : ui.capitalNotDisclosed;
 
   const folders = [...new Set(docs.map((d) => d.folder))];
 
@@ -114,22 +141,22 @@ export default async function ProjectDetail({
         <HeroVisual listing={l} className="absolute inset-0 opacity-40" overlay={false} locale={locale} />
         <div className="absolute inset-0 bg-gradient-to-r from-ink via-ink/80 to-ink/40" />
         <div className="relative max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8 lg:py-10">
-          <div className="flex items-center gap-2 text-[11px] font-bold uppercase tracking-wider mb-3">
+          <div className="flex flex-wrap items-center gap-2 text-xs font-bold uppercase tracking-wider mb-3">
             <span
               className="px-2 py-0.5 rounded-full"
-              style={{ background: l.sectorColor, color: sectorForeground(l.sector) }}
+              style={{ background: l.sectorColor, color: sectorForeground(sectorKey) }}
             >
               {l.sector}
             </span>
             <span className="text-white/60">
               {l.flag} {l.country} · {l.stage}
             </span>
-            <TrustBadges verified={l.verified} verifiedBy={row.verifiedBy} verifiedAt={row.verifiedAt ? row.verifiedAt.toISOString() : null} verificationNote={row.verificationNote} governmentBacked={l.governmentBacked} govMechanism={row.govMechanism} sponsor={l.org} />
-            <span className="ml-auto"><SectorBadge sector={l.sector} size={34} /></span>
+            <TrustBadges locale={locale} verified={l.verified} verifiedBy={row.verifiedBy} verifiedAt={row.verifiedAt ? row.verifiedAt.toISOString() : null} verificationNote={row.verificationNote} governmentBacked={l.governmentBacked} govMechanism={row.govMechanism} sponsor={l.org} />
+            <span className="ml-auto"><SectorBadge sector={sectorKey} size={34} /></span>
           </div>
           <div className="flex flex-col lg:flex-row items-start justify-between gap-6 lg:gap-8">
             <div>
-              <div className="mb-3 text-[10px] font-bold uppercase tracking-[0.18em] text-gold">
+              <div className="mb-3 text-xs font-bold uppercase tracking-[0.18em] text-gold">
                 {ui.publicBriefing}
               </div>
               <h1 className="font-display font-extrabold text-3xl tracking-tight max-w-xl">
@@ -141,33 +168,38 @@ export default async function ProjectDetail({
               <div className="font-display font-extrabold text-4xl text-gold">
                 {capital.value}
               </div>
-              <div className="mt-1 text-xs font-semibold text-white/70">{capital.label}</div>
+              <div className="mt-1 text-xs font-semibold text-white/70">{capitalLabel}</div>
               <div className="mt-2 text-xs text-white/65">
                 {l.instrument}
                 <br />
-                {returns.label}: {returns.value}
+                {ui.returnInformation}: {returns.value}
               </div>
               <div className="mt-1.5 text-xs text-white/65">{ui.sponsorFigures}</div>
             </div>
           </div>
-          <div className="mt-6 flex flex-wrap gap-x-5 gap-y-2 border-t border-white/15 pt-4 text-[11px] text-white/60">
+          <div className="mt-6 flex flex-wrap gap-x-5 gap-y-2 border-t border-white/15 pt-4 text-xs text-white/70">
             <span>{ui.lastUpdated} {new Date(row.updatedAt).toLocaleDateString(locale, { year: "numeric", month: "short", day: "numeric" })}</span>
             <span>{ui.sponsor}: {l.org}</span>
             <span>{ui.publicRestricted}</span>
           </div>
+          {isDescoRelatedOpportunity(l) && (
+            <p className="mt-4 max-w-3xl border-l-2 border-gold pl-3 text-xs leading-5 text-white/75">
+              {relatedPartyDisclosure(locale)}
+            </p>
+          )}
         </div>
       </div>
 
       <section aria-label={ui.publicEvidence} className="border-b border-charcoal/10 bg-white">
         <div className="mx-auto grid max-w-5xl grid-cols-2 gap-px bg-charcoal/10 sm:grid-cols-4">
           {[
-            [ui.publicEvidence, `${evidenceSummary.disclosed}/${evidenceSummary.total} ${ui.fieldsDisclosed}`],
-            [ui.principalRisks, `${evidenceSummary.risksDisclosed}/${evidenceSummary.risksTotal} ${ui.categoriesDisclosed}`],
+            [ui.publicEvidence, `${evidenceSummary.supported}/${evidenceSummary.total} ${coverageUi.fields}`],
+            [ui.principalRisks, `${evidenceSummary.risksSupported}/${evidenceSummary.risksTotal} ${coverageUi.risks}`],
             [ui.evidenceDate, evidence.provenance.sourceDate],
-            [ui.projectRoom, docs.length > 0 ? ui.restrictedDocs : ui.readinessNotPublic],
+            [ui.projectRoom, approvedRestrictedDocs.length > 0 ? ui.restrictedDocs : ui.readinessNotPublic],
           ].map(([label, value]) => (
             <div key={label} className="bg-white px-4 py-4">
-              <p className="text-[10px] font-bold uppercase tracking-wider text-wgray">{label}</p>
+              <p className="text-xs font-bold uppercase tracking-wider text-wgray">{label}</p>
               <p className="mt-1 text-xs font-semibold leading-5 text-charcoal">{value}</p>
             </div>
           ))}
@@ -178,7 +210,7 @@ export default async function ProjectDetail({
         <div className="min-w-0 space-y-6 lg:col-span-2">
           <section id="investment-evidence" className="scroll-mt-6 bg-white rounded-2xl p-6 shadow-[0_1px_3px_rgb(44_62_80/0.08)]">
             <div className="mb-5 border-l-2 border-gold pl-4">
-              <div className="text-[10px] font-bold uppercase tracking-[0.16em] text-gold">{ui.thesis}</div>
+              <div className="text-xs font-bold uppercase tracking-[0.16em] text-gold">{ui.thesis}</div>
               <p className="mt-2 text-sm leading-6 text-charcoal">{evidence.thesis}</p>
             </div>
             <h2 className="font-display font-bold text-lg mb-1">{t(locale, "project.highlights")}</h2>
@@ -188,7 +220,7 @@ export default async function ProjectDetail({
                 <li key={h} className="flex items-center gap-3 text-sm">
                   <span
                     className="w-6 h-6 rounded-full flex items-center justify-center text-xs shrink-0"
-                    style={{ background: l.sectorColor, color: sectorForeground(l.sector) }}
+                    style={{ background: l.sectorColor, color: sectorForeground(sectorKey) }}
                   >
                     ▸
                   </span>
@@ -206,10 +238,10 @@ export default async function ProjectDetail({
             <dl className="mt-5 divide-y divide-charcoal/10">
               {evidence.fields.map((field) => (
                 <div key={field.label} className="grid gap-1 py-3 sm:grid-cols-[12rem_1fr] sm:gap-5">
-                  <dt className="text-[11px] font-bold uppercase tracking-wider text-wgray">{field.label}</dt>
+                  <dt className="text-xs font-bold uppercase tracking-wider text-wgray">{field.label}</dt>
                   <dd>
                     <div className={field.status === "not-disclosed" ? "text-sm italic text-wgray" : "text-sm text-charcoal"}>{field.value}</div>
-                    {field.source && <div className="mt-1 text-[10px] text-wgray">{ui.source}: {field.source}</div>}
+                    {field.source && <div className="mt-1 text-xs leading-5 text-wgray">{ui.source}: {field.source}</div>}
                   </dd>
                 </div>
               ))}
@@ -224,7 +256,7 @@ export default async function ProjectDetail({
             <dl className="mt-5 grid gap-3 sm:grid-cols-2">
               {evidence.risks.map((risk) => (
                 <div key={risk.label} className="rounded-lg border border-charcoal/10 bg-mist p-4">
-                  <dt className="text-[11px] font-bold uppercase tracking-wider text-charcoal">{risk.label}</dt>
+                  <dt className="text-xs font-bold uppercase tracking-wider text-charcoal">{risk.label}</dt>
                   <dd className="mt-2 text-sm italic text-wgray">{risk.value}</dd>
                 </div>
               ))}
@@ -277,20 +309,25 @@ export default async function ProjectDetail({
                 {docs
                   .filter((d) => d.folder === f)
                   .map((d) => (
-                    <a
-                      key={d.id}
-                      href={"/api/documents/" + d.id}
-                      className="flex items-center justify-between py-2 px-3 rounded-lg hover:bg-mist text-sm"
-                      title={d.storageKey ? ui.download : ui.demoDocument}
-                    >
-                      <span className="flex items-center gap-2.5">
-                        <span className="text-gold">▤</span> {d.name}
-                        {d.storageKey && (
-                          <span className="text-[10px] text-wgray">↓</span>
-                        )}
-                      </span>
-                      <span className="text-wgray text-xs">{d.size}</span>
-                    </a>
+                    <div key={d.id} className="rounded-lg hover:bg-mist">
+                      <a
+                        href={"/api/documents/" + d.id}
+                        className="flex items-center justify-between px-3 py-2 text-sm"
+                        title={d.storageKey ? ui.download : ui.demoDocument}
+                      >
+                        <span className="flex items-center gap-2.5">
+                          <span className="text-gold">▤</span> {d.name}
+                          {d.storageKey && <span className="text-xs text-wgray">↓</span>}
+                        </span>
+                        <span className="text-wgray text-xs">{d.size}</span>
+                      </a>
+                      <div className="px-3 pb-2 text-xs leading-5 text-wgray">
+                        {[d.documentType.replaceAll("_", " "), d.sourceDate?.toLocaleDateString(locale), d.issuer]
+                          .filter(Boolean)
+                          .join(" · ")}
+                        {canManageListing && d.reviewNote ? <div>{d.reviewNote}</div> : null}
+                      </div>
+                    </div>
                   ))}
               </div>
             )) : roomAccess ? (

@@ -1,4 +1,5 @@
 import { prisma } from "@/lib/db";
+import { publicListingWhere } from "@/lib/public-listings";
 
 // Real aggregate metrics only, never hardcoded. Limited to figures that
 // stay meaningful regardless of current platform usage (opportunity count,
@@ -6,8 +7,8 @@ import { prisma } from "@/lib/db";
 // this stage (e.g. "1 registered investor") and would overstate traction.
 export default async function ProofBar() {
   const [listingCount, totalRaise] = await Promise.all([
-    prisma.listing.count(),
-    prisma.listing.aggregate({ _sum: { raiseUsd: true } }),
+    prisma.listing.count({ where: publicListingWhere }),
+    prisma.listing.aggregate({ where: publicListingWhere, _sum: { raiseUsd: true } }),
   ]);
   const totalRaiseM = Math.round((totalRaise._sum.raiseUsd ?? 0) / 1_000_000);
 

@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { prisma, toListing } from "@/lib/db";
 import { getSessionUser } from "@/lib/auth";
 import type { Listing } from "@/lib/data";
+import { publicListingWhere } from "@/lib/public-listings";
 
 // Matches Desco Global's real four pillars only (see lib/theme.ts
 // SECTOR_TO_PILLAR) — no invented sectors like "Renewable Energy" or
@@ -39,7 +40,7 @@ export async function GET(req: Request) {
   }
 
   const user = await getSessionUser();
-  const rows = await prisma.listing.findMany({ include: { org: true, images: true } });
+  const rows = await prisma.listing.findMany({ where: publicListingWhere, include: { org: true, images: true } });
   let results: Listing[] = rows.map(toListing).map((l) =>
     user ? l : { ...l, whyMatch: "", docs: [] }
   );

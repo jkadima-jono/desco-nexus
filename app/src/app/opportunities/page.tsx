@@ -8,6 +8,7 @@ import { getPublicHero } from "@/lib/public-copy";
 import ComparisonGrid from "./ComparisonGrid";
 import { investmentUi } from "@/lib/translations/investment-ui";
 import { localizeListing } from "@/lib/translations/listing-content";
+import { publicListingWhere } from "@/lib/public-listings";
 
 export const dynamic = "force-dynamic";
 
@@ -83,10 +84,24 @@ export default async function Opportunities({ searchParams }: { searchParams: Pr
   } = params;
 
   const rows = await prisma.listing.findMany({
-    include: { org: true, images: true, docs: true },
+    where: publicListingWhere,
+    include: {
+      org: true,
+      images: true,
+      docs: {
+        where: { visibility: "restricted", lifecycle: "approved", storageKey: { not: null } },
+        select: { id: true },
+      },
+    },
     orderBy: { updatedAt: "desc" },
   });
-  const allListings = (rows.length > 0 ? rows.map(toListing) : sourceListings).map((listing) => localizeListing(listing, locale));
+  const allListings = rows.length > 0
+    ? rows.map((row) => ({
+        ...toListing({ ...row, docs: [] }),
+        // Public pages receive readiness only, never confidential filenames.
+        docs: row.docs.length > 0 ? [{ name: "", size: "", folder: "" }] : [],
+      }))
+    : sourceListings;
   const sectors = optionValues(allListings.map((item) => item.sector));
   const countries = optionValues(allListings.map((item) => item.country));
   const stages = optionValues(allListings.map((item) => item.stage));
@@ -111,6 +126,24 @@ export default async function Opportunities({ searchParams }: { searchParams: Pr
   if (sort === "capital") listings = [...listings].sort((a, b) => b.raiseUsd - a.raiseUsd);
   if (sort === "updated") listings = [...listings].sort((a, b) => Number(b.updatedAt ?? 0) - Number(a.updatedAt ?? 0));
   if (sort === "stage") listings = [...listings].sort((a, b) => a.stage.localeCompare(b.stage));
+  const localizedListings = listings.map((listing) => localizeListing(listing, locale));
+
+  function localizedOption(name: string, option: string) {
+    if (option === "All") return ui.all;
+    const source = allListings.find((listing) => {
+      if (name === "sector") return listing.sector === option;
+      if (name === "country") return listing.country === option;
+      if (name === "stage") return listing.stage === option;
+      if (name === "sponsor") return listing.org === option;
+      return false;
+    });
+    if (!source) return option;
+    const localized = localizeListing(source, locale);
+    if (name === "sector") return localized.sector;
+    if (name === "country") return localized.country;
+    if (name === "stage") return localized.stage;
+    return localized.org;
+  }
 
   const selectClass = "min-h-11 w-full rounded-md border border-ink/15 bg-white px-3 py-2 text-sm text-ink focus:border-gold";
   const labelClass = "mb-1 block text-[10px] font-bold uppercase tracking-wider text-slate";
@@ -136,7 +169,7 @@ export default async function Opportunities({ searchParams }: { searchParams: Pr
         <div className="public-container">
           <SectionHeading
             eyebrow={ui.browse}
-            title={ui.result(listings.length)}
+            title={ui.result(localizedListings.length)}
             body={ui.disclosureBody}
           />
 
@@ -152,7 +185,11 @@ export default async function Opportunities({ searchParams }: { searchParams: Pr
                 <label key={name as string}>
                   <span className={labelClass}>{label as string}</span>
                   <select name={name as string} defaultValue={value as string} className={selectClass}>
-                    {(options as string[]).map((option) => <option key={option} value={option}>{option === "All" ? ui.all : option}</option>)}
+                    {(options as string[]).map((option) => (
+                      <option key={option} value={option}>
+                        {localizedOption(name as string, option)}
+                      </option>
+                    ))}
                   </select>
                 </label>
               ))}
@@ -207,9 +244,9 @@ export default async function Opportunities({ searchParams }: { searchParams: Pr
             </div>
           </form>
 
-          <ComparisonGrid listings={listings} locale={locale} />
+          <ComparisonGrid listings={localizedListings} locale={locale} />
 
-          {listings.length === 0 && (
+          {localizedListings.length === 0 && (
             <div className="mt-7">
               <QuietNotice>{ui.empty}</QuietNotice>
             </div>

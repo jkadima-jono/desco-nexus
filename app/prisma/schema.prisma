@@ -159,6 +159,19 @@ model Listing {
   useOfFunds             String? // carried from ProjectSubmission at publish time
   fundingSecuredUsd      Int? // carried from ProjectSubmission at publish time
   sponsorContributionUsd Int? // carried from ProjectSubmission at publish time
+  // Publication is fail-closed for newly approved submissions. Catalogue
+  // imports explicitly set public_teaser after their reviewed source packet
+  // and disclosure metadata have been attached.
+  publicationStatus      String             @default("internal_review") // draft|internal_review|public_teaser|paused|withdrawn|archived
+  designation            String             @default("candidate") // candidate|flagship_ready|paused|removed
+  publishedAt            DateTime?
+  publishedBy            String?
+  contentVersion         Int                @default(1)
+  publicationHistory     String             @default("[]") // [{by,action,reason?,at}]
+  sourceSubmissionId     String?
+  relatedParty           Boolean            @default(false)
+  relatedPartyType       String?
+  relatedPartyDisclosure String             @default("")
   verified               Boolean            @default(false)
   verifiedBy             String? // admin fullName — real reviewer, not a fabricated vendor
   verifiedAt             DateTime?
@@ -186,15 +199,35 @@ model Listing {
 }
 
 model Document {
-  id         String              @id @default(cuid())
-  listingId  String
-  listing    Listing             @relation(fields: [listingId], references: [id])
-  name       String
-  size       String
-  folder     String
-  storageKey String?
-  mime       String?
-  accessLogs DocumentAccessLog[]
+  id               String              @id @default(cuid())
+  listingId        String
+  listing          Listing             @relation(fields: [listingId], references: [id])
+  name             String
+  originalName     String?
+  size             String
+  folder           String
+  storageKey       String?
+  mime             String?
+  visibility       String              @default("restricted") // public|restricted|internal
+  lifecycle        String              @default("reviewed") // uploaded|quarantined|reviewed|approved|rejected|superseded|archived
+  documentType     String              @default("supporting_document")
+  evidenceCategory String?
+  issuer           String?
+  sourceDate       DateTime?
+  version          String?
+  language         String              @default("en")
+  sourceRef        String?
+  sha256           String?
+  pageCount        Int?
+  reviewNote       String              @default("")
+  approvedBy       String?
+  approvedAt       DateTime?
+  receivedAt       DateTime            @default(now())
+  accessLogs       DocumentAccessLog[]
+
+  @@unique([listingId, sha256])
+  @@unique([listingId, sourceRef])
+  @@index([listingId, visibility, lifecycle])
 }
 
 // Explicit per-investor data-room grant (Phase 5). Deliberately separate

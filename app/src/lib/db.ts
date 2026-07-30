@@ -23,6 +23,7 @@ export function toListing(
     title: row.title,
     org: row.org?.name ?? "",
     sector: row.sector,
+    sectorKey: row.sector,
     sectorColor: row.sectorColor,
     country: row.country,
     flag: row.flag,
@@ -50,6 +51,11 @@ export function toListing(
     useOfFunds: row.useOfFunds,
     fundingSecuredUsd: row.fundingSecuredUsd,
     sponsorContributionUsd: row.sponsorContributionUsd,
+    publicationStatus: row.publicationStatus,
+    designation: row.designation,
+    relatedParty: row.relatedParty,
+    relatedPartyType: row.relatedPartyType,
+    relatedPartyDisclosure: row.relatedPartyDisclosure,
     photos: row.images && row.images.length > 0
       ? row.images
           .sort((a, b) => a.position - b.position)

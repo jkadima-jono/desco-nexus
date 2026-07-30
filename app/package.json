@@ -11,6 +11,7 @@
     "test:api": "node --test tests/api.test.mjs",
     "test:unit": "node --import tsx --test tests/*.test.ts",
     "catalog:sync": "node --import tsx prisma/sync-catalog.ts",
+    "documents:upload": "node --import tsx scripts/upload-project-documents.ts",
     "db:deploy": "prisma db push",
     "predeploy:check": "node --import tsx scripts/predeploy-check.ts",
     "smoke:production": "node --import tsx scripts/smoke-production.ts",

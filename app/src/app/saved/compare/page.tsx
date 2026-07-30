@@ -8,6 +8,7 @@ import { getLocale } from "@/lib/i18n-server";
 import { investmentUi } from "@/lib/translations/investment-ui";
 import { localizeInvestmentEvidence, localizeListing } from "@/lib/translations/listing-content";
 import { projectHref } from "@/lib/project-slugs";
+import { PUBLIC_LISTING_STATUS } from "@/lib/public-listings";
 
 export const dynamic = "force-dynamic";
 
@@ -16,6 +17,13 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 const NOT_DISCLOSED = "Not disclosed";
+const COMPARE_VALUE_COPY = {
+  en: { reviewed: "DESCO evidence review recorded — inspect scope", pending: "Independent verification not recorded", risks: "See public project disclosure" },
+  fr: { reviewed: "Examen DESCO enregistré — vérifier le périmètre", pending: "Aucune vérification indépendante enregistrée", risks: "Voir les risques publics du projet" },
+  es: { reviewed: "Revisión DESCO registrada — examine el alcance", pending: "No consta verificación independiente", risks: "Consulte la divulgación pública del proyecto" },
+  pt: { reviewed: "Análise DESCO registada — confirme o âmbito", pending: "Não existe registo de verificação independente", risks: "Consulte a divulgação pública do projeto" },
+  zh: { reviewed: "已记录 DESCO 审查，请核对范围", pending: "未记录独立核实", risks: "请查看项目公开披露" },
+} as const;
 
 // Fields the platform actually holds on a published Listing. Several rows
 // the master spec asks for (revenue model, sponsor contribution, timetable)
@@ -29,7 +37,12 @@ type Row = {
 
 async function getListings(ids: string[]) {
   if (ids.length === 0) return [];
-  return prisma.listing.findMany({ where: { id: { in: ids } }, include: { org: true } });
+  const rows = await prisma.listing.findMany({
+    where: { id: { in: ids }, publicationStatus: PUBLIC_LISTING_STATUS },
+    include: { org: true },
+  });
+  const order = new Map(ids.map((id, index) => [id, index]));
+  return rows.sort((a, b) => (order.get(a.id) ?? 0) - (order.get(b.id) ?? 0));
 }
 
 const ROWS: Row[] = [
@@ -56,8 +69,11 @@ export default async function ComparePage({
   const { ids: idsParam } = await searchParams;
   const locale = await getLocale();
   const ui = investmentUi(locale).compare;
+  const valueCopy = COMPARE_VALUE_COPY[locale];
   const rawIds = Array.isArray(idsParam) ? idsParam : (idsParam || "").split(",");
-  const ids = rawIds.map((s) => s.trim()).filter(Boolean).slice(0, 4);
+  const requestedIds = rawIds.map((s) => s.trim()).filter(Boolean);
+  const truncated = requestedIds.length > 4;
+  const ids = requestedIds.slice(0, 4);
   const rawListings = await getListings(ids);
   const listings = rawListings.map((listing) => localizeListing({ ...listing, org: listing.org.name, sectorColor: "", docs: [], flag: listing.flag, scores: { match: 0, readiness: 0, esg: 0, risk: 0 }, summary: listing.summary, highlights: JSON.parse(listing.highlights) as string[], whyMatch: listing.whyMatch, photos: [] }, locale));
   const comparisonRows = ROWS.map((row) => ({
@@ -70,6 +86,8 @@ export default async function ComparePage({
       if (row.label === "Stage") return listing.stage;
       if (row.label === "Return information") return listing.irr;
       if (row.label === "Evidence source date") return localizeInvestmentEvidence(getInvestmentEvidence(listing), locale).provenance.sourceDate;
+      if (row.label === "Evidence review") return rawListings.find((item) => item.id === listing.id)!.verified ? valueCopy.reviewed : valueCopy.pending;
+      if (row.label === "Principal risks" && value !== NOT_DISCLOSED) return valueCopy.risks;
       return value;
     }),
   }));
@@ -94,6 +112,12 @@ export default async function ComparePage({
           <p className="text-sm text-wgray">{ui.none}</p>
         </div>
       ) : (
+        <>
+        {truncated && (
+          <p role="status" className="mt-5 rounded-lg border border-gold/30 bg-gold-soft px-4 py-3 text-sm text-charcoal">
+            {ui.truncated}
+          </p>
+        )}
         <div className="mt-6 overflow-x-auto">
           <table className="w-full text-sm border-collapse min-w-[640px]">
             <thead>
@@ -135,6 +159,7 @@ export default async function ComparePage({
             </tbody>
           </table>
         </div>
+        </>
       )}
     </div>
   );

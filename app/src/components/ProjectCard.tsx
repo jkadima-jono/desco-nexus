@@ -1,6 +1,6 @@
 import Link from "next/link";
 import type { Listing } from "@/lib/data";
-import { capitalPresentation } from "@/lib/data";
+import { capitalPresentation, isDescoRelatedOpportunity } from "@/lib/data";
 import HeroVisual from "./HeroVisual";
 import SectorBadge from "./SectorBadge";
 import { getInvestmentEvidence, summarizeEvidence } from "@/lib/investment-evidence";
@@ -24,6 +24,7 @@ export default function ProjectCard({
   index?: number;
   locale?: Locale;
 }) {
+  const sectorKey = listing.sectorKey ?? listing.sector;
   listing = localizeListing(listing, locale);
   const ui = investmentUi(locale).card;
   const verificationScope = listing.verified
@@ -33,7 +34,7 @@ export default function ProjectCard({
   const accessibleName = [
     listing.title,
     listing.country,
-    `${capital.label}: ${capital.value}`,
+    `${listing.raiseUsd > 0 ? ui.capitalSought : ui.capitalNotDisclosed}: ${capital.value}`,
   ].filter(Boolean).join(", ");
   const evidence = summarizeEvidence(getInvestmentEvidence(listing));
 
@@ -50,13 +51,13 @@ export default function ProjectCard({
           <div className="flex items-center gap-2 text-[11px] font-bold uppercase tracking-wider">
             <span
               className="px-2 py-0.5 rounded-full shadow-[0_1px_4px_rgb(16_22_29/0.3)]"
-              style={{ background: listing.sectorColor, color: sectorForeground(listing.sector) }}
+              style={{ background: listing.sectorColor, color: sectorForeground(sectorKey) }}
             >
               {listing.sector}
             </span>
             <span className="text-white/90 drop-shadow">{listing.flag} {listing.country}</span>
           </div>
-          <SectorBadge sector={listing.sector} size={28} />
+          <SectorBadge sector={sectorKey} size={28} />
         </div>
         <div className="absolute inset-x-0 bottom-0 p-4">
           <h3 className="font-display font-bold text-lg leading-snug max-w-md text-white drop-shadow">
@@ -93,9 +94,15 @@ export default function ProjectCard({
           <span>{ui.updated} {formatUpdated(listing.updatedAt, locale)}</span>
         </div>
 
+        {isDescoRelatedOpportunity(listing) && (
+          <div className="mt-3 text-[11px] font-bold uppercase tracking-wide text-rust">
+            {ui.relatedParty}
+          </div>
+        )}
+
         <div className="mt-3 flex items-center justify-between gap-3">
           <span className="line-clamp-1 rounded-full border border-charcoal/15 bg-mist px-2.5 py-1 text-xs font-bold text-slate">
-            {ui.evidence} {evidence.disclosed}/{evidence.total} · {ui.risks} {evidence.risksDisclosed}/{evidence.risksTotal}
+            {ui.evidence} {evidence.supported}/{evidence.total} · {ui.risks} {evidence.risksSupported}/{evidence.risksTotal}
           </span>
           <span className="flex items-center gap-1.5 text-sm font-bold text-charcoal group-hover:text-gold">
             {ui.review} <span aria-hidden="true">→</span>

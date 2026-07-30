@@ -23,10 +23,12 @@ export function summarizeEvidence(evidence: InvestmentEvidence) {
   return {
     disclosed: evidence.fields.filter((field) => field.status === "disclosed").length,
     partial: evidence.fields.filter((field) => field.status === "partial").length,
+    supported: evidence.fields.filter((field) => field.status !== "not-disclosed").length,
     missing: evidence.fields.filter((field) => field.status === "not-disclosed").length,
     total: evidence.fields.length,
     risksDisclosed: evidence.risks.filter((risk) => risk.status === "disclosed").length,
     risksPartial: evidence.risks.filter((risk) => risk.status === "partial").length,
+    risksSupported: evidence.risks.filter((risk) => risk.status !== "not-disclosed").length,
     risksMissing: evidence.risks.filter((risk) => risk.status === "not-disclosed").length,
     risksTotal: evidence.risks.length,
   };

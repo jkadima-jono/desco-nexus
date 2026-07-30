@@ -90,6 +90,9 @@ export async function PATCH(
         useOfFunds: submission.useOfFunds || null,
         fundingSecuredUsd: submission.fundingSecuredUsd,
         sponsorContributionUsd: submission.sponsorContributionUsd,
+        publicationStatus: "internal_review",
+        sourceSubmissionId: submission.id,
+        contentVersion: 1,
       },
     });
     const updated = await prisma.projectSubmission.update({

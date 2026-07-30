@@ -7,11 +7,19 @@ import { getSessionUser } from "@/lib/auth";
 import { canManageListing, forbidden } from "@/lib/authz";
 
 const MAX_BYTES = 20 * 1024 * 1024;
-const ALLOWED_EXT = new Set([".pdf", ".xlsx", ".docx", ".pptx", ".png", ".jpg", ".jpeg", ".csv"]);
+const ALLOWED_EXT = new Set([".pdf", ".xlsx", ".docx", ".pptx", ".png", ".jpg", ".jpeg", ".csv", ".txt"]);
 function fmtSize(n: number): string {
   return n >= 1024 * 1024
     ? (n / (1024 * 1024)).toFixed(1) + " MB"
     : Math.max(1, Math.round(n / 1024)) + " KB";
+}
+
+function signatureMatches(ext: string, bytes: Buffer) {
+  if (ext === ".pdf") return bytes.subarray(0, 5).equals(Buffer.from("%PDF-"));
+  if ([".docx", ".pptx", ".xlsx"].includes(ext)) return bytes[0] === 0x50 && bytes[1] === 0x4b;
+  if (ext === ".png") return bytes[0] === 0x89 && bytes[1] === 0x50 && bytes[2] === 0x4e && bytes[3] === 0x47;
+  if ([".jpg", ".jpeg"].includes(ext)) return bytes[0] === 0xff && bytes[1] === 0xd8;
+  return true;
 }
 
 export async function POST(req: Request) {
@@ -52,8 +60,21 @@ export async function POST(req: Request) {
     );
   }
 
+  const bytes = Buffer.from(await file.arrayBuffer());
+  if (!signatureMatches(ext, bytes)) {
+    return NextResponse.json({ error: "File content does not match its extension" }, { status: 400 });
+  }
+  const sha256 = crypto.createHash("sha256").update(bytes).digest("hex");
+  const duplicate = await prisma.document.findFirst({ where: { listingId, sha256 } });
+  if (duplicate) {
+    return NextResponse.json(
+      { error: "This file is already attached to the project", documentId: duplicate.id },
+      { status: 409 },
+    );
+  }
+
   const storageKey = `documents/${listingId}/${crypto.randomUUID()}${ext}`;
-  const blob = await put(storageKey, file, {
+  const blob = await put(storageKey, bytes, {
     access: "private",
     addRandomSuffix: false,
     contentType: file.type || "application/octet-stream",
@@ -64,10 +85,15 @@ export async function POST(req: Request) {
       listingId,
       // basename strips any client-supplied path segments
       name: path.basename(file.name).slice(0, 200),
+      originalName: path.basename(file.name).slice(0, 200),
       size: fmtSize(file.size),
       folder,
       storageKey: blob.pathname,
       mime: file.type || "application/octet-stream",
+      visibility: "restricted",
+      lifecycle: "uploaded",
+      sha256,
+      reviewNote: "Uploaded by a project manager; approval and evidence classification are pending.",
     },
   });
   return NextResponse.json({ ok: true, document: doc });

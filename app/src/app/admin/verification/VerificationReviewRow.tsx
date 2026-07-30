@@ -14,6 +14,10 @@ type Listing = {
   verificationNote: string;
   governmentBacked: boolean;
   govMechanism: string | null;
+  publicationStatus: string;
+  publishedAt: string | null;
+  sourceCount: number;
+  hasRelatedPartyReview: boolean;
 };
 
 export default function VerificationReviewRow({ listing }: { listing: Listing }) {
@@ -26,6 +30,7 @@ export default function VerificationReviewRow({ listing }: { listing: Listing })
   const [govBacked, setGovBacked] = useState(listing.governmentBacked);
   const [govMechanism, setGovMechanism] = useState(listing.govMechanism ?? GOV_MECHANISMS[0]);
   const [govNote, setGovNote] = useState("");
+  const [publicationReason, setPublicationReason] = useState("");
 
   const patch = async (body: Record<string, unknown>) => {
     setBusy(true);
@@ -42,6 +47,24 @@ export default function VerificationReviewRow({ listing }: { listing: Listing })
     setNoteDraft("");
     setGovOpen(false);
     setGovNote("");
+    router.refresh();
+  };
+
+  const patchPublication = async (action: "publish" | "pause" | "withdraw" | "archive") => {
+    setBusy(true);
+    setError(null);
+    const res = await fetch("/api/admin/listings/" + listing.id + "/publication", {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        action,
+        ...(action === "publish" ? {} : { reason: publicationReason }),
+      }),
+    });
+    const data = await res.json();
+    setBusy(false);
+    if (!res.ok) { setError(data.error ?? "Publication action failed."); return; }
+    setPublicationReason("");
     router.refresh();
   };
 
@@ -68,6 +91,51 @@ export default function VerificationReviewRow({ listing }: { listing: Listing })
         {listing.governmentBacked
           ? "Government involvement: " + (MECHANISM_LABELS[listing.govMechanism ?? ""] ?? listing.govMechanism)
           : "No government involvement recorded"}
+      </div>
+
+      <div className="mt-4 border-t border-charcoal/10 pt-3">
+        <div className="flex flex-wrap items-center justify-between gap-2">
+          <div>
+            <div className="text-[11px] font-bold uppercase tracking-wider text-wgray">Publication</div>
+            <div className="text-xs text-charcoal mt-1">
+              {listing.publicationStatus.replaceAll("_", " ")} · {listing.sourceCount} indexed source{listing.sourceCount === 1 ? "" : "s"}
+              {listing.publishedAt ? " · published " + new Date(listing.publishedAt).toLocaleDateString() : ""}
+            </div>
+          </div>
+          <span className={"text-[11px] font-bold uppercase tracking-wider px-2 py-1 rounded-full " +
+            (listing.publicationStatus === "public_teaser" ? "bg-emerald-p/10 text-emerald-p" : "bg-amber-50 text-amber-800")}>
+            {listing.publicationStatus === "public_teaser" ? "Public" : "Not public"}
+          </span>
+        </div>
+        {listing.publicationStatus !== "public_teaser" ? (
+          <button
+            disabled={busy || listing.sourceCount === 0 || !listing.hasRelatedPartyReview}
+            onClick={() => patchPublication("publish")}
+            className="mt-3 px-3 py-1.5 rounded-lg bg-charcoal text-white text-xs font-semibold disabled:opacity-40"
+          >
+            Publish reviewed teaser
+          </button>
+        ) : (
+          <div className="mt-3 space-y-2">
+            <textarea
+              rows={2}
+              value={publicationReason}
+              onChange={(e) => setPublicationReason(e.target.value)}
+              placeholder="Reason for changing public availability (required)"
+              className="w-full bg-mist rounded-xl px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-gold resize-none"
+            />
+            <div className="flex flex-wrap gap-2">
+              <button disabled={busy} onClick={() => patchPublication("pause")} className="px-3 py-1.5 rounded-lg bg-amber-50 text-amber-900 text-xs font-semibold disabled:opacity-50">Pause</button>
+              <button disabled={busy} onClick={() => patchPublication("withdraw")} className="px-3 py-1.5 rounded-lg bg-brandred/10 text-brandred text-xs font-semibold disabled:opacity-50">Withdraw</button>
+              <button disabled={busy} onClick={() => patchPublication("archive")} className="px-3 py-1.5 rounded-lg bg-mist text-charcoal text-xs font-semibold disabled:opacity-50">Archive</button>
+            </div>
+          </div>
+        )}
+        {(listing.sourceCount === 0 || !listing.hasRelatedPartyReview) && listing.publicationStatus !== "public_teaser" && (
+          <p className="mt-2 text-xs text-wgray">
+            Publication requires an indexed source and a completed related-party review.
+          </p>
+        )}
       </div>
 
       {error && <div role="alert" className="text-xs text-brandred bg-brandred/10 rounded-lg px-3 py-2 mt-3">{error}</div>}
