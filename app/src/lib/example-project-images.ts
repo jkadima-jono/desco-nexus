@@ -63,22 +63,31 @@ const EXAMPLES: Record<string, ExampleProjectImage[]> = {
     kind: "regional",
   }],
   "kasaji-kisenge-solar-50mw": [{
-    id: "example-kasaji-kisenge-solar",
-    url: "/examples/project-solar.svg",
-    caption: "Illustrative infrastructure concept. Not a project photograph or technical evidence.",
+    id: "regional-kasaji-kisenge-solar",
+    url: "/project-media/desco-drc/kasaji-kisenge-regional.jpg",
+    caption: "DESCO-supplied regional DRC landscape. Exact project location unconfirmed; not evidence of the proposed solar site.",
     isExample: true,
+    kind: "regional",
+  }],
+  "waterdesco-grand-kasai": [{
+    id: "regional-waterdesco-grand-kasai",
+    url: "/project-media/desco-drc/waterdesco-grand-kasai-regional.jpg",
+    caption: "DESCO-supplied regional DRC river landscape. Exact project location and water source unconfirmed.",
+    isExample: true,
+    kind: "regional",
   }],
   "ldc-integrated-housing-drc": [{
     id: "example-ldc-integrated-housing",
     url: "/examples/project-housing.svg",
-    caption: "Illustrative urban-infrastructure concept. Not a project rendering or evidence.",
+    caption: "Illustrative urban-infrastructure concept. Project-specific rendering and site photography are pending; this is not evidence.",
     isExample: true,
   }],
   "energulf-lotshi-block": [{
-    id: "example-energulf-lotshi",
-    url: "/examples/project-energy-exploration.svg",
-    caption: "Illustrative energy-exploration concept. Not a project photograph or technical evidence.",
+    id: "regional-energulf-lotshi",
+    url: "/project-media/desco-drc/energulf-lotshi-regional.jpg",
+    caption: "DESCO-supplied regional DRC terrain. Exact relationship to the Lotshi block is unconfirmed; not evidence of the licence area.",
     isExample: true,
+    kind: "regional",
   }],
 };
 

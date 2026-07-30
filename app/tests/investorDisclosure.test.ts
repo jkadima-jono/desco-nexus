@@ -1,6 +1,9 @@
 import assert from "node:assert/strict";
+import { existsSync } from "node:fs";
+import { join } from "node:path";
 import test from "node:test";
 import { capitalPresentation, isDescoRelatedOpportunity, listings, returnPresentation, sanitizePublicListing } from "../src/lib/data";
+import { exampleProjectImages } from "../src/lib/example-project-images";
 import { evidenceDisclosureStatus, getInvestmentEvidence, summarizeEvidence } from "../src/lib/investment-evidence";
 import { PUBLIC_OPPORTUNITY_IDS, isPublicOpportunityId } from "../src/lib/public-listings";
 import { disclosureStatusCopy, relatedPartyDisclosure } from "../src/lib/translations/investment-ui";
@@ -51,6 +54,15 @@ test("the public catalogue is limited to the four reviewed briefings", () => {
   ]);
   assert.equal(isPublicOpportunityId("sciress-kolwezi-12423"), false);
   assert.equal(isPublicOpportunityId("port-de-ndomba"), false);
+});
+
+test("every public opportunity has a controlled people-free project visual", () => {
+  for (const listingId of PUBLIC_OPPORTUNITY_IDS) {
+    const images = exampleProjectImages(listingId);
+    assert.ok(images.length > 0, listingId);
+    assert.ok(existsSync(join(process.cwd(), "public", images[0].url)), images[0].url);
+    assert.match(images[0].caption, /(unconfirmed|pending|not evidence)/i, listingId);
+  }
 });
 
 test("public presentation never publishes a return projection", () => {
