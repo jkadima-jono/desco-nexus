@@ -4,12 +4,13 @@ const required = [
   "SESSION_SECRET",
   "BLOB_READ_WRITE_TOKEN",
   "NEXT_PUBLIC_SITE_URL",
-  "CRON_SECRET",
 ] as const;
+const environment = process.env.VERCEL_ENV?.trim() || "local";
+const productionRequired = environment === "production" ? ["CRON_SECRET"] as const : [];
 
-const missing = required.filter((name) => !process.env[name]?.trim());
+const missing = [...required, ...productionRequired].filter((name) => !process.env[name]?.trim());
 if (missing.length > 0) {
-  throw new Error(`Production configuration missing: ${missing.join(", ")}`);
+  throw new Error(`${environment} configuration missing: ${missing.join(", ")}`);
 }
 
 if ((process.env.SESSION_SECRET?.length ?? 0) < 32) {
@@ -24,7 +25,7 @@ if (siteUrl.hostname === "desco.global" || siteUrl.hostname === "www.desco.globa
   throw new Error("NEXT_PUBLIC_SITE_URL must use the Compass application domain, not the corporate website.");
 }
 
-if (process.env.VERCEL_ENV === "production" && process.env.DEMO_AUTH_ENABLED === "true") {
+if (environment === "production" && process.env.DEMO_AUTH_ENABLED === "true") {
   throw new Error("DEMO_AUTH_ENABLED must not be true in production.");
 }
 if (
@@ -34,4 +35,4 @@ if (
   throw new Error("Confidential uploads require a configured DOCUMENT_SCANNER_PROVIDER.");
 }
 
-console.log(`Production configuration verified for ${siteUrl.origin}.`);
+console.log(`${environment} configuration verified for ${siteUrl.origin}.`);
