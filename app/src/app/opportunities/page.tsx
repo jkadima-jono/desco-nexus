@@ -173,7 +173,12 @@ export default async function Opportunities({ searchParams }: { searchParams: Pr
             body={ui.disclosureBody}
           />
 
-          <form method="get" className="mt-8 rounded-lg border border-ink/10 bg-white p-4" aria-label={ui.filterLabel}>
+          <details className="group mt-8 rounded-lg border border-ink/10 bg-white lg:contents">
+            <summary className="flex min-h-12 cursor-pointer list-none items-center justify-between gap-3 rounded-lg px-4 py-3 font-display text-sm font-bold text-ink marker:content-none lg:hidden">
+              <span>{ui.filterLabel}</span>
+              <span aria-hidden="true" className="text-lg text-gold transition-transform group-open:rotate-45">＋</span>
+            </summary>
+            <form method="get" className="hidden border-t border-ink/10 p-4 group-open:block lg:mt-8 lg:block lg:rounded-lg lg:border lg:border-ink/10" aria-label={ui.filterLabel}>
             <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
               {[
                 ["sector", ui.sector, sector, sectors],
@@ -242,7 +247,8 @@ export default async function Opportunities({ searchParams }: { searchParams: Pr
               <button className="button-primary" type="submit">{ui.apply}</button>
               <Link href="/opportunities" className="button-secondary">{ui.clear}</Link>
             </div>
-          </form>
+            </form>
+          </details>
 
           <ComparisonGrid listings={localizedListings} locale={locale} />
 

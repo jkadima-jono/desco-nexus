@@ -4,6 +4,7 @@ import { getSessionUser } from "@/lib/auth";
 import { canManageListing, unauthorized, forbidden } from "@/lib/authz";
 import { enqueueOutbox } from "@/lib/outbox";
 import { Prisma } from "@prisma/client";
+import { invalidatePublicationForImageChange } from "@/lib/invalidate-publication";
 
 async function loadAuthorized(id: string, photoId: string) {
   const user = await getSessionUser();
@@ -15,7 +16,7 @@ async function loadAuthorized(id: string, photoId: string) {
   if (!image || image.listingId !== id) {
     return { error: NextResponse.json({ error: "Photo not found" }, { status: 404 }) } as const;
   }
-  return { image } as const;
+  return { image, user } as const;
 }
 
 // Removes a photo — the "change" half of upload/change. Deletes the Blob
@@ -43,6 +44,12 @@ export async function DELETE(
       eventKey: `listing-image:${photoId}:delete`,
       payload: { storageKey: result.image.storageKey },
     });
+    await invalidatePublicationForImageChange(
+      tx,
+      id,
+      result.user.id,
+      "Project image deleted",
+    );
   }, { isolationLevel: Prisma.TransactionIsolationLevel.Serializable });
   return NextResponse.json({ ok: true });
 }
@@ -74,6 +81,12 @@ export async function PATCH(
       await tx.listingImage.update({ where: { id: photoId }, data: { position: -1 } });
       if (cover) await tx.listingImage.update({ where: { id: cover.id }, data: { position: current.position } });
       await tx.listingImage.update({ where: { id: photoId }, data: { position: 0 } });
+      await invalidatePublicationForImageChange(
+        tx,
+        id,
+        result.user.id,
+        "Project cover image changed",
+      );
     }, { isolationLevel: Prisma.TransactionIsolationLevel.Serializable });
   }
   return NextResponse.json({ ok: true });

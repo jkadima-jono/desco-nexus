@@ -21,6 +21,12 @@ export type PublicationContent = {
   governmentBacked: boolean;
   govMechanism: string | null;
   verified: boolean;
+  images?: Array<{
+    id: string;
+    storageKey: string;
+    caption: string | null;
+    position: number;
+  }>;
 };
 
 export function publicationContentHash(listing: PublicationContent): string {
@@ -45,6 +51,14 @@ export function publicationContentHash(listing: PublicationContent): string {
     governmentBacked: listing.governmentBacked,
     govMechanism: listing.govMechanism,
     verified: listing.verified,
+    images: [...(listing.images ?? [])]
+      .sort((a, b) => a.position - b.position || a.id.localeCompare(b.id))
+      .map(({ id, storageKey, caption, position }) => ({
+        id,
+        storageKey,
+        caption,
+        position,
+      })),
   };
   return createHash("sha256").update(JSON.stringify(canonical)).digest("hex");
 }

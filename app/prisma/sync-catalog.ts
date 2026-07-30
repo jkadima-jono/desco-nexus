@@ -27,6 +27,7 @@ async function main() {
         sponsorConsents: true,
         legalClearances: true,
         relatedPartyReviews: true,
+        images: true,
         docs: {
           where: {
             lifecycle: "approved",

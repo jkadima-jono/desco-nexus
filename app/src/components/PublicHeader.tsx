@@ -56,7 +56,7 @@ export default function PublicHeader({ user }: { user?: { role?: string } | null
     <>
       <header className="sticky top-0 z-40 border-b border-white/10 bg-ink text-white">
         <div className="mx-auto flex h-16 w-[calc(100%-2rem)] max-w-[106rem] items-center justify-between gap-6 md:w-[calc(100%-3rem)]">
-          <Link href="/" className="flex shrink-0 items-center gap-3" aria-label="DESCO Compass home">
+          <Link href="/" className="flex shrink-0 items-center gap-3" aria-label={`DESCO Compass — ${t("common.home")}`}>
             <BrandMark />
           </Link>
           <div className="hidden items-center gap-2 2xl:flex">

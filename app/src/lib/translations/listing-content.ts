@@ -1,6 +1,7 @@
 import type { Listing } from "@/lib/data";
 import type { EvidenceField, InvestmentEvidence } from "@/lib/investment-evidence";
 import type { Locale } from "@/lib/i18n";
+import { localizeExampleProjectImageCaption } from "@/lib/example-project-images";
 
 type ListingText =
   Pick<Listing, "sector" | "country" | "instrument" | "stage" | "irr" | "summary" | "highlights" | "whyMatch"> &
@@ -283,18 +284,21 @@ const addedProjectTranslations: ListingTranslations = {
   },
   es: {
     "kasaji-kisenge-solar-50mw": {
+      title: "Proyecto solar y de red eléctrica de Kasaji–Kisenge — 50 MW",
       sector: "Energía", country: "R. D. del Congo", instrument: "Necesidad de financiación descrita en la propuesta técnica de 2023; estructura no divulgada", stage: "Propuesta técnica y presupuesto de agosto de 2023", irr: "No divulgado públicamente",
       summary: "Presentamos una oportunidad energética que combina 50 MW solares, almacenamiento, subestaciones, distribución y alumbrado público para Kasaji, Kisenge y comunidades cercanas. La propuesta de 2023 estima 86,2 M$ y 11 meses desde la firma y financiación. Antes de avanzar, exigimos confirmar suelo, permisos, acuerdos eléctricos, demanda, precios de compra y modelo financiero.",
       highlights: ["Capacidad diseñada: 50 MW solares con almacenamiento y red", "Presupuesto de 2023: 86.215.774,30 $, impuestos y costes incluidos", "Plazo propuesto: 11 meses desde la firma y financiación", "Zona de servicio: Kasaji, Kisenge y comunidades cercanas; demanda y conexiones por validar"],
       whyMatch: "Consideramos este proyecto una posible oportunidad energética Investdesco, sujeta a validación técnica, jurídica, comercial y financiera.",
     },
     "ldc-integrated-housing-drc": {
+      title: "Programa LDC de vivienda e infraestructura urbana en la RDC",
       sector: "Infraestructura", country: "R. D. del Congo", instrument: "Programa público-privado y de crédito hipotecario propuesto; estructura financiera incompleta", stage: "Concepto del promotor y plan preliminar de costes", irr: "Supuesto del promotor: margen neto del 10 % por vivienda social; modelo no revisado independientemente",
       summary: "Presentamos una oportunidad urbana de gran escala con vivienda, carreteras, servicios, equipamientos públicos y usos industriales en tres emplazamientos propuestos en la RDC. El coste conceptual es de 14,64 mil M$. Evaluaremos el programa por fases, comenzando por un alcance conciliado, suelo confirmado, demanda probada, participación bancaria y costes validados.",
       highlights: ["Tres emplazamientos con vivienda residencial, económica y de servicio público", "Estimación preliminar: 14,64 mil M$, incluido un 5 % para seguimiento y evaluación", "Mecanismo propuesto: aportación inicial del 20 % y hasta 15 años de pago", "Las cantidades de vivienda y capacidades de agua y energía son incoherentes"],
       whyMatch: "Vemos una posible plataforma urbana Investdesco, sujeta a validar alcance, suelo, planificación, demanda y financiación.",
     },
     "energulf-lotshi-block": {
+      title: "Bloque de exploración terrestre EnerGulf Lotshi",
       sector: "Energía", country: "R. D. del Congo", instrument: "Financiación de exploración y evaluación; términos no divulgados", stage: "Preperforación; título y autorizaciones actuales por confirmar", irr: "No divulgado públicamente",
       summary: "Presentamos Lotshi como una oportunidad de exploración terrestre de unos 506 km² en Kongo Central, entre Moanda y Lukula. Los materiales identifican siete prospectos y sitúan Dallas como primer objetivo, a 1.500–2.300 metros. Antes de introducir financiación, exigimos confirmar título, propiedad y aprobaciones, revisar los datos, validar el presupuesto y completar los planes ambientales y de seguridad.",
       highlights: ["Área descrita: unos 506 km² en Kongo Central", "Programa histórico: 202 km de sísmica en 2010", "Siete prospectos identificados; Dallas es el primer objetivo", "Profundidad prevista: 1.500–2.300 metros; logística vía Banana, Moanda y Ntala"],
@@ -303,18 +307,21 @@ const addedProjectTranslations: ListingTranslations = {
   },
   pt: {
     "kasaji-kisenge-solar-50mw": {
+      title: "Projeto solar e de rede elétrica de Kasaji–Kisenge — 50 MW",
       sector: "Energia", country: "RD Congo", instrument: "Necessidade de financiamento descrita na proposta técnica de 2023; estrutura não divulgada", stage: "Proposta técnica e orçamento de agosto de 2023", irr: "Não divulgado publicamente",
       summary: "Apresentamos uma oportunidade energética que combina 50 MW solares, armazenamento, subestações, distribuição e iluminação pública para Kasaji, Kisenge e comunidades próximas. A proposta de 2023 estima US$ 86,2 milhões e 11 meses após contrato e financiamento. Antes de avançar, exigimos confirmar terrenos, licenças, acordos elétricos, procura, preços de compra e modelo financeiro.",
       highlights: ["Capacidade projetada: 50 MW solares com armazenamento e rede", "Orçamento de 2023: US$ 86.215.774,30 com impostos e custos", "Prazo proposto: 11 meses após contrato e financiamento", "Área de serviço: Kasaji, Kisenge e comunidades próximas; procura e ligações por validar"],
       whyMatch: "Consideramos este projeto uma potencial oportunidade energética Investdesco, sujeita a validação técnica, jurídica, comercial e financeira.",
     },
     "ldc-integrated-housing-drc": {
+      title: "Programa LDC de habitação e infraestrutura urbana na RDC",
       sector: "Infraestrutura", country: "RD Congo", instrument: "Programa público-privado e de crédito habitacional proposto; estrutura financeira incompleta", stage: "Conceito do promotor e plano preliminar de custos", irr: "Pressuposto do promotor: margem líquida de 10% por habitação social; modelo não revisto independentemente",
       summary: "Apresentamos uma oportunidade urbana de grande escala com habitação, estradas, serviços, equipamentos públicos e usos industriais em três áreas propostas na RDC. O custo conceptual é de US$ 14,64 mil milhões. Avaliaremos o programa por fases, começando por um âmbito conciliado, terrenos confirmados, procura testada, participação bancária e custos validados.",
       highlights: ["Três áreas com habitação residencial, económica e de serviço público", "Estimativa preliminar: US$ 14,64 mil milhões, incluindo 5% para monitorização e avaliação", "Mecanismo proposto: entrada de 20% e pagamento até 15 anos", "Quantidades de habitação e capacidades de água e energia são inconsistentes"],
       whyMatch: "Vemos uma potencial plataforma urbana Investdesco, sujeita à validação do âmbito, terreno, planeamento, procura e financiamento.",
     },
     "energulf-lotshi-block": {
+      title: "Bloco de exploração terrestre EnerGulf Lotshi",
       sector: "Energia", country: "RD Congo", instrument: "Financiamento de exploração e avaliação; termos não divulgados", stage: "Pré-perfuração; título e aprovações atuais por confirmar", irr: "Não divulgado publicamente",
       summary: "Apresentamos Lotshi como uma oportunidade de exploração terrestre de cerca de 506 km² no Kongo Central, entre Moanda e Lukula. Os materiais identificam sete prospetos e colocam Dallas como primeiro alvo, a 1.500–2.300 metros. Antes de introduzir financiamento, exigimos confirmar título, propriedade e aprovações, rever os dados, validar o orçamento e concluir os planos ambientais e de segurança.",
       highlights: ["Área descrita: cerca de 506 km² no Kongo Central", "Programa histórico: 202 km de sísmica em 2010", "Sete prospetos identificados; Dallas é o primeiro alvo", "Profundidade prevista: 1.500–2.300 metros; logística via Banana, Moanda e Ntala"],
@@ -323,18 +330,21 @@ const addedProjectTranslations: ListingTranslations = {
   },
   zh: {
     "kasaji-kisenge-solar-50mw": {
+      title: "Kasaji–Kisenge 50 MW 太阳能与电网项目",
       sector: "能源", country: "刚果民主共和国", instrument: "2023 年技术方案所述项目融资需求；交易结构未披露", stage: "2023 年 8 月技术方案及预算", irr: "尚未公开披露",
       summary: "我们展示一项能源基础设施机会，为 Kasaji、Kisenge 及周边社区建设 50 MW 光伏、储能、中压变电站、配电及公共照明。2023 年方案估算总成本为 8,621.6 万美元，合同签署及融资落实后工期 11 个月。推进前，我们要求确认土地权利、许可、公用事业安排、需求、采购价格及财务模型。",
       highlights: ["设计容量：50 MW 光伏发电、储能及电网工程", "2023 年预算：86,215,774.30 美元，含税费及项目成本", "拟议工期：合同签署及融资落实后 11 个月", "目标服务区域：Kasaji、Kisenge 及周边社区；需求及接入须核实"],
       whyMatch: "我们将其视为潜在 Investdesco 能源机会，但须完成最新技术、法律、商业及融资核验。",
     },
     "ldc-integrated-housing-drc": {
+      title: "刚果民主共和国 LDC 综合住房与城市基础设施计划",
       sector: "基础设施", country: "刚果民主共和国", instrument: "拟议公私合作及住房按揭计划；融资结构尚未完成", stage: "发起方概念及初步成本计划", irr: "发起方假设每套社会住房净利润率为 10%；模型未经独立审阅",
       summary: "我们展示一项大型城市发展机会，拟在刚果民主共和国三个片区整合住房、道路、公用设施、公共服务及工业用途。概念成本为 146.4 亿美元。我们将分阶段评估，首先统一范围、确认土地权利、测试需求、落实银行参与并独立验证成本。",
       highlights: ["概念涵盖三个片区及住宅、经济型和公共服务住房", "初步估算：146.4 亿美元，包括 5% 监测评估费用", "拟议购房机制：首付 20%，其余款项最长 15 年偿还", "文件中的住房数量、电力容量及水务设施数据不一致"],
       whyMatch: "我们认为其具备成为 Investdesco 城市平台的潜力，前提是核实范围、土地、规划、需求及融资。",
     },
     "energulf-lotshi-block": {
+      title: "EnerGulf Lotshi 陆上勘探区块",
       sector: "能源", country: "刚果民主共和国", instrument: "勘探及评价融资；交易条款未公开披露", stage: "钻探前阶段，须确认当前矿权及批准", irr: "尚未公开披露",
       summary: "我们将 Lotshi 作为一项陆上勘探机会展示。资料称其位于 Kongo Central，面积约 506 平方公里，介于 Moanda 与 Lukula 之间，并识别出七个目标，Dallas 为首个钻探目标，计划深度 1,500–2,300 米。引入融资前，我们要求确认矿权、所有权及批准，审阅技术数据，独立验证预算，并完成环境及安全计划。",
       highlights: ["资料所述面积：Kongo Central 约 506 平方公里", "历史工作：2010 年完成 202 公里地震勘测", "识别出七个目标；Dallas 为首个钻探目标", "计划深度：1,500–2,300 米；物流路线经 Banana、Moanda 及 Ntala"],
@@ -352,6 +362,11 @@ export function localizeListing<T extends Listing>(listing: T, locale: Locale): 
     ...listing,
     ...(translated ?? {}),
     irr: publicReturnCopy[locale],
+    photos: listing.photos?.map((photo) =>
+      photo.isExample
+        ? { ...photo, caption: localizeExampleProjectImageCaption(photo.id, photo.caption, locale) }
+        : photo,
+    ),
   };
 }
 

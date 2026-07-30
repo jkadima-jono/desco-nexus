@@ -23,6 +23,14 @@ const listing: PublicationContent = {
   governmentBacked: false,
   govMechanism: null,
   verified: false,
+  images: [
+    {
+      id: "image-1",
+      storageKey: "https://assets.example/project.jpg",
+      caption: "Sponsor-approved project image",
+      position: 0,
+    },
+  ],
 };
 
 test("publication hash is stable for identical controlled content", () => {
@@ -38,6 +46,14 @@ test("every material public-content change invalidates the publication hash", ()
     { ...listing, governmentBacked: true, govMechanism: "guarantee" },
     { ...listing, relatedPartyDisclosure: "Changed disclosure" },
     { ...listing, contentVersion: 5 },
+    {
+      ...listing,
+      images: [{ ...listing.images![0], caption: "Changed image caption" }],
+    },
+    {
+      ...listing,
+      images: [{ ...listing.images![0], storageKey: "https://assets.example/replacement.jpg" }],
+    },
   ];
   for (const changed of changes) assert.notEqual(publicationContentHash(changed), baseline);
 });

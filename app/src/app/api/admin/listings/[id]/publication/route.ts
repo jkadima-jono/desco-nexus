@@ -28,7 +28,7 @@ export async function PATCH(
   const { id } = await params;
   const listing = await prisma.listing.findUnique({
     where: { id },
-    include: { docs: true, sponsorConsents: true, legalClearances: true, relatedPartyReviews: true },
+    include: { docs: true, images: true, sponsorConsents: true, legalClearances: true, relatedPartyReviews: true },
   });
   if (!listing) return NextResponse.json({ error: "Listing not found" }, { status: 404 });
 

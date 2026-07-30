@@ -6,6 +6,8 @@ import { prisma } from "@/lib/db";
 import { getSessionUser } from "@/lib/auth";
 import { canManageListing, forbidden } from "@/lib/authz";
 import { Prisma } from "@prisma/client";
+import { invalidatePublicationForImageChange } from "@/lib/invalidate-publication";
+import { hasValidImageSignature } from "@/lib/image-upload";
 
 const MAX_BYTES = 10 * 1024 * 1024;
 const ALLOWED = new Set([".jpg", ".jpeg", ".png", ".webp"]);
@@ -41,6 +43,13 @@ export async function POST(
       { status: 400 }
     );
   }
+  const header = new Uint8Array(await file.slice(0, 12).arrayBuffer());
+  if (!hasValidImageSignature(ext, file.type, header)) {
+    return NextResponse.json(
+      { error: "File content does not match an allowed image format" },
+      { status: 400 },
+    );
+  }
   const caption = String(form?.get("caption") ?? "").slice(0, 200) || null;
   const pathname = "listings/" + id + "/" + crypto.randomUUID() + ext;
   const blob = await put(pathname, file, { access: "public" });
@@ -51,9 +60,16 @@ export async function POST(
         orderBy: { position: "desc" },
         select: { position: true },
       });
-      return tx.listingImage.create({
+      const image = await tx.listingImage.create({
         data: { listingId: id, storageKey: blob.url, caption, position: (last?.position ?? -1) + 1 },
       });
+      await invalidatePublicationForImageChange(
+        tx,
+        id,
+        user.id,
+        "Project image uploaded",
+      );
+      return image;
     }, { isolationLevel: Prisma.TransactionIsolationLevel.Serializable });
     return NextResponse.json({ ok: true, image });
   } catch (error) {
