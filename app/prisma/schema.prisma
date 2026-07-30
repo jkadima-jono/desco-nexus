@@ -225,8 +225,8 @@ model Document {
   receivedAt       DateTime            @default(now())
   accessLogs       DocumentAccessLog[]
 
-  @@unique([listingId, sha256])
-  @@unique([listingId, sourceRef])
+  @@index([listingId, sha256])
+  @@index([listingId, sourceRef])
   @@index([listingId, visibility, lifecycle])
 }
 

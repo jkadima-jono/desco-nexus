@@ -67,8 +67,11 @@ async function main() {
   }
 
   for (const source of projectDocumentSources) {
-    await prisma.document.create({
-      data: {
+    const existingDocument = await prisma.document.findFirst({
+      where: { listingId: source.listingId, sourceRef: source.sourceRef },
+      select: { id: true },
+    });
+    const documentData = {
         listingId: source.listingId,
         sourceRef: source.sourceRef,
         name: source.name,
@@ -84,8 +87,12 @@ async function main() {
         version: source.version,
         language: source.language ?? "en",
         reviewNote: source.reviewNote,
-      },
-    });
+    };
+    if (existingDocument) {
+      await prisma.document.update({ where: { id: existingDocument.id }, data: documentData });
+    } else {
+      await prisma.document.create({ data: documentData });
+    }
   }
 
   console.log("Seeded", await prisma.listing.count(), "real Desco Global projects");

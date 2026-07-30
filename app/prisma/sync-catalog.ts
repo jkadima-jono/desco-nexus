@@ -131,14 +131,11 @@ async function main() {
       select: { id: true },
     });
     if (!listingExists) continue;
-    await prisma.document.upsert({
-      where: {
-        listingId_sourceRef: {
-          listingId: source.listingId,
-          sourceRef: source.sourceRef,
-        },
-      },
-      update: {
+    const existingDocument = await prisma.document.findFirst({
+      where: { listingId: source.listingId, sourceRef: source.sourceRef },
+      select: { id: true },
+    });
+    const documentData = {
         name: source.name,
         originalName: source.sourceRef.split("/").at(-1) ?? source.name,
         folder: source.folder,
@@ -150,25 +147,23 @@ async function main() {
         version: source.version,
         language: source.language ?? "en",
         reviewNote: source.reviewNote,
-      },
-      create: {
+    };
+    if (existingDocument) {
+      await prisma.document.update({
+        where: { id: existingDocument.id },
+        data: documentData,
+      });
+    } else {
+      await prisma.document.create({
+        data: {
         listingId: source.listingId,
         sourceRef: source.sourceRef,
-        name: source.name,
-        originalName: source.sourceRef.split("/").at(-1) ?? source.name,
         size: "Source indexed",
-        folder: source.folder,
-        visibility: source.visibility,
         lifecycle: "reviewed",
-        documentType: source.documentType,
-        evidenceCategory: source.evidenceCategory,
-        issuer: source.issuer,
-        sourceDate: source.sourceDate ? new Date(`${source.sourceDate}T00:00:00.000Z`) : null,
-        version: source.version,
-        language: source.language ?? "en",
-        reviewNote: source.reviewNote,
-      },
-    });
+        ...documentData,
+        },
+      });
+    }
     indexedDocuments += 1;
   }
 

@@ -77,14 +77,11 @@ async function main() {
       seen.set(sha256, storageKey);
     }
 
-    await prisma.document.upsert({
-      where: {
-        listingId_sourceRef: {
-          listingId: source.listingId,
-          sourceRef: source.sourceRef,
-        },
-      },
-      update: {
+    const existingDocument = await prisma.document.findFirst({
+      where: { listingId: source.listingId, sourceRef: source.sourceRef },
+      select: { id: true },
+    });
+    const uploadedData = {
         storageKey,
         sha256,
         size: formatSize(fileStat.size),
@@ -92,8 +89,15 @@ async function main() {
         lifecycle: "reviewed",
         approvedAt: null,
         approvedBy: null,
-      },
-      create: {
+    };
+    if (existingDocument) {
+      await prisma.document.update({
+        where: { id: existingDocument.id },
+        data: uploadedData,
+      });
+    } else {
+      await prisma.document.create({
+        data: {
         listingId: source.listingId,
         sourceRef: source.sourceRef,
         name: source.name,
@@ -112,8 +116,9 @@ async function main() {
         language: source.language ?? "en",
         sha256,
         reviewNote: source.reviewNote,
-      },
-    });
+        },
+      });
+    }
     uploaded += 1;
     console.log(`Uploaded ${source.listingId}: ${source.name}`);
   }
