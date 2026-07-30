@@ -8,6 +8,28 @@ Application builds must not change production schema or business data. `vercel-b
 
 The live database predates Prisma migration history. Do not run a generated initial migration against it blindly.
 
+### Current release-candidate delta
+
+`20260730213000_controlled_institutional_release` is the reviewed incremental
+delta from the schema on `main` at commit `7171345` to the controlled-release
+schema. It exists so the change can be tested on an isolated restore. It is not
+authority to migrate production and must not be deployed as the first recorded
+migration on the live database.
+
+The delta:
+
+- adds governance, institutional-access, maintenance and outbox structures;
+- adds nullable or defaulted columns to existing tables;
+- drops no table or column;
+- replaces the old deal uniqueness index with investor-specific uniqueness and
+  a manually maintained partial index for legacy sponsor-level deals;
+- fails before altering the schema when duplicate listing-image positions would
+  prevent the new unique index.
+
+The Vercel preview at candidate commit `c9bcba8` confirmed that the application
+cannot render database-backed public routes against the older schema. Do not
+work around that failure with an unreviewed `prisma db push`.
+
 ### Isolated restore declaration
 
 Before any database command, record:
@@ -63,7 +85,7 @@ the actual identifier.
 
    ```bash
    export BASELINE_ID='<UTC identifier>_existing_database_baseline'
-   export CANDIDATE_MIGRATION_ID='<later UTC identifier>_operational_controls'
+   export CANDIDATE_MIGRATION_ID='20260730213000_controlled_institutional_release'
    mkdir -p "prisma/migrations/$BASELINE_ID"
    npx prisma migrate diff \
      --from-empty \
@@ -75,17 +97,21 @@ the actual identifier.
 
 2. Review the baseline against the restored schema. It must describe what already
    exists, not silently add candidate changes.
-3. Save the reviewed `/tmp/restored-to-candidate.sql` as a separate, later migration:
+3. Compare the reviewed `/tmp/restored-to-candidate.sql` with the committed
+   candidate migration:
 
    ```bash
-   mkdir -p "prisma/migrations/$CANDIDATE_MIGRATION_ID"
-   cp /tmp/restored-to-candidate.sql \
-     "prisma/migrations/$CANDIDATE_MIGRATION_ID/migration.sql"
+   diff -u \
+     "prisma/migrations/$CANDIDATE_MIGRATION_ID/migration.sql" \
+     /tmp/restored-to-candidate.sql
    ```
 
-   Review destructive statements, table locks, defaults, nullability, indexes and
-   data backfills. Use expand/backfill/contract sequencing. Never combine the
-   existing-schema baseline and candidate delta into one migration.
+   The committed migration includes an image-position preflight and a partial
+   sponsor-deal uniqueness index, so those reviewed additions will appear in
+   the diff. Review every other difference. Review table locks, defaults,
+   nullability, indexes and data backfills. Use expand/backfill/contract
+   sequencing. Never combine the existing-schema baseline and candidate delta
+   into one migration.
 4. On the isolated restore only, mark the baseline as applied and deploy the later
    candidate migration:
 
