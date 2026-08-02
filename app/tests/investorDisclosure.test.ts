@@ -7,6 +7,7 @@ import { exampleProjectImages } from "../src/lib/example-project-images";
 import { evidenceDisclosureStatus, getInvestmentEvidence, sourceDatePresentation, summarizeEvidence } from "../src/lib/investment-evidence";
 import { PUBLIC_OPPORTUNITY_IDS, isPublicOpportunityId } from "../src/lib/public-listings";
 import { disclosureStatusCopy, relatedPartyDisclosure } from "../src/lib/translations/investment-ui";
+import { localizeInvestmentEvidence } from "../src/lib/translations/listing-content";
 import { getMarketingCopy } from "../src/lib/translations/marketing";
 
 test("evidence coverage includes partially supported fields without calling them verified", () => {
@@ -166,5 +167,17 @@ test("evidence coverage is presented as a plain status in every language", () =>
     const label = disclosureStatusCopy(locale, status);
     assert.ok(label.length > 3);
     assert.doesNotMatch(label, /\d+\s*\/\s*\d+/);
+  }
+});
+
+test("missing disclosure field names are localized in every supported language", () => {
+  const solar = listings.find((listing) => listing.id === "kasaji-kisenge-solar-50mw");
+  assert.ok(solar);
+  for (const locale of ["fr", "es", "pt", "zh"] as const) {
+    const localized = localizeInvestmentEvidence(getInvestmentEvidence(solar), locale);
+    const missing = localized.fields.filter((field) => field.status === "not-disclosed");
+    assert.ok(missing.length > 0);
+    assert.equal(missing.some((field) => field.label === "Funding already secured"), false, locale);
+    assert.equal(missing.some((field) => field.label === "Ownership and development rights"), false, locale);
   }
 });

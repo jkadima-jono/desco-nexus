@@ -8,7 +8,7 @@ import { sectorForeground } from "@/lib/theme";
 import type { Locale } from "@/lib/i18n";
 import { investmentUi, materialFactCopy } from "@/lib/translations/investment-ui";
 import DisclosureCompleteness from "./DisclosureCompleteness";
-import { localizeListing } from "@/lib/translations/listing-content";
+import { localizeInvestmentEvidence, localizeListing } from "@/lib/translations/listing-content";
 import { projectHref } from "@/lib/project-slugs";
 
 export default function ProjectCard({
@@ -28,7 +28,7 @@ export default function ProjectCard({
   const verificationScope = listing.verified
     ? ui.reviewed
     : ui.pending;
-  const investmentEvidence = getInvestmentEvidence(listing);
+  const investmentEvidence = localizeInvestmentEvidence(getInvestmentEvidence(listing), locale);
   const sourceDate = sourceDatePresentation(investmentEvidence.provenance.sourceDate);
   const localizedSourceDate = sourceDate.date && sourceDate.label?.includes(" ")
     ? sourceDate.date.toLocaleDateString(locale, { month: "short", year: "numeric", timeZone: "UTC" })
