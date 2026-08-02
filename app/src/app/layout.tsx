@@ -8,6 +8,7 @@ import { I18nProvider } from "@/components/I18nProvider";
 import { t } from "@/lib/i18n";
 import ProductAnalytics from "@/components/ProductAnalytics";
 import { sharedCopy } from "@/lib/translations/shared";
+import { metadataBaseUrl } from "@/lib/metadata";
 
 const montserrat = Montserrat({
   subsets: ["latin"],
@@ -26,7 +27,7 @@ const playfair = Playfair_Display({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? "https://compass.desco.global"),
+  metadataBase: metadataBaseUrl(),
   title: "DESCO Compass — Structured African investment opportunities",
   description:
     "We present structured African investment opportunities with clear disclosure, controlled diligence and mandate-based screening.",
@@ -60,6 +61,7 @@ export default async function RootLayout({
         <ProductAnalytics />
         <AppShell
           user={user ? { fullName: user.fullName, title: user.title, role: user.role } : null}
+          demoMode={process.env.NEXT_PUBLIC_DEMO_MODE !== "false"}
           demoBanner={t(locale, "system.demoBanner")}
         >
           {children}

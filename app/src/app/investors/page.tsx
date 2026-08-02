@@ -9,13 +9,15 @@ import {
 } from "@/components/public/PublicPrimitives";
 import { getLocale } from "@/lib/i18n-server";
 import { getMarketingCopy, getMarketingMetadata } from "@/lib/translations/marketing";
+import { t } from "@/lib/i18n";
 
 export async function generateMetadata(): Promise<Metadata> {
   return getMarketingMetadata(await getLocale(), "investors");
 }
 
 export default async function InvestorsPage() {
-  const copy = getMarketingCopy(await getLocale(), "investors");
+  const locale = await getLocale();
+  const copy = getMarketingCopy(locale, "investors");
   const hero = copy.hero;
   return (
     <>
@@ -24,6 +26,7 @@ export default async function InvestorsPage() {
         title={hero.title}
         body={hero.body}
         primary={{ href: "/contact?topic=investor-access", label: hero.primary }}
+        primaryNote={t(locale, "access.investorQualifier")}
         secondary={{ href: "/opportunities", label: hero.secondary }}
         aside={
           <div className="briefing-card">
@@ -43,7 +46,10 @@ export default async function InvestorsPage() {
           </div>
           <div className="mt-10"><NumberedProcess items={copy.steps} /></div>
           <div className="mt-8"><QuietNotice>{copy.notice}</QuietNotice></div>
-          <Link href="/contact?topic=investor-access" className="button-primary mt-8">{copy.applyCta}</Link>
+          <div className="mt-8 max-w-xl">
+            <Link href="/contact?topic=investor-access" className="button-primary">{copy.applyCta}</Link>
+            <p className="mt-3 text-xs leading-5 text-slate">{t(locale, "access.investorQualifier")}</p>
+          </div>
         </div>
       </section>
     </>

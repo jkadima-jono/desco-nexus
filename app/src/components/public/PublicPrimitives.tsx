@@ -7,6 +7,7 @@ export function PageHero({
   title,
   body,
   primary,
+  primaryNote,
   secondary,
   aside,
 }: {
@@ -14,6 +15,7 @@ export function PageHero({
   title: string;
   body: string;
   primary?: { href: string; label: string };
+  primaryNote?: string;
   secondary?: { href: string; label: string };
   aside?: ReactNode;
 }) {
@@ -39,6 +41,7 @@ export function PageHero({
               {secondary && <Link href={secondary.href} className="button-on-dark">{secondary.label}</Link>}
             </div>
           )}
+          {primary && primaryNote && <p className="mt-3 max-w-xl text-xs leading-5 text-white/65">{primaryNote}</p>}
         </div>
         {aside && <div>{aside}</div>}
       </div>

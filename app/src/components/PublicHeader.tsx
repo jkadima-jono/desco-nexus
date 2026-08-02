@@ -32,7 +32,7 @@ export default function PublicHeader({ user }: { user?: { role?: string } | null
   useModalFocus({ open, container: mobileNavigation, initialFocus: closeButton, returnFocus: menuButton, onClose: closeMenu });
 
   const nav = (
-    <nav aria-label={t("nav.public")} className="flex flex-col gap-1 2xl:flex-row 2xl:items-center 2xl:gap-1">
+    <nav aria-label={t("nav.public")} className="flex flex-col gap-1 lg:flex-row lg:items-center lg:gap-0.5 xl:gap-1">
       {LINKS.map(([href, labelKey]) => {
         const active = pathname.startsWith(href);
         return (
@@ -41,7 +41,7 @@ export default function PublicHeader({ user }: { user?: { role?: string } | null
             href={href}
             onClick={() => setOpen(false)}
             aria-current={active ? "page" : undefined}
-            className={`min-h-11 whitespace-nowrap rounded-md px-2.5 py-3 text-sm font-semibold 2xl:min-h-0 2xl:py-2 ${
+            className={`min-h-11 whitespace-nowrap rounded-md px-2.5 py-3 text-sm font-semibold lg:min-h-0 lg:px-1.5 lg:py-2 lg:text-[11px] xl:px-2 xl:text-xs 2xl:px-2.5 2xl:text-sm ${
               active ? "bg-gold-soft text-ink" : "text-white/75 hover:bg-white/8 hover:text-white"
             }`}
           >
@@ -55,14 +55,14 @@ export default function PublicHeader({ user }: { user?: { role?: string } | null
   return (
     <>
       <header className="sticky top-0 z-40 border-b border-white/10 bg-ink text-white">
-        <div className="mx-auto flex h-16 w-[calc(100%-2rem)] max-w-[106rem] items-center justify-between gap-6 md:w-[calc(100%-3rem)]">
+        <div className="mx-auto flex h-16 w-[calc(100%-2rem)] max-w-[106rem] items-center justify-between gap-3 md:w-[calc(100%-3rem)] lg:w-[calc(100%-2rem)] xl:gap-4 2xl:w-[calc(100%-3rem)] 2xl:gap-6">
           <Link href="/" className="flex shrink-0 items-center gap-3" aria-label={`DESCO Compass — ${t("common.home")}`}>
-            <BrandMark />
+            <BrandMark compactDesktop />
           </Link>
-          <div className="hidden items-center gap-2 2xl:flex">
+          <div className="hidden min-w-0 items-center gap-1.5 lg:flex xl:gap-2">
             {nav}
-            <div className="w-32"><LanguageSwitcher /></div>
-            <Link href={workspaceHref} className="button-on-dark">{workspaceLabel}</Link>
+            <div className="w-24 shrink-0 xl:w-28 2xl:w-32"><LanguageSwitcher /></div>
+            <Link href={workspaceHref} className="button-primary shrink-0 px-2 text-[11px] xl:px-3 xl:text-xs 2xl:px-4 2xl:text-[0.82rem]">{workspaceLabel}</Link>
           </div>
           <button
             ref={menuButton}
@@ -70,7 +70,7 @@ export default function PublicHeader({ user }: { user?: { role?: string } | null
             onClick={() => setOpen(true)}
             aria-expanded={open}
             aria-controls="public-mobile-navigation"
-            className="grid min-h-11 min-w-11 place-items-center rounded-lg border border-white/20 text-xl 2xl:hidden"
+            className="grid min-h-11 min-w-11 place-items-center rounded-lg border border-white/20 text-xl lg:hidden"
             aria-label={t("nav.open")}
           >
             ☰
@@ -78,7 +78,7 @@ export default function PublicHeader({ user }: { user?: { role?: string } | null
         </div>
       </header>
       {open && (
-        <div className="fixed inset-0 z-50 bg-black/55 2xl:hidden" onClick={() => setOpen(false)}>
+        <div className="fixed inset-0 z-50 bg-black/55 lg:hidden" onClick={() => setOpen(false)}>
           <aside
             ref={mobileNavigation}
             id="public-mobile-navigation"
@@ -104,7 +104,7 @@ export default function PublicHeader({ user }: { user?: { role?: string } | null
             {nav}
             <div className="mt-auto space-y-3 border-t border-white/10 pt-5">
               <LanguageSwitcher />
-              <Link href={workspaceHref} onClick={() => setOpen(false)} className="button-on-dark w-full">{workspaceLabel}</Link>
+              <Link href={workspaceHref} onClick={() => setOpen(false)} className="button-primary w-full">{workspaceLabel}</Link>
             </div>
           </aside>
         </div>

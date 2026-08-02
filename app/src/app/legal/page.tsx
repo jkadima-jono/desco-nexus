@@ -1,14 +1,11 @@
 import type { Metadata } from "next";
 import { getLocale } from "@/lib/i18n-server";
 import { getPillarsLegal } from "@/lib/translations/pillars-legal";
+import { publicPageMetadata } from "@/lib/metadata";
 
 export async function generateMetadata(): Promise<Metadata> {
   const { legal } = getPillarsLegal(await getLocale());
-  return {
-    title: legal.metadataTitle,
-    description: legal.metadataDescription,
-    alternates: { canonical: "/legal" },
-  };
+  return publicPageMetadata(legal.metadataTitle, legal.metadataDescription, { canonical: "/legal" });
 }
 
 export default async function Legal() {

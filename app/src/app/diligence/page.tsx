@@ -43,7 +43,7 @@ export default async function DiligencePage() {
           <SectionHeading eyebrow={copy.processEyebrow} title={copy.processTitle} />
           <div className="mt-8"><NumberedProcess items={copy.process} /></div>
           <SectionHeading eyebrow={copy.roomEyebrow} title={copy.roomTitle} body={copy.roomBody} />
-          <div className="mt-8 grid gap-4 md:grid-cols-2 lg:grid-cols-5">
+          <div className="mt-8 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
             {copy.folders.map((folder, index) => (
               <InstitutionalCard key={folder} eyebrow={`${copy.folderLabel} ${String(index + 1).padStart(2, "0")}`} title={folder} />
             ))}

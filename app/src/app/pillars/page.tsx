@@ -6,10 +6,11 @@ import StatCounter from "@/components/story/StatCounter";
 import { getLocale } from "@/lib/i18n-server";
 import { getPillarsLegal } from "@/lib/translations/pillars-legal";
 import type { Metadata } from "next";
+import { publicPageMetadata } from "@/lib/metadata";
 
 export async function generateMetadata(): Promise<Metadata> {
   const copy = getPillarsLegal(await getLocale());
-  return { title: copy.metadataTitle, description: copy.metadataDescription };
+  return publicPageMetadata(copy.metadataTitle, copy.metadataDescription, { canonical: "/pillars" });
 }
 
 export default async function PillarsIndex() {

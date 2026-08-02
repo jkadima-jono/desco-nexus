@@ -13,7 +13,7 @@ export default function Footer() {
       <div className="public-container grid gap-8 py-9 text-xs text-wgray lg:grid-cols-[1fr_auto_auto] lg:items-start lg:gap-12">
         <div className="flex max-w-sm items-start gap-3">
           <span className="mt-0.5"><BrandMark size={28} showName={false} /></span>
-          <span className="leading-5">© {new Date().getFullYear()} Desco Global. {t("footer.demo")}</span>
+          <span className="leading-5">© {new Date().getFullYear()} Desco Global.</span>
         </div>
         <nav aria-label={copy.exploreNavigation} className="grid grid-cols-2 gap-x-8 font-semibold sm:grid-cols-4 lg:grid-cols-2">
           <Link href="/opportunities" className="inline-flex min-h-11 items-center hover:text-charcoal">{t("nav.opportunities")}</Link>

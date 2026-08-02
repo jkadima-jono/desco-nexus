@@ -65,12 +65,14 @@ export default function HeroVisual({
   overlay = true,
   locale = "en",
   priority = false,
+  contextLabelClassName = "right-3 top-3",
 }: {
   listing: Listing;
   className?: string;
   overlay?: boolean;
   locale?: Locale;
   priority?: boolean;
+  contextLabelClassName?: string;
 }) {
   const ui = investmentUi(locale).images;
   const photo = listing.photos?.[0] ?? exampleProjectImages(listing.id)[0];
@@ -89,7 +91,7 @@ export default function HeroVisual({
           <div className="absolute inset-0 bg-gradient-to-t from-ink/70 via-ink/10 to-transparent" />
         )}
         {photo.isExample && (
-          <span className="absolute right-3 top-3 rounded-full bg-ink/85 px-2.5 py-1 text-xs font-bold uppercase tracking-[0.08em] text-white">
+          <span className={`absolute max-w-[calc(100%-1.5rem)] whitespace-normal rounded-md bg-ink/90 px-2.5 py-1 text-right text-[10px] font-bold uppercase leading-4 tracking-[0.06em] text-white shadow-sm ${contextLabelClassName}`} title={photo.caption ?? (photo.kind === "regional" ? ui.regional : ui.example)}>
             {photo.kind === "regional" ? ui.regional : ui.example}
           </span>
         )}

@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-labelledby="title">
+  <title id="title">DESCO</title>
+  <circle cx="32" cy="32" r="29" fill="#0D151C" stroke="#B8953D" stroke-width="3"/>
+  <path d="M32 12 38 27 52 32 38 37 32 52 26 37 12 32 26 27Z" fill="#B8953D"/>
+  <path d="M32 17 35 29 47 32 35 35 32 47 29 35 17 32 29 29Z" fill="#FFFFFF"/>
+  <circle cx="32" cy="32" r="4" fill="#B8953D"/>
+</svg>

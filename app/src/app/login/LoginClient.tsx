@@ -105,9 +105,12 @@ function LoginForm({
               ))}
             </div>
           ) : (
-            <Link href="/contact?topic=investor-access" className="button-primary w-full">
-              {t("nav.enterWorkspace")}
-            </Link>
+            <div>
+              <Link href="/contact?topic=investor-access" className="button-primary w-full">
+                {t("nav.enterWorkspace")}
+              </Link>
+              <p className="mt-3 text-xs leading-5 text-wgray">{t("access.investorQualifier")}</p>
+            </div>
           )}
           {error && (
             <div role="alert" className="text-xs text-brandred bg-brandred/10 rounded-lg px-3 py-2 mt-4">
