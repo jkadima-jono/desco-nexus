@@ -1,4 +1,5 @@
 import { spawnSync } from "node:child_process";
+
 const env = { ...process.env };
 env.DIRECT_URL ||= env.DATABASE_URL_UNPOOLED;
 

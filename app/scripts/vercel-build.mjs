@@ -19,7 +19,7 @@ const steps = [
 ];
 
 for (const [command, args] of steps) {
-  const executable = process.platform === "win32" ? `${command}.cmd` : command;
+  const executable = process.platform === "win32" ? command + ".cmd" : command;
   const result = spawnSync(executable, args, {
     env,
     stdio: "inherit",
