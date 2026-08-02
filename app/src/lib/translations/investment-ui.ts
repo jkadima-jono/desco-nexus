@@ -231,6 +231,16 @@ export function materialFactCopy(
   sourceDate: string | null,
 ) {
   const copy = materialFactLabels[locale];
+  const monthMatch = sourceDate?.match(/^([A-Za-z]+)\s+(\d{4})$/);
+  const monthNames = ["jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec"];
+  const monthIndex = monthMatch ? monthNames.findIndex((month) => monthMatch[1].toLowerCase().startsWith(month)) : -1;
+  const localizedSourceDate = monthMatch && monthIndex >= 0
+    ? new Intl.DateTimeFormat(locale, {
+        month: monthMatch[1].length > 3 ? "long" : "short",
+        year: "numeric",
+        timeZone: "UTC",
+      }).format(new Date(Date.UTC(Number(monthMatch[2]), monthIndex, 1)))
+    : sourceDate;
   const label = kind === "current_ask"
     ? copy.currentAsk
     : kind === "estimated_cost"
@@ -239,7 +249,7 @@ export function materialFactCopy(
         ? copy.projectScale
         : copy.capitalGap;
   return {
-    label: sourceDate && kind === "estimated_cost" ? `${label} · ${sourceDate} ${copy.source}` : label,
+    label: localizedSourceDate && kind === "estimated_cost" ? `${label} · ${localizedSourceDate} ${copy.source}` : label,
     capitalGap: copy.capitalGap,
   };
 }

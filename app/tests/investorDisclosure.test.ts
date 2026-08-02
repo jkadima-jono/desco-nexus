@@ -6,7 +6,7 @@ import { capitalPresentation, controlledCapitalFields, isDescoRelatedOpportunity
 import { exampleProjectImages } from "../src/lib/example-project-images";
 import { evidenceDisclosureStatus, getInvestmentEvidence, sourceDatePresentation, summarizeEvidence } from "../src/lib/investment-evidence";
 import { PUBLIC_OPPORTUNITY_IDS, isPublicOpportunityId } from "../src/lib/public-listings";
-import { disclosureStatusCopy, relatedPartyDisclosure } from "../src/lib/translations/investment-ui";
+import { disclosureStatusCopy, materialFactCopy, relatedPartyDisclosure } from "../src/lib/translations/investment-ui";
 import { localizeInvestmentEvidence } from "../src/lib/translations/listing-content";
 import { getMarketingCopy } from "../src/lib/translations/marketing";
 
@@ -61,6 +61,19 @@ test("the strongest known material fact leads without implying it is the current
   assert.equal(ldcFact.kind, "estimated_cost");
   assert.equal(ldcFact.value, "$14.6B");
   assert.equal(ldcFact.sourceDate, "Nov 2025");
+
+  assert.equal(
+    materialFactPresentation(solar, "Plans dated 31 August 2023; folder reviewed 29 July 2026").sourceDate,
+    "August 2023",
+  );
+  assert.equal(
+    materialFactPresentation(ldc, "Documents undated; folder reviewed 29 July 2026").sourceDate,
+    null,
+  );
+  assert.equal(
+    materialFactPresentation(solar, "2026 decks; retrieved from folder on 29 July 2026").sourceDate,
+    "2026",
+  );
 });
 
 test("controlled project costs remain available before database catalogue synchronization", () => {
@@ -71,6 +84,12 @@ test("controlled project costs remain available before database catalogue synchr
     }),
     { estimatedProjectCostUsd: 86_215_774, currentCapitalAskUsd: null },
   );
+});
+
+test("material-fact source months are localized without inventing dates", () => {
+  assert.match(materialFactCopy("fr", "estimated_cost", "August 2023").label, /août 2023/);
+  assert.doesNotMatch(materialFactCopy("fr", "estimated_cost", null).label, /2026/);
+  assert.match(materialFactCopy("zh", "estimated_cost", "August 2023").label, /2023年8月/);
 });
 
 test("material fact presentation falls back to physical scale, then a muted disclosure", () => {

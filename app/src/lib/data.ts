@@ -73,14 +73,19 @@ export type MaterialFactPresentation = {
 
 function sourceMonthYear(sourceDate: string | undefined): string | null {
   if (!sourceDate) return null;
-  const match = sourceDate.match(
+  const primarySourceDate = sourceDate.split(";")[0].trim();
+  if (/\b(?:undated|not disclosed)\b/i.test(primarySourceDate)) return null;
+  const match = primarySourceDate.match(
     /\b(January|February|March|April|May|June|July|August|September|October|November|December)\s+\d{4}\b/i,
   );
   if (match) return match[0];
-  const isoMatch = sourceDate.match(/\b(\d{4})-(0[1-9]|1[0-2])(?:-\d{2})?\b/);
-  if (!isoMatch) return null;
-  return new Intl.DateTimeFormat("en", { month: "short", year: "numeric", timeZone: "UTC" })
-    .format(new Date(Date.UTC(Number(isoMatch[1]), Number(isoMatch[2]) - 1, 1)));
+  const isoMatch = primarySourceDate.match(/\b(\d{4})-(0[1-9]|1[0-2])(?:-\d{2})?\b/);
+  if (isoMatch) {
+    return new Intl.DateTimeFormat("en", { month: "short", year: "numeric", timeZone: "UTC" })
+      .format(new Date(Date.UTC(Number(isoMatch[1]), Number(isoMatch[2]) - 1, 1)));
+  }
+  const yearMatch = primarySourceDate.match(/\b(?:19|20)\d{2}\b/);
+  return yearMatch?.[0] ?? null;
 }
 
 export function materialFactPresentation(
