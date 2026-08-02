@@ -6,10 +6,11 @@ import StatCounter from "@/components/story/StatCounter";
 import { getLocale } from "@/lib/i18n-server";
 import { getPillarsLegal } from "@/lib/translations/pillars-legal";
 import type { Metadata } from "next";
+import { publicPageMetadata } from "@/lib/metadata";
 
 export async function generateMetadata(): Promise<Metadata> {
   const copy = getPillarsLegal(await getLocale());
-  return { title: copy.metadataTitle, description: copy.metadataDescription };
+  return publicPageMetadata(copy.metadataTitle, copy.metadataDescription, { canonical: "/pillars" });
 }
 
 export default async function PillarsIndex() {
@@ -163,7 +164,7 @@ export default async function PillarsIndex() {
             </h2>
           </div>
         </Reveal>
-        <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
           {copy.pillars.map((p, i) => (
             <PillarCard key={p.slug} pillar={p} index={i} learnMore={copy.detail.learn} />
           ))}

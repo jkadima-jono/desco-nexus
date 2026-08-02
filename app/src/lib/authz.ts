@@ -4,11 +4,11 @@ import { getSessionUser } from "./auth";
 
 export type Role = "investor" | "owner" | "advisor" | "admin";
 
-// Single policy source. Confidential material (data rooms, documents,
-// discussions, personalized scores) requires an authenticated session.
+// Single policy source. A basic account never grants confidential access.
+// Data-room and document routes must use their resource-specific grants.
 // Managing a listing (uploads, photos, teaser) requires org ownership or admin.
 export function canViewConfidential(user: User | null): boolean {
-  return !!user;
+  return !!user && user.role === "admin";
 }
 
 export function canManageListing(user: User | null, listing: Listing): boolean {

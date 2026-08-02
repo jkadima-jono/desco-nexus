@@ -3,10 +3,11 @@ import type { Metadata } from "next";
 import { getLocale } from "@/lib/i18n-server";
 import { investmentUi } from "@/lib/translations/investment-ui";
 import BrandMark from "@/components/BrandMark";
+import { publicPageMetadata } from "@/lib/metadata";
 
 export async function generateMetadata(): Promise<Metadata> {
   const ui = investmentUi(await getLocale()).contact;
-  return { title: ui.metadataTitle, description: ui.metadataDescription };
+  return publicPageMetadata(ui.metadataTitle, ui.metadataDescription, { canonical: "/contact" });
 }
 
 export default async function ContactPage({

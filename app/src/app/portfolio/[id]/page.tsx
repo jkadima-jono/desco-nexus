@@ -9,9 +9,9 @@ export default async function LegacyPositionDetail({
 }: {
   params: Promise<{ id: string }>;
 }) {
-  const user = await getSessionUser();
-  if (!user) redirect("/login");
   const { id } = await params;
+  const user = await getSessionUser();
+  if (!user) redirect(`/login?next=${encodeURIComponent(`/portfolio/${id}`)}`);
   const deal = await prisma.deal.findUnique({
     where: { id },
     select: { listingId: true, investorId: true },

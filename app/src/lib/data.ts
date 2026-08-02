@@ -23,6 +23,9 @@ export type Listing = {
   stage: string;
   irr: string;
   summary: string;
+  // TODO(content): Every currently published briefing uses the same unverified
+  // review flag. Add controlled, evidence-backed review states before using
+  // this field as a differentiating catalogue taxonomy.
   verified: boolean;
   governmentBacked: boolean;
   scores: Scores;
@@ -61,6 +64,63 @@ export type CapitalPresentation = {
   amountUsd: number | null;
   kind: "current_ask" | "estimated_cost" | "not_disclosed";
 };
+
+export type MaterialFactPresentation = {
+  kind: "current_ask" | "estimated_cost" | "physical_scale" | "not_disclosed";
+  value: string;
+  sourceDate: string | null;
+};
+
+function sourceMonthYear(sourceDate: string | undefined): string | null {
+  if (!sourceDate) return null;
+  const primarySourceDate = sourceDate.split(";")[0].trim();
+  if (/\b(?:undated|not disclosed)\b/i.test(primarySourceDate)) return null;
+  const match = primarySourceDate.match(
+    /\b(January|February|March|April|May|June|July|August|September|October|November|December)\s+\d{4}\b/i,
+  );
+  if (match) return match[0];
+  const isoMatch = primarySourceDate.match(/\b(\d{4})-(0[1-9]|1[0-2])(?:-\d{2})?\b/);
+  if (isoMatch) {
+    return new Intl.DateTimeFormat("en", { month: "short", year: "numeric", timeZone: "UTC" })
+      .format(new Date(Date.UTC(Number(isoMatch[1]), Number(isoMatch[2]) - 1, 1)));
+  }
+  const yearMatch = primarySourceDate.match(/\b(?:19|20)\d{2}\b/);
+  return yearMatch?.[0] ?? null;
+}
+
+export function materialFactPresentation(
+  listing: Pick<Listing, "id" | "raiseUsd" | "highlights"> &
+    Partial<Pick<Listing, "estimatedProjectCostUsd" | "currentCapitalAskUsd">>,
+  evidenceSourceDate?: string,
+): MaterialFactPresentation {
+  const sourceDate = sourceMonthYear(evidenceSourceDate);
+  if (listing.currentCapitalAskUsd != null && listing.currentCapitalAskUsd > 0) {
+    return { kind: "current_ask", value: fmtUsd(listing.currentCapitalAskUsd), sourceDate };
+  }
+  if (listing.estimatedProjectCostUsd != null && listing.estimatedProjectCostUsd > 0) {
+    return { kind: "estimated_cost", value: fmtUsd(listing.estimatedProjectCostUsd), sourceDate };
+  }
+  const physicalScale = listing.highlights.find((highlight) =>
+    /\b\d[\d,.]*\s*(?:MW|GW|km(?:\u00b2)?|hectares?|ha|homes?|housing units?|hubs?|stations?|beds?|sites?|prospects?|wells?)\b/i.test(highlight),
+  );
+  if (physicalScale) {
+    return { kind: "physical_scale", value: physicalScale, sourceDate };
+  }
+  return { kind: "not_disclosed", value: "Capital ask not disclosed", sourceDate };
+}
+
+export function controlledCapitalFields(
+  id: string,
+  fields: Pick<Listing, "estimatedProjectCostUsd" | "currentCapitalAskUsd">,
+) {
+  const controlled = listings.find((listing) => listing.id === id);
+  return {
+    estimatedProjectCostUsd:
+      fields.estimatedProjectCostUsd ?? controlled?.estimatedProjectCostUsd ?? null,
+    currentCapitalAskUsd:
+      fields.currentCapitalAskUsd ?? controlled?.currentCapitalAskUsd ?? null,
+  };
+}
 
 export function isDescoRelatedOpportunity(
   listing: Pick<Listing, "org"> & Partial<Pick<Listing, "relatedParty">>,

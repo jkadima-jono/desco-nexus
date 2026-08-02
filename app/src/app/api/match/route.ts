@@ -7,6 +7,7 @@ import { isPublicOpportunityId, PUBLIC_LISTING_STATUS } from "@/lib/public-listi
 import { institutionalAccessDecision } from "@/lib/institutional-access";
 import { DEMO_NDA_HASH, DEMO_NDA_VERSION, RESTRICTED_ACCESS_NOTICE_VERSION } from "@/lib/restricted-access";
 import { Prisma } from "@prisma/client";
+import { applyRateLimit, rejectUntrustedOrigin } from "@/lib/request-security";
 
 const ACTIONS = new Set(["interested", "pass", "saved", "follow", "info_requested", "dataroom_requested"]);
 
@@ -23,6 +24,10 @@ const ACTION_STAGE: Partial<Record<string, Stage>> = {
 };
 
 export async function POST(req: Request) {
+  const originRejection = rejectUntrustedOrigin(req);
+  if (originRejection) return originRejection;
+  const limited = await applyRateLimit(req, "match-action", 30, 60_000);
+  if (limited) return limited;
   const user = await getSessionUser();
   if (!user) {
     return NextResponse.json({ error: "Sign in required" }, { status: 401 });

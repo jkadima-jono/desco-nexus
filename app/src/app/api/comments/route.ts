@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
 import { getSessionUser } from "@/lib/auth";
 import { canParticipateInListing } from "@/lib/listing-participation";
+import { applyRateLimit, rejectUntrustedOrigin } from "@/lib/request-security";
 
 export async function GET(req: Request) {
   const listingId = new URL(req.url).searchParams.get("listingId");
@@ -52,6 +53,10 @@ export async function GET(req: Request) {
 }
 
 export async function POST(req: Request) {
+  const originRejection = rejectUntrustedOrigin(req);
+  if (originRejection) return originRejection;
+  const limited = await applyRateLimit(req, "comment", 20, 60_000);
+  if (limited) return limited;
   const user = await getSessionUser();
   if (!user) {
     return NextResponse.json({ error: "Sign in required" }, { status: 401 });

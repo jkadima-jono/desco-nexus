@@ -8,7 +8,7 @@ import { investmentUi } from "@/lib/translations/investment-ui";
 
 const LIMIT = 4;
 
-export default function ComparisonGrid({ listings, locale }: { listings: Listing[]; locale: Locale }) {
+export default function ComparisonGrid({ listings, locale, showReviewStatus = true }: { listings: Listing[]; locale: Locale; showReviewStatus?: boolean }) {
   const ui = investmentUi(locale).compare;
   const [selected, setSelected] = useState<string[]>([]);
   const atLimit = selected.length >= LIMIT;
@@ -54,7 +54,7 @@ export default function ComparisonGrid({ listings, locale }: { listings: Listing
                 {ui.checkbox}
               </label>
               <div className="[&>article]:rounded-none [&>article]:border-0">
-                <ProjectCard listing={listing} index={index} locale={locale} />
+                <ProjectCard listing={listing} index={index} locale={locale} showReviewStatus={showReviewStatus} />
               </div>
             </div>
           );

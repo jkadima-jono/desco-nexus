@@ -5,15 +5,21 @@ import { prisma, toListing } from "@/lib/db";
 import { getLocale } from "@/lib/i18n-server";
 import { getPublicHero } from "@/lib/public-copy";
 import ComparisonGrid from "./ComparisonGrid";
-import { instrumentCategoryCopy, investmentUi } from "@/lib/translations/investment-ui";
+import { catalogueReviewNote, instrumentCategoryCopy, investmentUi } from "@/lib/translations/investment-ui";
 import { localizeListing } from "@/lib/translations/listing-content";
 import { publicListingWhere } from "@/lib/public-listings";
+import { t } from "@/lib/i18n";
+import { publicPageMetadata } from "@/lib/metadata";
+import { openSignupConfig } from "@/lib/openSignup";
+import { accountCopy } from "@/lib/translations/account";
 
 export const dynamic = "force-dynamic";
 
 export async function generateMetadata(): Promise<Metadata> {
   const ui = investmentUi(await getLocale());
-  return { title: ui.opportunities.metadataTitle, description: ui.opportunities.metadataDescription };
+  return publicPageMetadata(ui.opportunities.metadataTitle, ui.opportunities.metadataDescription, {
+    canonical: "/opportunities",
+  });
 }
 
 type Params = {
@@ -71,6 +77,8 @@ export default async function Opportunities({ searchParams }: { searchParams: Pr
   const locale = await getLocale();
   const hero = getPublicHero(locale, "opportunities");
   const ui = investmentUi(locale).opportunities;
+  const account = accountCopy(locale);
+  const signupEnabled = openSignupConfig().enabled;
   const {
     sector = "All",
     country = "All",
@@ -106,6 +114,9 @@ export default async function Opportunities({ searchParams }: { searchParams: Pr
   const stages = optionValues(allListings.map((item) => item.stage));
   const instruments = optionValues(allListings.map((item) => instrumentCategory(item.instrument)));
   const sponsors = optionValues(allListings.map((item) => item.org));
+  const reviewStatuses = new Set(allListings.map((item) => item.verified));
+  const hasDifferentiatingReviewStatus = reviewStatuses.size > 1;
+  const commonReviewStatus = allListings[0]?.verified ?? false;
 
   let listings = allListings.filter((item) => {
     if (sector !== "All" && item.sector !== sector) return false;
@@ -154,7 +165,8 @@ export default async function Opportunities({ searchParams }: { searchParams: Pr
         eyebrow={hero.eyebrow}
         title={hero.title}
         body={hero.body}
-        primary={{ href: "/contact?topic=investor-access", label: hero.primary }}
+        primary={signupEnabled ? { href: "/signup", label: account.createAccount } : { href: "/contact?topic=investor-access", label: hero.primary }}
+        primaryNote={signupEnabled ? account.basicAccountNotice : t(locale, "access.investorQualifier")}
         secondary={{ href: "/diligence", label: hero.secondary }}
         aside={
           <div className="analytical-panel p-6 text-ink">
@@ -172,6 +184,11 @@ export default async function Opportunities({ searchParams }: { searchParams: Pr
             title={ui.result(localizedListings.length)}
             body={ui.disclosureBody}
           />
+          {!hasDifferentiatingReviewStatus && allListings.length > 0 && (
+            <div className="mt-5 max-w-4xl">
+              <QuietNotice>{catalogueReviewNote(locale, commonReviewStatus)}</QuietNotice>
+            </div>
+          )}
 
           <details className="group mt-8 rounded-lg border border-ink/10 bg-white lg:contents">
             <summary className="flex min-h-12 cursor-pointer list-none items-center justify-between gap-3 rounded-lg px-4 py-3 font-display text-sm font-bold text-ink marker:content-none lg:hidden">
@@ -250,7 +267,7 @@ export default async function Opportunities({ searchParams }: { searchParams: Pr
             </form>
           </details>
 
-          <ComparisonGrid listings={localizedListings} locale={locale} />
+          <ComparisonGrid listings={localizedListings} locale={locale} showReviewStatus={hasDifferentiatingReviewStatus} />
 
           {localizedListings.length === 0 && (
             <div className="mt-7">

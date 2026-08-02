@@ -8,6 +8,9 @@ import { I18nProvider } from "@/components/I18nProvider";
 import { t } from "@/lib/i18n";
 import ProductAnalytics from "@/components/ProductAnalytics";
 import { sharedCopy } from "@/lib/translations/shared";
+import { metadataBaseUrl } from "@/lib/metadata";
+import { openSignupConfig } from "@/lib/openSignup";
+import StructuredData from "@/components/StructuredData";
 
 const montserrat = Montserrat({
   subsets: ["latin"],
@@ -26,11 +29,17 @@ const playfair = Playfair_Display({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? "https://compass.desco.global"),
+  metadataBase: metadataBaseUrl(),
   title: "DESCO Compass — Structured African investment opportunities",
   description:
     "We present structured African investment opportunities with clear disclosure, controlled diligence and mandate-based screening.",
-  icons: { icon: "/brand/desco-globe.svg", apple: "/brand/desco-coin.png" },
+  icons: {
+    icon: [
+      { url: "/brand/desco-compass-192.png", sizes: "192x192", type: "image/png" },
+      { url: "/brand/desco-compass-512.png", sizes: "512x512", type: "image/png" },
+    ],
+    apple: { url: "/brand/desco-compass-apple.png", sizes: "180x180", type: "image/png" },
+  },
   openGraph: {
     type: "website",
     siteName: "DESCO Compass",
@@ -55,12 +64,30 @@ export default async function RootLayout({
   return (
     <html lang={locale}>
       <body className={`${montserrat.variable} ${openSans.variable} ${playfair.variable} min-h-screen`}>
+        <StructuredData data={[
+          {
+            "@context": "https://schema.org",
+            "@type": "Organization",
+            name: "DESCO Global",
+            url: metadataBaseUrl().toString(),
+            logo: new URL("/brand/desco-compass-logo.jpg", metadataBaseUrl()).toString(),
+          },
+          {
+            "@context": "https://schema.org",
+            "@type": "WebSite",
+            name: "DESCO Compass",
+            url: metadataBaseUrl().toString(),
+            publisher: { "@type": "Organization", name: "DESCO Global" },
+          },
+        ]} />
         <a href="#main-content" className="skip-link">{copy.skipToContent}</a>
         <I18nProvider locale={locale}>
         <ProductAnalytics />
         <AppShell
           user={user ? { fullName: user.fullName, title: user.title, role: user.role } : null}
+          demoMode={process.env.NEXT_PUBLIC_DEMO_MODE !== "false"}
           demoBanner={t(locale, "system.demoBanner")}
+          signupEnabled={openSignupConfig().enabled}
         >
           {children}
         </AppShell>

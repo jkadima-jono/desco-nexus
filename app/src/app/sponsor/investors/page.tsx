@@ -13,7 +13,7 @@ const STAGE_LABEL: Record<string, string> = {
 
 export default async function SponsorInvestors() {
   const user = await getSessionUser();
-  if (!user) redirect("/login");
+  if (!user) redirect("/login?next=/sponsor/investors");
   if (user.role !== "owner" && user.role !== "admin") redirect("/");
 
   const listings = await prisma.listing.findMany({

@@ -5,6 +5,7 @@ import { put } from "@vercel/blob";
 import { prisma } from "@/lib/db";
 import { getSessionUser } from "@/lib/auth";
 import { canManageListing, forbidden } from "@/lib/authz";
+import { applyRateLimit, rejectUntrustedOrigin } from "@/lib/request-security";
 
 const MAX_BYTES = 20 * 1024 * 1024;
 const ALLOWED_EXT = new Set([".pdf", ".xlsx", ".docx", ".pptx", ".png", ".jpg", ".jpeg", ".csv", ".txt"]);
@@ -23,6 +24,10 @@ function signatureMatches(ext: string, bytes: Buffer) {
 }
 
 export async function POST(req: Request) {
+  const originRejection = rejectUntrustedOrigin(req);
+  if (originRejection) return originRejection;
+  const limited = await applyRateLimit(req, "document-upload", 12, 60 * 60_000);
+  if (limited) return limited;
   const user = await getSessionUser();
   if (!user) {
     return NextResponse.json({ error: "Sign in required" }, { status: 401 });

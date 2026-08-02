@@ -1,0 +1,45 @@
+import type { Metadata } from "next";
+
+const DEFAULT_SITE_ORIGIN = "https://compass.desco.global";
+const SOCIAL_IMAGE = {
+  url: "/brand/desco-compass-logo.jpg",
+  width: 800,
+  height: 800,
+  alt: "Official DESCO Compass logo",
+};
+
+function withProtocol(host: string) {
+  return host.startsWith("http://") || host.startsWith("https://") ? host : `https://${host}`;
+}
+
+export function metadataBaseUrl() {
+  const previewHost = process.env.VERCEL_ENV === "preview" ? process.env.VERCEL_URL : undefined;
+  return new URL(withProtocol(previewHost || process.env.NEXT_PUBLIC_SITE_URL || DEFAULT_SITE_ORIGIN));
+}
+
+export function publicPageMetadata(
+  title: string,
+  description: string,
+  options: { canonical?: string; openGraphTitle?: string } = {},
+): Metadata {
+  const openGraphTitle = options.openGraphTitle ?? title;
+  return {
+    title,
+    description,
+    ...(options.canonical ? { alternates: { canonical: options.canonical } } : {}),
+    openGraph: {
+      type: "website",
+      siteName: "DESCO Compass",
+      title: openGraphTitle,
+      description,
+      ...(options.canonical ? { url: options.canonical } : {}),
+      images: [SOCIAL_IMAGE],
+    },
+    twitter: {
+      card: "summary",
+      title: openGraphTitle,
+      description,
+      images: [SOCIAL_IMAGE.url],
+    },
+  };
+}

@@ -7,7 +7,7 @@ export const dynamic = "force-dynamic";
 
 export default async function Portfolio() {
   const user = await getSessionUser();
-  if (!user) redirect("/login");
+  if (!user) redirect("/login?next=/portfolio");
 
   const actedListingIds = (
     await prisma.matchAction.findMany({

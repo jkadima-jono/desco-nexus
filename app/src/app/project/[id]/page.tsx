@@ -1,5 +1,5 @@
 import { notFound, redirect } from "next/navigation";
-import { capitalPresentation, fmtUsd, isDescoRelatedOpportunity } from "@/lib/data";
+import { capitalPresentation, fmtUsd, isDescoRelatedOpportunity, materialFactPresentation } from "@/lib/data";
 import { prisma, toListing } from "@/lib/db";
 import { UploadDoc, TeaserGenerator } from "./RoomTools";
 import Comments from "./Comments";
@@ -20,14 +20,16 @@ import DataRoomAccessPanel from "./DataRoomAccessPanel";
 import MeetingsPanel from "./MeetingsPanel";
 import { hasDataRoomAccess } from "@/lib/dataroom";
 import type { Metadata } from "next";
-import { evidenceDisclosureStatus, getInvestmentEvidence, normalizeStage, summarizeEvidence } from "@/lib/investment-evidence";
+import { getInvestmentEvidence, normalizeStage, summarizeEvidence } from "@/lib/investment-evidence";
 import { sectorForeground } from "@/lib/theme";
-import { disclosureStatusCopy, inaccurateInformationLabel, investmentUi, localizedCapitalPresentation, localizedReturnValue, relatedPartyDisclosure } from "@/lib/translations/investment-ui";
+import { inaccurateInformationLabel, investmentUi, localizedCapitalPresentation, localizedReturnValue, materialFactCopy, relatedPartyDisclosure } from "@/lib/translations/investment-ui";
 import { localizeInvestmentEvidence, localizeListing } from "@/lib/translations/listing-content";
 import { localizedMatchReason, matchPanelCopy } from "@/lib/translations/matching";
 import { internalProjectId, projectHref, publicProjectId } from "@/lib/project-slugs";
 import { PUBLIC_LISTING_STATUS, isPublicOpportunityId, publicListingWhere } from "@/lib/public-listings";
 import { sharedCopy } from "@/lib/translations/shared";
+import DisclosureCompleteness from "@/components/DisclosureCompleteness";
+import { publicPageMetadata } from "@/lib/metadata";
 
 export const dynamic = "force-dynamic";
 
@@ -53,12 +55,10 @@ export async function generateMetadata({
     ? `${capital.value} — ${capital.label}`
     : metadataUi.capitalNotDisclosed;
   const description = `${localized.sector} ${metadataUi.opportunityIn} ${localized.country} — ${capitalDescription} · ${localized.instrument}. ${localized.stage}.`;
-  return {
-    title: localized.title + " — DESCO Compass",
-    description,
-    alternates: { canonical: projectHref(row.id) },
-    openGraph: { title: localized.title, description, url: projectHref(row.id), type: "website" },
-  };
+  return publicPageMetadata(localized.title + " — DESCO Compass", description, {
+    canonical: projectHref(row.id),
+    openGraphTitle: localized.title + " — DESCO Compass",
+  });
 }
 
 export default async function ProjectDetail({
@@ -110,10 +110,8 @@ export default async function ProjectDetail({
   const localizedEvidence = localizeInvestmentEvidence(getInvestmentEvidence(l), locale);
   const evidence = { ...localizedEvidence, thesis: locale === "en" ? localizedEvidence.thesis : l.summary };
   const evidenceSummary = summarizeEvidence(evidence);
-  const disclosureStatus = disclosureStatusCopy(locale, evidenceDisclosureStatus(evidenceSummary));
-  const capital = localizedCapitalPresentation(locale, capitalPresentation(l));
-  const capitalValue = capital.value;
-  const capitalLabel = capital.label;
+  const materialFact = materialFactPresentation(l, evidence.provenance.sourceDate);
+  const materialCopy = materialFactCopy(locale, materialFact.kind, materialFact.sourceDate);
 
   const folders = [...new Set(docs.map((d) => d.folder))];
 
@@ -176,10 +174,11 @@ export default async function ProjectDetail({
               <p className="text-white/70 mt-3 max-w-xl">{l.summary}</p>
             </div>
             <div className="text-left lg:text-right shrink-0">
-              <div className="font-display font-extrabold text-4xl text-gold">
-                {capitalValue}
+              <div className={materialFact.kind === "not_disclosed" ? "text-sm font-semibold text-white/70" : "font-display text-4xl font-extrabold text-gold"}>
+                {materialFact.value}
               </div>
-              <div className="mt-1 text-xs font-semibold text-white/70">{capitalLabel}</div>
+              {materialFact.kind !== "not_disclosed" && <div className="mt-1 text-xs font-semibold text-white/70">{materialCopy.label}</div>}
+              {materialFact.kind === "estimated_cost" && <div className="mt-2 text-sm text-white/70">{materialCopy.capitalGap}</div>}
               <div className="mt-2 text-xs text-white/65">
                 {l.instrument}
                 <br />
@@ -202,16 +201,16 @@ export default async function ProjectDetail({
       </div>
 
       <section aria-label={ui.publicEvidence} className="border-b border-charcoal/10 bg-white">
-        <div className="mx-auto grid max-w-5xl grid-cols-2 gap-px bg-charcoal/10 sm:grid-cols-4">
+        <div className="mx-auto grid max-w-5xl grid-cols-1 gap-px bg-charcoal/10 sm:grid-cols-2 lg:grid-cols-4">
           {[
-            [ui.publicEvidence, disclosureStatus],
+            [ui.publicEvidence, <DisclosureCompleteness key="disclosure-completeness" evidence={evidence} locale={locale} compact />],
             [ui.principalRisks, evidenceSummary.risksSupported > 0 ? ui.riskDisclosure : ui.readinessNotPublic],
             [ui.evidenceDate, evidence.provenance.sourceDate],
             [ui.projectRoom, approvedRestrictedDocs.length > 0 ? ui.restrictedDocs : ui.readinessNotPublic],
           ].map(([label, value]) => (
-            <div key={label} className="bg-white px-4 py-4">
+            <div key={String(label)} className="bg-white px-4 py-4">
               <p className="text-xs font-bold uppercase tracking-wider text-wgray">{label}</p>
-              <p className="mt-1 text-xs font-semibold leading-5 text-charcoal">{value}</p>
+              <div className="mt-1 text-xs font-semibold leading-5 text-charcoal">{value}</div>
             </div>
           ))}
         </div>
@@ -401,6 +400,7 @@ export default async function ProjectDetail({
               <div className="space-y-3">
                 <p className="text-sm leading-6 text-wgray">{ui.workspaceAccess}</p>
                 <Link href={`/contact?topic=investor-access&project=${l.id}`} className="block text-center bg-gold text-ink font-display font-bold text-sm py-2.5 rounded-xl">{ui.applyAccess}</Link>
+                <p className="text-xs leading-5 text-wgray">{t(locale, "access.investorQualifier")}</p>
               </div>
             )}
           </section>

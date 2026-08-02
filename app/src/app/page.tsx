@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import ProjectCard from "@/components/ProjectCard";
 import { prisma, toListing } from "@/lib/db";
-import { capitalPresentation, fmtUsd, type Listing } from "@/lib/data";
+import { fmtUsd, materialFactPresentation, type Listing } from "@/lib/data";
 import { getSessionUser } from "@/lib/auth";
 import { getLocale } from "@/lib/i18n-server";
 import { t } from "@/lib/i18n";
@@ -17,7 +17,8 @@ import {
 import { projectHref } from "@/lib/project-slugs";
 import { orderPublicOpportunities, publicListingWhere } from "@/lib/public-listings";
 import { localizeListing } from "@/lib/translations/listing-content";
-import { investmentUi, localizedCapitalPresentation } from "@/lib/translations/investment-ui";
+import { catalogueReviewNote, materialFactCopy } from "@/lib/translations/investment-ui";
+import { getInvestmentEvidence } from "@/lib/investment-evidence";
 
 export const dynamic = "force-dynamic";
 
@@ -27,9 +28,9 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 function FeaturedBrief({ listing, copy, locale }: { listing: Listing; copy: HomeMarketingCopy; locale: Awaited<ReturnType<typeof getLocale>> }) {
-  const capital = localizedCapitalPresentation(locale, capitalPresentation(listing));
-  const ui = investmentUi(locale);
-  const capitalValue = capital.amountUsd != null ? capital.value : ui.compare.notDisclosed;
+  const evidence = getInvestmentEvidence(listing);
+  const fact = materialFactPresentation(listing, evidence.provenance.sourceDate);
+  const factCopy = materialFactCopy(locale, fact.kind, fact.sourceDate);
   return (
     <div className="overflow-hidden rounded-xl border border-white/14 bg-white text-ink shadow-2xl shadow-black/25">
       <div className="bg-gradient-to-br from-ink to-navy p-5 text-white">
@@ -42,8 +43,9 @@ function FeaturedBrief({ listing, copy, locale }: { listing: Listing; copy: Home
       </div>
       <div className="grid grid-cols-2 border-b border-ink/10">
         <div className="border-r border-ink/10 p-4">
-          <p className="text-xs font-bold text-slate">{capital.includeInProjectTotal ? copy.capitalSought : capital.label}</p>
-          <p className="mt-1 break-words font-display text-2xl font-extrabold">{capitalValue}</p>
+          <p className="text-xs font-bold text-slate">{factCopy.label}</p>
+          <p className={fact.kind === "not_disclosed" ? "mt-2 text-sm font-semibold text-slate" : "mt-1 break-words font-display text-2xl font-extrabold"}>{fact.value}</p>
+          {fact.kind === "estimated_cost" && <p className="mt-1 text-xs text-wgray">{factCopy.capitalGap}</p>}
         </div>
         <div className="p-4">
           <p className="text-[10px] font-bold uppercase tracking-wider text-slate">{copy.projectStage}</p>
@@ -81,7 +83,6 @@ export default async function Home() {
   const user = await getSessionUser();
   const locale = await getLocale();
   const copy = getMarketingCopy(locale, "home");
-  const ui = investmentUi(locale);
   const rows = await prisma.listing.findMany({
     where: publicListingWhere,
     include: { org: true, images: true },
@@ -91,11 +92,13 @@ export default async function Home() {
   const listings = rows.map(toListing);
   const featured = orderPublicOpportunities(listings).slice(0, 4);
   const localizedFeatured = featured.map((listing) => localizeListing(listing, locale));
-  const totalProjectCapital = featured.reduce(
-    (sum, listing) => {
-      const capital = capitalPresentation(listing);
-      return sum + (capital.includeInProjectTotal ? (capital.amountUsd ?? 0) : 0);
-    },
+  const reviewStatuses = new Set(featured.map((listing) => listing.verified));
+  const hasDifferentiatingReviewStatus = reviewStatuses.size > 1;
+  const projectCostContributors = featured.filter(
+    (listing) => (listing.estimatedProjectCostUsd ?? 0) > 0,
+  );
+  const totalProjectCapital = projectCostContributors.reduce(
+    (sum, listing) => sum + (listing.estimatedProjectCostUsd ?? 0),
     0,
   );
 
@@ -174,16 +177,23 @@ export default async function Home() {
             />
             <div className="shrink-0 border-l border-gold pl-5">
               <p className="font-display text-2xl font-extrabold text-ink">
-                {totalProjectCapital > 0 ? fmtUsd(totalProjectCapital) : ui.compare.notDisclosed}
+                {totalProjectCapital > 0 ? fmtUsd(totalProjectCapital) : "—"}
               </p>
               <p className="mt-1 text-xs font-bold text-slate">{copy.capitalRepresented}</p>
+              <p className="mt-1 text-xs text-slate">{copy.projectCostCoverage(projectCostContributors.length, featured.length)}</p>
               <p className="mt-1 text-xs text-slate">{copy.sponsorFigures}</p>
             </div>
           </div>
 
+          {!hasDifferentiatingReviewStatus && featured.length > 0 && (
+            <div className="mt-6 max-w-4xl">
+              <QuietNotice>{catalogueReviewNote(locale, featured[0].verified)}</QuietNotice>
+            </div>
+          )}
+
           <div className="mt-10 grid gap-5 lg:grid-cols-2">
             {localizedFeatured.map((listing, index) => (
-              <ProjectCard key={listing.id} listing={listing} index={index} locale={locale} />
+              <ProjectCard key={listing.id} listing={listing} index={index} locale={locale} showReviewStatus={hasDifferentiatingReviewStatus} />
             ))}
           </div>
 
@@ -195,6 +205,30 @@ export default async function Home() {
 
       {!user && (
         <>
+          <section className="border-y border-charcoal/10 bg-mist py-10" aria-labelledby="desco-public-profile">
+            <div className="public-container">
+              <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
+                <div className="max-w-3xl">
+                  <p className="eyebrow text-teal">{copy.credibilityEyebrow}</p>
+                  <h2 id="desco-public-profile" className="editorial-heading mt-3 text-2xl text-ink lg:text-3xl">{copy.credibilityTitle}</h2>
+                  <p className="mt-3 text-sm leading-6 text-slate">{copy.credibilityBody}</p>
+                </div>
+                <div className="flex shrink-0 flex-wrap gap-3">
+                  <Link href="/about" className="button-secondary">{copy.credibilityAbout}</Link>
+                  <Link href="/partners" className="button-secondary">{copy.credibilityPartners}</Link>
+                </div>
+              </div>
+              <dl className="mt-7 grid gap-px overflow-hidden rounded-lg border border-charcoal/10 bg-charcoal/10 sm:grid-cols-2 lg:grid-cols-4">
+                {copy.credibilityItems.map((item) => (
+                  <div key={item.title} className="bg-white p-4">
+                    <dt className="text-xs font-bold uppercase tracking-wider text-ink">{item.title}</dt>
+                    <dd className="mt-2 text-xs leading-5 text-slate">{item.body}</dd>
+                  </div>
+                ))}
+              </dl>
+            </div>
+          </section>
+
           <section className="bg-ivory py-14 lg:py-18" id="how-it-works">
             <div className="public-container">
               <SectionHeading
@@ -214,7 +248,7 @@ export default async function Home() {
                 title={copy.trustTitle}
                 body={copy.trustBody}
               />
-              <div className="mt-9 grid gap-4 md:grid-cols-2 lg:grid-cols-5">
+              <div className="mt-9 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
                 {copy.controls.map((control) => (
                   <InstitutionalCard key={control.title} title={control.title} body={control.body} />
                 ))}

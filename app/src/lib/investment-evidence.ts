@@ -19,6 +19,45 @@ export type InvestmentEvidence = {
   };
 };
 
+export type SourceDatePresentation = {
+  date: Date | null;
+  label: string | null;
+  ageMonths: number | null;
+};
+
+const SOURCE_MONTHS: Record<string, number> = {
+  january: 0, february: 1, march: 2, april: 3, may: 4, june: 5,
+  july: 6, august: 7, september: 8, october: 9, november: 10, december: 11,
+};
+
+/** Uses the source-document portion only; folder review/retrieval dates are excluded. */
+export function sourceDatePresentation(sourceDate: string, now = new Date()): SourceDatePresentation {
+  if (/\bundated\b/i.test(sourceDate)) return { date: null, label: null, ageMonths: null };
+  const sourceOnly = sourceDate.split(/;\s*(?:folder\s+)?(?:reviewed|retrieved)\b/i)[0];
+  const namedDates = [...sourceOnly.matchAll(
+    /(?:(\d{1,2})\s+)?(January|February|March|April|May|June|July|August|September|October|November|December)\s+(\d{4})/gi,
+  )];
+  const years = [...sourceOnly.matchAll(/\b(19|20)\d{2}\b/g)];
+  let date: Date | null = null;
+  let precision: "month" | "year" = "year";
+  if (namedDates.length > 0) {
+    const match = namedDates[namedDates.length - 1];
+    date = new Date(Date.UTC(Number(match[3]), SOURCE_MONTHS[match[2].toLowerCase()], Number(match[1] ?? 1)));
+    precision = "month";
+  } else if (years.length > 0) {
+    const year = Number(years[years.length - 1][0]);
+    date = new Date(Date.UTC(year, 0, 1));
+  }
+  if (!date) return { date: null, label: null, ageMonths: null };
+  const ageMonths = precision === "month"
+    ? Math.max(0, (now.getUTCFullYear() - date.getUTCFullYear()) * 12 + now.getUTCMonth() - date.getUTCMonth())
+    : null;
+  const label = precision === "month"
+    ? new Intl.DateTimeFormat("en", { month: "short", year: "numeric", timeZone: "UTC" }).format(date)
+    : String(date.getUTCFullYear());
+  return { date, label, ageMonths };
+}
+
 export function summarizeEvidence(evidence: InvestmentEvidence) {
   return {
     disclosed: evidence.fields.filter((field) => field.status === "disclosed").length,

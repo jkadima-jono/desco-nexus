@@ -9,6 +9,7 @@ import Timeline from "@/components/story/Timeline";
 import { getLocale } from "@/lib/i18n-server";
 import { getPillarsLegal } from "@/lib/translations/pillars-legal";
 import Image from "next/image";
+import { publicPageMetadata } from "@/lib/metadata";
 
 export function generateStaticParams() {
   return PILLARS.map((p) => ({ slug: p.slug }));
@@ -22,10 +23,9 @@ export async function generateMetadata({
   const { slug } = await params;
   const pillar = getPillarsLegal(await getLocale()).pillars.find((item) => item.slug === slug);
   if (!pillar) return {};
-  return {
-    title: pillar.name + " — DESCO Compass",
-    description: pillar.summary,
-  };
+  return publicPageMetadata(pillar.name + " — DESCO Compass", pillar.summary, {
+    canonical: `/pillars/${pillar.slug}`,
+  });
 }
 
 export default async function PillarPage({
@@ -58,6 +58,7 @@ export default async function PillarPage({
           }}
           aria-hidden="true"
         />
+        <div className="absolute inset-0 bg-black/40" aria-hidden="true" />
         <div className="relative max-w-5xl mx-auto px-6 lg:px-8 py-16 lg:py-24 text-white">
           <Reveal>
             <div className="flex items-center gap-3 mb-4">

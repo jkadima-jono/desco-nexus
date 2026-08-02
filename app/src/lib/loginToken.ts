@@ -64,7 +64,12 @@ export function isLoginTokenUsable(
 
 export async function issueLoginToken(
   email: string,
-  requestIp: string | null
+  requestIp: string | null,
+  registration?: {
+    fullName: string;
+    termsVersion: string;
+    privacyVersion: string;
+  },
 ): Promise<{ rawToken: string; expiresAt: Date }> {
   const normalized = normalizeEmail(email);
   const rawToken = createLoginTokenValue();
@@ -78,7 +83,15 @@ export async function issueLoginToken(
   });
 
   await prisma.loginToken.create({
-    data: { email: normalized, tokenHash: hashLoginToken(rawToken), expiresAt, requestIp },
+    data: {
+      email: normalized,
+      tokenHash: hashLoginToken(rawToken),
+      expiresAt,
+      requestIp,
+      requestedFullName: registration?.fullName ?? null,
+      termsVersion: registration?.termsVersion ?? null,
+      privacyVersion: registration?.privacyVersion ?? null,
+    },
   });
 
   return { rawToken, expiresAt };
@@ -87,18 +100,35 @@ export async function issueLoginToken(
 // Atomically consumes a token. Returns the verified email, or null if the
 // token is unknown, expired, or already used — the caller must not be able
 // to distinguish these cases in its response.
-export async function consumeLoginToken(rawToken: string): Promise<string | null> {
+export type ConsumedLoginToken = {
+  email: string;
+  requestedFullName: string | null;
+  termsVersion: string | null;
+  privacyVersion: string | null;
+  requestIpHash: string | null;
+};
+
+export async function consumeLoginToken(rawToken: string): Promise<ConsumedLoginToken | null> {
   const tokenHash = hashLoginToken(rawToken);
+  const now = new Date();
   const record = await prisma.loginToken.findUnique({ where: { tokenHash } });
-  if (!isLoginTokenUsable(record)) return null;
+  if (!isLoginTokenUsable(record, now)) return null;
 
   // Conditional update: if a concurrent request consumed it first, count
   // is 0 and this caller correctly gets nothing.
   const claimed = await prisma.loginToken.updateMany({
-    where: { tokenHash, consumedAt: null },
-    data: { consumedAt: new Date() },
+    // Keep expiry in the database predicate. A token that expires between
+    // the read above and this write must not be claimed successfully.
+    where: { tokenHash, consumedAt: null, expiresAt: { gt: now } },
+    data: { consumedAt: now },
   });
   if (claimed.count === 0) return null;
 
-  return record!.email;
+  return {
+    email: record!.email,
+    requestedFullName: record!.requestedFullName,
+    termsVersion: record!.termsVersion,
+    privacyVersion: record!.privacyVersion,
+    requestIpHash: record!.requestIp,
+  };
 }

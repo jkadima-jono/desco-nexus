@@ -8,6 +8,7 @@ import LanguageSwitcher from "./LanguageSwitcher";
 import { sharedCopy } from "@/lib/translations/shared";
 import NotificationBell from "./NotificationBell";
 import { useModalFocus } from "./useModalFocus";
+import { accountCopy } from "@/lib/translations/account";
 
 type NavItem = { href: string; key: string; icon: string };
 type NavGroup = { labelKey: string; items: NavItem[] };
@@ -74,6 +75,7 @@ export default function Sidebar({ user }: { user: SidebarUser }) {
   const router = useRouter();
   const { locale, t } = useI18n();
   const copy = sharedCopy(locale);
+  const account = accountCopy(locale);
   const [mobileOpen, setMobileOpen] = useState(false);
   const menuButtonRef = useRef<HTMLButtonElement>(null);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
@@ -100,7 +102,7 @@ export default function Sidebar({ user }: { user: SidebarUser }) {
       <div className="px-6 pt-7 pb-6">
         <div className="flex items-center gap-3">
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/brand/desco-compass-logo.jpg" alt="Official DESCO Compass logo" className="h-11 w-11 rounded-full object-cover shadow-[0_2px_8px_rgb(184_149_61/0.5)]" />
+          <img src="/brand/desco-compass-logo.jpg" alt="" className="h-11 w-11 rounded-full object-cover shadow-[0_2px_8px_rgb(184_149_61/0.5)]" />
           <div>
             <div className="font-display font-extrabold text-lg tracking-tight leading-tight">DESCO <span className="text-gold">Compass</span></div>
             <div className="text-[10px] text-white/50 font-body">{t("brand.tagline")}</div>
@@ -130,10 +132,12 @@ export default function Sidebar({ user }: { user: SidebarUser }) {
       <div className="px-4 py-4 border-t border-white/10">
         {user ? (
           <div className="flex items-center gap-3">
+            <Link href="/account" onClick={() => setMobileOpen(false)} aria-label={account.settingsTitle} className="flex min-w-0 flex-1 items-center gap-3 rounded-lg focus-visible:outline-offset-2">
             <div className="w-9 h-9 rounded-full bg-gold text-ink font-display font-bold flex items-center justify-center">{user.fullName.charAt(0)}</div>
             <div className="min-w-0 flex-1"><div className="text-sm font-semibold truncate">{user.fullName}</div><div className="text-[11px] text-gold truncate">✓ {user.title ?? t("nav.member")}</div></div>
+            </Link>
             <NotificationBell />
-            <button onClick={logout} className="text-[11px] text-white/60 hover:text-white" aria-label={copy.signOut}>⎋</button>
+            <button onClick={logout} className="grid min-h-11 min-w-11 place-items-center rounded-lg text-sm text-white/70 hover:bg-white/10 hover:text-white" aria-label={copy.signOut}>⎋</button>
           </div>
         ) : (
           <div className="space-y-2">

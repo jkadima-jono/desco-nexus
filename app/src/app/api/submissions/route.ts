@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
 import { getSessionUser } from "@/lib/auth";
 import { SECTORS, INSTRUMENTS } from "@/lib/submissions";
+import { applyRateLimit, rejectUntrustedOrigin } from "@/lib/request-security";
 
 type SubmissionBody = {
   orgName?: string;
@@ -74,6 +75,10 @@ export async function GET() {
 }
 
 export async function POST(req: Request) {
+  const originRejection = rejectUntrustedOrigin(req);
+  if (originRejection) return originRejection;
+  const limited = await applyRateLimit(req, "project-submission", 6, 60 * 60_000);
+  if (limited) return limited;
   const user = await getSessionUser();
   if (!user) return NextResponse.json({ error: "Sign in required" }, { status: 401 });
   let body: SubmissionBody;

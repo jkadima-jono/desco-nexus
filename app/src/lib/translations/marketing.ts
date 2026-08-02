@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { publicPageMetadata } from "@/lib/metadata";
 import type { Locale } from "../i18n";
 
 type Card = { title: string; body: string };
@@ -32,7 +33,14 @@ type MarketingCopy = {
     investorBenefits: string[];
     sponsorBenefits: string[];
     capitalRepresented: string;
+    projectCostCoverage: (count: number, total: number) => string;
     sponsorFigures: string;
+    credibilityEyebrow: string;
+    credibilityTitle: string;
+    credibilityBody: string;
+    credibilityItems: Card[];
+    credibilityAbout: string;
+    credibilityPartners: string;
     processEyebrow: string;
     processTitle: string;
     processBody: string;
@@ -137,7 +145,16 @@ const en: MarketingCopy = {
     sponsorProvided: "Sponsor-provided", dataRoom: "Data room", readinessNotPublic: "Readiness not public",
     reviewOpportunity: "Review opportunity", investorBenefits: ["Review structured public opportunities", "Match opportunities against your mandate", "Request deeper due diligence only when justified"],
     sponsorBenefits: ["Prepare an institutional listing", "Control access to confidential information", "Coordinate qualified investor engagement"],
-    capitalRepresented: "Total disclosed project capital across published opportunities", sponsorFigures: "Sponsor-provided figures",
+    capitalRepresented: "Total preliminary project cost from available source figures", projectCostCoverage: (count, total) => `${count} of ${total} published opportunities contribute a project-cost figure.`, sponsorFigures: "Sponsor-provided figures",
+    credibilityEyebrow: "DESCO public profile", credibilityTitle: "What the current public record supports.",
+    credibilityBody: "These statements are limited to information already published on the DESCO Compass About and Partners pages.",
+    credibilityItems: [
+      { title: "Platform operator", body: "DESCO Global operates DESCO Compass. No additional operating or contracting entity is named publicly." },
+      { title: "Geographic focus", body: "The platform is initially focused on the Democratic Republic of the Congo, with stated capacity to support selected African markets." },
+      { title: "Published role", body: "DESCO describes project preparation, capital screening, controlled due diligence and authorised engagement as its platform role." },
+      { title: "People and affiliations", body: "Named team biographies and named adviser or partner affiliations have not been supplied for public display." },
+    ],
+    credibilityAbout: "Review About DESCO", credibilityPartners: "Review partners and advisers",
     processEyebrow: "Investor due diligence pathway", processTitle: "A controlled path from screening to deeper review.",
     processBody: "We support screening, information exchange and engagement. Investors remain responsible for their own legal, financial, technical and commercial due diligence.",
     process: [
@@ -203,7 +220,7 @@ const en: MarketingCopy = {
     matchingNote: "Matching uses disclosed project fields and deterministic criteria. It is a screening aid, not investment advice.",
     sectionEyebrow: "Investor operating model", sectionTitle: "Review opportunities against defined mandate criteria.",
     cards: [
-      { title: "Review qualified opportunities", body: "Start with comparison-ready public teasers, named sponsors and visible disclosure status." },
+      { title: "Review disclosed opportunities", body: "Start with comparison-ready public teasers, named sponsors and visible disclosure status." },
       { title: "Match against your mandate", body: "Use explicit sector, geography, ticket, instrument and exclusion criteria." },
       { title: "Request due diligence when justified", body: "Request restricted material and sponsor engagement only after initial screening." },
     ],
@@ -308,7 +325,16 @@ const fr: MarketingCopy = {
     featured: "Présentation d’une opportunité", publicTeaser: "Présentation publique", capitalSought: "Capital recherché", projectStage: "Stade du projet", sector: "Secteur", location: "Localisation", disclosure: "Divulgation", sponsorProvided: "Fourni par le porteur", dataRoom: "Data room", readinessNotPublic: "État de préparation non public", reviewOpportunity: "Examiner l’opportunité",
     investorBenefits: ["Examiner les opportunités publiques structurées", "Comparer les opportunités à votre mandat", "Demander une diligence approfondie uniquement lorsqu’elle est justifiée"],
     sponsorBenefits: ["Préparer un dossier institutionnel", "Contrôler l’accès aux informations confidentielles", "Coordonner les échanges avec des investisseurs qualifiés"],
-    capitalRepresented: "Capital total communiqué pour les opportunités publiées", sponsorFigures: "Chiffres fournis par les porteurs",
+    capitalRepresented: "Coût préliminaire total issu des chiffres sources disponibles", projectCostCoverage: (count, total) => `${count} opportunités publiées sur ${total} contribuent un coût de projet.`, sponsorFigures: "Chiffres fournis par les porteurs",
+    credibilityEyebrow: "Profil public de DESCO", credibilityTitle: "Ce que les informations publiques actuelles permettent d’établir.",
+    credibilityBody: "Ces déclarations se limitent aux informations déjà publiées sur les pages À propos et Partenaires de DESCO Compass.",
+    credibilityItems: [
+      { title: "Opérateur de la plateforme", body: "DESCO Global exploite DESCO Compass. Aucune autre entité d’exploitation ou de contractualisation n’est nommée publiquement." },
+      { title: "Périmètre géographique", body: "La plateforme est initialement centrée sur la République démocratique du Congo, avec une capacité déclarée à accompagner certains marchés africains." },
+      { title: "Rôle publié", body: "DESCO décrit la préparation des projets, le filtrage des capitaux, la diligence contrôlée et les échanges autorisés comme le rôle de la plateforme." },
+      { title: "Équipe et affiliations", body: "Aucune biographie nominative ni affiliation avec un conseiller ou partenaire nommé n’a été fournie pour publication." },
+    ],
+    credibilityAbout: "Lire À propos de DESCO", credibilityPartners: "Examiner les partenaires et conseillers",
     processEyebrow: "Parcours de diligence investisseur", processTitle: "Un parcours contrôlé, du filtrage à l’examen approfondi.", processBody: "Nous organisons le filtrage, l’échange d’informations et les prises de contact. Les investisseurs restent responsables de leur propre diligence juridique, financière, technique et commerciale.",
     process: [
       { title: "Examiner la présentation publique", body: "Évaluer la thèse, le besoin en capital, le porteur, le stade, les risques et le niveau de divulgation." },
@@ -362,7 +388,7 @@ const fr: MarketingCopy = {
     preview: "Aperçu du mandat", mandateFields: ["Secteurs privilégiés", "Ciblage géographique", "Taille du ticket", "Instrument d’investissement", "Stade du projet", "Exigences d’impact", "Tolérance au risque", "Préférence de contrôle"],
     matchingNote: "Le rapprochement utilise les champs divulgués et des critères déterministes. Il s’agit d’un outil de filtrage, pas d’un conseil en investissement.",
     sectionEyebrow: "Modèle opérationnel investisseur", sectionTitle: "Examiner les opportunités selon des critères de mandat définis.",
-    cards: [{ title: "Examiner les opportunités qualifiées", body: "Commencer par des présentations publiques comparables, des porteurs identifiés et un statut de divulgation visible." }, { title: "Comparer à votre mandat", body: "Utiliser des critères explicites de secteur, géographie, ticket, instrument et exclusion." }, { title: "Demander une diligence justifiée", body: "Demander les documents restreints et l’échange avec le porteur après le filtrage initial." }],
+    cards: [{ title: "Examiner les opportunités publiées", body: "Commencer par des présentations publiques comparables, des porteurs identifiés et un statut de divulgation visible." }, { title: "Comparer à votre mandat", body: "Utiliser des critères explicites de secteur, géographie, ticket, instrument et exclusion." }, { title: "Demander une diligence justifiée", body: "Demander les documents restreints et l’échange avec le porteur après le filtrage initial." }],
     steps: [
       { title: "Définir les critères d’investissement", body: "Enregistrer secteurs, géographies, ticket, instrument, stade et exclusions." },
       { title: "Examiner les opportunités publiques", body: "Comparer thèses, besoins en capital, porteurs, risques et divulgation." },
@@ -468,8 +494,20 @@ function completeTranslation(locale: "es" | "pt" | "zh"): MarketingCopy {
         tr("Controlar el acceso a la información confidencial", "Controlar o acesso à informação confidencial", "控制保密信息访问"),
         tr("Coordinar la relación con inversores cualificados", "Coordenar o contacto com investidores qualificados", "协调与合格投资者的沟通"),
       ],
-      capitalRepresented: tr("Capital total divulgado de las oportunidades publicadas", "Capital total divulgado das oportunidades publicadas", "已发布机会披露的项目融资总额"),
+      capitalRepresented: tr("Coste preliminar total según las cifras fuente disponibles", "Custo preliminar total segundo os valores-fonte disponíveis", "依据现有来源数据汇总的项目初步成本"),
+      projectCostCoverage: (count, total) => tr(`${count} de ${total} oportunidades publicadas aportan una cifra de coste del proyecto.`, `${count} de ${total} oportunidades publicadas incluem um valor de custo do projeto.`, `${total} 个已发布项目中有 ${count} 个提供项目成本数据。`),
       sponsorFigures: tr("Cifras proporcionadas por los promotores", "Valores fornecidos pelos promotores", "项目发起方提供的数据"),
+      credibilityEyebrow: tr("Perfil público de DESCO", "Perfil público da DESCO", "DESCO 公开资料"),
+      credibilityTitle: tr("Lo que respalda el registro público actual.", "O que o registo público atual sustenta.", "现有公开资料所支持的信息。"),
+      credibilityBody: tr("Estas declaraciones se limitan a la información ya publicada en las páginas Acerca de y Socios de DESCO Compass.", "Estas declarações limitam-se à informação já publicada nas páginas Sobre e Parceiros da DESCO Compass.", "以下陈述仅依据 DESCO Compass 的关于我们及合作伙伴页面已发布的信息。"),
+      credibilityItems: [
+        card("Operador de la plataforma", "Operador da plataforma", "平台运营方", "DESCO Global opera DESCO Compass. No se identifica públicamente otra entidad operativa o contratante.", "A DESCO Global opera a DESCO Compass. Não é identificada publicamente outra entidade operacional ou contratante.", "DESCO Global 运营 DESCO Compass。公开资料未列明其他运营或签约主体。"),
+        card("Enfoque geográfico", "Foco geográfico", "地域重点", "La plataforma se centra inicialmente en la República Democrática del Congo y declara capacidad para apoyar mercados africanos seleccionados.", "A plataforma centra-se inicialmente na República Democrática do Congo e declara capacidade para apoiar mercados africanos selecionados.", "平台初期重点覆盖刚果民主共和国，并声明可支持部分非洲市场。"),
+        card("Función publicada", "Função publicada", "公开说明的职责", "DESCO describe la preparación de proyectos, la selección de capital, la diligencia controlada y la relación autorizada como funciones de la plataforma.", "A DESCO descreve a preparação de projetos, a seleção de capital, a diligência controlada e o contacto autorizado como funções da plataforma.", "DESCO 将项目准备、资本筛选、受控尽调及授权沟通描述为平台职责。"),
+        card("Personas y afiliaciones", "Pessoas e afiliações", "人员与关联机构", "No se han aportado biografías nominativas ni afiliaciones con asesores o socios identificados para su publicación.", "Não foram fornecidas biografias nominativas nem afiliações com consultores ou parceiros identificados para publicação.", "尚未提供可公开展示的具名团队简介、顾问或合作伙伴关联信息。"),
+      ],
+      credibilityAbout: tr("Revisar Acerca de DESCO", "Consultar Sobre a DESCO", "查看关于 DESCO"),
+      credibilityPartners: tr("Revisar socios y asesores", "Consultar parceiros e consultores", "查看合作伙伴与顾问"),
       processEyebrow: tr("Proceso de diligencia del inversor", "Processo de diligência do investidor", "投资者尽调流程"),
       processTitle: tr("Un proceso controlado desde la selección hasta la revisión detallada.", "Um processo controlado desde a seleção até à análise aprofundada.", "从初步筛选到深入审查的受控流程。"),
       processBody: tr("Organizamos la selección, el intercambio de información y el contacto. Los inversores siguen siendo responsables de su propia diligencia jurídica, financiera, técnica y comercial.", "Organizamos a seleção, a troca de informação e o contacto. Os investidores continuam responsáveis pela sua própria diligência jurídica, financeira, técnica e comercial.", "我们组织项目筛选、信息交换和沟通。投资者仍须自行完成法律、财务、技术和商业尽调。"),
@@ -692,5 +730,16 @@ export function getMarketingCopy<L extends keyof MarketingCopy>(locale: Locale, 
 }
 
 export function getMarketingMetadata(locale: Locale, page: keyof MarketingCopy): Metadata {
-  return COPY[locale][page].metadata;
+  const { title, description } = COPY[locale][page].metadata;
+  const canonical: Record<keyof MarketingCopy, string> = {
+    home: "/",
+    about: "/about",
+    diligence: "/diligence",
+    investors: "/investors",
+    sponsors: "/sponsors",
+    partners: "/partners",
+    pricing: "/pricing",
+    trust: "/trust",
+  };
+  return publicPageMetadata(String(title), String(description), { canonical: canonical[page] });
 }

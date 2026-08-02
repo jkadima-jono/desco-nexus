@@ -1,5 +1,9 @@
 import LoginClient from "./LoginClient";
 import { isDemoAdminEnabled, isDemoAuthEnabled } from "@/lib/demoAuth";
+import { openSignupConfig } from "@/lib/openSignup";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = { title: "Sign in — DESCO Compass", robots: { index: false, follow: false } };
 
 export default function LoginPage() {
   const demoEnabled = isDemoAuthEnabled({
@@ -12,5 +16,5 @@ export default function LoginPage() {
     vercelEnv: process.env.VERCEL_ENV,
   });
 
-  return <LoginClient demoEnabled={demoEnabled} adminEnabled={adminEnabled} />;
+  return <LoginClient demoEnabled={demoEnabled} adminEnabled={adminEnabled} signupEnabled={openSignupConfig().enabled} />;
 }

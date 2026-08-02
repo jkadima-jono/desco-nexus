@@ -28,6 +28,21 @@ if (siteUrl.hostname === "desco.global" || siteUrl.hostname === "www.desco.globa
 if (environment === "production" && process.env.DEMO_AUTH_ENABLED === "true") {
   throw new Error("DEMO_AUTH_ENABLED must not be true in production.");
 }
+if (process.env.OPEN_SIGNUP_ENABLED === "true") {
+  const signupRequired = [
+    "EMAIL_PROVIDER_API_KEY",
+    "EMAIL_FROM_ADDRESS",
+    "ACCOUNT_TERMS_VERSION",
+    "PRIVACY_NOTICE_VERSION",
+  ] as const;
+  const signupMissing = signupRequired.filter((name) => !process.env[name]?.trim());
+  if (signupMissing.length > 0) {
+    throw new Error(`Open signup configuration missing: ${signupMissing.join(", ")}`);
+  }
+  if (process.env.EMAIL_PROVIDER !== "resend") {
+    throw new Error('Open signup requires EMAIL_PROVIDER="resend".');
+  }
+}
 if (
   process.env.CONFIDENTIAL_UPLOADS_ENABLED === "true" &&
   !process.env.DOCUMENT_SCANNER_PROVIDER?.trim()

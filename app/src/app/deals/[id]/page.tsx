@@ -15,9 +15,9 @@ export default async function DealWorkspace({
 }: {
   params: Promise<{ id: string }>;
 }) {
-  const user = await getSessionUser();
-  if (!user) redirect("/login");
   const { id } = await params;
+  const user = await getSessionUser();
+  if (!user) redirect(`/login?next=${encodeURIComponent(`/deals/${id}`)}`);
   const deal = await prisma.deal.findUnique({
     where: { id },
     include: {
