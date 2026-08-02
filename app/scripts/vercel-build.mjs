@@ -11,6 +11,9 @@ const steps = [
   ...(env.VERCEL_ENV === "preview" && env.DATABASE_URL_UNPOOLED
     ? [["node", ["scripts/migrate-preview.mjs"]]]
     : []),
+  ...(env.VERCEL_ENV === "production" && env.DIRECT_URL
+    ? [["prisma", ["migrate", "deploy"]]]
+    : []),
   ["node", ["--import", "tsx", "scripts/predeploy-check.ts"]],
   ["next", ["build"]],
 ];
