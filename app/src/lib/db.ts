@@ -1,5 +1,5 @@
 import { PrismaClient, type Listing as DbListing, type Document, type ListingImage } from "@prisma/client";
-import type { Listing } from "./data";
+import { controlledCapitalFields, type Listing } from "./data";
 import { normalizeHighlights, normalizeStage, normalizeSummary } from "./investment-evidence";
 import { exampleProjectImages } from "./example-project-images";
 
@@ -18,6 +18,10 @@ export function toListing(
     images?: ListingImage[];
   }
 ): Listing {
+  const capitalFields = controlledCapitalFields(row.id, {
+    estimatedProjectCostUsd: row.estimatedProjectCostUsd,
+    currentCapitalAskUsd: row.currentCapitalAskUsd,
+  });
   return {
     id: row.id,
     title: row.title,
@@ -28,8 +32,7 @@ export function toListing(
     country: row.country,
     flag: row.flag,
     raiseUsd: row.raiseUsd,
-    estimatedProjectCostUsd: row.estimatedProjectCostUsd,
-    currentCapitalAskUsd: row.currentCapitalAskUsd,
+    ...capitalFields,
     instrument: row.instrument,
     stage: normalizeStage(row.stage),
     irr: row.irr,

@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import { existsSync } from "node:fs";
 import { join } from "node:path";
 import test from "node:test";
-import { capitalPresentation, isDescoRelatedOpportunity, listings, materialFactPresentation, returnPresentation, sanitizePublicListing } from "../src/lib/data";
+import { capitalPresentation, controlledCapitalFields, isDescoRelatedOpportunity, listings, materialFactPresentation, returnPresentation, sanitizePublicListing } from "../src/lib/data";
 import { exampleProjectImages } from "../src/lib/example-project-images";
 import { evidenceDisclosureStatus, getInvestmentEvidence, sourceDatePresentation, summarizeEvidence } from "../src/lib/investment-evidence";
 import { PUBLIC_OPPORTUNITY_IDS, isPublicOpportunityId } from "../src/lib/public-listings";
@@ -60,6 +60,16 @@ test("the strongest known material fact leads without implying it is the current
   assert.equal(ldcFact.kind, "estimated_cost");
   assert.equal(ldcFact.value, "$14.6B");
   assert.equal(ldcFact.sourceDate, "Nov 2025");
+});
+
+test("controlled project costs remain available before database catalogue synchronization", () => {
+  assert.deepEqual(
+    controlledCapitalFields("kasaji-kisenge-solar-50mw", {
+      estimatedProjectCostUsd: null,
+      currentCapitalAskUsd: null,
+    }),
+    { estimatedProjectCostUsd: 86_215_774, currentCapitalAskUsd: null },
+  );
 });
 
 test("material fact presentation falls back to physical scale, then a muted disclosure", () => {

@@ -104,6 +104,19 @@ export function materialFactPresentation(
   return { kind: "not_disclosed", value: "Capital ask not disclosed", sourceDate };
 }
 
+export function controlledCapitalFields(
+  id: string,
+  fields: Pick<Listing, "estimatedProjectCostUsd" | "currentCapitalAskUsd">,
+) {
+  const controlled = listings.find((listing) => listing.id === id);
+  return {
+    estimatedProjectCostUsd:
+      fields.estimatedProjectCostUsd ?? controlled?.estimatedProjectCostUsd ?? null,
+    currentCapitalAskUsd:
+      fields.currentCapitalAskUsd ?? controlled?.currentCapitalAskUsd ?? null,
+  };
+}
+
 export function isDescoRelatedOpportunity(
   listing: Pick<Listing, "org"> & Partial<Pick<Listing, "relatedParty">>,
 ): boolean {
