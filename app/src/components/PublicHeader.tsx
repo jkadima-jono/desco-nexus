@@ -34,7 +34,7 @@ export default function PublicHeader({ user, signupEnabled }: { user?: { role?: 
   useModalFocus({ open, container: mobileNavigation, initialFocus: closeButton, returnFocus: menuButton, onClose: closeMenu });
 
   const nav = (
-    <nav aria-label={t("nav.public")} className="flex flex-col gap-1 lg:flex-row lg:items-center lg:gap-0.5 xl:gap-1">
+    <nav aria-label={t("nav.public")} className="flex flex-col gap-1 xl:flex-row xl:items-center xl:gap-1">
       {LINKS.map(([href, labelKey]) => {
         const active = pathname.startsWith(href);
         return (
@@ -61,7 +61,7 @@ export default function PublicHeader({ user, signupEnabled }: { user?: { role?: 
           <Link href="/" className="flex shrink-0 items-center gap-3" aria-label={`DESCO Compass — ${t("common.home")}`}>
             <BrandMark compactDesktop />
           </Link>
-          <div className="hidden min-w-0 items-center gap-1.5 lg:flex xl:gap-2">
+          <div className="hidden min-w-0 items-center gap-2 xl:flex">
             {nav}
             <div className="w-24 shrink-0 xl:w-28 2xl:w-32"><LanguageSwitcher /></div>
             {!user && signupEnabled && <Link href="/login" className="shrink-0 px-2 py-2 text-[11px] font-bold text-white underline-offset-4 hover:underline xl:text-xs">{account.signIn}</Link>}
@@ -73,7 +73,7 @@ export default function PublicHeader({ user, signupEnabled }: { user?: { role?: 
             onClick={() => setOpen(true)}
             aria-expanded={open}
             aria-controls="public-mobile-navigation"
-            className="grid min-h-11 min-w-11 place-items-center rounded-lg border border-white/20 text-xl lg:hidden"
+            className="grid min-h-11 min-w-11 place-items-center rounded-lg border border-white/20 text-xl xl:hidden"
             aria-label={t("nav.open")}
           >
             ☰
@@ -81,7 +81,7 @@ export default function PublicHeader({ user, signupEnabled }: { user?: { role?: 
         </div>
       </header>
       {open && (
-        <div className="fixed inset-0 z-50 bg-black/55 lg:hidden" onClick={() => setOpen(false)}>
+        <div className="fixed inset-0 z-50 bg-black/55 xl:hidden" onClick={() => setOpen(false)}>
           <aside
             ref={mobileNavigation}
             id="public-mobile-navigation"

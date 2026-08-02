@@ -24,6 +24,7 @@ test("production signup requires configured mail delivery", () => {
     EMAIL_FROM_ADDRESS: "access@compass.desco.global",
   });
   assert.equal(config.enabled, true);
+  assert.equal(config.emailAccessEnabled, true);
   assert.equal(config.termsVersion, "terms-1");
   assert.equal(config.privacyVersion, "privacy-1");
   assert.equal(openSignupConfig({
@@ -35,6 +36,17 @@ test("production signup requires configured mail delivery", () => {
     EMAIL_PROVIDER_API_KEY: "secret",
     EMAIL_FROM_ADDRESS: "access@compass.desco.global",
   }).enabled, false);
+});
+
+test("existing-account email access remains available when registration is paused", () => {
+  const config = openSignupConfig({
+    NODE_ENV: "production",
+    EMAIL_PROVIDER: "resend",
+    EMAIL_PROVIDER_API_KEY: "secret",
+    EMAIL_FROM_ADDRESS: "access@compass.desco.global",
+  });
+  assert.equal(config.enabled, false);
+  assert.equal(config.emailAccessEnabled, true);
 });
 
 test("site origin rejects unsafe production origins and strips paths", () => {

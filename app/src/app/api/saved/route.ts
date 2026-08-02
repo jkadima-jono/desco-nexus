@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
-import { prisma } from "@/lib/db";
+import { prisma, toListing } from "@/lib/db";
 import { getSessionUser } from "@/lib/auth";
+import { sanitizePublicListing } from "@/lib/data";
 
 export async function GET() {
   const user = await getSessionUser();
@@ -10,9 +11,9 @@ export async function GET() {
     include: { listing: { include: { org: true } }, collection: true },
     orderBy: { createdAt: "desc" },
   });
-  const publicSafeSaved = saved.map((item) => {
-    const { irr: _irr, whyMatch: _whyMatch, ...publicListing } = item.listing;
-    return { ...item, listing: publicListing };
-  });
+  const publicSafeSaved = saved.map(({ listing, ...item }) => ({
+    ...item,
+    listing: sanitizePublicListing(toListing(listing)),
+  }));
   return NextResponse.json({ saved: publicSafeSaved });
 }

@@ -2,17 +2,20 @@ import { isMailerConfigured } from "./mailer";
 
 export type OpenSignupConfig = {
   enabled: boolean;
+  emailAccessEnabled: boolean;
   termsVersion: string;
   privacyVersion: string;
 };
 
 export function openSignupConfig(env: NodeJS.ProcessEnv = process.env): OpenSignupConfig {
+  const emailAccessEnabled = env.NODE_ENV !== "production" || isMailerConfigured(env);
   return {
     enabled:
       env.OPEN_SIGNUP_ENABLED === "true" &&
       Boolean(env.ACCOUNT_TERMS_VERSION?.trim()) &&
       Boolean(env.PRIVACY_NOTICE_VERSION?.trim()) &&
-      (env.NODE_ENV !== "production" || isMailerConfigured(env)),
+      emailAccessEnabled,
+    emailAccessEnabled,
     termsVersion: env.ACCOUNT_TERMS_VERSION?.trim() ?? "",
     privacyVersion: env.PRIVACY_NOTICE_VERSION?.trim() ?? "",
   };

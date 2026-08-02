@@ -16,5 +16,6 @@ export default function LoginPage() {
     vercelEnv: process.env.VERCEL_ENV,
   });
 
-  return <LoginClient demoEnabled={demoEnabled} adminEnabled={adminEnabled} signupEnabled={openSignupConfig().enabled} />;
+  const access = openSignupConfig();
+  return <LoginClient demoEnabled={demoEnabled} adminEnabled={adminEnabled} signupEnabled={access.enabled} accessEnabled={access.emailAccessEnabled} />;
 }

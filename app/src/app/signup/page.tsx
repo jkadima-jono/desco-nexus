@@ -5,5 +5,6 @@ import type { Metadata } from "next";
 export const metadata: Metadata = { title: "Create account — DESCO Compass", robots: { index: false, follow: false } };
 
 export default function SignupPage() {
-  return <LoginClient demoEnabled={false} adminEnabled={false} signupEnabled={openSignupConfig().enabled} mode="signup" />;
+  const access = openSignupConfig();
+  return <LoginClient demoEnabled={false} adminEnabled={false} signupEnabled={access.enabled} accessEnabled={access.emailAccessEnabled} mode="signup" />;
 }

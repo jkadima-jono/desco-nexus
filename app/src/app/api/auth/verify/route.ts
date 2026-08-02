@@ -9,7 +9,7 @@ import { applyRateLimit, clientIpHash, rejectUntrustedOrigin } from "@/lib/reque
 export async function POST(req: Request) {
   const originRejection = rejectUntrustedOrigin(req);
   if (originRejection) return originRejection;
-  if (!openSignupConfig().enabled) {
+  if (!openSignupConfig().emailAccessEnabled) {
     return NextResponse.json({ error: "Email account access is not configured." }, { status: 503 });
   }
   const limited = await applyRateLimit(req, "auth-verify-ip", 10, 15 * 60_000);

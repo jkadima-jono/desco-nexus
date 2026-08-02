@@ -15,19 +15,21 @@ const PERSONAS = [
   { id: "admin", labelKey: "login.demoAdmin", icon: "⚙" },
 ];
 
-export default function Login({ demoEnabled, adminEnabled, signupEnabled, mode = "login" }: {
+export default function Login({ demoEnabled, adminEnabled, signupEnabled, accessEnabled, mode = "login" }: {
   demoEnabled: boolean;
   adminEnabled: boolean;
   signupEnabled: boolean;
+  accessEnabled: boolean;
   mode?: "login" | "signup";
 }) {
-  return <Suspense fallback={null}><LoginForm demoEnabled={demoEnabled} adminEnabled={adminEnabled} signupEnabled={signupEnabled} mode={mode} /></Suspense>;
+  return <Suspense fallback={<div role="status" className="min-h-screen bg-ink" aria-label="Loading secure access" />}><LoginForm demoEnabled={demoEnabled} adminEnabled={adminEnabled} signupEnabled={signupEnabled} accessEnabled={accessEnabled} mode={mode} /></Suspense>;
 }
 
-function LoginForm({ demoEnabled, adminEnabled, signupEnabled, mode }: {
+function LoginForm({ demoEnabled, adminEnabled, signupEnabled, accessEnabled, mode }: {
   demoEnabled: boolean;
   adminEnabled: boolean;
   signupEnabled: boolean;
+  accessEnabled: boolean;
   mode: "login" | "signup";
 }) {
   const { locale, t } = useI18n();
@@ -87,7 +89,7 @@ function LoginForm({ demoEnabled, adminEnabled, signupEnabled, mode }: {
               ))}</div>
               <p className="text-xs text-wgray mt-5 leading-relaxed">{t("login.demoNote")}</p>
             </>
-          ) : signupEnabled ? sent ? (
+          ) : (mode === "login" ? accessEnabled : signupEnabled) ? sent ? (
             <div role="status" aria-live="polite" className="text-center py-3">
               <div aria-hidden="true" className="mx-auto mb-4 grid h-12 w-12 place-items-center rounded-full bg-gold-soft text-ink">✓</div>
               <h1 className="font-display font-bold text-xl">{account.checkEmailTitle}</h1>
@@ -104,7 +106,7 @@ function LoginForm({ demoEnabled, adminEnabled, signupEnabled, mode }: {
                 {error && <div role="alert" className="rounded-lg bg-brandred/10 px-3 py-2 text-xs text-brandred">{error}</div>}
                 <button disabled={busy === "email" || (mode === "signup" && !acceptedTerms)} className="button-primary w-full disabled:opacity-60">{busy === "email" ? account.sending : account.sendLink}</button>
               </form>
-              <Link href={switchHref} className="mt-5 block min-h-11 py-3 text-center text-sm font-bold text-ink underline underline-offset-4">{mode === "signup" ? account.switchToLogin : account.switchToSignup}</Link>
+              {(mode === "signup" || signupEnabled) && <Link href={switchHref} className="mt-5 block min-h-11 py-3 text-center text-sm font-bold text-ink underline underline-offset-4">{mode === "signup" ? account.switchToLogin : account.switchToSignup}</Link>}
             </>
           ) : (
             <div className="text-center"><h1 className="font-display font-bold text-xl">{account.unavailableTitle}</h1><p className="mt-3 text-sm leading-6 text-wgray">{account.unavailableBody}</p><Link href="/contact?topic=investor-access" className="button-primary mt-5 w-full">{account.contact}</Link></div>

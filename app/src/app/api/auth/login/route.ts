@@ -16,7 +16,7 @@ export async function POST(req: Request) {
 
   const config = openSignupConfig();
   const siteOrigin = configuredSiteOrigin();
-  if (!config.enabled || !siteOrigin) {
+  if (!config.emailAccessEnabled || !siteOrigin) {
     return NextResponse.json({ error: "Email account access is not configured." }, { status: 503 });
   }
 
@@ -38,6 +38,9 @@ export async function POST(req: Request) {
   if (emailLimited) return emailLimited;
 
   const hasRegistrationInput = body.fullName !== undefined || body.acceptedTerms !== undefined;
+  if (hasRegistrationInput && !config.enabled) {
+    return NextResponse.json({ error: "New account registration is not available." }, { status: 403 });
+  }
   const fullName = normalizeRegistrationName(body.fullName);
   if (hasRegistrationInput && (!fullName || body.acceptedTerms !== true)) {
     return NextResponse.json({ error: "Name and acceptance of the current terms are required to create an account." }, { status: 400 });
