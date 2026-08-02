@@ -20,6 +20,11 @@ const EVENTS = new Set([
   "mandate_created",
   "submission_started",
   "submission_completed",
+  "account_started",
+  "email_verification_requested",
+  "email_verified",
+  "profile_completed",
+  "institutional_access_requested",
 ]);
 
 export async function POST(req: Request) {

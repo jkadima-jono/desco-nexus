@@ -13,6 +13,9 @@ const REQUIRED_SCHEMA = [
   ["MaintenanceRun", "status"],
   ["MatchAction", "requestKey"],
   ["ListingImage", "position"],
+  ["LoginToken", "requestedFullName"],
+  ["AccountAcceptance", "requestIpHash"],
+  ["AccountLifecycleRequest", "status"],
 ] as const;
 
 type SchemaRow = { table_name: string; column_name: string };
@@ -36,6 +39,9 @@ export async function GET(req: Request) {
             OR (table_name = 'MaintenanceRun' AND column_name = 'status')
             OR (table_name = 'MatchAction' AND column_name = 'requestKey')
             OR (table_name = 'ListingImage' AND column_name = 'position')
+            OR (table_name = 'LoginToken' AND column_name = 'requestedFullName')
+            OR (table_name = 'AccountAcceptance' AND column_name = 'requestIpHash')
+            OR (table_name = 'AccountLifecycleRequest' AND column_name = 'status')
           )
       `,
       new Promise((_, reject) => setTimeout(() => reject(new Error("database readiness timeout")), 2_000)),

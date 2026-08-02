@@ -10,8 +10,8 @@ export default function manifest(): MetadataRoute.Manifest {
     background_color: "#f8f5ee",
     theme_color: "#111b24",
     icons: [
-      { src: "/brand/desco-globe.svg", sizes: "any", type: "image/svg+xml", purpose: "any" },
-      { src: "/brand/desco-coin.png", sizes: "400x400", type: "image/png", purpose: "any" },
+      { src: "/brand/desco-compass-192.png", sizes: "192x192", type: "image/png", purpose: "any" },
+      { src: "/brand/desco-compass-512.png", sizes: "512x512", type: "image/png", purpose: "any" },
     ],
   };
 }

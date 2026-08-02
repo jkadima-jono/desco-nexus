@@ -12,7 +12,7 @@ export default function BrandMark({
   return (
     <span className="inline-flex items-center gap-3">
       <Image
-        src={size < 64 ? "/brand/desco-mark.svg" : "/brand/desco-compass-logo.jpg"}
+        src="/brand/desco-compass-logo.jpg"
         alt=""
         width={size}
         height={size}

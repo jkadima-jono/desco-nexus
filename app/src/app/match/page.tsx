@@ -9,7 +9,7 @@ export const dynamic = "force-dynamic";
 
 export default async function Match() {
   const user = await getSessionUser();
-  if (!user) redirect("/login");
+  if (!user) redirect("/login?next=/match");
   const acted = await prisma.matchAction.findMany({
     where: { userId: user.id },
     select: { listingId: true },

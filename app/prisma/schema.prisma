@@ -44,6 +44,8 @@ model User {
   // Null until the address is proven by consuming a login link. Never set
   // by registration alone — see lib/loginToken.ts.
   emailVerifiedAt        DateTime?
+  accountAcceptances     AccountAcceptance[]
+  accountLifecycleRequests AccountLifecycleRequest[]
 }
 
 // Single-use, short-lived email sign-in link. Keyed by email rather than
@@ -58,9 +60,38 @@ model LoginToken {
   expiresAt  DateTime
   consumedAt DateTime?
   requestIp  String?
+  requestedFullName String?
+  termsVersion String?
+  privacyVersion String?
   createdAt  DateTime  @default(now())
 
   @@index([email])
+}
+
+model AccountAcceptance {
+  id             String   @id @default(cuid())
+  userId         String
+  user           User     @relation(fields: [userId], references: [id])
+  termsVersion   String
+  privacyVersion String
+  requestIpHash  String?
+  acceptedAt     DateTime @default(now())
+
+  @@unique([userId, termsVersion, privacyVersion])
+  @@index([acceptedAt])
+}
+
+model AccountLifecycleRequest {
+  id          String   @id @default(cuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id])
+  type        String   // data_export|account_deletion
+  status      String   @default("requested") // requested|in_review|completed|declined|cancelled
+  requestedAt DateTime @default(now())
+  completedAt DateTime?
+
+  @@index([userId, type, status])
+  @@index([status, requestedAt])
 }
 
 // Server-side session record so a stolen or old cookie can actually be
@@ -73,6 +104,8 @@ model Session {
   user      User      @relation(fields: [userId], references: [id])
   createdAt DateTime  @default(now())
   revokedAt DateTime?
+
+  @@index([userId])
 }
 
 // In-app notifications for events a user would otherwise only discover by

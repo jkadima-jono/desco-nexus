@@ -6,6 +6,12 @@ import { trackProductEvent } from "@/components/ProductAnalytics";
 import type { Locale } from "@/lib/i18n";
 import { CONTACT_NOTICE_VERSION } from "@/lib/legal-consent";
 import {
+  CAMPAIGN_STORAGE_KEY,
+  campaignAttributionFromSearch,
+  hasCampaignAttribution,
+  parseStoredCampaignAttribution,
+} from "@/lib/marketing-attribution";
+import {
   contactCollectionPaused,
   contactEmailFallback,
   contactLegalAcknowledgement,
@@ -77,6 +83,11 @@ export default function ContactForm({
     setBusy(true);
     setError(null);
     try {
+      const currentCampaign = campaignAttributionFromSearch(window.location.search);
+      const storedCampaign = parseStoredCampaignAttribution(
+        window.sessionStorage.getItem(CAMPAIGN_STORAGE_KEY),
+      );
+      const campaign = hasCampaignAttribution(currentCampaign) ? currentCampaign : storedCampaign;
       const res = await fetch("/api/contact", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -90,9 +101,9 @@ export default function ContactForm({
           locale,
           sourcePath: window.location.pathname,
           referrer: document.referrer,
-          campaignSource: new URLSearchParams(window.location.search).get("utm_source"),
-          campaignMedium: new URLSearchParams(window.location.search).get("utm_medium"),
-          campaignName: new URLSearchParams(window.location.search).get("utm_campaign"),
+          campaignSource: campaign?.source,
+          campaignMedium: campaign?.medium,
+          campaignName: campaign?.campaign,
           requestKey,
           acknowledgedContactNotice: acknowledged,
           contactNoticeVersion: CONTACT_NOTICE_VERSION,

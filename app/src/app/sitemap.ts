@@ -10,7 +10,7 @@ export const dynamic = "force-dynamic";
 
 const PUBLIC_ROUTES = [
   "", "/about", "/contact", "/diligence", "/investors", "/opportunities",
-  "/partners", "/pillars", "/pricing", "/sponsors", "/trust",
+  "/partners", "/pillars", "/pricing", "/resources", "/sponsors", "/trust",
 ];
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {

@@ -220,7 +220,7 @@ const en: MarketingCopy = {
     matchingNote: "Matching uses disclosed project fields and deterministic criteria. It is a screening aid, not investment advice.",
     sectionEyebrow: "Investor operating model", sectionTitle: "Review opportunities against defined mandate criteria.",
     cards: [
-      { title: "Review qualified opportunities", body: "Start with comparison-ready public teasers, named sponsors and visible disclosure status." },
+      { title: "Review disclosed opportunities", body: "Start with comparison-ready public teasers, named sponsors and visible disclosure status." },
       { title: "Match against your mandate", body: "Use explicit sector, geography, ticket, instrument and exclusion criteria." },
       { title: "Request due diligence when justified", body: "Request restricted material and sponsor engagement only after initial screening." },
     ],
@@ -388,7 +388,7 @@ const fr: MarketingCopy = {
     preview: "Aperçu du mandat", mandateFields: ["Secteurs privilégiés", "Ciblage géographique", "Taille du ticket", "Instrument d’investissement", "Stade du projet", "Exigences d’impact", "Tolérance au risque", "Préférence de contrôle"],
     matchingNote: "Le rapprochement utilise les champs divulgués et des critères déterministes. Il s’agit d’un outil de filtrage, pas d’un conseil en investissement.",
     sectionEyebrow: "Modèle opérationnel investisseur", sectionTitle: "Examiner les opportunités selon des critères de mandat définis.",
-    cards: [{ title: "Examiner les opportunités qualifiées", body: "Commencer par des présentations publiques comparables, des porteurs identifiés et un statut de divulgation visible." }, { title: "Comparer à votre mandat", body: "Utiliser des critères explicites de secteur, géographie, ticket, instrument et exclusion." }, { title: "Demander une diligence justifiée", body: "Demander les documents restreints et l’échange avec le porteur après le filtrage initial." }],
+    cards: [{ title: "Examiner les opportunités publiées", body: "Commencer par des présentations publiques comparables, des porteurs identifiés et un statut de divulgation visible." }, { title: "Comparer à votre mandat", body: "Utiliser des critères explicites de secteur, géographie, ticket, instrument et exclusion." }, { title: "Demander une diligence justifiée", body: "Demander les documents restreints et l’échange avec le porteur après le filtrage initial." }],
     steps: [
       { title: "Définir les critères d’investissement", body: "Enregistrer secteurs, géographies, ticket, instrument, stade et exclusions." },
       { title: "Examiner les opportunités publiques", body: "Comparer thèses, besoins en capital, porteurs, risques et divulgation." },
@@ -731,5 +731,15 @@ export function getMarketingCopy<L extends keyof MarketingCopy>(locale: Locale, 
 
 export function getMarketingMetadata(locale: Locale, page: keyof MarketingCopy): Metadata {
   const { title, description } = COPY[locale][page].metadata;
-  return publicPageMetadata(String(title), String(description));
+  const canonical: Record<keyof MarketingCopy, string> = {
+    home: "/",
+    about: "/about",
+    diligence: "/diligence",
+    investors: "/investors",
+    sponsors: "/sponsors",
+    partners: "/partners",
+    pricing: "/pricing",
+    trust: "/trust",
+  };
+  return publicPageMetadata(String(title), String(description), { canonical: canonical[page] });
 }

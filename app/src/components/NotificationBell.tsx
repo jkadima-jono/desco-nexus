@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useI18n } from "./I18nProvider";
 import { sharedCopy } from "@/lib/translations/shared";
 
@@ -23,6 +23,12 @@ export default function NotificationBell() {
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [unreadCount, setUnreadCount] = useState(0);
   const containerRef = useRef<HTMLDivElement>(null);
+  const triggerRef = useRef<HTMLButtonElement>(null);
+
+  const closeAndRestoreFocus = useCallback(() => {
+    setOpen(false);
+    requestAnimationFrame(() => triggerRef.current?.focus());
+  }, []);
 
   const load = async () => {
     const res = await fetch("/api/notifications");
@@ -44,7 +50,7 @@ export default function NotificationBell() {
       if (containerRef.current && !containerRef.current.contains(e.target as Node)) setOpen(false);
     };
     const onKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape") setOpen(false);
+      if (e.key === "Escape") closeAndRestoreFocus();
     };
     document.addEventListener("mousedown", onClick);
     document.addEventListener("keydown", onKeyDown);
@@ -52,7 +58,7 @@ export default function NotificationBell() {
       document.removeEventListener("mousedown", onClick);
       document.removeEventListener("keydown", onKeyDown);
     };
-  }, [open]);
+  }, [closeAndRestoreFocus, open]);
 
   const toggle = async () => {
     const next = !open;
@@ -66,12 +72,13 @@ export default function NotificationBell() {
   return (
     <div ref={containerRef} className="relative">
       <button
+        ref={triggerRef}
         type="button"
         onClick={toggle}
         aria-label={unreadCount > 0 ? unreadCount + " " + copy.unreadNotifications : copy.notifications}
         aria-expanded={open}
         aria-controls="notification-panel"
-        className="relative w-9 h-9 rounded-full flex items-center justify-center text-white/70 hover:bg-white/10 hover:text-white"
+        className="relative flex min-h-11 min-w-11 items-center justify-center rounded-full text-white/70 hover:bg-white/10 hover:text-white"
       >
         <span aria-hidden="true">🔔</span>
         {unreadCount > 0 && (
@@ -89,7 +96,7 @@ export default function NotificationBell() {
         >
           <div className="flex items-center justify-between border-b border-charcoal/10 px-4 py-2">
             <span className="text-xs font-bold uppercase tracking-wider text-wgray">{copy.notifications}</span>
-            <button type="button" onClick={() => setOpen(false)} className="min-h-11 min-w-11 rounded-lg text-xl" aria-label={copy.closeNotifications}>×</button>
+            <button type="button" onClick={closeAndRestoreFocus} className="min-h-11 min-w-11 rounded-lg text-xl" aria-label={copy.closeNotifications}>×</button>
           </div>
           {notifications.length === 0 ? (
             <div className="px-4 py-6 text-sm text-wgray text-center">{copy.nothingYet}</div>

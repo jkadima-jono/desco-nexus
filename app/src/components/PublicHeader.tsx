@@ -7,6 +7,7 @@ import LanguageSwitcher from "./LanguageSwitcher";
 import { useI18n } from "./I18nProvider";
 import { useModalFocus } from "./useModalFocus";
 import BrandMark from "./BrandMark";
+import { accountCopy } from "@/lib/translations/account";
 
 const LINKS = [
   ["/opportunities", "nav.opportunities"],
@@ -17,8 +18,9 @@ const LINKS = [
   ["/about", "nav.about"],
 ] as const;
 
-export default function PublicHeader({ user }: { user?: { role?: string } | null }) {
-  const { t } = useI18n();
+export default function PublicHeader({ user, signupEnabled }: { user?: { role?: string } | null; signupEnabled: boolean }) {
+  const { locale, t } = useI18n();
+  const account = accountCopy(locale);
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
   const menuButton = useRef<HTMLButtonElement>(null);
@@ -27,8 +29,8 @@ export default function PublicHeader({ user }: { user?: { role?: string } | null
   const closeMenu = useCallback(() => setOpen(false), []);
   const workspaceHref = user
     ? user.role === "owner" ? "/submit-project" : user.role === "admin" ? "/admin/verification" : "/match"
-    : "/contact?topic=investor-access";
-  const workspaceLabel = user ? t("nav.openWorkspace") : t("nav.enterWorkspace");
+    : signupEnabled ? "/signup" : "/contact?topic=investor-access";
+  const workspaceLabel = user ? account.openWorkspace : signupEnabled ? account.createAccount : t("nav.enterWorkspace");
   useModalFocus({ open, container: mobileNavigation, initialFocus: closeButton, returnFocus: menuButton, onClose: closeMenu });
 
   const nav = (
@@ -62,6 +64,7 @@ export default function PublicHeader({ user }: { user?: { role?: string } | null
           <div className="hidden min-w-0 items-center gap-1.5 lg:flex xl:gap-2">
             {nav}
             <div className="w-24 shrink-0 xl:w-28 2xl:w-32"><LanguageSwitcher /></div>
+            {!user && signupEnabled && <Link href="/login" className="shrink-0 px-2 py-2 text-[11px] font-bold text-white underline-offset-4 hover:underline xl:text-xs">{account.signIn}</Link>}
             <Link href={workspaceHref} className="button-primary shrink-0 px-2 text-[11px] xl:px-3 xl:text-xs 2xl:px-4 2xl:text-[0.82rem]">{workspaceLabel}</Link>
           </div>
           <button
@@ -104,6 +107,7 @@ export default function PublicHeader({ user }: { user?: { role?: string } | null
             {nav}
             <div className="mt-auto space-y-3 border-t border-white/10 pt-5">
               <LanguageSwitcher />
+              {!user && signupEnabled && <Link href="/login" onClick={() => setOpen(false)} className="button-on-dark w-full">{account.signIn}</Link>}
               <Link href={workspaceHref} onClick={() => setOpen(false)} className="button-primary w-full">{workspaceLabel}</Link>
             </div>
           </aside>

@@ -58,6 +58,7 @@ export default async function PillarPage({
           }}
           aria-hidden="true"
         />
+        <div className="absolute inset-0 bg-black/40" aria-hidden="true" />
         <div className="relative max-w-5xl mx-auto px-6 lg:px-8 py-16 lg:py-24 text-white">
           <Reveal>
             <div className="flex items-center gap-3 mb-4">

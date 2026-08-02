@@ -25,7 +25,7 @@ export default function LanguageSwitcher() {
       aria-label={t("common.language")}
       disabled={pending}
       aria-busy={pending}
-      className="w-full bg-white/10 text-white/80 text-xs rounded-lg px-2.5 py-2 outline-none cursor-pointer hover:bg-white/15 [&>option]:text-charcoal"
+      className="min-h-11 w-full cursor-pointer rounded-lg bg-white/10 px-2.5 py-2 text-xs text-white/80 outline-none hover:bg-white/15 [&>option]:text-charcoal"
     >
       {LOCALES.map((l) => (
         <option key={l} value={l}>

@@ -10,6 +10,8 @@ import { localizeListing } from "@/lib/translations/listing-content";
 import { publicListingWhere } from "@/lib/public-listings";
 import { t } from "@/lib/i18n";
 import { publicPageMetadata } from "@/lib/metadata";
+import { openSignupConfig } from "@/lib/openSignup";
+import { accountCopy } from "@/lib/translations/account";
 
 export const dynamic = "force-dynamic";
 
@@ -75,6 +77,8 @@ export default async function Opportunities({ searchParams }: { searchParams: Pr
   const locale = await getLocale();
   const hero = getPublicHero(locale, "opportunities");
   const ui = investmentUi(locale).opportunities;
+  const account = accountCopy(locale);
+  const signupEnabled = openSignupConfig().enabled;
   const {
     sector = "All",
     country = "All",
@@ -161,8 +165,8 @@ export default async function Opportunities({ searchParams }: { searchParams: Pr
         eyebrow={hero.eyebrow}
         title={hero.title}
         body={hero.body}
-        primary={{ href: "/contact?topic=investor-access", label: hero.primary }}
-        primaryNote={t(locale, "access.investorQualifier")}
+        primary={signupEnabled ? { href: "/signup", label: account.createAccount } : { href: "/contact?topic=investor-access", label: hero.primary }}
+        primaryNote={signupEnabled ? account.basicAccountNotice : t(locale, "access.investorQualifier")}
         secondary={{ href: "/diligence", label: hero.secondary }}
         aside={
           <div className="analytical-panel p-6 text-ink">

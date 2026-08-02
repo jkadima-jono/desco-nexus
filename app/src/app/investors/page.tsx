@@ -10,6 +10,8 @@ import {
 import { getLocale } from "@/lib/i18n-server";
 import { getMarketingCopy, getMarketingMetadata } from "@/lib/translations/marketing";
 import { t } from "@/lib/i18n";
+import { openSignupConfig } from "@/lib/openSignup";
+import { accountCopy } from "@/lib/translations/account";
 
 export async function generateMetadata(): Promise<Metadata> {
   return getMarketingMetadata(await getLocale(), "investors");
@@ -18,6 +20,8 @@ export async function generateMetadata(): Promise<Metadata> {
 export default async function InvestorsPage() {
   const locale = await getLocale();
   const copy = getMarketingCopy(locale, "investors");
+  const account = accountCopy(locale);
+  const signupEnabled = openSignupConfig().enabled;
   const hero = copy.hero;
   return (
     <>
@@ -25,8 +29,8 @@ export default async function InvestorsPage() {
         eyebrow={hero.eyebrow}
         title={hero.title}
         body={hero.body}
-        primary={{ href: "/contact?topic=investor-access", label: hero.primary }}
-        primaryNote={t(locale, "access.investorQualifier")}
+        primary={signupEnabled ? { href: "/signup", label: account.createAccount } : { href: "/contact?topic=investor-access", label: hero.primary }}
+        primaryNote={signupEnabled ? account.basicAccountNotice : t(locale, "access.investorQualifier")}
         secondary={{ href: "/opportunities", label: hero.secondary }}
         aside={
           <div className="briefing-card">
@@ -47,7 +51,10 @@ export default async function InvestorsPage() {
           <div className="mt-10"><NumberedProcess items={copy.steps} /></div>
           <div className="mt-8"><QuietNotice>{copy.notice}</QuietNotice></div>
           <div className="mt-8 max-w-xl">
-            <Link href="/contact?topic=investor-access" className="button-primary">{copy.applyCta}</Link>
+            <div className="flex flex-wrap gap-3">
+              {signupEnabled && <Link href="/signup" className="button-primary">{account.createAccount}</Link>}
+              <Link href="/contact?topic=investor-access" className={signupEnabled ? "button-secondary" : "button-primary"}>{copy.applyCta}</Link>
+            </div>
             <p className="mt-3 text-xs leading-5 text-slate">{t(locale, "access.investorQualifier")}</p>
           </div>
         </div>

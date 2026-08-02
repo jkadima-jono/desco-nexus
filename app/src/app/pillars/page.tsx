@@ -164,7 +164,7 @@ export default async function PillarsIndex() {
             </h2>
           </div>
         </Reveal>
-        <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
           {copy.pillars.map((p, i) => (
             <PillarCard key={p.slug} pillar={p} index={i} learnMore={copy.detail.learn} />
           ))}
