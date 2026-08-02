@@ -12,7 +12,7 @@ const steps = [
     ? [["node", ["scripts/migrate-preview.mjs"]]]
     : []),
   ...(env.VERCEL_ENV === "production" && env.DIRECT_URL
-    ? [["prisma", ["migrate", "deploy"]]]
+    ? [["node", ["scripts/migrate-production.mjs"]]]
     : []),
   ["node", ["--import", "tsx", "scripts/predeploy-check.ts"]],
   ["next", ["build"]],
