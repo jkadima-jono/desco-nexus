@@ -3,6 +3,7 @@ import { PILLARS } from "@/lib/pillars";
 import { projectHref } from "@/lib/project-slugs";
 import { publicListingWhere } from "@/lib/public-listings";
 import { prisma } from "@/lib/db";
+import { metadataBaseUrl } from "@/lib/metadata";
 
 // Public project URLs depend on governed database state. Generate this route
 // at request time so builds never require a live production database.
@@ -14,7 +15,7 @@ const PUBLIC_ROUTES = [
 ];
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const base = process.env.NEXT_PUBLIC_SITE_URL ?? "https://compass.desco.global";
+  const base = metadataBaseUrl().origin;
   const now = new Date();
   const listings = await prisma.listing.findMany({
     where: publicListingWhere,

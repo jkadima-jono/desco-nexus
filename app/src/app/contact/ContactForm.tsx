@@ -17,6 +17,7 @@ import {
   contactLegalAcknowledgement,
   investmentUi,
 } from "@/lib/translations/investment-ui";
+import { releaseReadinessCopy } from "@/lib/translations/release-readiness";
 
 const TOPICS = [
   { value: "general", label: "General inquiry" },
@@ -43,6 +44,7 @@ export default function ContactForm({
 }) {
   const ui = investmentUi(locale).contact;
   const legalUi = contactLegalAcknowledgement(locale);
+  const readiness = releaseReadinessCopy(locale);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [organization, setOrganization] = useState("");
@@ -144,6 +146,9 @@ export default function ContactForm({
 
   return (
     <form onSubmit={submit} onFocus={markStarted} className="bg-white rounded-3xl p-8 shadow-[0_12px_32px_rgb(0_0_0/0.35)] space-y-4">
+      <p className="rounded-xl border border-charcoal/10 bg-mist p-4 text-xs leading-5 text-slate">
+        {readiness.contactProcess}
+      </p>
       <div className="grid sm:grid-cols-2 gap-4">
         <div>
           <label htmlFor="name" className="block text-xs font-bold uppercase tracking-wider text-wgray mb-1.5">

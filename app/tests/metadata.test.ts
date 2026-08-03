@@ -30,3 +30,25 @@ test("preview metadata resolves against the active Vercel deployment", () => {
     else process.env.VERCEL_URL = previousUrl;
   }
 });
+
+test("production metadata falls back to the active Vercel production hostname", () => {
+  const previous = {
+    environment: process.env.VERCEL_ENV,
+    publicUrl: process.env.NEXT_PUBLIC_SITE_URL,
+    productionUrl: process.env.VERCEL_PROJECT_PRODUCTION_URL,
+  };
+  process.env.VERCEL_ENV = "production";
+  delete process.env.NEXT_PUBLIC_SITE_URL;
+  process.env.VERCEL_PROJECT_PRODUCTION_URL = "desco-production.vercel.app";
+
+  try {
+    assert.equal(metadataBaseUrl().toString(), "https://desco-production.vercel.app/");
+  } finally {
+    if (previous.environment === undefined) delete process.env.VERCEL_ENV;
+    else process.env.VERCEL_ENV = previous.environment;
+    if (previous.publicUrl === undefined) delete process.env.NEXT_PUBLIC_SITE_URL;
+    else process.env.NEXT_PUBLIC_SITE_URL = previous.publicUrl;
+    if (previous.productionUrl === undefined) delete process.env.VERCEL_PROJECT_PRODUCTION_URL;
+    else process.env.VERCEL_PROJECT_PRODUCTION_URL = previous.productionUrl;
+  }
+});

@@ -14,7 +14,10 @@ function withProtocol(host: string) {
 
 export function metadataBaseUrl() {
   const previewHost = process.env.VERCEL_ENV === "preview" ? process.env.VERCEL_URL : undefined;
-  return new URL(withProtocol(previewHost || process.env.NEXT_PUBLIC_SITE_URL || DEFAULT_SITE_ORIGIN));
+  const productionHost = process.env.VERCEL_ENV === "production"
+    ? process.env.VERCEL_PROJECT_PRODUCTION_URL
+    : undefined;
+  return new URL(withProtocol(previewHost || productionHost || process.env.NEXT_PUBLIC_SITE_URL || DEFAULT_SITE_ORIGIN));
 }
 
 export function publicPageMetadata(

@@ -56,7 +56,7 @@ const en: AccountCopy = {
   termsLink: "Review legal terms and privacy status",
   sendLink: "Email me a secure link", sending: "Sending…",
   checkEmailTitle: "Check your email", checkEmailBody: "If the address can receive DESCO Compass email, a secure link will arrive shortly. The link expires after 15 minutes and can be used once.",
-  unavailableTitle: "Online account creation is not available", unavailableBody: "DESCO Compass will enable online accounts only after the email service, account terms and privacy notice are approved and configured.", contact: "Contact DESCO",
+  unavailableTitle: "Online account access is not available", unavailableBody: "DESCO Compass will enable sign-in and new account creation only after the email service, account terms and privacy notice are approved and configured.", contact: "Contact DESCO",
   switchToSignup: "New to Compass? Create an account", switchToLogin: "Already have an account? Sign in",
   verifyTitle: "Confirm this sign-in", verifyIntro: "Continue only if you requested this secure DESCO Compass link.", verifyButton: "Confirm and continue", verifying: "Confirming…", verifyError: "This link is invalid, expired or has already been used. Request a new secure link.",
   verifiedTitle: "Email confirmed", verifiedBody: "Your secure session is ready.", continue: "Continue to Compass",
@@ -72,8 +72,16 @@ const copies: Record<Locale, AccountCopy> = {
   zh: { ...en, signIn: "登录", createAccount: "创建账户", openWorkspace: "打开工作区", email: "工作邮箱", fullName: "姓名", loginTitle: "登录 DESCO Compass", loginIntro: "我们将发送安全的一次性登录链接。", signupTitle: "创建 DESCO Compass 账户", signupIntro: "使用已验证邮箱创建基础投资者账户。", basicAccountNotice: "基础账户可保存机会并准备投资授权，但不授予机构资格、项目资料室访问权或投资批准。", termsAcceptance: "我接受已批准的账户条款，并确认知悉隐私声明。", termsLink: "查看法律条款和隐私状态", sendLink: "发送安全链接", sending: "正在发送…", checkEmailTitle: "请查收邮件", checkEmailBody: "如果该地址可以接收 DESCO Compass 邮件，安全链接将很快送达。链接在 15 分钟后过期且只能使用一次。", unavailableTitle: "暂未开放在线创建账户", unavailableBody: "DESCO Compass 仅在邮件服务、账户条款和隐私声明获批并配置后开放在线账户。", contact: "联系 DESCO", switchToSignup: "首次使用 Compass？创建账户", switchToLogin: "已有账户？登录", verifyTitle: "确认本次登录", verifyIntro: "仅在您申请了此 DESCO Compass 安全链接时继续。", verifyButton: "确认并继续", verifying: "正在确认…", verifyError: "链接无效、已过期或已使用。请申请新的安全链接。", verifiedTitle: "邮箱已确认", verifiedBody: "安全会话已准备就绪。", continue: "继续进入 Compass", onboardingTitle: "基础投资者账户已准备就绪", onboardingBody: "先查看公开机会，再保存相关项目或创建筛选授权。", onboardingBoundary: "创建账户不会验证机构，也不会授予机密项目材料访问权。这些决定独立且受控。", reviewOpportunities: "查看机会", createMandate: "创建授权", settingsTitle: "账户设置", settingsIntro: "查看当前账户和会话选项。", accountEmail: "已验证邮箱", signOut: "退出登录", signOutAll: "退出所有会话", exportData: "申请导出数据", deleteAccount: "申请删除账户", unavailableAction: "当前版本暂不支持此受控请求。请联系 DESCO 支持。" },
 };
 
+const unavailableAccessCopy: Record<Locale, Pick<AccountCopy, "unavailableTitle" | "unavailableBody">> = {
+  en: { unavailableTitle: "Online account access is not available", unavailableBody: "DESCO Compass will enable sign-in and new account creation only after the email service, account terms and privacy notice are approved and configured." },
+  fr: { unavailableTitle: "L’accès aux comptes en ligne n’est pas disponible", unavailableBody: "DESCO Compass activera la connexion et la création de comptes après approbation et configuration du service e-mail, des conditions de compte et de l’avis de confidentialité." },
+  es: { unavailableTitle: "El acceso a cuentas en línea no está disponible", unavailableBody: "DESCO Compass habilitará el inicio de sesión y la creación de cuentas cuando estén aprobados y configurados el servicio de correo, las condiciones de cuenta y el aviso de privacidad." },
+  pt: { unavailableTitle: "O acesso a contas online não está disponível", unavailableBody: "A DESCO Compass ativará o início de sessão e a criação de contas após aprovação e configuração do serviço de e-mail, dos termos de conta e do aviso de privacidade." },
+  zh: { unavailableTitle: "暂未开放在线账户访问", unavailableBody: "DESCO Compass 仅在邮件服务、账户条款和隐私声明获批并配置后开放登录及新账户创建。" },
+};
+
 export function accountCopy(locale: Locale): AccountCopy {
-  return copies[locale];
+  return { ...copies[locale], ...unavailableAccessCopy[locale] };
 }
 
 export function accountRequestReceived(locale: Locale): string {

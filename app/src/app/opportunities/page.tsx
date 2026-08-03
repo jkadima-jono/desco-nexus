@@ -12,6 +12,8 @@ import { t } from "@/lib/i18n";
 import { publicPageMetadata } from "@/lib/metadata";
 import { openSignupConfig } from "@/lib/openSignup";
 import { accountCopy } from "@/lib/translations/account";
+import { releaseReadinessCopy } from "@/lib/translations/release-readiness";
+import { isDescoRelatedOpportunity } from "@/lib/data";
 
 export const dynamic = "force-dynamic";
 
@@ -78,6 +80,7 @@ export default async function Opportunities({ searchParams }: { searchParams: Pr
   const hero = getPublicHero(locale, "opportunities");
   const ui = investmentUi(locale).opportunities;
   const account = accountCopy(locale);
+  const readiness = releaseReadinessCopy(locale);
   const signupEnabled = openSignupConfig().enabled;
   const {
     sector = "All",
@@ -91,6 +94,8 @@ export default async function Opportunities({ searchParams }: { searchParams: Pr
     updated = "All",
     sort = "latest",
   } = params;
+  const advancedFiltersActive = country !== "All" || stage !== "All" || instrument !== "All" ||
+    sponsor !== "All" || dataroom !== "All" || updated !== "All" || sort !== "latest";
 
   const rows = await prisma.listing.findMany({
     where: publicListingWhere,
@@ -190,20 +195,19 @@ export default async function Opportunities({ searchParams }: { searchParams: Pr
             </div>
           )}
 
-          <details className="group mt-8 rounded-lg border border-ink/10 bg-white lg:contents">
-            <summary className="flex min-h-12 cursor-pointer list-none items-center justify-between gap-3 rounded-lg px-4 py-3 font-display text-sm font-bold text-ink marker:content-none lg:hidden">
-              <span>{ui.filterLabel}</span>
-              <span aria-hidden="true" className="text-lg text-gold transition-transform group-open:rotate-45">＋</span>
-            </summary>
-            <form method="get" className="hidden border-t border-ink/10 p-4 group-open:block lg:mt-8 lg:block lg:rounded-lg lg:border lg:border-ink/10" aria-label={ui.filterLabel}>
-            <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-              {[
-                ["sector", ui.sector, sector, sectors],
-                ["country", ui.geography, country, countries],
-                ["stage", ui.stage, stage, stages],
-                ["instrument", ui.instrument, instrument, instruments],
-                ["sponsor", ui.sponsor, sponsor, sponsors],
-              ].map(([name, label, value, options]) => (
+          {allListings.some(isDescoRelatedOpportunity) && (
+            <aside className="mt-5 max-w-4xl rounded-xl border border-rust/25 bg-rust/5 p-5" aria-labelledby="related-party-disclosure">
+              <h2 id="related-party-disclosure" className="font-display text-base font-bold text-ink">{readiness.relatedTitle}</h2>
+              <p className="mt-2 text-sm leading-6 text-slate">{readiness.relatedBody}</p>
+              <Link href="/trust" className="mt-3 inline-flex min-h-11 items-center text-sm font-bold text-ink underline underline-offset-4">
+                {readiness.relatedLink}
+              </Link>
+            </aside>
+          )}
+
+          <form method="get" className="mt-8 rounded-lg border border-ink/10 bg-white p-4" aria-label={ui.filterLabel}>
+            <div className="grid gap-3 sm:grid-cols-3">
+              {[["sector", ui.sector, sector, sectors]].map(([name, label, value, options]) => (
                 <label key={name as string}>
                   <span className={labelClass}>{label as string}</span>
                   <select name={name as string} defaultValue={value as string} className={selectClass}>
@@ -233,39 +237,64 @@ export default async function Opportunities({ searchParams }: { searchParams: Pr
                   <option value="reviewed">{ui.reviewed}</option>
                 </select>
               </label>
-              <label>
-                <span className={labelClass}>{ui.roomReadiness}</span>
-                <select name="dataroom" defaultValue={dataroom} className={selectClass}>
-                  <option value="All">{ui.allStatuses}</option>
-                  <option value="prepared">{ui.documentsRecorded}</option>
-                  <option value="not-publicly-confirmed">{ui.notConfirmed}</option>
-                </select>
-              </label>
-              <label>
-                <span className={labelClass}>{ui.updated}</span>
-                <select name="updated" defaultValue={updated} className={selectClass}>
-                  <option value="All">{ui.anyDate}</option>
-                  <option value="30">{ui.past30}</option>
-                  <option value="90">{ui.past90}</option>
-                  <option value="older">{ui.older90}</option>
-                </select>
-              </label>
-              <label>
-                <span className={labelClass}>{ui.sort}</span>
-                <select name="sort" defaultValue={sort} className={selectClass}>
-                  <option value="latest">{ui.latest}</option>
-                  <option value="updated">{ui.recentlyUpdated}</option>
-                  <option value="capital">{ui.capitalSize}</option>
-                  <option value="stage">{ui.stage}</option>
-                </select>
-              </label>
             </div>
+            <details open={advancedFiltersActive} className="group mt-4 rounded-lg border border-ink/10 bg-mist/60">
+              <summary className="flex min-h-12 cursor-pointer list-none items-center justify-between gap-3 px-4 py-3 marker:content-none">
+                <span>
+                  <span className="block font-display text-sm font-bold text-ink">{readiness.advancedFilters}</span>
+                  <span className="mt-0.5 block text-xs text-slate">{readiness.advancedFiltersBody}</span>
+                </span>
+                <span aria-hidden="true" className="text-lg text-gold transition-transform group-open:rotate-45">＋</span>
+              </summary>
+              <div className="grid gap-3 border-t border-ink/10 p-4 sm:grid-cols-2 lg:grid-cols-4">
+                {[
+                  ["country", ui.geography, country, countries],
+                  ["stage", ui.stage, stage, stages],
+                  ["instrument", ui.instrument, instrument, instruments],
+                  ["sponsor", ui.sponsor, sponsor, sponsors],
+                ].map(([name, label, value, options]) => (
+                  <label key={name as string}>
+                    <span className={labelClass}>{label as string}</span>
+                    <select name={name as string} defaultValue={value as string} className={selectClass}>
+                      {(options as string[]).map((option) => (
+                        <option key={option} value={option}>{localizedOption(name as string, option)}</option>
+                      ))}
+                    </select>
+                  </label>
+                ))}
+                <label>
+                  <span className={labelClass}>{ui.roomReadiness}</span>
+                  <select name="dataroom" defaultValue={dataroom} className={selectClass}>
+                    <option value="All">{ui.allStatuses}</option>
+                    <option value="prepared">{ui.documentsRecorded}</option>
+                    <option value="not-publicly-confirmed">{ui.notConfirmed}</option>
+                  </select>
+                </label>
+                <label>
+                  <span className={labelClass}>{ui.updated}</span>
+                  <select name="updated" defaultValue={updated} className={selectClass}>
+                    <option value="All">{ui.anyDate}</option>
+                    <option value="30">{ui.past30}</option>
+                    <option value="90">{ui.past90}</option>
+                    <option value="older">{ui.older90}</option>
+                  </select>
+                </label>
+                <label>
+                  <span className={labelClass}>{ui.sort}</span>
+                  <select name="sort" defaultValue={sort} className={selectClass}>
+                    <option value="latest">{ui.latest}</option>
+                    <option value="updated">{ui.recentlyUpdated}</option>
+                    <option value="capital">{ui.capitalSize}</option>
+                    <option value="stage">{ui.stage}</option>
+                  </select>
+                </label>
+              </div>
+            </details>
             <div className="mt-4 flex flex-wrap gap-3">
               <button className="button-primary" type="submit">{ui.apply}</button>
               <Link href="/opportunities" className="button-secondary">{ui.clear}</Link>
             </div>
-            </form>
-          </details>
+          </form>
 
           <ComparisonGrid listings={localizedListings} locale={locale} showReviewStatus={hasDifferentiatingReviewStatus} />
 

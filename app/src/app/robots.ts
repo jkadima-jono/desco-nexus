@@ -1,7 +1,8 @@
 import type { MetadataRoute } from "next";
+import { metadataBaseUrl } from "@/lib/metadata";
 
 export default function robots(): MetadataRoute.Robots {
-  const base = process.env.NEXT_PUBLIC_SITE_URL ?? "https://compass.desco.global";
+  const base = metadataBaseUrl().origin;
   return {
     rules: [
       { userAgent: "*", allow: "/", disallow: ["/admin/", "/api/", "/deals/", "/messages/", "/portfolio/", "/saved/"] },
