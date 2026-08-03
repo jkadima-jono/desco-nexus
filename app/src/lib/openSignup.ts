@@ -11,7 +11,10 @@ export function openSignupConfig(env: NodeJS.ProcessEnv = process.env): OpenSign
   const emailAccessEnabled = env.NODE_ENV !== "production" || isMailerConfigured(env);
   return {
     enabled:
+      env.NODE_ENV !== "production" &&
       env.OPEN_SIGNUP_ENABLED === "true" &&
+      env.ACCOUNT_TERMS_APPROVED === "true" &&
+      env.PRIVACY_NOTICE_APPROVED === "true" &&
       Boolean(env.ACCOUNT_TERMS_VERSION?.trim()) &&
       Boolean(env.PRIVACY_NOTICE_VERSION?.trim()) &&
       emailAccessEnabled,
@@ -28,6 +31,7 @@ export function configuredSiteOrigin(env: NodeJS.ProcessEnv = process.env): stri
     const url = new URL(raw);
     const localDevelopment = env.NODE_ENV !== "production" && ["localhost", "127.0.0.1"].includes(url.hostname);
     if (url.protocol !== "https:" && !localDevelopment) return null;
+    if (env.NODE_ENV === "production" && url.hostname !== "compass.desco.global") return null;
     return url.origin;
   } catch {
     return null;

@@ -142,8 +142,8 @@ test("the public catalogue is limited to the four reviewed briefings", () => {
   assert.deepEqual([...PUBLIC_OPPORTUNITY_IDS], [
     "kasaji-kisenge-solar-50mw",
     "waterdesco-grand-kasai",
-    "ldc-integrated-housing-drc",
     "energulf-lotshi-block",
+    "ldc-integrated-housing-drc",
   ]);
   assert.equal(isPublicOpportunityId("sciress-kolwezi-12423"), false);
   assert.equal(isPublicOpportunityId("port-de-ndomba"), false);

@@ -459,7 +459,7 @@ export const listings: Listing[] = [
   },
   {
     id: "ldc-integrated-housing-drc",
-    title: "LDC Integrated Housing and Urban Infrastructure Programme",
+    title: "LDC Phased Housing and Urban Infrastructure Programme",
     org: "ONGD Logement Décent pour les Congolais (LDC)",
     sector: "Infrastructure",
     sectorColor: colorForSector("Infrastructure"),
@@ -470,25 +470,25 @@ export const listings: Listing[] = [
     raiseUsd: 0,
     estimatedProjectCostUsd: 14_635_509_000,
     currentCapitalAskUsd: null,
-    instrument: "Public-private development and mortgage finance; structure to be completed",
-    stage: "Sponsor concept and preliminary cost plan",
+    instrument: "Phased public-private development and mortgage finance; first-phase structure not yet defined",
+    stage: "Long-horizon sponsor concept; first phase to be scoped",
     irr: "No public return projection published",
     summary:
-      "We are presenting a large-scale urban development opportunity that brings together housing, roads, utilities, public facilities and industrial uses across three proposed sites in the DRC, with an initial focus on the housing and infrastructure pressure around Kinshasa. The concept-level cost estimate is $14.64 billion. We intend to evaluate the programme in phases, beginning with a reconciled scope, confirmed sites and land rights, tested household demand, bank participation and independently validated costs.",
+      "We are assessing a long-horizon housing and urban-infrastructure programme across three proposed sites in the DRC. The sponsor’s $14.64 billion figure applies to the full concept and is not a current capital request. A financeable first phase has not yet been defined. Progress requires a reconciled scope, confirmed sites and land rights, tested household demand, bank participation, an independently validated first-phase budget and a delivery entity.",
     useOfFunds:
       "Preliminary sponsor allocation includes housing, site preparation, industrial facilities, police housing, schools, health and civic facilities, power, water, roads and programme monitoring.",
     verified: false,
     governmentBacked: false,
     scores: { match: 0, readiness: 27, esg: 0, risk: 82 },
     highlights: [
-      "Three integrated sites with residential, economic and public-service housing",
-      "Preliminary programme estimate: $14.64 billion, including a 5% monitoring and evaluation allowance",
+      "Long-horizon concept spanning three proposed sites and several housing categories",
+      "Sponsor concept estimate: $14.64 billion for the full programme; no current first-phase capital request is disclosed",
       "Buyer-finance concept: 20% initial contribution followed by up to 15 years of mortgage repayment",
       "Housing counts, power capacity and water assets are inconsistent across the narrative and budget and require a controlled baseline",
     ],
     docs: [],
     whyMatch:
-      "We see a potential Investdesco urban-infrastructure platform, provided that scope, land, planning, demand and financing are validated through a phased process.",
+      "We see a potential long-horizon Investdesco urban-infrastructure programme. It should advance only through a defined first phase with validated scope, land, planning, demand, cost and financing.",
   },
   {
     id: "energulf-lotshi-block",

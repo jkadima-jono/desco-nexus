@@ -18,9 +18,12 @@
   --color-blue-p: #0066CC;
   --color-deepblue-p: #0047AB;
   --color-orange-p: #FF8C00;
-  --font-display: var(--font-montserrat), ui-sans-serif, system-ui, sans-serif;
-  --font-body: var(--font-open-sans), ui-sans-serif, system-ui, sans-serif;
-  --font-serif: var(--font-playfair), ui-serif, Georgia, serif;
+  --font-montserrat: "Avenir Next", Avenir, "Helvetica Neue", Arial, sans-serif;
+  --font-open-sans: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+  --font-playfair: Georgia, "Times New Roman", serif;
+  --font-display: var(--font-montserrat);
+  --font-body: var(--font-open-sans);
+  --font-serif: var(--font-playfair);
 }
 
 .bg-white .text-gold,

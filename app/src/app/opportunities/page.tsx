@@ -122,6 +122,7 @@ export default async function Opportunities({ searchParams }: { searchParams: Pr
   const reviewStatuses = new Set(allListings.map((item) => item.verified));
   const hasDifferentiatingReviewStatus = reviewStatuses.size > 1;
   const commonReviewStatus = allListings[0]?.verified ?? false;
+  const hasDisclosedCapitalAsk = allListings.some((item) => (item.currentCapitalAskUsd ?? 0) > 0);
 
   let listings = allListings.filter((item) => {
     if (sector !== "All" && item.sector !== sector) return false;
@@ -130,7 +131,7 @@ export default async function Opportunities({ searchParams }: { searchParams: Pr
     if (instrument !== "All" && instrumentCategory(item.instrument) !== instrument) return false;
     if (sponsor !== "All" && item.org !== sponsor) return false;
     if (!matchesUpdated(item.updatedAt, updated)) return false;
-    if (!matchesCapital(item.currentCapitalAskUsd, capital)) return false;
+    if (hasDisclosedCapitalAsk && !matchesCapital(item.currentCapitalAskUsd, capital)) return false;
     if (disclosure === "reviewed" && !item.verified) return false;
     if (disclosure === "pending" && item.verified) return false;
     if (dataroom === "prepared" && item.docs.length === 0) return false;
@@ -206,7 +207,7 @@ export default async function Opportunities({ searchParams }: { searchParams: Pr
           )}
 
           <form method="get" className="mt-8 rounded-lg border border-ink/10 bg-white p-4" aria-label={ui.filterLabel}>
-            <div className="grid gap-3 sm:grid-cols-3">
+            <div className={`grid gap-3 ${hasDisclosedCapitalAsk ? "sm:grid-cols-3" : "sm:grid-cols-2"}`}>
               {[["sector", ui.sector, sector, sectors]].map(([name, label, value, options]) => (
                 <label key={name as string}>
                   <span className={labelClass}>{label as string}</span>
@@ -219,16 +220,18 @@ export default async function Opportunities({ searchParams }: { searchParams: Pr
                   </select>
                 </label>
               ))}
-              <label>
-                <span className={labelClass}>{ui.capital}</span>
-                <select name="capital" defaultValue={capital} className={selectClass}>
-                  <option value="All">{ui.allSizes}</option>
-                  <option value="under-10">{ui.under10}</option>
-                  <option value="10-50">$10M–$50M</option>
-                  <option value="50-100">$50M–$100M</option>
-                  <option value="100-plus">$100M+</option>
-                </select>
-              </label>
+              {hasDisclosedCapitalAsk && (
+                <label>
+                  <span className={labelClass}>{ui.capital}</span>
+                  <select name="capital" defaultValue={capital} className={selectClass}>
+                    <option value="All">{ui.allSizes}</option>
+                    <option value="under-10">{ui.under10}</option>
+                    <option value="10-50">$10M–$50M</option>
+                    <option value="50-100">$50M–$100M</option>
+                    <option value="100-plus">$100M+</option>
+                  </select>
+                </label>
+              )}
               <label>
                 <span className={labelClass}>{ui.evidence}</span>
                 <select name="disclosure" defaultValue={disclosure} className={selectClass}>
@@ -284,7 +287,7 @@ export default async function Opportunities({ searchParams }: { searchParams: Pr
                   <select name="sort" defaultValue={sort} className={selectClass}>
                     <option value="latest">{ui.latest}</option>
                     <option value="updated">{ui.recentlyUpdated}</option>
-                    <option value="capital">{ui.capitalSize}</option>
+                    {hasDisclosedCapitalAsk && <option value="capital">{ui.capitalSize}</option>}
                     <option value="stage">{ui.stage}</option>
                   </select>
                 </label>

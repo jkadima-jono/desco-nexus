@@ -23,7 +23,7 @@ import type { Metadata } from "next";
 import { getInvestmentEvidence, normalizeStage, summarizeEvidence } from "@/lib/investment-evidence";
 import { sectorForeground } from "@/lib/theme";
 import { inaccurateInformationLabel, investmentUi, localizedCapitalPresentation, localizedReturnValue, materialFactCopy, relatedPartyDisclosure } from "@/lib/translations/investment-ui";
-import { localizeInvestmentEvidence, localizeListing } from "@/lib/translations/listing-content";
+import { localizeInvestmentEvidence, localizeListing, organizationPresentation } from "@/lib/translations/listing-content";
 import { localizedMatchReason, matchPanelCopy } from "@/lib/translations/matching";
 import { internalProjectId, projectHref, publicProjectId } from "@/lib/project-slugs";
 import { PUBLIC_LISTING_STATUS, isPublicOpportunityId, publicListingWhere } from "@/lib/public-listings";
@@ -92,6 +92,7 @@ export default async function ProjectDetail({
   const full = localizeListing(toListing(row), locale);
   const sectorKey = full.sectorKey ?? row.sector;
   const l = { ...full, docs: [], whyMatch: "" };
+  const organization = organizationPresentation(l.id, locale);
   const docs = canManageListing
     ? row.docs
     : row.docs.filter(
@@ -189,7 +190,8 @@ export default async function ProjectDetail({
           </div>
           <div className="mt-6 flex flex-wrap gap-x-5 gap-y-2 border-t border-white/15 pt-4 text-xs text-white/70">
             <span>{ui.lastUpdated} {new Date(row.updatedAt).toLocaleDateString(locale, { year: "numeric", month: "short", day: "numeric" })}</span>
-            <span>{ui.sponsor}: {l.org}</span>
+            <span>{organization?.role ?? ui.sponsor}: {l.org}</span>
+            {organization?.context && <span>{organization.context}</span>}
             <span>{ui.publicRestricted}</span>
           </div>
           {isDescoRelatedOpportunity(l) && (

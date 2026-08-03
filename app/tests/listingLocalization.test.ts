@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import { listings } from "../src/lib/data";
-import { localizeListing } from "../src/lib/translations/listing-content";
+import { localizeListing, organizationPresentation } from "../src/lib/translations/listing-content";
 import { exampleProjectImages, localizeExampleProjectImageCaption } from "../src/lib/example-project-images";
 
 const locales = ["fr", "es", "pt", "zh"] as const;
@@ -79,6 +79,26 @@ test("translated project summaries retain DESCO's first-person institutional voi
     for (const locale of locales) {
       const localized = localizeListing(listing, locale);
       assert.match(localized.summary, descoVoice[locale], `${listing.id} (${locale})`);
+    }
+  }
+});
+
+test("public organisation roles are governed and translated", () => {
+  const publicIds = [
+    "kasaji-kisenge-solar-50mw",
+    "waterdesco-grand-kasai",
+    "energulf-lotshi-block",
+    "ldc-integrated-housing-drc",
+  ];
+  for (const id of publicIds) {
+    const english = organizationPresentation(id, "en");
+    assert.ok(english?.role, `${id} English role`);
+    assert.ok(english?.context, `${id} English context`);
+    for (const locale of locales) {
+      const translated = organizationPresentation(id, locale);
+      assert.ok(translated?.role, `${id} ${locale} role`);
+      assert.ok(translated?.context, `${id} ${locale} context`);
+      assert.notEqual(translated?.context, english.context, `${id} ${locale} context translation`);
     }
   }
 });

@@ -7,8 +7,8 @@ export const PUBLIC_LISTING_STATUS = "public_teaser";
 export const PUBLIC_OPPORTUNITY_IDS = [
   "kasaji-kisenge-solar-50mw",
   "waterdesco-grand-kasai",
-  "ldc-integrated-housing-drc",
   "energulf-lotshi-block",
+  "ldc-integrated-housing-drc",
 ] as const;
 
 export const publicListingWhere = {

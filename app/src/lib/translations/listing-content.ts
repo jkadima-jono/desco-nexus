@@ -8,6 +8,43 @@ type ListingText =
   Partial<Pick<Listing, "title">>;
 type ListingTranslations = Record<Exclude<Locale, "en">, Record<string, ListingText>>;
 
+type OrganizationPresentation = { role: string; context: string };
+
+const organizationPresentations: Record<string, Record<Locale, OrganizationPresentation>> = {
+  "kasaji-kisenge-solar-50mw": {
+    en: { role: "Designer and proposed implementer", context: "Role stated in the August 2023 technical proposal" },
+    fr: { role: "Concepteur et exécutant proposé", context: "Rôle indiqué dans la proposition technique d’août 2023" },
+    es: { role: "Diseñador y ejecutor propuesto", context: "Función indicada en la propuesta técnica de agosto de 2023" },
+    pt: { role: "Projetista e executor proposto", context: "Função indicada na proposta técnica de agosto de 2023" },
+    zh: { role: "设计方及拟实施方", context: "2023 年 8 月技术方案中所述角色" },
+  },
+  "waterdesco-grand-kasai": {
+    en: { role: "DESCO-related development platform", context: "Relationship disclosed by DESCO; legal project entity is not publicly confirmed" },
+    fr: { role: "Plateforme de développement liée à DESCO", context: "Lien déclaré par DESCO ; l’entité juridique du projet n’est pas confirmée publiquement" },
+    es: { role: "Plataforma de desarrollo vinculada a DESCO", context: "Relación divulgada por DESCO; la entidad jurídica del proyecto no está confirmada públicamente" },
+    pt: { role: "Plataforma de desenvolvimento ligada à DESCO", context: "Relação divulgada pela DESCO; a entidade jurídica do projeto não está confirmada publicamente" },
+    zh: { role: "DESCO 关联开发平台", context: "关联关系由 DESCO 披露；项目法律实体尚未公开确认" },
+  },
+  "energulf-lotshi-block": {
+    en: { role: "Local project company", context: "Role stated in the EnerGulf Lotshi project one-pager" },
+    fr: { role: "Société de projet locale", context: "Rôle indiqué dans la fiche de projet EnerGulf Lotshi" },
+    es: { role: "Sociedad local del proyecto", context: "Función indicada en la ficha del proyecto EnerGulf Lotshi" },
+    pt: { role: "Sociedade de projeto local", context: "Função indicada na ficha do projeto EnerGulf Lotshi" },
+    zh: { role: "当地项目公司", context: "EnerGulf Lotshi 项目简介中所述角色" },
+  },
+  "ldc-integrated-housing-drc": {
+    en: { role: "Concept-paper organisation", context: "Congolese housing NGO named in the sponsor concept paper" },
+    fr: { role: "Organisation nommée dans la note conceptuelle", context: "ONG congolaise du logement citée dans la note du porteur" },
+    es: { role: "Organización de la nota conceptual", context: "ONG congoleña de vivienda citada en la nota del promotor" },
+    pt: { role: "Organização da nota conceptual", context: "ONG congolesa de habitação citada na nota do promotor" },
+    zh: { role: "概念文件所列机构", context: "项目发起方概念文件中列明的刚果住房非政府组织" },
+  },
+};
+
+export function organizationPresentation(listingId: string, locale: Locale): OrganizationPresentation | null {
+  return organizationPresentations[listingId]?.[locale] ?? null;
+}
+
 const fr = {
   "port-de-ndomba": {
     title: "Port de Ndomba — porte d’entrée fluviale du Kasaï",
@@ -268,11 +305,11 @@ const addedProjectTranslations: ListingTranslations = {
       whyMatch: "Nous considérons ce projet comme une opportunité énergétique potentielle pour Investdesco, sous réserve d’une validation technique, juridique, commerciale et financière actualisée.",
     },
     "ldc-integrated-housing-drc": {
-      title: "Programme LDC de logements et d’infrastructures urbaines en RDC",
-      sector: "Infrastructure", country: "RDC", instrument: "Programme proposé en partenariat public-privé et crédit logement ; structure financière non finalisée", stage: "Concept du porteur et plan de coûts préliminaire", irr: "Hypothèse du porteur : marge nette de 10 % par logement social ; modèle non examiné indépendamment",
-      summary: "Nous présentons une opportunité urbaine de grande ampleur réunissant logements, voirie, réseaux, équipements publics et activités industrielles sur trois sites proposés en RDC. Le coût conceptuel est estimé à 14,64 Md$. Nous envisageons une évaluation par phases, en commençant par un périmètre réconcilié, des sites et droits fonciers confirmés, une demande testée, la participation bancaire et des coûts validés indépendamment.",
-      highlights: ["Concept portant sur trois sites et plusieurs catégories de logements résidentiels, économiques et publics", "Estimation préliminaire : 14,64 Md$, dont 5 % pour le suivi-évaluation", "Mécanisme proposé : apport initial de 20 %, puis remboursement sur 15 ans au maximum", "Quantités de logements et capacités d’eau et d’électricité incohérentes dans les documents"],
-      whyMatch: "Nous y voyons une plateforme urbaine potentielle pour Investdesco, sous réserve de valider le périmètre, le foncier, l’urbanisme, la demande et le financement.",
+      title: "Programme LDC par phases de logements et d’infrastructures urbaines",
+      sector: "Infrastructure", country: "RDC", instrument: "Développement public-privé et crédit logement par phases ; première phase non définie", stage: "Concept à long terme ; première phase à définir", irr: "Aucune projection publique de rendement n’est publiée",
+      summary: "Nous présentons à l’examen un programme de logements et d’infrastructures urbaines à long terme sur trois sites proposés en RDC. Le chiffre de 14,64 Md$ fourni par le porteur couvre le concept complet et ne constitue pas une demande actuelle de capital. Aucune première phase finançable n’est encore définie. L’avancement exige un périmètre réconcilié, des terrains confirmés, une demande testée, un budget indépendant et une entité de réalisation.",
+      highlights: ["Concept à long terme portant sur trois sites proposés et plusieurs catégories de logements", "Estimation du concept complet : 14,64 Md$ ; aucun besoin actuel pour une première phase n’est communiqué", "Mécanisme proposé : apport initial de 20 %, puis remboursement sur 15 ans au maximum", "Quantités de logements et capacités d’eau et d’électricité incohérentes dans les documents"],
+      whyMatch: "Nous y voyons un programme urbain potentiel à long terme, qui ne devrait avancer qu’avec une première phase définie et des hypothèses de périmètre, foncier, demande, coût et financement validées.",
     },
     "energulf-lotshi-block": {
       title: "Bloc d’exploration terrestre EnerGulf Lotshi",
@@ -291,11 +328,11 @@ const addedProjectTranslations: ListingTranslations = {
       whyMatch: "Consideramos este proyecto una posible oportunidad energética Investdesco, sujeta a validación técnica, jurídica, comercial y financiera.",
     },
     "ldc-integrated-housing-drc": {
-      title: "Programa LDC de vivienda e infraestructura urbana en la RDC",
-      sector: "Infraestructura", country: "R. D. del Congo", instrument: "Programa público-privado y de crédito hipotecario propuesto; estructura financiera incompleta", stage: "Concepto del promotor y plan preliminar de costes", irr: "Supuesto del promotor: margen neto del 10 % por vivienda social; modelo no revisado independientemente",
-      summary: "Presentamos una oportunidad urbana de gran escala con vivienda, carreteras, servicios, equipamientos públicos y usos industriales en tres emplazamientos propuestos en la RDC. El coste conceptual es de 14,64 mil M$. Evaluaremos el programa por fases, comenzando por un alcance conciliado, suelo confirmado, demanda probada, participación bancaria y costes validados.",
-      highlights: ["Tres emplazamientos con vivienda residencial, económica y de servicio público", "Estimación preliminar: 14,64 mil M$, incluido un 5 % para seguimiento y evaluación", "Mecanismo propuesto: aportación inicial del 20 % y hasta 15 años de pago", "Las cantidades de vivienda y capacidades de agua y energía son incoherentes"],
-      whyMatch: "Vemos una posible plataforma urbana Investdesco, sujeta a validar alcance, suelo, planificación, demanda y financiación.",
+      title: "Programa LDC por fases de vivienda e infraestructura urbana",
+      sector: "Infraestructura", country: "R. D. del Congo", instrument: "Desarrollo público-privado y financiación hipotecaria por fases; primera fase sin definir", stage: "Concepto a largo plazo; primera fase por definir", irr: "No se publica ninguna proyección pública de rentabilidad",
+      summary: "Presentamos para revisión un programa de vivienda e infraestructura urbana a largo plazo en tres emplazamientos propuestos en la RDC. La cifra de 14,64 mil millones de USD del promotor corresponde al concepto completo y no es una solicitud actual de capital. Aún no existe una primera fase financiable definida. El avance exige alcance y suelo confirmados, demanda probada, presupuesto independiente y una entidad ejecutora.",
+      highlights: ["Concepto a largo plazo para tres emplazamientos propuestos y varias categorías de vivienda", "Estimación del concepto completo: 14,64 mil millones de USD; no se divulga una necesidad actual para la primera fase", "Mecanismo propuesto: aportación inicial del 20 % y hasta 15 años de pago", "Las cantidades de vivienda y capacidades de agua y energía son incoherentes"],
+      whyMatch: "Vemos un posible programa urbano a largo plazo que solo debe avanzar con una primera fase definida y supuestos validados de alcance, suelo, demanda, coste y financiación.",
     },
     "energulf-lotshi-block": {
       title: "Bloque de exploración terrestre EnerGulf Lotshi",
@@ -314,11 +351,11 @@ const addedProjectTranslations: ListingTranslations = {
       whyMatch: "Consideramos este projeto uma potencial oportunidade energética Investdesco, sujeita a validação técnica, jurídica, comercial e financeira.",
     },
     "ldc-integrated-housing-drc": {
-      title: "Programa LDC de habitação e infraestrutura urbana na RDC",
-      sector: "Infraestrutura", country: "RD Congo", instrument: "Programa público-privado e de crédito habitacional proposto; estrutura financeira incompleta", stage: "Conceito do promotor e plano preliminar de custos", irr: "Pressuposto do promotor: margem líquida de 10% por habitação social; modelo não revisto independentemente",
-      summary: "Apresentamos uma oportunidade urbana de grande escala com habitação, estradas, serviços, equipamentos públicos e usos industriais em três áreas propostas na RDC. O custo conceptual é de US$ 14,64 mil milhões. Avaliaremos o programa por fases, começando por um âmbito conciliado, terrenos confirmados, procura testada, participação bancária e custos validados.",
-      highlights: ["Três áreas com habitação residencial, económica e de serviço público", "Estimativa preliminar: US$ 14,64 mil milhões, incluindo 5% para monitorização e avaliação", "Mecanismo proposto: entrada de 20% e pagamento até 15 anos", "Quantidades de habitação e capacidades de água e energia são inconsistentes"],
-      whyMatch: "Vemos uma potencial plataforma urbana Investdesco, sujeita à validação do âmbito, terreno, planeamento, procura e financiamento.",
+      title: "Programa LDC faseado de habitação e infraestrutura urbana",
+      sector: "Infraestrutura", country: "RD Congo", instrument: "Desenvolvimento público-privado e financiamento habitacional faseados; primeira fase por definir", stage: "Conceito de longo prazo; primeira fase por definir", irr: "Não é publicada qualquer projeção pública de retorno",
+      summary: "Apresentamos para análise um programa de habitação e infraestrutura urbana de longo prazo em três áreas propostas na RDC. O valor de US$ 14,64 mil milhões fornecido pelo promotor refere-se ao conceito completo e não é um pedido atual de capital. Ainda não existe uma primeira fase financiável definida. O avanço exige âmbito e terrenos confirmados, procura testada, orçamento independente e uma entidade executora.",
+      highlights: ["Conceito de longo prazo para três áreas propostas e várias categorias de habitação", "Estimativa do conceito completo: US$ 14,64 mil milhões; não é divulgado um pedido atual para a primeira fase", "Mecanismo proposto: entrada de 20% e pagamento até 15 anos", "Quantidades de habitação e capacidades de água e energia são inconsistentes"],
+      whyMatch: "Vemos um possível programa urbano de longo prazo que só deve avançar com uma primeira fase definida e pressupostos validados de âmbito, terreno, procura, custo e financiamento.",
     },
     "energulf-lotshi-block": {
       title: "Bloco de exploração terrestre EnerGulf Lotshi",
@@ -337,11 +374,11 @@ const addedProjectTranslations: ListingTranslations = {
       whyMatch: "我们将其视为潜在 Investdesco 能源机会，但须完成最新技术、法律、商业及融资核验。",
     },
     "ldc-integrated-housing-drc": {
-      title: "刚果民主共和国 LDC 综合住房与城市基础设施计划",
-      sector: "基础设施", country: "刚果民主共和国", instrument: "拟议公私合作及住房按揭计划；融资结构尚未完成", stage: "发起方概念及初步成本计划", irr: "发起方假设每套社会住房净利润率为 10%；模型未经独立审阅",
-      summary: "我们展示一项大型城市发展机会，拟在刚果民主共和国三个片区整合住房、道路、公用设施、公共服务及工业用途。概念成本为 146.4 亿美元。我们将分阶段评估，首先统一范围、确认土地权利、测试需求、落实银行参与并独立验证成本。",
-      highlights: ["概念涵盖三个片区及住宅、经济型和公共服务住房", "初步估算：146.4 亿美元，包括 5% 监测评估费用", "拟议购房机制：首付 20%，其余款项最长 15 年偿还", "文件中的住房数量、电力容量及水务设施数据不一致"],
-      whyMatch: "我们认为其具备成为 Investdesco 城市平台的潜力，前提是核实范围、土地、规划、需求及融资。",
+      title: "LDC 分阶段住房与城市基础设施计划",
+      sector: "基础设施", country: "刚果民主共和国", instrument: "分阶段公私合作开发及住房融资；首期结构尚未确定", stage: "长期概念；首期范围待确定", irr: "未公开发布任何回报预测",
+      summary: "我们正在评估一项覆盖刚果民主共和国三个拟议片区的长期住房与城市基础设施计划。发起方提供的 146.4 亿美元数字适用于完整概念，并非当前融资需求。目前尚未确定可融资的首期项目。推进工作需要统一范围、确认土地、验证需求、独立核定首期预算并明确实施主体。",
+      highlights: ["涵盖三个拟议片区及多类住房的长期概念", "完整概念估算为 146.4 亿美元；未披露当前首期融资需求", "拟议购房机制：首付 20%，其余款项最长 15 年偿还", "文件中的住房数量、电力容量及水务设施数据不一致"],
+      whyMatch: "我们认为该项目可能成为长期城市基础设施计划，但仅应在首期范围明确且范围、土地、需求、成本和融资假设得到验证后推进。",
     },
     "energulf-lotshi-block": {
       title: "EnerGulf Lotshi 陆上勘探区块",

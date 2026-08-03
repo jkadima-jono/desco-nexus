@@ -21,19 +21,27 @@ const siteUrl = new URL(process.env.NEXT_PUBLIC_SITE_URL!);
 if (siteUrl.protocol !== "https:") {
   throw new Error("NEXT_PUBLIC_SITE_URL must use HTTPS.");
 }
-if (siteUrl.hostname === "desco.global" || siteUrl.hostname === "www.desco.global") {
-  throw new Error("NEXT_PUBLIC_SITE_URL must use the Compass application domain, not the corporate website.");
+if (environment === "production" && siteUrl.hostname !== "compass.desco.global") {
+  throw new Error("Production NEXT_PUBLIC_SITE_URL must be https://compass.desco.global.");
 }
 
 if (environment === "production" && process.env.DEMO_AUTH_ENABLED === "true") {
   throw new Error("DEMO_AUTH_ENABLED must not be true in production.");
 }
+if (environment === "production" && process.env.ENABLE_PUBLIC_FORM_COLLECTION === "true") {
+  throw new Error("Public form collection must remain disabled until CRM derivative-data retention is enforced.");
+}
 if (process.env.OPEN_SIGNUP_ENABLED === "true") {
+  if (environment === "production") {
+    throw new Error("Open signup must remain disabled until approved versioned terms and privacy documents are published on the site.");
+  }
   const signupRequired = [
     "EMAIL_PROVIDER_API_KEY",
     "EMAIL_FROM_ADDRESS",
     "ACCOUNT_TERMS_VERSION",
     "PRIVACY_NOTICE_VERSION",
+    "ACCOUNT_TERMS_APPROVED",
+    "PRIVACY_NOTICE_APPROVED",
   ] as const;
   const signupMissing = signupRequired.filter((name) => !process.env[name]?.trim());
   if (signupMissing.length > 0) {
@@ -41,6 +49,9 @@ if (process.env.OPEN_SIGNUP_ENABLED === "true") {
   }
   if (process.env.EMAIL_PROVIDER !== "resend") {
     throw new Error('Open signup requires EMAIL_PROVIDER="resend".');
+  }
+  if (process.env.ACCOUNT_TERMS_APPROVED !== "true" || process.env.PRIVACY_NOTICE_APPROVED !== "true") {
+    throw new Error("Open signup requires explicitly approved account terms and privacy notice.");
   }
 }
 if (

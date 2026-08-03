@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { Montserrat, Open_Sans, Playfair_Display } from "next/font/google";
 import "./globals.css";
 import AppShell from "@/components/AppShell";
 import { getSessionUser } from "@/lib/auth";
@@ -12,27 +11,11 @@ import { metadataBaseUrl } from "@/lib/metadata";
 import { openSignupConfig } from "@/lib/openSignup";
 import StructuredData from "@/components/StructuredData";
 
-const montserrat = Montserrat({
-  subsets: ["latin"],
-  variable: "--font-montserrat",
-  display: "swap",
-});
-const openSans = Open_Sans({
-  subsets: ["latin"],
-  variable: "--font-open-sans",
-  display: "swap",
-});
-const playfair = Playfair_Display({
-  subsets: ["latin"],
-  variable: "--font-playfair",
-  display: "swap",
-});
-
 export const metadata: Metadata = {
   metadataBase: metadataBaseUrl(),
-  title: "DESCO Compass — Structured African investment opportunities",
+  title: "DESCO Compass — Structured DRC investment opportunities",
   description:
-    "We present structured African investment opportunities with clear disclosure, controlled diligence and mandate-based screening.",
+    "Review selected DRC investment opportunities through consistent disclosure, controlled diligence and mandate-based screening.",
   icons: {
     icon: [
       { url: "/brand/desco-compass-192.png", sizes: "192x192", type: "image/png" },
@@ -43,14 +26,14 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     siteName: "DESCO Compass",
-    title: "DESCO Compass — Structured African investment opportunities",
-    description: "We present structured African investment opportunities with clear disclosure and controlled diligence.",
+    title: "DESCO Compass — Structured DRC investment opportunities",
+    description: "Review selected DRC investment opportunities through consistent disclosure and controlled diligence.",
     images: [{ url: "/brand/desco-compass-logo.jpg", width: 800, height: 800, alt: "Official DESCO Compass logo" }],
   },
   twitter: {
     card: "summary",
-    title: "DESCO Compass — Structured African investment opportunities",
-    description: "We present structured African investment opportunities with clear disclosure and controlled diligence.",
+    title: "DESCO Compass — Structured DRC investment opportunities",
+    description: "Review selected DRC investment opportunities through consistent disclosure and controlled diligence.",
     images: ["/brand/desco-compass-logo.jpg"],
   },
 };
@@ -63,7 +46,7 @@ export default async function RootLayout({
   const copy = sharedCopy(locale);
   return (
     <html lang={locale}>
-      <body className={`${montserrat.variable} ${openSans.variable} ${playfair.variable} min-h-screen`}>
+      <body className="min-h-screen">
         <StructuredData data={[
           {
             "@context": "https://schema.org",
@@ -85,7 +68,7 @@ export default async function RootLayout({
         <ProductAnalytics />
         <AppShell
           user={user ? { fullName: user.fullName, title: user.title, role: user.role } : null}
-          demoMode={process.env.NEXT_PUBLIC_DEMO_MODE !== "false"}
+          demoMode={process.env.NODE_ENV !== "production" && process.env.NEXT_PUBLIC_DEMO_MODE !== "false"}
           demoBanner={t(locale, "system.demoBanner")}
           signupEnabled={openSignupConfig().enabled}
         >

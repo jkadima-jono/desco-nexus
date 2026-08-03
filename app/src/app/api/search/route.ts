@@ -3,6 +3,7 @@ import { prisma, toListing } from "@/lib/db";
 import type { Listing } from "@/lib/data";
 import { sanitizePublicListing } from "@/lib/data";
 import { publicListingWhere } from "@/lib/public-listings";
+import { applyRateLimit } from "@/lib/request-security";
 
 // Matches Desco Global's real four pillars only (see lib/theme.ts
 // SECTOR_TO_PILLAR) — no invented sectors like "Renewable Energy" or
@@ -34,7 +35,13 @@ const containsTerm = (query: string, term: string) => {
 };
 
 export async function GET(req: Request) {
-  const q = new URL(req.url).searchParams.get("q")?.toLowerCase() ?? "";
+  const limited = await applyRateLimit(req, "public-search-ip", 30, 60_000);
+  if (limited) return limited;
+  const rawQuery = new URL(req.url).searchParams.get("q") ?? "";
+  if (rawQuery.length > 200) {
+    return NextResponse.json({ error: "q parameter must not exceed 200 characters" }, { status: 400 });
+  }
+  const q = rawQuery.toLowerCase();
   if (!q.trim()) {
     return NextResponse.json({ error: "q parameter required" }, { status: 400 });
   }

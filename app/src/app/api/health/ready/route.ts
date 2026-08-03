@@ -1,6 +1,7 @@
 import { prisma } from "@/lib/db";
 import { apiError, apiOk } from "@/lib/api-response";
 import { logOperationalEvent } from "@/lib/observability";
+import { clientIpHash } from "@/lib/request-security";
 
 export const dynamic = "force-dynamic";
 
@@ -19,8 +20,24 @@ const REQUIRED_SCHEMA = [
 ] as const;
 
 type SchemaRow = { table_name: string; column_name: string };
+const readinessBuckets = new Map<string, { count: number; resetsAt: number }>();
+
+function readinessRateLimited(req: Request): boolean {
+  const key = clientIpHash(req);
+  const now = Date.now();
+  const current = readinessBuckets.get(key);
+  if (!current || current.resetsAt <= now) {
+    readinessBuckets.set(key, { count: 1, resetsAt: now + 60_000 });
+    return false;
+  }
+  current.count += 1;
+  return current.count > 60;
+}
 
 export async function GET(req: Request) {
+  if (readinessRateLimited(req)) {
+    return apiError(req, 429, "rate_limited", "Too many readiness requests.");
+  }
   const missing = REQUIRED_CONFIGURATION.filter((name) => !process.env[name]?.trim());
   if (missing.length > 0) {
     logOperationalEvent("error", "health.ready.configuration_missing", { count: missing.length });

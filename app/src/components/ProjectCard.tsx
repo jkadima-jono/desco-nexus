@@ -8,7 +8,7 @@ import { sectorForeground } from "@/lib/theme";
 import type { Locale } from "@/lib/i18n";
 import { investmentUi, materialFactCopy } from "@/lib/translations/investment-ui";
 import DisclosureCompleteness from "./DisclosureCompleteness";
-import { localizeInvestmentEvidence, localizeListing } from "@/lib/translations/listing-content";
+import { localizeInvestmentEvidence, localizeListing, organizationPresentation } from "@/lib/translations/listing-content";
 import { projectHref } from "@/lib/project-slugs";
 
 export default function ProjectCard({
@@ -35,9 +35,14 @@ export default function ProjectCard({
     : sourceDate.label;
   const fact = materialFactPresentation(listing, investmentEvidence.provenance.sourceDate);
   const factCopy = materialFactCopy(locale, fact.kind, fact.sourceDate);
+  const organization = organizationPresentation(listing.id, locale);
   const accessibleName = [
     listing.title,
     listing.country,
+    listing.stage,
+    listing.org,
+    organization?.role,
+    organization?.context,
     `${factCopy.label}: ${fact.value}`,
   ].filter(Boolean).join(", ");
   return (
@@ -90,7 +95,8 @@ export default function ProjectCard({
           </div>
           <div className="min-w-0 text-left text-[11px] text-wgray sm:text-right">
             <div className="break-words font-semibold text-charcoal">{listing.org}</div>
-            <div>{ui.sponsor}</div>
+            <div>{organization?.role ?? ui.sponsor}</div>
+            {organization?.context && <div className="mt-1 leading-4 text-slate">{organization.context}</div>}
           </div>
         </div>
 

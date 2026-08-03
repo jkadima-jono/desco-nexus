@@ -8,34 +8,40 @@ test("open signup is fail-closed without its explicit flag and legal versions", 
   assert.equal(openSignupConfig({
     NODE_ENV: "production",
     OPEN_SIGNUP_ENABLED: "true",
+    ACCOUNT_TERMS_APPROVED: "true",
+    PRIVACY_NOTICE_APPROVED: "true",
     ACCOUNT_TERMS_VERSION: "terms-1",
     PRIVACY_NOTICE_VERSION: "privacy-1",
   }).enabled, false);
 });
 
-test("production signup requires configured mail delivery", () => {
+test("production signup remains disabled until approved policies are published", () => {
   const config = openSignupConfig({
     NODE_ENV: "production",
     OPEN_SIGNUP_ENABLED: "true",
+    ACCOUNT_TERMS_APPROVED: "true",
+    PRIVACY_NOTICE_APPROVED: "true",
     ACCOUNT_TERMS_VERSION: "terms-1",
     PRIVACY_NOTICE_VERSION: "privacy-1",
     EMAIL_PROVIDER: "resend",
     EMAIL_PROVIDER_API_KEY: "secret",
     EMAIL_FROM_ADDRESS: "access@compass.desco.global",
   });
-  assert.equal(config.enabled, true);
+  assert.equal(config.enabled, false);
   assert.equal(config.emailAccessEnabled, true);
   assert.equal(config.termsVersion, "terms-1");
   assert.equal(config.privacyVersion, "privacy-1");
+});
+
+test("non-production signup requires explicit approved policy flags and versions", () => {
   assert.equal(openSignupConfig({
-    NODE_ENV: "production",
+    NODE_ENV: "development",
     OPEN_SIGNUP_ENABLED: "true",
+    ACCOUNT_TERMS_APPROVED: "true",
+    PRIVACY_NOTICE_APPROVED: "true",
     ACCOUNT_TERMS_VERSION: "terms-1",
     PRIVACY_NOTICE_VERSION: "privacy-1",
-    EMAIL_PROVIDER: "unsupported",
-    EMAIL_PROVIDER_API_KEY: "secret",
-    EMAIL_FROM_ADDRESS: "access@compass.desco.global",
-  }).enabled, false);
+  }).enabled, true);
 });
 
 test("existing-account email access remains available when registration is paused", () => {
@@ -51,6 +57,7 @@ test("existing-account email access remains available when registration is pause
 
 test("site origin rejects unsafe production origins and strips paths", () => {
   assert.equal(configuredSiteOrigin({ NODE_ENV: "production", NEXT_PUBLIC_SITE_URL: "http://compass.desco.global" }), null);
+  assert.equal(configuredSiteOrigin({ NODE_ENV: "production", NEXT_PUBLIC_SITE_URL: "https://example.com" }), null);
   assert.equal(
     configuredSiteOrigin({ NODE_ENV: "production", NEXT_PUBLIC_SITE_URL: "https://compass.desco.global/some/path" }),
     "https://compass.desco.global",
