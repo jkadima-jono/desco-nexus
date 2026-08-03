@@ -13,9 +13,9 @@ import StructuredData from "@/components/StructuredData";
 
 export const metadata: Metadata = {
   metadataBase: metadataBaseUrl(),
-  title: "DESCO Compass — Structured DRC investment opportunities",
+  title: "DESCO Compass — Structured DRC project screening",
   description:
-    "Review selected DRC investment opportunities through consistent disclosure, controlled diligence and mandate-based screening.",
+    "Review public DRC project records through consistent disclosure, controlled diligence and mandate-based screening.",
   icons: {
     icon: [
       { url: "/brand/desco-compass-192.png", sizes: "192x192", type: "image/png" },
@@ -26,14 +26,14 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     siteName: "DESCO Compass",
-    title: "DESCO Compass — Structured DRC investment opportunities",
-    description: "Review selected DRC investment opportunities through consistent disclosure and controlled diligence.",
+    title: "DESCO Compass — Structured DRC project screening",
+    description: "Review public DRC project records through consistent disclosure and controlled diligence.",
     images: [{ url: "/brand/desco-compass-logo.jpg", width: 800, height: 800, alt: "Official DESCO Compass logo" }],
   },
   twitter: {
     card: "summary",
-    title: "DESCO Compass — Structured DRC investment opportunities",
-    description: "Review selected DRC investment opportunities through consistent disclosure and controlled diligence.",
+    title: "DESCO Compass — Structured DRC project screening",
+    description: "Review public DRC project records through consistent disclosure and controlled diligence.",
     images: ["/brand/desco-compass-logo.jpg"],
   },
 };

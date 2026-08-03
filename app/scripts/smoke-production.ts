@@ -9,7 +9,8 @@ if (baseUrl.protocol !== "https:") {
 const routes = [
   "/",
   "/opportunities",
-  "/project/agridesco-grand-kasai",
+  "/investors",
+  "/project/kasaji-kisenge-solar-50mw",
   "/login",
   "/api/health/live",
   "/api/health/ready",
@@ -39,8 +40,16 @@ for (const route of routes) {
     if (route === "/" && !body.includes("DESCO Compass")) {
       failures.push(`${route}: DESCO Compass identity missing`);
     }
-    if (route === "/project/agridesco-grand-kasai" && !body.includes("Agridesco")) {
-      failures.push(`${route}: Agridesco project content missing`);
+    if (route === "/") {
+      for (const header of ["content-security-policy", "strict-transport-security", "x-content-type-options", "referrer-policy", "permissions-policy"]) {
+        if (!response.headers.has(header)) failures.push(`${route}: ${header} response header missing`);
+      }
+    }
+    if (route === "/investors" && (!body.includes("DESCO Compass") || body.includes("This page could not be loaded"))) {
+      failures.push(`${route}: investor pathway content missing or error boundary rendered`);
+    }
+    if (route === "/project/kasaji-kisenge-solar-50mw" && !body.includes("Kasaji")) {
+      failures.push(`${route}: Kasaji project content missing`);
     }
     if (route === "/api/health/live" && !body.includes('"status":"live"')) {
       failures.push(`${route}: liveness contract missing`);
@@ -50,6 +59,24 @@ for (const route of routes) {
     }
   } catch (error) {
     failures.push(`${route}: ${error instanceof Error ? error.message : "request failed"}`);
+  }
+}
+
+for (const locale of ["en", "fr", "es", "pt", "zh"]) {
+  try {
+    const response = await fetch(new URL("/investors", baseUrl), {
+      redirect: "follow",
+      headers: {
+        cookie: `nexus_locale=${locale}`,
+        "user-agent": "DESCO-Compass-release-check/1.0",
+      },
+    });
+    const body = await response.text();
+    if (!response.ok || /This page could not be loaded|Cette page n.a pas pu être chargée/.test(body)) {
+      failures.push(`/investors [${locale}]: HTTP ${response.status} or error boundary rendered`);
+    }
+  } catch (error) {
+    failures.push(`/investors [${locale}]: ${error instanceof Error ? error.message : "request failed"}`);
   }
 }
 

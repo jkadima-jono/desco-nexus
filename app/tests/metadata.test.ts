@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import { metadataBaseUrl, publicPageMetadata } from "../src/lib/metadata";
+import { investmentUi } from "../src/lib/translations/investment-ui";
 
 test("public pages publish page-specific Open Graph and Twitter metadata", () => {
   const metadata = publicPageMetadata("Water project — DESCO Compass", "A controlled project summary.", {
@@ -13,6 +14,15 @@ test("public pages publish page-specific Open Graph and Twitter metadata", () =>
   assert.equal(twitter.card, "summary");
   assert.equal(twitter.title, "Water project — DESCO Compass");
   assert.deepEqual(metadata.alternates, { canonical: "/project/water-project" });
+});
+
+test("opportunity metadata describes a screening catalogue in every language", () => {
+  for (const locale of ["en", "fr", "es", "pt", "zh"] as const) {
+    const metadata = investmentUi(locale).opportunities;
+    assert.match(metadata.metadataTitle, /Compass/);
+    assert.doesNotMatch(metadata.metadataDescription, /selected DRC investment opportunities/i);
+    assert.ok(metadata.metadataDescription.length > 25, locale);
+  }
 });
 
 test("preview metadata resolves against the active Vercel deployment", () => {

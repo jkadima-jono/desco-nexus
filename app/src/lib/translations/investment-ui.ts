@@ -132,9 +132,21 @@ const projectFinanceLabels: Record<Locale, Pick<InvestmentUi["project"], "capita
   zh: { capitalSought: "项目融资需求", programmeAllocation: "项目群资金分配，并非单一项目融资需求", returnInformation: "回报信息" },
 };
 
+const screeningCatalogueMetadata: Record<Locale, Pick<InvestmentUi["opportunities"], "metadataTitle" | "metadataDescription">> = {
+  en: { metadataTitle: "Project screening catalogue — DESCO Compass", metadataDescription: "Review public DRC project records by sector, stage, instrument and disclosure status. Publication does not imply investment readiness or independent verification." },
+  fr: { metadataTitle: "Catalogue de présélection — DESCO Compass", metadataDescription: "Examinez les dossiers publics de projets en RDC selon le secteur, le stade, l’instrument et la divulgation. La publication n’implique ni préparation à l’investissement ni vérification indépendante." },
+  es: { metadataTitle: "Catálogo de selección de proyectos — DESCO Compass", metadataDescription: "Revise expedientes públicos de proyectos en la RDC por sector, etapa, instrumento y estado de divulgación. La publicación no implica preparación para la inversión ni verificación independiente." },
+  pt: { metadataTitle: "Catálogo de seleção de projetos — DESCO Compass", metadataDescription: "Analise registos públicos de projetos na RDC por setor, fase, instrumento e estado de divulgação. A publicação não implica preparação para investimento nem verificação independente." },
+  zh: { metadataTitle: "项目筛选目录 — DESCO Compass", metadataDescription: "按行业、阶段、投资工具及披露状态审阅刚果民主共和国的公开项目记录。公开发布不表示项目已具备投资条件或已完成独立核实。" },
+};
+
 export function investmentUi(locale: Locale): InvestmentUi {
   const dictionary = dictionaries[locale];
-  return { ...dictionary, project: { ...dictionary.project, ...projectFinanceLabels[locale] } };
+  return {
+    ...dictionary,
+    opportunities: { ...dictionary.opportunities, ...screeningCatalogueMetadata[locale] },
+    project: { ...dictionary.project, ...projectFinanceLabels[locale] },
+  };
 }
 
 const instrumentCategoryLabels: Record<Locale, Record<string, string>> = {

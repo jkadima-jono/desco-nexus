@@ -50,10 +50,12 @@ export function PageHero({
 }
 
 export function SectionHeading({
+  id,
   eyebrow,
   title,
   body,
 }: {
+  id?: string;
   eyebrow?: string;
   title: string;
   body?: string;
@@ -61,7 +63,7 @@ export function SectionHeading({
   return (
     <div className="max-w-3xl">
       {eyebrow && <p className="eyebrow text-gold">{eyebrow}</p>}
-      <h2 className="editorial-heading mt-3 text-3xl text-ink lg:text-4xl">{title}</h2>
+      <h2 id={id} className="editorial-heading mt-3 text-3xl text-ink lg:text-4xl">{title}</h2>
       {body && <p className="mt-4 max-w-2xl text-sm leading-7 text-slate lg:text-base">{body}</p>}
     </div>
   );

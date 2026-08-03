@@ -186,6 +186,7 @@ export default async function Opportunities({ searchParams }: { searchParams: Pr
       <section className="bg-ivory py-12 lg:py-16" aria-labelledby="opportunity-results">
         <div className="public-container">
           <SectionHeading
+            id="opportunity-results"
             eyebrow={ui.browse}
             title={ui.result(localizedListings.length)}
             body={ui.disclosureBody}

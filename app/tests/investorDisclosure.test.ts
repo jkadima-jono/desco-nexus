@@ -43,7 +43,10 @@ test("the public investor preview and conflict policy are complete in every lang
   for (const locale of ["en", "fr", "es", "pt", "zh"] as const) {
     const preview = getMarketingCopy(locale, "investors").previewCopy;
     assert.ok(preview.title.length > 4, locale);
-    assert.ok(preview.results(2).includes("2"), locale);
+    assert.equal(typeof preview.resultOne, "string", locale);
+    assert.equal(typeof preview.resultMany, "string", locale);
+    assert.ok(preview.resultMany.replace("{count}", "2").includes("2"), locale);
+    assert.doesNotThrow(() => JSON.stringify(preview), locale);
     assert.ok(preview.capitalNote.length > 40, locale);
     const legalSections = getPillarsLegal(locale).legal.sections;
     assert.ok(legalSections.length >= 10, locale);

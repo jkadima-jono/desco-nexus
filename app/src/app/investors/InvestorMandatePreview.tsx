@@ -19,7 +19,8 @@ type PreviewCopy = {
   stage: string;
   instrument: string;
   all: string;
-  results: (count: number) => string;
+  resultOne: string;
+  resultMany: string;
   empty: string;
   capitalNote: string;
   review: string;
@@ -64,7 +65,9 @@ export default function InvestorMandatePreview({ opportunities, copy }: { opport
         ))}
       </div>
       <div aria-live="polite" className="mt-5 border-t border-ink/10 pt-4">
-        <p className="text-sm font-bold text-ink">{copy.results(matches.length)}</p>
+        <p className="text-sm font-bold text-ink">
+          {(matches.length === 1 ? copy.resultOne : copy.resultMany).replace("{count}", String(matches.length))}
+        </p>
         {matches.length > 0 ? (
           <ul className="mt-3 space-y-2">
             {matches.map((item) => (
