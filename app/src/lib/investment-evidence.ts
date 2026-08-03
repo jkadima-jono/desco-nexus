@@ -137,7 +137,7 @@ const PROJECT_EVIDENCE: Record<
       { label: "Legal project entity", value: "DIPC Group is named as designer and proposed implementer; the project SPV is not disclosed", status: "partial", source: "Kasaji–Kisenge technical proposal, August 2023" },
       { label: "Ownership and development rights", value: NOT_DISCLOSED, status: "not-disclosed" },
       { label: "Technical evidence", value: "A 40-page proposal describes 50 MW of solar generation, battery storage, substations, distribution and public lighting. Independent engineering review is not recorded", status: "partial", source: "Kasaji–Kisenge technical proposal, August 2023" },
-      { label: "Capital estimate", value: "Sponsor estimate: $86,215,774.30 including taxes and project delivery costs; quotations and current pricing require validation", status: "partial", source: "Kasaji–Kisenge technical proposal, August 2023" },
+      { label: "Capital estimate", value: "Sponsor estimate: approximately $86.2 million including taxes and project delivery costs; quotations and current pricing require validation", status: "partial", source: "Kasaji–Kisenge technical proposal, August 2023" },
       { label: "Revenue and offtake evidence", value: NOT_DISCLOSED, status: "not-disclosed" },
       { label: "Implementation timetable", value: "Sponsor proposes 11 months from contract signature and funding; critical path and procurement evidence are not disclosed", status: "partial", source: "Kasaji–Kisenge technical proposal, August 2023" },
     ],

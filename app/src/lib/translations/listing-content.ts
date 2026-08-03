@@ -301,7 +301,7 @@ const addedProjectTranslations: ListingTranslations = {
       title: "Projet solaire et réseau électrique de Kasaji–Kisenge — 50 MW",
       sector: "Énergie", country: "RDC", instrument: "Besoin de financement de projet décrit dans la proposition technique 2023 ; structure de transaction non communiquée", stage: "Proposition technique et budget datés d’août 2023", irr: "Non communiqué publiquement",
       summary: "Nous présentons une opportunité énergétique combinant 50 MW photovoltaïques, stockage, sous-stations moyenne tension, distribution et éclairage public pour Kasaji, Kisenge et les communautés voisines. La proposition technique 2023 estime le coût à 86,2 M$ et le délai à 11 mois après signature et financement. Avant d’avancer, nous exigeons la confirmation des droits fonciers, permis, accords avec l’opérateur, demande, prix d’achat et modèle financier.",
-      highlights: ["Capacité conçue : 50 MW photovoltaïques avec stockage et travaux de réseau", "Budget 2023 : 86 215 774,30 $, taxes et coûts de projet inclus", "Délai proposé : 11 mois après signature et financement", "Zone de service cible : Kasaji, Kisenge et les communautés voisines ; demande et raccordements à valider"],
+      highlights: ["Capacité conçue : 50 MW photovoltaïques avec stockage et travaux de réseau", "Budget du porteur en 2023 : environ 86,2 M$, taxes et coûts inclus ; prix actuels à valider", "Délai proposé : 11 mois après signature et financement", "Zone de service cible : Kasaji, Kisenge et les communautés voisines ; demande et raccordements à valider"],
       whyMatch: "Nous considérons ce projet comme une opportunité énergétique potentielle pour Investdesco, sous réserve d’une validation technique, juridique, commerciale et financière actualisée.",
     },
     "ldc-integrated-housing-drc": {
@@ -324,7 +324,7 @@ const addedProjectTranslations: ListingTranslations = {
       title: "Proyecto solar y de red eléctrica de Kasaji–Kisenge — 50 MW",
       sector: "Energía", country: "R. D. del Congo", instrument: "Necesidad de financiación descrita en la propuesta técnica de 2023; estructura no divulgada", stage: "Propuesta técnica y presupuesto de agosto de 2023", irr: "No divulgado públicamente",
       summary: "Presentamos una oportunidad energética que combina 50 MW solares, almacenamiento, subestaciones, distribución y alumbrado público para Kasaji, Kisenge y comunidades cercanas. La propuesta de 2023 estima 86,2 M$ y 11 meses desde la firma y financiación. Antes de avanzar, exigimos confirmar suelo, permisos, acuerdos eléctricos, demanda, precios de compra y modelo financiero.",
-      highlights: ["Capacidad diseñada: 50 MW solares con almacenamiento y red", "Presupuesto de 2023: 86.215.774,30 $, impuestos y costes incluidos", "Plazo propuesto: 11 meses desde la firma y financiación", "Zona de servicio: Kasaji, Kisenge y comunidades cercanas; demanda y conexiones por validar"],
+      highlights: ["Capacidad diseñada: 50 MW solares con almacenamiento y red", "Presupuesto del promotor en 2023: aproximadamente 86,2 M$, con impuestos y costes; precios actuales por validar", "Plazo propuesto: 11 meses desde la firma y financiación", "Zona de servicio: Kasaji, Kisenge y comunidades cercanas; demanda y conexiones por validar"],
       whyMatch: "Consideramos este proyecto una posible oportunidad energética Investdesco, sujeta a validación técnica, jurídica, comercial y financiera.",
     },
     "ldc-integrated-housing-drc": {
@@ -347,7 +347,7 @@ const addedProjectTranslations: ListingTranslations = {
       title: "Projeto solar e de rede elétrica de Kasaji–Kisenge — 50 MW",
       sector: "Energia", country: "RD Congo", instrument: "Necessidade de financiamento descrita na proposta técnica de 2023; estrutura não divulgada", stage: "Proposta técnica e orçamento de agosto de 2023", irr: "Não divulgado publicamente",
       summary: "Apresentamos uma oportunidade energética que combina 50 MW solares, armazenamento, subestações, distribuição e iluminação pública para Kasaji, Kisenge e comunidades próximas. A proposta de 2023 estima US$ 86,2 milhões e 11 meses após contrato e financiamento. Antes de avançar, exigimos confirmar terrenos, licenças, acordos elétricos, procura, preços de compra e modelo financeiro.",
-      highlights: ["Capacidade projetada: 50 MW solares com armazenamento e rede", "Orçamento de 2023: US$ 86.215.774,30 com impostos e custos", "Prazo proposto: 11 meses após contrato e financiamento", "Área de serviço: Kasaji, Kisenge e comunidades próximas; procura e ligações por validar"],
+      highlights: ["Capacidade projetada: 50 MW solares com armazenamento e rede", "Orçamento do promotor em 2023: aproximadamente US$ 86,2 milhões com impostos e custos; preços atuais por validar", "Prazo proposto: 11 meses após contrato e financiamento", "Área de serviço: Kasaji, Kisenge e comunidades próximas; procura e ligações por validar"],
       whyMatch: "Consideramos este projeto uma potencial oportunidade energética Investdesco, sujeita a validação técnica, jurídica, comercial e financeira.",
     },
     "ldc-integrated-housing-drc": {
@@ -370,7 +370,7 @@ const addedProjectTranslations: ListingTranslations = {
       title: "Kasaji–Kisenge 50 MW 太阳能与电网项目",
       sector: "能源", country: "刚果民主共和国", instrument: "2023 年技术方案所述项目融资需求；交易结构未披露", stage: "2023 年 8 月技术方案及预算", irr: "尚未公开披露",
       summary: "我们展示一项能源基础设施机会，为 Kasaji、Kisenge 及周边社区建设 50 MW 光伏、储能、中压变电站、配电及公共照明。2023 年方案估算总成本为 8,621.6 万美元，合同签署及融资落实后工期 11 个月。推进前，我们要求确认土地权利、许可、公用事业安排、需求、采购价格及财务模型。",
-      highlights: ["设计容量：50 MW 光伏发电、储能及电网工程", "2023 年预算：86,215,774.30 美元，含税费及项目成本", "拟议工期：合同签署及融资落实后 11 个月", "目标服务区域：Kasaji、Kisenge 及周边社区；需求及接入须核实"],
+      highlights: ["设计容量：50 MW 光伏发电、储能及电网工程", "发起方 2023 年预算约为 8,620 万美元，含税费及项目成本；当前价格仍须核实", "拟议工期：合同签署及融资落实后 11 个月", "目标服务区域：Kasaji、Kisenge 及周边社区；需求及接入须核实"],
       whyMatch: "我们将其视为潜在 Investdesco 能源机会，但须完成最新技术、法律、商业及融资核验。",
     },
     "ldc-integrated-housing-drc": {

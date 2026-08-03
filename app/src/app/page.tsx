@@ -162,20 +162,12 @@ export default async function Home() {
 
       <section className="bg-white py-14 lg:py-18" id="opportunities">
         <div className="public-container">
-          <div className="flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
+          <div>
             <SectionHeading
               eyebrow={t(locale, "home.opportunitiesEyebrow")}
               title={t(locale, "home.opportunitiesTitle")}
               body={t(locale, "home.opportunitiesBody")}
             />
-            <div className="shrink-0 border-l border-gold pl-5">
-              <p className="font-display text-2xl font-extrabold text-ink">
-                {featured.length}
-              </p>
-              <p className="mt-1 text-xs font-bold text-slate">{copy.capitalRepresented}</p>
-              <p className="mt-1 text-xs text-slate">{copy.projectCostCoverage(featured.length, featured.length)}</p>
-              <p className="mt-1 text-xs text-slate">{copy.sponsorFigures}</p>
-            </div>
           </div>
 
           {!hasDifferentiatingReviewStatus && featured.length > 0 && (
@@ -185,7 +177,7 @@ export default async function Home() {
           )}
 
           <div className="mt-10 grid gap-5 lg:grid-cols-2">
-            {localizedFeatured.map((listing, index) => (
+            {localizedFeatured.slice(user ? 0 : 1).map((listing, index) => (
               <ProjectCard key={listing.id} listing={listing} index={index} locale={locale} showReviewStatus={hasDifferentiatingReviewStatus} />
             ))}
           </div>

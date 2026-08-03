@@ -9,6 +9,7 @@ import { PUBLIC_OPPORTUNITY_IDS, isPublicOpportunityId } from "../src/lib/public
 import { disclosureStatusCopy, materialFactCopy, relatedPartyDisclosure } from "../src/lib/translations/investment-ui";
 import { localizeInvestmentEvidence } from "../src/lib/translations/listing-content";
 import { getMarketingCopy } from "../src/lib/translations/marketing";
+import { getPillarsLegal } from "../src/lib/translations/pillars-legal";
 
 test("evidence coverage includes partially supported fields without calling them verified", () => {
   const solar = listings.find((listing) => listing.id === "kasaji-kisenge-solar-50mw");
@@ -35,6 +36,18 @@ test("related-party and institutional risk disclosures are translated", () => {
     assert.ok(relatedPartyDisclosure(locale).length > 40);
     const controls = getMarketingCopy(locale, "trust").controls;
     assert.ok(controls.length >= 7, locale);
+  }
+});
+
+test("the public investor preview and conflict policy are complete in every language", () => {
+  for (const locale of ["en", "fr", "es", "pt", "zh"] as const) {
+    const preview = getMarketingCopy(locale, "investors").previewCopy;
+    assert.ok(preview.title.length > 4, locale);
+    assert.ok(preview.results(2).includes("2"), locale);
+    assert.ok(preview.capitalNote.length > 40, locale);
+    const legalSections = getPillarsLegal(locale).legal.sections;
+    assert.ok(legalSections.length >= 10, locale);
+    assert.ok(legalSections.some(([title]) => /related|liée|vinculad|relacionad|关联/.test(title.toLowerCase())), `${locale} related-party policy`);
   }
 });
 
@@ -138,15 +151,15 @@ test("source dates use the document date and calculate age at render time", () =
   assert.equal(undated.ageMonths, null);
 });
 
-test("the public catalogue is limited to the four reviewed briefings", () => {
+test("the public catalogue excludes projects with unresolved scope conflicts", () => {
   assert.deepEqual([...PUBLIC_OPPORTUNITY_IDS], [
     "kasaji-kisenge-solar-50mw",
-    "waterdesco-grand-kasai",
     "energulf-lotshi-block",
     "ldc-integrated-housing-drc",
   ]);
   assert.equal(isPublicOpportunityId("sciress-kolwezi-12423"), false);
   assert.equal(isPublicOpportunityId("port-de-ndomba"), false);
+  assert.equal(isPublicOpportunityId("waterdesco-grand-kasai"), false);
 });
 
 test("every public opportunity has a controlled people-free project visual", () => {

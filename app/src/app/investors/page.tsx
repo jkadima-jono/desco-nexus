@@ -12,6 +12,11 @@ import { getMarketingCopy, getMarketingMetadata } from "@/lib/translations/marke
 import { t } from "@/lib/i18n";
 import { openSignupConfig } from "@/lib/openSignup";
 import { accountCopy } from "@/lib/translations/account";
+import InvestorMandatePreview from "./InvestorMandatePreview";
+import { prisma, toListing } from "@/lib/db";
+import { publicListingWhere } from "@/lib/public-listings";
+import { localizeListing } from "@/lib/translations/listing-content";
+import { projectHref } from "@/lib/project-slugs";
 
 export async function generateMetadata(): Promise<Metadata> {
   return getMarketingMetadata(await getLocale(), "investors");
@@ -23,6 +28,11 @@ export default async function InvestorsPage() {
   const account = accountCopy(locale);
   const signupEnabled = openSignupConfig().enabled;
   const hero = copy.hero;
+  const rows = await prisma.listing.findMany({ where: publicListingWhere, include: { org: true, images: true }, orderBy: { updatedAt: "desc" } });
+  const opportunities = rows.map(toListing).map((listing) => {
+    const localized = localizeListing(listing, locale);
+    return { id: localized.id, title: localized.title, sector: localized.sector, stage: localized.stage, instrument: localized.instrument, href: projectHref(localized.id) };
+  });
   return (
     <>
       <PageHero
@@ -33,13 +43,7 @@ export default async function InvestorsPage() {
         primaryNote={signupEnabled ? account.basicAccountNotice : t(locale, "access.investorQualifier")}
         secondary={{ href: "/opportunities", label: hero.secondary }}
         aside={
-          <div className="briefing-card">
-            <p className="eyebrow text-gold">{copy.preview}</p>
-            <div className="mt-5 grid grid-cols-2 gap-3">
-              {copy.mandateFields.map((field) => <div key={field} className="border-b border-ink/10 pb-2 text-xs font-semibold text-ink">{field}</div>)}
-            </div>
-            <p className="mt-5 text-xs leading-5 text-slate">{copy.matchingNote}</p>
-          </div>
+          <InvestorMandatePreview opportunities={opportunities} copy={copy.previewCopy} />
         }
       />
       <section className="bg-ivory py-14 lg:py-18">

@@ -78,6 +78,18 @@ type MarketingCopy = {
     preview: string;
     mandateFields: string[];
     matchingNote: string;
+    previewCopy: {
+      title: string;
+      instruction: string;
+      sector: string;
+      stage: string;
+      instrument: string;
+      all: string;
+      results: (count: number) => string;
+      empty: string;
+      capitalNote: string;
+      review: string;
+    };
     sectionEyebrow: string;
     sectionTitle: string;
     cards: Card[];
@@ -203,6 +215,7 @@ const en: MarketingCopy = {
     hero: { eyebrow: "Investor pathway", title: "Assess mandate fit before committing to full due diligence.", body: "We help institutional investors, funds, family offices, lenders and strategic capital providers screen structured opportunities and control the transition into deeper review.", primary: "Apply for investor access", secondary: "Review opportunities" },
     preview: "Mandate builder preview", mandateFields: ["Preferred sectors", "Geographic focus", "Ticket size", "Investment instrument", "Project stage", "Impact requirements", "Risk tolerance", "Control preference"],
     matchingNote: "Matching uses disclosed project fields and deterministic criteria. Ticket-size matching applies only when a current capital ask is disclosed. It is a screening aid, not investment advice.",
+    previewCopy: { title: "Test the public catalogue", instruction: "Choose criteria to see which published opportunities remain in scope.", sector: "Sector", stage: "Project stage", instrument: "Instrument", all: "All", results: (count) => `${count} ${count === 1 ? "opportunity matches" : "opportunities match"}`, empty: "No published opportunity matches this combination.", capitalNote: "Ticket-size screening is unavailable because no current public opportunity discloses a current capital ask. Missing data is not treated as a match.", review: "Review" },
     sectionEyebrow: "Investor operating model", sectionTitle: "Review opportunities against defined mandate criteria.",
     cards: [
       { title: "Reduce origination noise", body: "Start with comparable public briefings, named sponsors and visible information gaps before allocating analyst time." },
@@ -363,6 +376,7 @@ const fr: MarketingCopy = {
     hero: { eyebrow: "Parcours investisseur", title: "Évaluez l’adéquation au mandat avant d’engager une diligence complète.", body: "Nous aidons les investisseurs institutionnels, fonds, family offices, prêteurs et investisseurs stratégiques à filtrer les opportunités et à contrôler le passage vers un examen approfondi.", primary: "Demander un accès investisseur", secondary: "Examiner les opportunités" },
     preview: "Aperçu du mandat", mandateFields: ["Secteurs privilégiés", "Ciblage géographique", "Taille du ticket", "Instrument d’investissement", "Stade du projet", "Exigences d’impact", "Tolérance au risque", "Préférence de contrôle"],
     matchingNote: "Le rapprochement utilise les champs divulgués et des critères déterministes. Le critère de ticket ne s’applique que lorsqu’un besoin actuel en capital est communiqué. Il s’agit d’un outil de filtrage, pas d’un conseil en investissement.",
+    previewCopy: { title: "Tester le catalogue public", instruction: "Choisissez des critères pour voir quelles opportunités publiées restent dans le périmètre.", sector: "Secteur", stage: "Stade du projet", instrument: "Instrument", all: "Tous", results: (count) => `${count} ${count === 1 ? "opportunité correspond" : "opportunités correspondent"}`, empty: "Aucune opportunité publiée ne correspond à cette combinaison.", capitalNote: "Le filtrage par ticket est indisponible car aucune opportunité publique ne communique actuellement un besoin en capital. Une donnée manquante n’est pas traitée comme une correspondance.", review: "Examiner" },
     sectionEyebrow: "Modèle opérationnel investisseur", sectionTitle: "Examiner les opportunités selon des critères de mandat définis.",
     cards: [{ title: "Réduire le bruit d’origination", body: "Commencer par des présentations comparables, des porteurs identifiés et des lacunes visibles avant de mobiliser les analystes." }, { title: "Préparer une note de filtrage pour le comité", body: "Conserver les dates des sources, le statut de divulgation et les critères d’adéquation au mandat dans un format cohérent." }, { title: "Maîtriser le coût de la diligence approfondie", body: "Demander les documents restreints et l’échange avec le porteur uniquement lorsque le dossier public justifie la suite." }],
     steps: [
@@ -569,6 +583,15 @@ function translatedInvestors(locale: "es" | "pt" | "zh", tr: Tr, card: CardFacto
     preview: tr("Vista previa del mandato", "Pré-visualização do mandato", "投资授权设置预览"),
     mandateFields: [tr("Sectores preferidos", "Setores preferidos", "偏好行业"), tr("Enfoque geográfico", "Foco geográfico", "地域重点"), tr("Tamaño de inversión", "Montante de investimento", "投资规模"), tr("Instrumento", "Instrumento", "投资工具"), tr("Etapa del proyecto", "Fase do projeto", "项目阶段"), tr("Requisitos de impacto", "Requisitos de impacto", "影响要求"), tr("Tolerancia al riesgo", "Tolerância ao risco", "风险承受度"), tr("Preferencia de control", "Preferência de controlo", "控制权偏好")],
     matchingNote: tr("La comparación utiliza campos divulgados y criterios deterministas. El tamaño de inversión solo se compara cuando existe una solicitud actual de capital divulgada. Es una ayuda de selección, no asesoramiento.", "A comparação utiliza campos divulgados e critérios determinísticos. O montante só é comparado quando existe um pedido atual de capital divulgado. É uma ajuda à seleção, não aconselhamento.", "匹配使用已披露项目字段及确定性标准。只有在披露当前融资需求时才进行投资规模匹配。该功能仅用于筛选，不构成投资建议。"),
+    previewCopy: {
+      title: tr("Probar el catálogo público", "Testar o catálogo público", "测试公开项目目录"),
+      instruction: tr("Elija criterios para ver qué oportunidades publicadas permanecen dentro del mandato.", "Escolha critérios para ver quais oportunidades publicadas permanecem no âmbito.", "选择条件，查看哪些已发布项目仍符合授权范围。"),
+      sector: tr("Sector", "Setor", "行业"), stage: tr("Etapa del proyecto", "Fase do projeto", "项目阶段"), instrument: tr("Instrumento", "Instrumento", "投资工具"), all: tr("Todos", "Todos", "全部"),
+      results: (count) => tr(`${count} ${count === 1 ? "oportunidad coincide" : "oportunidades coinciden"}`, `${count} ${count === 1 ? "oportunidade corresponde" : "oportunidades correspondem"}`, `${count} 个项目符合条件`),
+      empty: tr("Ninguna oportunidad publicada coincide con esta combinación.", "Nenhuma oportunidade publicada corresponde a esta combinação.", "没有已发布项目符合此条件组合。"),
+      capitalNote: tr("El filtro por tamaño no está disponible porque ninguna oportunidad pública divulga actualmente una solicitud de capital vigente. Los datos ausentes no se consideran coincidencias.", "O filtro por montante não está disponível porque nenhuma oportunidade pública divulga atualmente um pedido de capital vigente. Os dados em falta não são tratados como correspondência.", "由于当前公开项目均未披露现行融资需求，暂不提供投资规模筛选。缺失数据不会被视为匹配。"),
+      review: tr("Revisar", "Analisar", "审阅"),
+    },
     sectionEyebrow: tr("Modelo operativo del inversor", "Modelo operacional do investidor", "投资者操作模式"),
     sectionTitle: tr("Revise oportunidades con criterios de mandato definidos.", "Analise oportunidades com critérios de mandato definidos.", "按照明确的授权标准审阅项目。"),
     cards: [

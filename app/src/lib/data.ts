@@ -449,7 +449,7 @@ export const listings: Listing[] = [
     scores: { match: 0, readiness: 48, esg: 0, risk: 66 },
     highlights: [
       "Designed capacity: 50 MW photovoltaic generation with battery storage and grid works",
-      "2023 project budget: $86,215,774.30 including taxes and delivery costs",
+      "2023 sponsor budget: approximately $86.2 million including taxes and delivery costs; current pricing requires validation",
       "Proposed delivery period: 11 months after contract signature and funding",
       "Target service area: Kasaji, Kisenge and nearby communities; demand and connection evidence require validation",
     ],
