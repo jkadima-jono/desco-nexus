@@ -67,6 +67,9 @@ export default function ContactForm({
     return (
       <div className="rounded-3xl border border-gold/30 bg-white p-8 text-charcoal shadow-[0_12px_32px_rgb(0_0_0/0.35)]">
         <p className="text-sm leading-7">{contactCollectionPaused(locale)}</p>
+        <p className="mt-4 rounded-xl border border-charcoal/10 bg-mist p-4 text-xs leading-5 text-slate">
+          {readiness.contactProcess}
+        </p>
         <a
           href={`mailto:support@desco.global?subject=${encodeURIComponent(ui.topics[topic] ?? ui.topics.general)}${projectId ? `&body=${encodeURIComponent(`Project: ${projectId}`)}` : ""}`}
           className="button-primary mt-6"
