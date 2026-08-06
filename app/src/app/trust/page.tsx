@@ -8,13 +8,16 @@ import {
 } from "@/components/public/PublicPrimitives";
 import { getLocale } from "@/lib/i18n-server";
 import { getMarketingCopy, getMarketingMetadata } from "@/lib/translations/marketing";
+import { screeningReadinessCopy } from "@/lib/translations/investment-ui";
 
 export async function generateMetadata(): Promise<Metadata> {
   return getMarketingMetadata(await getLocale(), "trust");
 }
 
 export default async function TrustPage() {
-  const copy = getMarketingCopy(await getLocale(), "trust");
+  const locale = await getLocale();
+  const copy = getMarketingCopy(locale, "trust");
+  const readiness = screeningReadinessCopy(locale);
   const hero = copy.hero;
   return (
     <>
@@ -38,6 +41,15 @@ export default async function TrustPage() {
           </div>
           <div className="mt-10 grid gap-5 md:grid-cols-2">
             {copy.controls.map((card) => <InstitutionalCard key={card.title} {...card} />)}
+          </div>
+          <div className="mt-10">
+            <InstitutionalCard title={readiness.standard} body={readiness.rule}>
+              <div className="mt-5 flex flex-wrap gap-2">
+                <DisclosureChip tone="reviewed">{readiness.fieldsMinimum}</DisclosureChip>
+                <DisclosureChip tone="reviewed">{readiness.risksMinimum}</DisclosureChip>
+                <DisclosureChip tone="pending">{readiness.sourceLimit}</DisclosureChip>
+              </div>
+            </InstitutionalCard>
           </div>
           <div className="mt-8"><QuietNotice>{copy.notice}</QuietNotice></div>
         </div>

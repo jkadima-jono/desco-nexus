@@ -28,13 +28,11 @@ function isWorkspaceRoute(pathname: string): boolean {
 
 export default function AppShell({
   user,
-  demoMode,
   demoBanner,
   signupEnabled,
   children,
 }: {
   user: ShellUser;
-  demoMode: boolean;
   demoBanner: string;
   signupEnabled: boolean;
   children: React.ReactNode;
@@ -51,11 +49,9 @@ export default function AppShell({
         tabIndex={-1}
         className={`flex min-h-screen min-w-0 flex-1 flex-col ${workspace ? "pt-16 lg:pt-0" : ""}`}
       >
-        {!focused && demoMode && (
-          <div className="border-b border-gold/25 bg-[#171f27] px-4 py-2 text-center text-xs leading-5 text-white/75">
-            {demoBanner}
-          </div>
-        )}
+        <div className="border-b border-gold/25 bg-[#171f27] px-4 py-2 text-center text-xs leading-5 text-white/75">
+          {demoBanner}
+        </div>
         <div className="flex-1">{children}</div>
         {!workspace && !focused && <Footer />}
       </main>

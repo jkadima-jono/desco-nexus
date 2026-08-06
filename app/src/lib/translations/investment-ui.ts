@@ -1,5 +1,6 @@
 import type { Locale } from "@/lib/i18n";
 import type { CapitalPresentation } from "@/lib/data";
+import type { ScreeningReadinessGap } from "@/lib/investment-evidence";
 
 type InvestmentUi = {
   opportunities: {
@@ -57,7 +58,7 @@ const en: InvestmentUi = {
   opportunities: {
     metadataTitle: "Opportunities — DESCO Compass", metadataDescription: "Review selected DRC investment opportunities by sector, stage, instrument and disclosure status.",
     screeningPrinciple: "Screening principle", screeningTitle: "Public value before gated diligence.", screeningBody: "Missing disclosure remains visible and should influence whether deeper review is warranted.",
-    browse: "Browse and compare", result: (n) => `${n} public ${n === 1 ? "opportunity" : "opportunities"}`, disclosureBody: "Figures and project claims remain sponsor-provided unless a module expressly identifies reviewed or independently verified evidence.",
+    browse: "Current preparation files", result: (n) => `${n} ${n === 1 ? "file" : "files"} in preparation`, disclosureBody: "Figures and project claims remain sponsor-provided unless a module expressly identifies reviewed or independently verified evidence.",
     filterLabel: "Filter opportunities", sector: "Sector", geography: "Geography", stage: "Project stage", instrument: "Instrument", sponsor: "Sponsor",
     capital: "Capital requirement", allSizes: "All sizes", under10: "Under $10M", evidence: "Evidence review", allStatuses: "All statuses",
     pending: "Review pending", reviewed: "Evidence review recorded", roomReadiness: "Data-room readiness", documentsRecorded: "Documents recorded", notConfirmed: "Not publicly confirmed",
@@ -132,19 +133,19 @@ const projectFinanceLabels: Record<Locale, Pick<InvestmentUi["project"], "capita
   zh: { capitalSought: "项目融资需求", programmeAllocation: "项目群资金分配，并非单一项目融资需求", returnInformation: "回报信息" },
 };
 
-const screeningCatalogueMetadata: Record<Locale, Pick<InvestmentUi["opportunities"], "metadataTitle" | "metadataDescription">> = {
-  en: { metadataTitle: "Project screening catalogue — DESCO Compass", metadataDescription: "Review public DRC project records by sector, stage, instrument and disclosure status. Publication does not imply investment readiness or independent verification." },
-  fr: { metadataTitle: "Catalogue de présélection — DESCO Compass", metadataDescription: "Examinez les dossiers publics de projets en RDC selon le secteur, le stade, l’instrument et la divulgation. La publication n’implique ni préparation à l’investissement ni vérification indépendante." },
-  es: { metadataTitle: "Catálogo de selección de proyectos — DESCO Compass", metadataDescription: "Revise expedientes públicos de proyectos en la RDC por sector, etapa, instrumento y estado de divulgación. La publicación no implica preparación para la inversión ni verificación independiente." },
-  pt: { metadataTitle: "Catálogo de seleção de projetos — DESCO Compass", metadataDescription: "Analise registos públicos de projetos na RDC por setor, fase, instrumento e estado de divulgação. A publicação não implica preparação para investimento nem verificação independente." },
-  zh: { metadataTitle: "项目筛选目录 — DESCO Compass", metadataDescription: "按行业、阶段、投资工具及披露状态审阅刚果民主共和国的公开项目记录。公开发布不表示项目已具备投资条件或已完成独立核实。" },
+const preparationSurfaceLabels: Record<Locale, Pick<InvestmentUi["opportunities"], "metadataTitle" | "metadataDescription" | "browse" | "result">> = {
+  en: { metadataTitle: "Current preparation files — DESCO Compass", metadataDescription: "Review DRC project files under preparation, their dated sources, disclosure status and named blocking gaps.", browse: "Current preparation files", result: (n) => `${n} ${n === 1 ? "file" : "files"} in preparation` },
+  fr: { metadataTitle: "Dossiers en préparation — DESCO Compass", metadataDescription: "Examinez les dossiers de projets en préparation en RDC, leurs sources datées, leur divulgation et leurs blocages.", browse: "Dossiers en préparation", result: (n) => `${n} ${n === 1 ? "dossier en préparation" : "dossiers en préparation"}` },
+  es: { metadataTitle: "Expedientes en preparación — DESCO Compass", metadataDescription: "Revise expedientes de proyectos en preparación en la RDC, sus fuentes fechadas, divulgación y bloqueos.", browse: "Expedientes en preparación", result: (n) => `${n} ${n === 1 ? "expediente en preparación" : "expedientes en preparación"}` },
+  pt: { metadataTitle: "Dossiês em preparação — DESCO Compass", metadataDescription: "Analise dossiês de projetos em preparação na RDC, as fontes datadas, a divulgação e os bloqueios.", browse: "Dossiês em preparação", result: (n) => `${n} ${n === 1 ? "dossiê em preparação" : "dossiês em preparação"}` },
+  zh: { metadataTitle: "准备中的项目文件 — DESCO Compass", metadataDescription: "审阅正在准备中的刚果民主共和国项目文件、注明日期的来源、披露状态及明确阻碍事项。", browse: "当前准备文件", result: (n) => `${n} 个准备中的项目文件` },
 };
 
 export function investmentUi(locale: Locale): InvestmentUi {
   const dictionary = dictionaries[locale];
   return {
     ...dictionary,
-    opportunities: { ...dictionary.opportunities, ...screeningCatalogueMetadata[locale] },
+    opportunities: { ...dictionary.opportunities, ...preparationSurfaceLabels[locale] },
     project: { ...dictionary.project, ...projectFinanceLabels[locale] },
   };
 }
@@ -156,6 +157,18 @@ const instrumentCategoryLabels: Record<Locale, Record<string, string>> = {
   pt: { "Equipment finance": "Financiamento de equipamento", "DFI / impact capital": "IFD / capital de impacto", "Programme allocation": "Alocação de programa", "Project SPV equity": "Capital de SPV do projeto", "Project development capital": "Capital de desenvolvimento do projeto", Equity: "Capital próprio", Debt: "Dívida", Other: "Outro" },
   zh: { "Equipment finance": "设备融资", "DFI / impact capital": "开发金融机构 / 影响力资本", "Programme allocation": "项目群资金分配", "Project SPV equity": "项目 SPV 股权", "Project development capital": "项目开发资本", Equity: "股权", Debt: "债务", Other: "其他" },
 };
+
+export function instrumentCategory(value: string): string {
+  const normalized = value.toLowerCase();
+  if (normalized.includes("equipment")) return "Equipment finance";
+  if (normalized.includes("dfi") || normalized.includes("impact")) return "DFI / impact capital";
+  if (normalized.includes("programme") || normalized.includes("pillar")) return "Programme allocation";
+  if (normalized.includes("spv")) return "Project SPV equity";
+  if (normalized.includes("development") || normalized.includes("mining")) return "Project development capital";
+  if (normalized.includes("equity")) return "Equity";
+  if (normalized.includes("debt") || normalized.includes("loan")) return "Debt";
+  return "Other";
+}
 
 export function instrumentCategoryCopy(locale: Locale, category: string): string {
   return instrumentCategoryLabels[locale][category] ?? category;
@@ -280,6 +293,27 @@ export function disclosureCompletenessCopy(locale: Locale) {
   return completenessLabels[locale];
 }
 
+const readinessLabels: Record<Locale, {
+  ready: string;
+  preparation: string;
+  standard: string;
+  fieldsMinimum: string;
+  risksMinimum: string;
+  sourceLimit: string;
+  rule: string;
+  gaps: Record<ScreeningReadinessGap, string>;
+}> = {
+  en: { ready: "Screening-ready", preparation: "In preparation", standard: "Compass Disclosure Standard", fieldsMinimum: "7 / 9 public fields", risksMinimum: "4 / 5 risk categories", sourceLimit: "18-month source limit", rule: "Ready requires a named legal entity, a dated current capital ask, documented rights, a primary source no older than 18 months, at least 7 of 9 public fields and 4 of 5 risk categories.", gaps: { entity: "legal entity", capital: "current capital ask", rights: "rights status", source: "current primary source", disclosure: "disclosure minimum" } },
+  fr: { ready: "Prêt pour la présélection", preparation: "En préparation", standard: "Norme de divulgation Compass", fieldsMinimum: "7 / 9 champs publics", risksMinimum: "4 / 5 catégories de risques", sourceLimit: "Source de moins de 18 mois", rule: "Le statut prêt exige une entité juridique nommée, un besoin actuel en capital daté, des droits documentés, une source primaire de moins de 18 mois, au moins 7 champs publics sur 9 et 4 catégories de risques sur 5.", gaps: { entity: "entité juridique", capital: "besoin actuel en capital", rights: "statut des droits", source: "source primaire actuelle", disclosure: "minimum de divulgation" } },
+  es: { ready: "Listo para evaluación", preparation: "En preparación", standard: "Norma de divulgación Compass", fieldsMinimum: "7 / 9 campos públicos", risksMinimum: "4 / 5 categorías de riesgo", sourceLimit: "Fuente de menos de 18 meses", rule: "El estado listo exige una entidad jurídica identificada, una necesidad actual de capital fechada, derechos documentados, una fuente primaria de menos de 18 meses, al menos 7 de 9 campos públicos y 4 de 5 categorías de riesgo.", gaps: { entity: "entidad jurídica", capital: "necesidad actual de capital", rights: "estado de los derechos", source: "fuente primaria actual", disclosure: "mínimo de divulgación" } },
+  pt: { ready: "Pronto para análise", preparation: "Em preparação", standard: "Norma de divulgação Compass", fieldsMinimum: "7 / 9 campos públicos", risksMinimum: "4 / 5 categorias de risco", sourceLimit: "Fonte com menos de 18 meses", rule: "O estado pronto exige uma entidade jurídica identificada, uma necessidade atual de capital datada, direitos documentados, uma fonte primária com menos de 18 meses, pelo menos 7 de 9 campos públicos e 4 de 5 categorias de risco.", gaps: { entity: "entidade jurídica", capital: "necessidade atual de capital", rights: "estado dos direitos", source: "fonte primária atual", disclosure: "mínimo de divulgação" } },
+  zh: { ready: "可进入筛选", preparation: "准备中", standard: "Compass 披露标准", fieldsMinimum: "9 个公开字段中至少 7 个", risksMinimum: "5 个风险类别中至少 4 个", sourceLimit: "来源不超过 18 个月", rule: "达到可筛选状态须具备明确的法律实体、注明日期的当前融资需求、已记录的权利状态、18 个月内的主要来源、至少 7/9 个公开字段及 4/5 个风险类别。", gaps: { entity: "法律实体", capital: "当前融资需求", rights: "权利状态", source: "当前主要来源", disclosure: "最低披露标准" } },
+};
+
+export function screeningReadinessCopy(locale: Locale) {
+  return readinessLabels[locale];
+}
+
 const catalogueReviewNotes: Record<Locale, { pending: string; reviewed: string }> = {
   en: { pending: "All published briefings contain sponsor-provided information. DESCO source review is recorded; independent verification is not recorded.", reviewed: "DESCO evidence review is recorded for all published briefings." },
   fr: { pending: "Toutes les présentations publiées contiennent des informations fournies par les porteurs. L’examen des sources par DESCO est enregistré ; aucune vérification indépendante n’est enregistrée.", reviewed: "L’examen des preuves par DESCO est enregistré pour toutes les présentations publiées." },
@@ -388,6 +422,18 @@ const contactCollectionPausedCopy: Record<Locale, string> = {
 
 export function contactCollectionPaused(locale: Locale): string {
   return contactCollectionPausedCopy[locale];
+}
+
+const contactPausedPageLabels: Record<Locale, { title: string; intro: string; process: string; notice: string }> = {
+  en: { title: "Email DESCO Global", intro: "Public form collection is paused. Contact links preserve the inquiry topic and open your email application with a prepared subject.", process: "Email is handled outside Compass while the public form is paused. Do not include confidential, personal or sensitive project information. Emailing DESCO does not create an account or grant workspace or project-room access.", notice: "The selected inquiry topic and any project reference are included in the email draft. Delivery and response times depend on your email provider and DESCO’s manual review during private beta." },
+  fr: { title: "Écrire à DESCO Global", intro: "La collecte par formulaire public est suspendue. Les liens conservent l’objet de la demande et ouvrent votre application de messagerie avec un objet préparé.", process: "Les courriels sont traités hors de Compass pendant la suspension du formulaire. N’incluez aucune information confidentielle, personnelle ou sensible. L’envoi d’un courriel ne crée aucun compte et n’accorde aucun accès.", notice: "L’objet choisi et toute référence de projet sont inclus dans le brouillon. La livraison et le délai de réponse dépendent de votre messagerie et de l’examen manuel de DESCO pendant la bêta privée." },
+  es: { title: "Escribir a DESCO Global", intro: "La recopilación mediante formulario público está suspendida. Los enlaces conservan el motivo de la consulta y abren su aplicación de correo con un asunto preparado.", process: "El correo se gestiona fuera de Compass mientras el formulario está suspendido. No incluya información confidencial, personal o sensible. Enviar un correo no crea una cuenta ni concede acceso.", notice: "El motivo seleccionado y cualquier referencia de proyecto se incluyen en el borrador. La entrega y el plazo de respuesta dependen de su proveedor de correo y de la revisión manual de DESCO durante la beta privada." },
+  pt: { title: "Contactar a DESCO Global por email", intro: "A recolha pelo formulário público está suspensa. As ligações preservam o assunto do pedido e abrem a aplicação de email com um assunto preparado.", process: "O email é tratado fora da Compass enquanto o formulário está suspenso. Não inclua informação confidencial, pessoal ou sensível. Enviar um email não cria uma conta nem concede acesso.", notice: "O assunto selecionado e qualquer referência do projeto são incluídos no rascunho. A entrega e o prazo de resposta dependem do fornecedor de email e da análise manual da DESCO durante a beta privada." },
+  zh: { title: "发送邮件至 DESCO Global", intro: "公开联系表单已暂停。联系链接会保留咨询主题，并在您的邮件应用中生成带有预设主题的草稿。", process: "表单暂停期间，邮件在 Compass 之外处理。请勿包含机密、个人或敏感项目信息。发送邮件不会创建账户，也不会授予工作区或项目资料室权限。", notice: "所选咨询主题及项目编号会写入邮件草稿。邮件送达及回复时间取决于邮件服务商及 DESCO 在私人测试期间的人工审核。" },
+};
+
+export function contactPausedPageCopy(locale: Locale) {
+  return contactPausedPageLabels[locale];
 }
 
 const contactEmailFallbackCopy: Record<Locale, string> = {

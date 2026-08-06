@@ -44,12 +44,7 @@ export const PILLARS: Pillar[] = [
       "Deploy shared mechanization to reduce labor intensity",
       "Build post-harvest storage and value-add processing for maize, cassava, and soy",
     ],
-    impact: [
-      { label: "Farmers to be integrated (target)", value: 50000, suffix: "+" },
-      { label: "Hectares to be revitalized (target)", value: 25000, suffix: "" },
-      { label: "Villages to be served (target)", value: 40, suffix: "+" },
-      { label: "Projected income uplift for smallholders", value: 45, suffix: "%" },
-    ],
+    impact: [],
     milestones: [
       { year: "Step 1", label: "Confirm project entity, land access, participating farmers and baseline evidence", done: false },
       { year: "Step 2", label: "Validate pilot scope, demand, offtake, unit economics and safeguards", done: false },
@@ -67,7 +62,7 @@ export const PILLARS: Pillar[] = [
     thesis:
       "Investdesco is proposed as DESCO Global’s capital-structuring and infrastructure-development area. Each project requires confirmed rights, counterparties, demand, costs, delivery capacity and transaction authority before investor engagement.",
     marketOpportunity:
-      "Desco Global materials describe a proposed $750 million Phase 1 programme across infrastructure and operating projects. The allocation, financing structure, project rights, delivery sequence and independently reviewed financial model are not yet publicly established.",
+      "We define capital requirements project by project. No aggregate programme raise is currently published because project rights, costs, sequencing and financing structures remain under preparation.",
     geography: ["DR Congo — Kasai River and Lake Mweru corridors", "Pan-African trade links to Zambia and Angola"],
     objectives: [
       "Develop Port de Ndomba and Port de Kasenga as the region's logistics backbone",
@@ -75,10 +70,7 @@ export const PILLARS: Pillar[] = [
       "Structure joint ventures and blended-finance partnerships with DFIs",
       "Build industrial parks and distributed renewable energy for the platform",
     ],
-    impact: [
-      { label: "Phase 1 capital raise target ($M)", value: 750, suffix: "" },
-      { label: "Projected jobs by 2035", value: 100000, suffix: "+" },
-    ],
+    impact: [],
     milestones: [
       { year: "Step 1", label: "Confirm project rights, sponsors, counterparties and authority", done: false },
       { year: "Step 2", label: "Validate feasibility, demand, safeguards, costs and delivery sequence", done: false },
@@ -104,10 +96,7 @@ export const PILLARS: Pillar[] = [
       "Establish a GMP-compliant local generic-drug production unit",
       "Launch Phardesco Academy to train pharmacists, technicians, and health agents",
     ],
-    impact: [
-      { label: "Planned hubs by 2035", value: 50, suffix: "+" },
-      { label: "Startup raise target ($M)", value: 5, suffix: "–10M" },
-    ],
+    impact: [],
     milestones: [
       { year: "Step 1", label: "Confirm entity, licensing pathway, clinical governance and site rights", done: false },
       { year: "Step 2", label: "Validate demand, service model, procurement, cold chain and pilot budget", done: false },
@@ -134,10 +123,8 @@ export const PILLARS: Pillar[] = [
       "Build local community capacity for long-term system management",
     ],
     impact: [
-      { label: "People served (target)", value: 2500000, suffix: "" },
-      { label: "Liters delivered daily (target)", value: 45000000, suffix: "" },
-      { label: "Sanitation facilities built (target)", value: 150, suffix: "+" },
-      { label: "Communities proposed for service", value: 50, suffix: "" },
+      { label: "Daily design volume (litres)", value: 45000000, suffix: "" },
+      { label: "Equivalent people at 50 litres per person/day", value: 900000, suffix: "" },
     ],
     milestones: [
       { year: "Step 1", label: "Reconcile the proposed network configurations and beneficiary assumptions", done: false },

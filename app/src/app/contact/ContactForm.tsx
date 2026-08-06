@@ -15,6 +15,7 @@ import {
   contactCollectionPaused,
   contactEmailFallback,
   contactLegalAcknowledgement,
+  contactPausedPageCopy,
   investmentUi,
 } from "@/lib/translations/investment-ui";
 import { releaseReadinessCopy } from "@/lib/translations/release-readiness";
@@ -45,6 +46,7 @@ export default function ContactForm({
   const ui = investmentUi(locale).contact;
   const legalUi = contactLegalAcknowledgement(locale);
   const readiness = releaseReadinessCopy(locale);
+  const paused = contactPausedPageCopy(locale);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [organization, setOrganization] = useState("");
@@ -68,7 +70,7 @@ export default function ContactForm({
       <div className="rounded-3xl border border-gold/30 bg-white p-8 text-charcoal shadow-[0_12px_32px_rgb(0_0_0/0.35)]">
         <p className="text-sm leading-7">{contactCollectionPaused(locale)}</p>
         <p className="mt-4 rounded-xl border border-charcoal/10 bg-mist p-4 text-xs leading-5 text-slate">
-          {readiness.contactProcess}
+          {paused.process}
         </p>
         <a
           href={`mailto:support@desco.global?subject=${encodeURIComponent(ui.topics[topic] ?? ui.topics.general)}${projectId ? `&body=${encodeURIComponent(`Project: ${projectId}`)}` : ""}`}

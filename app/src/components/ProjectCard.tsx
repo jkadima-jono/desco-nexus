@@ -2,10 +2,10 @@ import Link from "next/link";
 import type { Listing } from "@/lib/data";
 import { isDescoRelatedOpportunity, materialFactPresentation } from "@/lib/data";
 import HeroVisual from "./HeroVisual";
-import { getInvestmentEvidence, sourceDatePresentation } from "@/lib/investment-evidence";
+import { getInvestmentEvidence, screeningReadiness, sourceDatePresentation } from "@/lib/investment-evidence";
 import { sectorForeground } from "@/lib/theme";
 import type { Locale } from "@/lib/i18n";
-import { investmentUi, materialFactCopy } from "@/lib/translations/investment-ui";
+import { investmentUi, materialFactCopy, screeningReadinessCopy } from "@/lib/translations/investment-ui";
 import DisclosureCompleteness from "./DisclosureCompleteness";
 import { localizeInvestmentEvidence, localizeListing, organizationPresentation } from "@/lib/translations/listing-content";
 import { projectHref } from "@/lib/project-slugs";
@@ -22,12 +22,15 @@ export default function ProjectCard({
   showReviewStatus?: boolean;
 }) {
   const sectorKey = listing.sectorKey ?? listing.sector;
+  const rawEvidence = getInvestmentEvidence(listing);
+  const readiness = screeningReadiness(rawEvidence, listing.currentCapitalAskUsd);
   listing = localizeListing(listing, locale);
   const ui = investmentUi(locale).card;
+  const readinessUi = screeningReadinessCopy(locale);
   const verificationScope = listing.verified
     ? ui.reviewed
     : ui.pending;
-  const investmentEvidence = localizeInvestmentEvidence(getInvestmentEvidence(listing), locale);
+  const investmentEvidence = localizeInvestmentEvidence(rawEvidence, locale);
   const sourceDate = sourceDatePresentation(investmentEvidence.provenance.sourceDate);
   const localizedSourceDate = sourceDate.date && sourceDate.label?.includes(" ")
     ? sourceDate.date.toLocaleDateString(locale, { month: "short", year: "numeric", timeZone: "UTC" })
@@ -76,6 +79,16 @@ export default function ProjectCard({
       </div>
 
       <div className="p-4 sm:p-5 sm:pt-4">
+        <div className="mb-3 flex flex-wrap items-center gap-2">
+          <span className={`disclosure-chip ${readiness.ready ? "disclosure-reviewed" : "disclosure-pending"}`}>
+            {readiness.ready ? readinessUi.ready : readinessUi.preparation}
+          </span>
+          {!readiness.ready && (
+            <span className="text-[11px] leading-4 text-slate">
+              {readiness.gaps.map((gap) => readinessUi.gaps[gap]).join(" · ")}
+            </span>
+          )}
+        </div>
         <div className="mb-2 flex min-h-9 items-start gap-2 text-[11px] font-bold uppercase leading-4 tracking-wider text-wgray">
           <span className="break-words">{listing.stage}</span>
         </div>

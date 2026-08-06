@@ -7,6 +7,8 @@ import { getLocale } from "@/lib/i18n-server";
 import { getPillarsLegal } from "@/lib/translations/pillars-legal";
 import type { Metadata } from "next";
 import { publicPageMetadata } from "@/lib/metadata";
+import { prisma } from "@/lib/db";
+import { publicListingWhere } from "@/lib/public-listings";
 
 export async function generateMetadata(): Promise<Metadata> {
   const copy = getPillarsLegal(await getLocale());
@@ -15,6 +17,7 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export default async function PillarsIndex() {
   const copy = getPillarsLegal(await getLocale());
+  const publicOpportunityCount = await prisma.listing.count({ where: publicListingWhere });
   return (
     <div>
       {/* Hero */}
@@ -144,10 +147,10 @@ export default async function PillarsIndex() {
       {/* Impact stats */}
       <section className="bg-mist py-16 lg:py-20">
         <div className="max-w-4xl mx-auto px-6 lg:px-8 grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
-          <Reveal><StatCounter value={750} suffix="M" label={copy.stats[0]} /></Reveal>
-          <Reveal delay={80}><StatCounter value={4} label={copy.stats[1]} /></Reveal>
-          <Reveal delay={160}><StatCounter value={100000} suffix="+" label={copy.stats[2]} /></Reveal>
-          <Reveal delay={240}><StatCounter value={2500000} label={copy.stats[3]} /></Reveal>
+          <Reveal><StatCounter value={4} label={copy.stats[0]} /></Reveal>
+          <Reveal delay={80}><StatCounter value={publicOpportunityCount} label={copy.stats[1]} /></Reveal>
+          <Reveal delay={160}><StatCounter value={5} label={copy.stats[2]} /></Reveal>
+          <Reveal delay={240}><StatCounter value={900000} label={copy.stats[3]} /></Reveal>
         </div>
         <p className="text-center text-[11px] text-wgray/70 max-w-lg mx-auto mt-8 leading-relaxed">
           {copy.statsQualifier}

@@ -5,7 +5,7 @@ import { prisma, toListing } from "@/lib/db";
 import { getLocale } from "@/lib/i18n-server";
 import { getPublicHero } from "@/lib/public-copy";
 import ComparisonGrid from "./ComparisonGrid";
-import { catalogueReviewNote, instrumentCategoryCopy, investmentUi } from "@/lib/translations/investment-ui";
+import { catalogueReviewNote, instrumentCategory, instrumentCategoryCopy, investmentUi, screeningReadinessCopy } from "@/lib/translations/investment-ui";
 import { localizeListing } from "@/lib/translations/listing-content";
 import { publicListingWhere } from "@/lib/public-listings";
 import { t } from "@/lib/i18n";
@@ -52,18 +52,6 @@ function matchesCapital(value: number | null | undefined, band: string) {
   return true;
 }
 
-function instrumentCategory(value: string) {
-  const normalized = value.toLowerCase();
-  if (normalized.includes("equipment")) return "Equipment finance";
-  if (normalized.includes("dfi") || normalized.includes("impact")) return "DFI / impact capital";
-  if (normalized.includes("programme") || normalized.includes("pillar")) return "Programme allocation";
-  if (normalized.includes("spv")) return "Project SPV equity";
-  if (normalized.includes("development") || normalized.includes("mining")) return "Project development capital";
-  if (normalized.includes("equity")) return "Equity";
-  if (normalized.includes("debt") || normalized.includes("loan")) return "Debt";
-  return "Other";
-}
-
 function matchesUpdated(value: Date | undefined, band: string) {
   if (band === "All") return true;
   if (!value) return false;
@@ -81,6 +69,7 @@ export default async function Opportunities({ searchParams }: { searchParams: Pr
   const ui = investmentUi(locale).opportunities;
   const account = accountCopy(locale);
   const readiness = releaseReadinessCopy(locale);
+  const screeningStandard = screeningReadinessCopy(locale);
   const signupEnabled = openSignupConfig().enabled;
   const {
     sector = "All",
@@ -191,6 +180,9 @@ export default async function Opportunities({ searchParams }: { searchParams: Pr
             title={ui.result(localizedListings.length)}
             body={ui.disclosureBody}
           />
+          <div className="mt-5 max-w-4xl">
+            <QuietNotice>{screeningStandard.rule}</QuietNotice>
+          </div>
           {!hasDifferentiatingReviewStatus && allListings.length > 0 && (
             <div className="mt-5 max-w-4xl">
               <QuietNotice>{catalogueReviewNote(locale, commonReviewStatus)}</QuietNotice>

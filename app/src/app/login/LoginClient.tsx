@@ -114,7 +114,7 @@ function LoginForm({ demoEnabled, adminEnabled, signupEnabled, accessEnabled, mo
           <Link href="/opportunities" className="button-secondary mt-5 w-full">{copy.backToOpportunities}</Link>
         </div>
         <div className="mt-6 flex flex-wrap justify-center gap-4 text-xs text-white/70"><a href="/legal">{copy.privacy}</a><a href="/legal">{copy.terms}</a><a href="/legal">{copy.security}</a><a href="/contact">{copy.contact}</a></div>
-        <p className="mt-3 text-center text-xs text-white/60">desco.global | © 2026 DESCO Global</p>
+        <p className="mt-3 text-center text-xs text-white/60">compass.desco.global | © 2026 DESCO Global</p>
       </div>
     </div>
   );

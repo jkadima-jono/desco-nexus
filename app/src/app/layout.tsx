@@ -68,7 +68,6 @@ export default async function RootLayout({
         <ProductAnalytics />
         <AppShell
           user={user ? { fullName: user.fullName, title: user.title, role: user.role } : null}
-          demoMode={process.env.NODE_ENV !== "production" && process.env.NEXT_PUBLIC_DEMO_MODE !== "false"}
           demoBanner={t(locale, "system.demoBanner")}
           signupEnabled={openSignupConfig().enabled}
         >

@@ -14,7 +14,7 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export default async function SubmitProjectPage() {
   const user = await getSessionUser();
-  if (!user) redirect("/login?next=/submit-project");
+  if (!user) redirect("/contact?topic=project-submission");
   const ui = submissionCopy(await getLocale());
 
   return (

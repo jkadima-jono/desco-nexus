@@ -4,9 +4,9 @@ import { join } from "node:path";
 import test from "node:test";
 import { capitalPresentation, controlledCapitalFields, isDescoRelatedOpportunity, listings, materialFactPresentation, returnPresentation, sanitizePublicListing } from "../src/lib/data";
 import { exampleProjectImages } from "../src/lib/example-project-images";
-import { evidenceDisclosureStatus, getInvestmentEvidence, sourceDatePresentation, summarizeEvidence } from "../src/lib/investment-evidence";
+import { evidenceDisclosureStatus, getInvestmentEvidence, screeningReadiness, sourceDatePresentation, summarizeEvidence } from "../src/lib/investment-evidence";
 import { PUBLIC_OPPORTUNITY_IDS, isPublicOpportunityId } from "../src/lib/public-listings";
-import { disclosureStatusCopy, materialFactCopy, relatedPartyDisclosure } from "../src/lib/translations/investment-ui";
+import { disclosureStatusCopy, instrumentCategory, instrumentCategoryCopy, materialFactCopy, relatedPartyDisclosure } from "../src/lib/translations/investment-ui";
 import { localizeInvestmentEvidence } from "../src/lib/translations/listing-content";
 import { getMarketingCopy } from "../src/lib/translations/marketing";
 import { getPillarsLegal } from "../src/lib/translations/pillars-legal";
@@ -158,11 +158,47 @@ test("the public catalogue excludes projects with unresolved scope conflicts", (
   assert.deepEqual([...PUBLIC_OPPORTUNITY_IDS], [
     "kasaji-kisenge-solar-50mw",
     "energulf-lotshi-block",
-    "ldc-integrated-housing-drc",
   ]);
+  assert.equal(isPublicOpportunityId("ldc-integrated-housing-drc"), false);
   assert.equal(isPublicOpportunityId("sciress-kolwezi-12423"), false);
   assert.equal(isPublicOpportunityId("port-de-ndomba"), false);
   assert.equal(isPublicOpportunityId("waterdesco-grand-kasai"), false);
+});
+
+test("no current public file passes the Compass screening-readiness gate", () => {
+  for (const id of PUBLIC_OPPORTUNITY_IDS) {
+    const listing = listings.find((item) => item.id === id);
+    assert.ok(listing, id);
+    const readiness = screeningReadiness(
+      getInvestmentEvidence(listing),
+      listing.currentCapitalAskUsd,
+      new Date("2026-08-06T00:00:00Z"),
+    );
+    assert.equal(readiness.ready, false, id);
+    assert.ok(readiness.gaps.includes("capital"), id);
+  }
+});
+
+test("the Compass disclosure minimum is 7 of 9 fields and 4 of 5 risk categories", () => {
+  const evidence = getInvestmentEvidence(listings[0]);
+  const qualifying = {
+    ...evidence,
+    fields: evidence.fields.map((field, index) => ({ ...field, status: index < 7 ? "disclosed" as const : "not-disclosed" as const })),
+    risks: evidence.risks.map((risk, index) => ({ ...risk, status: index < 4 ? "disclosed" as const : "not-disclosed" as const })),
+  };
+  assert.equal(evidenceDisclosureStatus(summarizeEvidence(qualifying)), "minimum");
+  assert.equal(evidenceDisclosureStatus(summarizeEvidence({ ...qualifying, fields: qualifying.fields.map((field, index) => ({ ...field, status: index < 6 ? "disclosed" as const : "not-disclosed" as const })) })), "partial");
+});
+
+test("public screening surfaces use one controlled instrument taxonomy", () => {
+  assert.equal(instrumentCategory("Project finance; transaction structure to be defined"), "Other");
+  assert.equal(instrumentCategory("Phased public-private development and mortgage finance"), "Project development capital");
+  assert.equal(instrumentCategory("Exploration and appraisal financing"), "Other");
+
+  for (const locale of ["en", "fr", "es", "pt", "zh"] as const) {
+    assert.notEqual(instrumentCategoryCopy(locale, "Other"), "");
+    assert.notEqual(instrumentCategoryCopy(locale, "Project development capital"), "");
+  }
 });
 
 test("every public opportunity has a controlled people-free project visual", () => {
@@ -170,6 +206,7 @@ test("every public opportunity has a controlled people-free project visual", () 
     const images = exampleProjectImages(listingId);
     assert.ok(images.length > 0, listingId);
     assert.ok(existsSync(join(process.cwd(), "public", images[0].url)), images[0].url);
+    assert.match(images[0].url, /\.svg$/, listingId);
     assert.match(images[0].caption, /(unconfirmed|pending|not evidence)/i, listingId);
   }
 });

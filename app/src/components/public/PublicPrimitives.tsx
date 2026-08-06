@@ -85,7 +85,7 @@ export function NumberedProcess({
   items: { title: string; body: string }[];
 }) {
   return (
-    <ol className="process-grid">
+    <ol className="process-grid list-none">
       {items.map((item, index) => (
         <li key={item.title} className="process-step">
           <span className="process-number">{String(index + 1).padStart(2, "0")}</span>

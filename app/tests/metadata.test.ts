@@ -16,7 +16,7 @@ test("public pages publish page-specific Open Graph and Twitter metadata", () =>
   assert.deepEqual(metadata.alternates, { canonical: "/project/water-project" });
 });
 
-test("opportunity metadata describes a screening catalogue in every language", () => {
+test("opportunity metadata describes preparation files in every language", () => {
   for (const locale of ["en", "fr", "es", "pt", "zh"] as const) {
     const metadata = investmentUi(locale).opportunities;
     assert.match(metadata.metadataTitle, /Compass/);

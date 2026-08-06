@@ -280,7 +280,7 @@ export default async function ProjectDetail({
             </dl>
           </section>
 
-          {(l.useOfFunds || l.fundingSecuredUsd != null || l.sponsorContributionUsd != null) && (
+          {canManageListing && (l.useOfFunds || l.fundingSecuredUsd != null || l.sponsorContributionUsd != null) && (
             <section className="bg-white rounded-2xl p-6 shadow-[0_1px_3px_rgb(44_62_80/0.08)]">
               <h2 className="font-display font-bold text-lg mb-1">{ui.financialStructure}</h2>
               <p className="text-xs text-wgray mb-4">{ui.figuresNote}</p>

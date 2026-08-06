@@ -17,6 +17,7 @@ import { prisma, toListing } from "@/lib/db";
 import { publicListingWhere } from "@/lib/public-listings";
 import { localizeListing } from "@/lib/translations/listing-content";
 import { projectHref } from "@/lib/project-slugs";
+import { instrumentCategory, instrumentCategoryCopy } from "@/lib/translations/investment-ui";
 
 export async function generateMetadata(): Promise<Metadata> {
   return getMarketingMetadata(await getLocale(), "investors");
@@ -31,7 +32,14 @@ export default async function InvestorsPage() {
   const rows = await prisma.listing.findMany({ where: publicListingWhere, include: { org: true, images: true }, orderBy: { updatedAt: "desc" } });
   const opportunities = rows.map(toListing).map((listing) => {
     const localized = localizeListing(listing, locale);
-    return { id: localized.id, title: localized.title, sector: localized.sector, stage: localized.stage, instrument: localized.instrument, href: projectHref(localized.id) };
+    return {
+      id: localized.id,
+      title: localized.title,
+      sector: localized.sector,
+      stage: localized.stage,
+      instrument: instrumentCategoryCopy(locale, instrumentCategory(listing.instrument)),
+      href: projectHref(localized.id),
+    };
   });
   return (
     <>

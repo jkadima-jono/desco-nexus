@@ -142,21 +142,23 @@ export default async function PillarPage({
         </div>
 
         <div className="space-y-6">
-          <Reveal>
-            <section className="bg-white rounded-2xl p-6 shadow-[0_1px_3px_rgb(44_62_80/0.08)]">
-              <h2 className="font-display font-bold text-sm uppercase tracking-wider text-wgray mb-4">
-                {copy.detail.impact}
-              </h2>
-              <div className="grid grid-cols-1 gap-5">
-                {pillar.impact.map((s) => (
-                  <StatCounter key={s.label} value={s.value} suffix={s.suffix} label={s.label} />
-                ))}
-              </div>
-              <p className="text-[11px] text-wgray mt-4 pt-4 border-t border-charcoal/10 leading-relaxed">
-                {copy.detail.impactNote}
-              </p>
-            </section>
-          </Reveal>
+          {pillar.impact.length > 0 && (
+            <Reveal>
+              <section className="bg-white rounded-2xl p-6 shadow-[0_1px_3px_rgb(44_62_80/0.08)]">
+                <h2 className="font-display font-bold text-sm uppercase tracking-wider text-wgray mb-4">
+                  {copy.detail.impact}
+                </h2>
+                <div className="grid grid-cols-1 gap-5">
+                  {pillar.impact.map((s) => (
+                    <StatCounter key={s.label} value={s.value} suffix={s.suffix} label={s.label} />
+                  ))}
+                </div>
+                <p className="text-[11px] text-wgray mt-4 pt-4 border-t border-charcoal/10 leading-relaxed">
+                  {copy.detail.impactNote}
+                </p>
+              </section>
+            </Reveal>
+          )}
 
           <Reveal>
             <section className="bg-white rounded-2xl p-6 shadow-[0_1px_3px_rgb(44_62_80/0.08)]">

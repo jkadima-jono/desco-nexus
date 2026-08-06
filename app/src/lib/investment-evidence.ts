@@ -78,9 +78,29 @@ export type EvidenceDisclosureStatus = "insufficient" | "partial" | "minimum";
 export function evidenceDisclosureStatus(
   summary: ReturnType<typeof summarizeEvidence>,
 ): EvidenceDisclosureStatus {
-  if (summary.supported >= 5 && summary.risksSupported >= 3) return "minimum";
+  if (summary.supported >= 7 && summary.risksSupported >= 4) return "minimum";
   if (summary.supported >= 4) return "partial";
   return "insufficient";
+}
+
+export type ScreeningReadinessGap = "entity" | "capital" | "rights" | "source" | "disclosure";
+
+export function screeningReadiness(
+  evidence: InvestmentEvidence,
+  currentCapitalAskUsd: number | null | undefined,
+  now = new Date(),
+) {
+  const summary = summarizeEvidence(evidence);
+  const legalEntity = evidence.fields.find((field) => field.label === "Legal project entity");
+  const rights = evidence.fields.find((field) => field.label === "Ownership and development rights");
+  const source = sourceDatePresentation(evidence.provenance.sourceDate, now);
+  const gaps: ScreeningReadinessGap[] = [];
+  if (legalEntity?.status !== "disclosed") gaps.push("entity");
+  if (!currentCapitalAskUsd || currentCapitalAskUsd <= 0) gaps.push("capital");
+  if (!rights || rights.status === "not-disclosed") gaps.push("rights");
+  if (source.ageMonths == null || source.ageMonths > 18) gaps.push("source");
+  if (summary.supported < 7 || summary.risksSupported < 4) gaps.push("disclosure");
+  return { ready: gaps.length === 0, gaps, source, summary };
 }
 
 const NOT_DISCLOSED = "Not publicly disclosed";
@@ -460,8 +480,6 @@ export function normalizeHighlights(highlights: string[]): string[] {
     if (item === "Feasibility study complete") return "Sponsor reports that feasibility documentation is available";
     if (item === "1,200 construction jobs + 450 permanent operational roles") return "Sponsor target: 1,200 construction roles and 450 permanent operational roles";
     if (item === "IFC Performance Standards, biodiversity plan, community compact") return "Sponsor-stated framework: IFC Performance Standards, biodiversity plan and community compact; evidence not public";
-    if (item === "50,000+ farmers reached; 25,000 hectares revitalized") return "Sponsor-reported: 50,000+ farmers and 25,000 hectares; measurement evidence and reporting date not public";
-    if (item === "40+ villages served; 45% income uplift for smallholders") return "Sponsor-reported: 40+ villages and 45% income uplift; methodology and reporting date not public";
     if (item === "10,000 women in direct employment") return "Sponsor-reported employment figure: 10,000 women; measurement evidence not public";
     if (item === "924+ sq km concession area") return "Sponsor-reported concession area: 924+ sq km; title evidence not public";
     if (item === "OECD Due Diligence Guidance alignment; mercury-free processing") return "Sponsor-stated OECD guidance alignment and mercury-free processing; evidence not public";

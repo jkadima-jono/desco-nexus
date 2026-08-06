@@ -3,6 +3,7 @@ import { exampleProjectImages } from "@/lib/example-project-images";
 import type { Locale } from "@/lib/i18n";
 import { investmentUi } from "@/lib/translations/investment-ui";
 import Image from "next/image";
+import { isPublicOpportunityId } from "@/lib/public-listings";
 
 // Deterministic pattern pick per listing (brand: African-inspired geometric
 // library — circular unity, connected nodes, radial burst).
@@ -75,7 +76,10 @@ export default function HeroVisual({
   contextLabelClassName?: string;
 }) {
   const ui = investmentUi(locale).images;
-  const photo = listing.photos?.[0] ?? exampleProjectImages(listing.id)[0];
+  const controlledExample = exampleProjectImages(listing.id)[0];
+  const photo = isPublicOpportunityId(listing.id)
+    ? controlledExample
+    : listing.photos?.[0] ?? controlledExample;
   if (photo) {
     return (
       <div className={"relative overflow-hidden " + className}>

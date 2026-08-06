@@ -272,7 +272,7 @@ export const listings: Listing[] = [
     country: "DR Congo",
     flag: "🇨🇩",
     raiseUsd: 225_000_000,
-    instrument: "Agridesco pillar capital allocation (30% of Desco Global's $750M Phase 1 program)",
+    instrument: "Project-specific capital structure not yet defined",
     stage: "Operating information supplied",
     irr: "No public return projection published",
     summary:
@@ -281,8 +281,8 @@ export const listings: Listing[] = [
     governmentBacked: false,
     scores: { match: 82, readiness: 69, esg: 89, risk: 44 },
     highlights: [
-      "Reported reach: 50,000+ farmers and 25,000 hectares; measurement evidence and reporting date remain under review",
-      "Reported coverage: 40+ villages and 45% income uplift; methodology and reporting date remain under review",
+      "Target: material smallholder participation and cultivated-area expansion, to be defined and evidenced at pilot stage",
+      "Target: improved village coverage and household income, with baseline and measurement method still required",
       "Reported employment: 10,000 women; measurement evidence remains under review",
     ],
     docs: [],
@@ -441,7 +441,7 @@ export const listings: Listing[] = [
     stage: "Technical proposal and budget dated August 2023",
     irr: "No public return projection published",
     summary:
-      "We are presenting an energy-infrastructure opportunity that combines 50 MW of photovoltaic generation and battery storage with medium-voltage substations, distribution works and public lighting for Kasaji, Kisenge and surrounding communities. The 2023 technical proposal estimates total project cost at $86.2 million and an 11-month delivery period from contract signature and funding. Before advancing the opportunity, we require confirmation of land rights, permits, utility arrangements, demand, procurement pricing and the financial model.",
+      "We are presenting an energy-infrastructure opportunity that combines 50 MW of photovoltaic generation and battery storage with medium-voltage substations, distribution works and public lighting for Kasaji, Kisenge and surrounding communities. The August 2023 technical proposal estimates total project cost at approximately $86 million; procurement pricing requires a current re-quote. Before advancing the opportunity, we require confirmation of land rights, permits, utility arrangements, demand, procurement pricing and the financial model.",
     useOfFunds:
       "Sponsor budget covers photovoltaic and battery equipment, substations, medium- and low-voltage distribution, public lighting, site works, logistics, taxes and project delivery costs.",
     verified: false,
@@ -449,7 +449,7 @@ export const listings: Listing[] = [
     scores: { match: 0, readiness: 48, esg: 0, risk: 66 },
     highlights: [
       "Designed capacity: 50 MW photovoltaic generation with battery storage and grid works",
-      "2023 sponsor budget: approximately $86.2 million including taxes and delivery costs; current pricing requires validation",
+      "August 2023 sponsor budget: approximately $86 million including taxes and delivery costs; procurement re-quote required",
       "Proposed delivery period: 11 months after contract signature and funding",
       "Target service area: Kasaji, Kisenge and nearby communities; demand and connection evidence require validation",
     ],
