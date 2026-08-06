@@ -4,15 +4,11 @@ import { projectHref } from "@/lib/project-slugs";
 import { publicListingWhere } from "@/lib/public-listings";
 import { prisma } from "@/lib/db";
 import { metadataBaseUrl } from "@/lib/metadata";
+import { PUBLIC_SITEMAP_ROUTES } from "@/lib/public-sitemap";
 
 // Public project URLs depend on governed database state. Generate this route
 // at request time so builds never require a live production database.
 export const dynamic = "force-dynamic";
-
-const PUBLIC_ROUTES = [
-  "", "/about", "/contact", "/diligence", "/investors", "/opportunities",
-  "/partners", "/pillars", "/pricing", "/resources", "/sponsors", "/trust",
-];
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const base = metadataBaseUrl().origin;
@@ -22,7 +18,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     select: { id: true, updatedAt: true },
   });
   return [
-    ...PUBLIC_ROUTES.map((route) => ({
+    ...PUBLIC_SITEMAP_ROUTES.map((route) => ({
       url: `${base}${route}`,
       lastModified: now,
       changeFrequency: route === "" || route === "/opportunities" ? "weekly" as const : "monthly" as const,

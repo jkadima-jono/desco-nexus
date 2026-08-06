@@ -25,7 +25,7 @@ const copy: Record<Locale, EntityDisclosureCopy> = {
     ],
     recordTitle: "Public operating record",
     record: ["Completed transactions: none disclosed on this site", "Capital raised: none disclosed on this site", "Assets under management: none disclosed on this site", "Fees collected: none disclosed on this site", "Regulatory authorisation: none claimed on this site"],
-    note: "These statements describe this site’s public evidence record. They are not a company-registry search or independent verification.",
+    note: "DESCO has not supplied approved public evidence for the corporate fields above. This record must be completed before any paid engagement or controlled investor onboarding. These statements are not a company-registry search or independent verification.",
   },
   fr: {
     eyebrow: "Auto-divulgation DESCO",
@@ -34,7 +34,7 @@ const copy: Record<Locale, EntityDisclosureCopy> = {
     fields: [{ label: "Entité juridique", value: "Non communiqué publiquement" }, { label: "Numéro d’immatriculation", value: "Non communiqué publiquement" }, { label: "Domicile", value: "Non communiqué publiquement" }, { label: "Date de constitution", value: "Non communiqué publiquement" }, { label: "Administrateurs et responsable", value: "Non communiqué publiquement" }, { label: "Bénéficiaires effectifs", value: "Non communiqué publiquement" }],
     recordTitle: "Historique opérationnel public",
     record: ["Transactions réalisées : aucune communiquée sur ce site", "Capitaux levés : aucun communiqué sur ce site", "Actifs sous gestion : aucun communiqué sur ce site", "Honoraires perçus : aucun communiqué sur ce site", "Autorisation réglementaire : aucune revendiquée sur ce site"],
-    note: "Ces mentions décrivent les preuves publiques de ce site. Elles ne constituent ni une recherche au registre ni une vérification indépendante.",
+    note: "DESCO n’a pas fourni de preuves publiques approuvées pour les informations ci-dessus. Ce dossier doit être complété avant toute mission payante ou intégration contrôlée d’investisseurs. Ces mentions ne constituent ni une recherche au registre ni une vérification indépendante.",
   },
   es: {
     eyebrow: "Autodivulgación de DESCO",
@@ -43,7 +43,7 @@ const copy: Record<Locale, EntityDisclosureCopy> = {
     fields: [{ label: "Entidad jurídica", value: "No divulgado públicamente" }, { label: "Número de registro", value: "No divulgado públicamente" }, { label: "Domicilio", value: "No divulgado públicamente" }, { label: "Fecha de constitución", value: "No divulgado públicamente" }, { label: "Directores y responsable", value: "No divulgado públicamente" }, { label: "Titularidad real", value: "No divulgado públicamente" }],
     recordTitle: "Historial operativo público",
     record: ["Transacciones completadas: ninguna divulgada en este sitio", "Capital captado: ninguno divulgado en este sitio", "Activos bajo gestión: ninguno divulgado en este sitio", "Honorarios cobrados: ninguno divulgado en este sitio", "Autorización regulatoria: ninguna declarada en este sitio"],
-    note: "Estas menciones describen el registro público de este sitio. No son una consulta registral ni una verificación independiente.",
+    note: "DESCO no ha aportado evidencia pública aprobada para los datos anteriores. Este registro debe completarse antes de cualquier encargo remunerado o incorporación controlada de inversores. No es una consulta registral ni una verificación independiente.",
   },
   pt: {
     eyebrow: "Autodivulgação da DESCO",
@@ -52,7 +52,7 @@ const copy: Record<Locale, EntityDisclosureCopy> = {
     fields: [{ label: "Entidade jurídica", value: "Não divulgado publicamente" }, { label: "Número de registo", value: "Não divulgado publicamente" }, { label: "Domicílio", value: "Não divulgado publicamente" }, { label: "Data de constituição", value: "Não divulgado publicamente" }, { label: "Administradores e responsável", value: "Não divulgado publicamente" }, { label: "Beneficiários efetivos", value: "Não divulgado publicamente" }],
     recordTitle: "Histórico operacional público",
     record: ["Transações concluídas: nenhuma divulgada neste site", "Capital angariado: nenhum divulgado neste site", "Ativos sob gestão: nenhum divulgado neste site", "Honorários cobrados: nenhum divulgado neste site", "Autorização regulamentar: nenhuma alegada neste site"],
-    note: "Estas menções descrevem o registo público deste site. Não constituem pesquisa registral nem verificação independente.",
+    note: "A DESCO não forneceu evidência pública aprovada para os dados acima. Este registo deve ser concluído antes de qualquer trabalho remunerado ou integração controlada de investidores. Não constitui pesquisa registral nem verificação independente.",
   },
   zh: {
     eyebrow: "DESCO 自我披露",
@@ -61,7 +61,7 @@ const copy: Record<Locale, EntityDisclosureCopy> = {
     fields: [{ label: "法律实体", value: "尚未公开披露" }, { label: "注册号", value: "尚未公开披露" }, { label: "注册地", value: "尚未公开披露" }, { label: "成立日期", value: "尚未公开披露" }, { label: "董事及责任人", value: "尚未公开披露" }, { label: "实际受益所有权", value: "尚未公开披露" }],
     recordTitle: "公开运营记录",
     record: ["已完成交易：本网站未披露", "已募集资本：本网站未披露", "管理资产：本网站未披露", "已收费用：本网站未披露", "监管授权：本网站未作相关声明"],
-    note: "以上内容仅描述本网站的公开证据记录，不构成公司注册查询或独立核验。",
+    note: "DESCO 尚未为上述公司信息提供获批的公开证据。在开展任何付费服务或受控投资者准入前，必须补全该记录。以上内容不构成公司注册查询或独立核验。",
   },
 };
 

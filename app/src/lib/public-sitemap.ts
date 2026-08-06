@@ -1,0 +1,16 @@
+export const PUBLIC_SITEMAP_ROUTES = [
+  "",
+  "/about",
+  "/contact",
+  "/diligence",
+  "/investors",
+  "/legal",
+  "/opportunities",
+  "/partners",
+  "/pillars",
+  "/pricing",
+  "/resources",
+  "/resources/model-file",
+  "/sponsors",
+  "/trust",
+] as const;

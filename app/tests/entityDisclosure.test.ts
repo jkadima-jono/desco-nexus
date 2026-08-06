@@ -17,6 +17,7 @@ test("DESCO self-disclosure exposes the same corporate fields in every language"
   const english = entityDisclosureCopy("en");
   assert.ok(english.fields.every((field) => field.value === "Not publicly disclosed"));
   assert.match(english.note, /not a company-registry search or independent verification/i);
+  assert.match(english.note, /must be completed before any paid engagement/i);
 });
 
 test("catalogue readiness summary displays ready and preparation counts in every language", () => {

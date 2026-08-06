@@ -1,5 +1,6 @@
 import type { MetadataRoute } from "next";
 import { metadataBaseUrl } from "@/lib/metadata";
+import { PRIVATE_ROBOT_PATHS } from "@/lib/private-metadata";
 
 export default function robots(): MetadataRoute.Robots {
   const base = metadataBaseUrl().origin;
@@ -9,7 +10,7 @@ export default function robots(): MetadataRoute.Robots {
   }
   return {
     rules: [
-      { userAgent: "*", allow: "/", disallow: ["/admin/", "/api/", "/deals/", "/messages/", "/portfolio/", "/saved/"] },
+      { userAgent: "*", allow: "/", disallow: [...PRIVATE_ROBOT_PATHS] },
     ],
     sitemap: `${base}/sitemap.xml`,
   };

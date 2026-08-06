@@ -111,7 +111,6 @@ type MarketingCopy = {
     sectionBody: string;
     process: Step[];
     notice: string;
-    startCta: string;
   };
   partners: PageBase & {
     sectionEyebrow: string;
@@ -253,7 +252,6 @@ const en: MarketingCopy = {
       { title: "Coordinate engagement", body: "Manage meetings, documents, messages and next steps through the workspace." },
     ],
     notice: "DESCO review addresses structure, completeness and internal consistency. It does not constitute legal approval, project endorsement or independent investment verification.",
-    startCta: "Start a structured submission",
   },
   partners: {
     metadata: { title: "Advisory model — DESCO Compass", description: "How legal, financial, technical, government and development specialists can support structured opportunities." },
@@ -410,7 +408,6 @@ const fr: MarketingCopy = {
       { title: "Coordonner les échanges", body: "Gérer réunions, documents, messages et prochaines étapes dans l’espace." },
     ],
     notice: "L’examen DESCO porte sur la structure, l’exhaustivité et la cohérence interne. Il ne constitue ni approbation juridique, ni recommandation, ni vérification indépendante.",
-    startCta: "Commencer une soumission structurée",
   },
   partners: {
     ...en.partners,
@@ -641,7 +638,6 @@ function translatedSponsors(locale: "es" | "pt" | "zh", tr: Tr, card: CardFactor
       step("Coordinar la relación", "Coordenar o contacto", "协调沟通", "Gestionar reuniones, documentos, mensajes y siguientes pasos.", "Gerir reuniões, documentos, mensagens e passos seguintes.", "管理会议、文件、消息和后续行动。"),
     ],
     notice: tr("La revisión DESCO cubre estructura, integridad y coherencia interna. No es aprobación jurídica, respaldo del proyecto ni verificación independiente.", "A análise DESCO cobre estrutura, completude e coerência interna. Não é aprovação jurídica, apoio ao projeto ou verificação independente.", "DESCO 审查仅涉及结构、完整性和内部一致性，不构成法律批准、项目认可或独立投资核实。"),
-    startCta: tr("Iniciar una presentación estructurada", "Iniciar uma submissão estruturada", "开始结构化提交"),
   };
 }
 
