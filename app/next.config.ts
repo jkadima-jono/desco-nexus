@@ -11,12 +11,16 @@ const securityHeaders = [
   { key: "Strict-Transport-Security", value: "max-age=31536000; includeSubDomains" },
 ];
 
+const nonProductionHeaders = process.env.VERCEL_ENV === "production"
+  ? []
+  : [{ key: "X-Robots-Tag", value: "noindex, nofollow, noarchive" }];
+
 const nextConfig: NextConfig = {
   output: "standalone",
   poweredByHeader: false,
   async headers() {
     return [
-      { source: "/(.*)", headers: securityHeaders },
+      { source: "/(.*)", headers: [...securityHeaders, ...nonProductionHeaders] },
       { source: "/api/:path*", headers: [{ key: "Cache-Control", value: "private, no-store, max-age=0" }] },
       // Verification URLs initially contain a short-lived bearer token. The
       // page removes it from browser history, and this response policy also

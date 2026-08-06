@@ -2,7 +2,6 @@ import Link from "next/link";
 import type { Listing } from "@/lib/data";
 import { isDescoRelatedOpportunity, materialFactPresentation } from "@/lib/data";
 import HeroVisual from "./HeroVisual";
-import BrandMark from "./BrandMark";
 import { getInvestmentEvidence, sourceDatePresentation } from "@/lib/investment-evidence";
 import { sectorForeground } from "@/lib/theme";
 import type { Locale } from "@/lib/i18n";
@@ -66,7 +65,6 @@ export default function ProjectCard({
               {listing.flag} {listing.country}
             </span>
           </div>
-          <BrandMark size={28} showName={false} />
         </div>
         <div className="absolute inset-x-0 bottom-0 p-4">
           <h3 className="max-w-md font-display text-lg font-bold leading-snug text-white">

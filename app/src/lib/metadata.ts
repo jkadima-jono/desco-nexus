@@ -14,8 +14,10 @@ function withProtocol(host: string) {
 
 export function metadataBaseUrl() {
   const previewHost = process.env.VERCEL_ENV === "preview" ? process.env.VERCEL_URL : undefined;
+  // The configured public origin is authoritative in production. Vercel's
+  // project URL is a deployment host and may not be the domain users visit.
   const productionHost = process.env.VERCEL_ENV === "production"
-    ? process.env.VERCEL_PROJECT_PRODUCTION_URL
+    ? process.env.NEXT_PUBLIC_SITE_URL || process.env.VERCEL_PROJECT_PRODUCTION_URL
     : undefined;
   return new URL(withProtocol(previewHost || productionHost || process.env.NEXT_PUBLIC_SITE_URL || DEFAULT_SITE_ORIGIN));
 }

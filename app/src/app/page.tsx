@@ -70,6 +70,11 @@ function FeaturedBrief({ listing, copy, locale }: { listing: Listing; copy: Home
           <div className="mt-1"><DisclosureChip tone="restricted">{copy.readinessNotPublic}</DisclosureChip></div>
         </div>
       </div>
+      <div className="border-t border-ink/10 bg-mist/60 px-4 py-4 text-xs leading-5 text-slate">
+        <p className="font-bold text-ink">{copy.whyFeatured}</p>
+        <p className="mt-1">{copy.featuredReason}</p>
+        <p className="mt-2"><span className="font-semibold text-ink">{copy.featuredStatus}:</span> {listing.stage}. {factCopy.capitalGap}</p>
+      </div>
       <div className="border-t border-ink/10 px-4 py-3">
         <Link href={projectHref(listing.id)} className="inline-flex min-h-11 items-center text-sm font-bold text-ink hover:text-gold">
           {copy.reviewOpportunity} →

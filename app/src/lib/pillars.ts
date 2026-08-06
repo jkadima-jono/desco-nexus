@@ -34,9 +34,9 @@ export const PILLARS: Pillar[] = [
     summary:
       "We are developing Agridesco around farming cooperatives, processing hubs and market-access infrastructure across Grand Kasaï. Before scaling, we require verified land access, farmer participation, yields, offtake and operating evidence.",
     thesis:
-      "The Grand Kasai region holds over 15 million hectares of arable land and 1,500mm of annual rainfall, yet the DRC spends an estimated $3.0B a year importing food it could grow domestically. Agridesco exists to close that gap by giving smallholders the processing and market-access infrastructure that converts fertile land into investable, exportable surplus.",
+      "Sponsor materials propose a network of smallholder cooperatives, shared mechanisation, storage and crop processing in Grand Kasaï. The public investment case depends on verified land access, farmer participation, yields, operating performance and offtake evidence.",
     marketOpportunity:
-      "A $3.0B annual food-import bill represents immediate import-substitution potential, and the Grand Kasai region's arable land could feed over 90 million people once mechanization, processing, and market access are in place.",
+      "The sponsor identifies food imports and limited processing capacity as the commercial context. Current, attributable market data and an independently reviewed demand study are required before those claims can support investment decisions.",
     geography: ["Grand Kasai region, DR Congo — Kasai, Kasai-Central, Kasai-Oriental, Sankuru, Lomami provinces"],
     objectives: [
       "Organize smallholders into outgrower cooperatives for scale",
@@ -51,9 +51,9 @@ export const PILLARS: Pillar[] = [
       { label: "Projected income uplift for smallholders", value: 45, suffix: "%" },
     ],
     milestones: [
-      { year: "2026–2027", label: "Agridesco operations launch alongside Port de Ndomba Phase 1", done: false },
-      { year: "2028", label: "Kasenga trade link opens regional export routes for agri surplus", done: false },
-      { year: "2029", label: "Full portfolio operations", done: false },
+      { year: "Step 1", label: "Confirm project entity, land access, participating farmers and baseline evidence", done: false },
+      { year: "Step 2", label: "Validate pilot scope, demand, offtake, unit economics and safeguards", done: false },
+      { year: "Step 3", label: "Define a financeable rollout only after pilot evidence is reviewed", done: false },
     ],
   },
   {
@@ -65,7 +65,7 @@ export const PILLARS: Pillar[] = [
     summary:
       "We are building Investdesco as our capital and infrastructure platform for ports, industrial parks, energy and mining-development partnerships. We require confirmed project rights, counterparties and financing terms before committing capital.",
     thesis:
-      "Frontier real-asset opportunities in the Grand Kasai region fail to attract capital not for lack of resources, but for lack of structure — unclear logistics, informal production, and absent enabling infrastructure. Investdesco absorbs that structuring risk first: securing access, building the port and logistics backbone, then introducing disciplined capital aligned with long-term value creation.",
+      "Investdesco is proposed as DESCO Global’s capital-structuring and infrastructure-development area. Each project requires confirmed rights, counterparties, demand, costs, delivery capacity and transaction authority before investor engagement.",
     marketOpportunity:
       "Desco Global materials describe a proposed $750 million Phase 1 programme across infrastructure and operating projects. The allocation, financing structure, project rights, delivery sequence and independently reviewed financial model are not yet publicly established.",
     geography: ["DR Congo — Kasai River and Lake Mweru corridors", "Pan-African trade links to Zambia and Angola"],
@@ -80,11 +80,9 @@ export const PILLARS: Pillar[] = [
       { label: "Projected jobs by 2035", value: 100000, suffix: "+" },
     ],
     milestones: [
-      { year: "2026 (Q2–Q3)", label: "Financial close and Port de Ndomba groundbreaking", done: false },
-      { year: "2028 (Q2–Q4)", label: "Kasenga port start", done: false },
-      { year: "2029 (Q2)", label: "Full portfolio operations", done: false },
-      { year: "2030 (Q4)", label: "Scale and optimization", done: false },
-      { year: "2032", label: "Target exit — IPO, strategic sale, or refinancing", done: false },
+      { year: "Step 1", label: "Confirm project rights, sponsors, counterparties and authority", done: false },
+      { year: "Step 2", label: "Validate feasibility, demand, safeguards, costs and delivery sequence", done: false },
+      { year: "Step 3", label: "Define project-specific capital structures and approved engagement terms", done: false },
     ],
   },
   {
@@ -96,9 +94,9 @@ export const PILLARS: Pillar[] = [
     summary:
       "We are developing solar-powered Phardesco Pharmalab Hubs that combine pharmaceutical retail, diagnostics, water access and health education, beginning in Mbuji-Mayi. We require validated licensing, demand, procurement, clinical governance and forecasts before launch.",
     thesis:
-      "In Kasai, one pharmacist serves more than 50,000 people against a WHO benchmark of 1 per 2,000, and over 80% of the DRC's population lacks regular access to quality medicines. Phardesco closes that gap with an integrated, self-sustaining Pharmalab model rather than a standalone pharmacy chain.",
+      "Sponsor materials propose solar-powered hubs combining pharmaceutical retail, diagnostics, water access and health education. Licensing, demand, clinical governance, procurement, cold-chain capacity and operating forecasts require independent review before launch.",
     marketOpportunity:
-      "A market of 100M+ people with chronic pharmaceutical supply gaps, counterfeit-drug risk, and an overburdened public health sector — creating durable demand for a compliant, reliable, last-mile health and medicine network.",
+      "Sponsor materials cite limited access to pharmacists and quality medicines. The cited ratios, population figures and addressable demand require current, attributable sources before they can support the investment case.",
     geography: ["Grand Kasai region, DR Congo — first hub in Mbuji-Mayi", "National expansion planned across all DRC provinces by 2035"],
     objectives: [
       "Launch the first Pharmalab Hub in Mbuji-Mayi",
@@ -111,11 +109,9 @@ export const PILLARS: Pillar[] = [
       { label: "Startup raise target ($M)", value: 5, suffix: "–10M" },
     ],
     milestones: [
-      { year: "Months 1–2", label: "Legal incorporation and licensing in the DRC", done: false },
-      { year: "Months 3–6", label: "Land acquisition in Mbuji-Mayi; construction begins", done: false },
-      { year: "Months 7–9", label: "Staff recruitment and health-authority registration", done: false },
-      { year: "Months 10–12", label: "Pilot hub launch", done: false },
-      { year: "2028 (Q2–Q4)", label: "Healthcare rollout alongside Kasenga port start", done: false },
+      { year: "Step 1", label: "Confirm entity, licensing pathway, clinical governance and site rights", done: false },
+      { year: "Step 2", label: "Validate demand, service model, procurement, cold chain and pilot budget", done: false },
+      { year: "Step 3", label: "Set a launch timetable only after approvals and financing are confirmed", done: false },
     ],
   },
   {
@@ -127,9 +123,9 @@ export const PILLARS: Pillar[] = [
     summary:
       "We are developing Waterdesco as a drinking-water and sanitation platform for Grand Kasaï. We will confirm project locations, technical designs, rights, tariffs, funding and delivery plans before selecting the implementation configuration.",
     thesis:
-      "\"Water is the foundation of dignity.\" Every other pillar — agriculture, mining, community health — depends on reliable water access. Waterdesco is the infrastructure investment with the widest multiplier effect across the platform.",
+      "Waterdesco is proposed as a drinking-water and sanitation platform for Grand Kasaï. Sponsor materials describe two conflicting network configurations, so the technical scope must be reconciled before costs, beneficiaries or delivery can be relied upon.",
     marketOpportunity:
-      "Chronic water and sanitation deficits in the Grand Kasai region drive waterborne disease and constrain industrial and agricultural productivity alike — a foundational infrastructure gap with platform-wide returns.",
+      "The investment case depends on verified water sources, site demand, affordability, tariff approval, permits, engineering design, operating costs and maintenance capacity. These items are not yet established in the public record.",
     geography: ["Grand Kasai region, DR Congo"],
     objectives: [
       "Expand clean drinking-water networks to underserved regions",
@@ -141,10 +137,12 @@ export const PILLARS: Pillar[] = [
       { label: "People served (target)", value: 2500000, suffix: "" },
       { label: "Liters delivered daily (target)", value: 45000000, suffix: "" },
       { label: "Sanitation facilities built (target)", value: 150, suffix: "+" },
-      { label: "Communities transformed (target)", value: 50, suffix: "" },
+      { label: "Communities proposed for service", value: 50, suffix: "" },
     ],
     milestones: [
-      { year: "2026–2030", label: "Distributed infrastructure build-out alongside Investdesco's port and industrial program", done: false },
+      { year: "Step 1", label: "Reconcile the proposed network configurations and beneficiary assumptions", done: false },
+      { year: "Step 2", label: "Complete source-water, site, demand, affordability and permitting studies", done: false },
+      { year: "Step 3", label: "Define procurement, financing, operations and maintenance before rollout", done: false },
     ],
   },
 ];

@@ -302,7 +302,7 @@ export const listings: Listing[] = [
     stage: "Pre-construction",
     irr: "No public return projection published",
     summary:
-      "We are presenting a four-hectare freeze-drying facility near Kimwenza station, sourcing cassava leaves from growers in Mont Ngafula and Kongo Central. The model combines solar power, cold storage, water treatment and distribution through retail vendors and depots. Before investment, we require product testing, demand validation, site rights and independently reviewed unit economics.",
+      "We are presenting a four-hectare freeze-drying facility near Kimwenza station, sourcing cassava leaves from growers in Mont Ngafula and Kongo Central Province. The model combines solar power, cold storage, water treatment and distribution through retail vendors and depots. Before investment, we require product testing, demand validation, site rights and independently reviewed unit economics.",
     verified: false,
     governmentBacked: false,
     scores: { match: 79, readiness: 74, esg: 81, risk: 39 },
@@ -504,14 +504,14 @@ export const listings: Listing[] = [
     stage: "Pre-drilling opportunity requiring current title and approval confirmation",
     irr: "No public return projection published",
     summary:
-      "We are presenting the Lotshi opportunity as an onshore exploration asset covering an area described as approximately 506 km² in Kongo Central, between Moanda and Lukula. Available materials identify seven prospects from historical seismic work and position Dallas as the first drilling target, at a planned depth of 1,500–2,300 metres. Before introducing financing, we require confirmation of current licence standing, ownership and transfer approvals, access to the underlying seismic and certification reports, an independently reviewed drilling budget and a complete environmental and safety plan.",
+      "We are presenting the Lotshi opportunity as an onshore exploration asset covering an area described as approximately 506 km² in Kongo Central Province, Democratic Republic of the Congo, between Moanda and Lukula. Available materials identify seven prospects from historical seismic work and position Dallas as the first drilling target, at a planned depth of 1,500–2,300 metres. Before introducing financing, we require confirmation of current licence standing, ownership and transfer approvals, access to the underlying seismic and certification reports, an independently reviewed drilling budget and a complete environmental and safety plan.",
     useOfFunds:
       "Exploration and appraisal capital is expected to support legal and regulatory completion, technical-data review, site preparation, access and logistics, drilling of the Dallas prospect, testing, environmental and safety work, and contingency. A current itemised financing requirement is not publicly disclosed.",
     verified: false,
     governmentBacked: false,
     scores: { match: 0, readiness: 31, esg: 0, risk: 85 },
     highlights: [
-      "Exploration area described in the available material: approximately 506 km² in Kongo Central",
+      "Exploration area described in the available material: approximately 506 km² in Kongo Central Province",
       "Historical programme: 202 km of seismic acquisition completed in 2010",
       "Seven prospects identified in the source material; Dallas is presented as the initial drilling target",
       "Planned drilling depth: 1,500–2,300 metres, with logistics routed through Banana, Moanda and Ntala",

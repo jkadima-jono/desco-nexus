@@ -125,7 +125,7 @@ const THESIS: Record<string, string> = {
   "ldc-integrated-housing-drc":
     "LDC proposes a multi-site housing and urban-infrastructure programme. Before capital formation, the sponsor needs one controlled scope, a phased pilot, confirmed land and planning rights, household demand and affordability evidence, bank participation, cost validation and a deliverable procurement plan.",
   "energulf-lotshi-block":
-    "Lotshi is an onshore exploration opportunity in Kongo Central with historical seismic coverage and seven prospects described in the available project material. The investment case depends on confirming current title and ownership, reviewing the underlying technical data and independent certification, and defining a financeable drilling, safeguards and appraisal programme.",
+    "Lotshi is an onshore exploration opportunity in Kongo Central Province, Democratic Republic of the Congo, with historical seismic coverage and seven prospects described in the available project material. The investment case depends on confirming current title and ownership, reviewing the underlying technical data and independent certification, and defining a financeable drilling, safeguards and appraisal programme.",
 };
 
 const PROJECT_EVIDENCE: Record<

@@ -20,6 +20,9 @@ type MarketingCopy = {
   home: {
     metadata: { title: string; description: string };
     featured: string;
+    whyFeatured: string;
+    featuredStatus: string;
+    featuredReason: string;
     publicTeaser: string;
     capitalSought: string;
     projectStage: string;
@@ -147,10 +150,10 @@ export type HomeMarketingCopy = MarketingCopy["home"];
 const en: MarketingCopy = {
   home: {
     metadata: { title: "DESCO Compass — Structured DRC opportunities", description: "Review selected DRC opportunities through consistent disclosure, mandate-based screening and controlled due diligence." },
-    featured: "Featured opportunity briefing", publicTeaser: "Public teaser", capitalSought: "Capital sought",
+    featured: "Featured opportunity briefing", whyFeatured: "Why featured", featuredStatus: "Current public status", featuredReason: "It is the only published opportunity supported by a dated technical proposal and preliminary budget. Selection is not an endorsement or a statement of investment readiness.", publicTeaser: "Public teaser", capitalSought: "Capital sought",
     projectStage: "Project stage", sector: "Sector", location: "Location", disclosure: "Disclosure",
     sponsorProvided: "Sponsor-provided", dataRoom: "Data room", readinessNotPublic: "Readiness not public",
-    reviewOpportunity: "Review opportunity", investorBenefits: ["Review structured public opportunities", "Match opportunities against your mandate", "Request deeper due diligence only when justified"],
+    reviewOpportunity: "Review opportunity", investorBenefits: ["Reduce origination noise with a curated DRC pipeline", "Compare opportunities through one disclosure structure", "Carry source dates, evidence gaps and provenance into investment-committee screening", "Request deeper due diligence only when the public case supports it"],
     sponsorBenefits: ["Prepare an institutional listing", "Control access to confidential information", "Coordinate investor engagement following access review"],
     capitalRepresented: "public opportunities", projectCostCoverage: (_count, total) => `${total} opportunities use a common public-disclosure structure.`, sponsorFigures: "Capital requirements are shown separately by project",
     processEyebrow: "Investor due diligence pathway", processTitle: "A controlled path from screening to deeper review.",
@@ -181,7 +184,7 @@ const en: MarketingCopy = {
   },
   about: {
     metadata: { title: "About DESCO Global — DESCO Compass", description: "DESCO Global’s role in connecting structured projects, capital providers and strategic partners." },
-    hero: { eyebrow: "About DESCO Global", title: "We connect structured projects, capital and strategic partners.", body: "We operate DESCO Compass as an investment-opportunity and due diligence platform focused initially on the Democratic Republic of the Congo, with capacity to support selected African markets.", primary: "Contact DESCO Global", secondary: "Review investment pillars" },
+    hero: { eyebrow: "About DESCO Global", title: "We connect structured projects, capital and strategic partners.", body: "We operate DESCO Compass as an investment-opportunity and due diligence platform focused initially on the Democratic Republic of the Congo, with the capacity to support selected African markets.", primary: "Contact DESCO Global", secondary: "Review investment pillars" },
     notice: "This page does not claim an investment track record, client list, transaction history, office network or regulatory status that has not been supplied and approved by DESCO Global.",
     sectionEyebrow: "Platform rationale", sectionTitle: "A clearer interface between project preparation and investor review.",
     cards: [
@@ -321,8 +324,8 @@ const fr: MarketingCopy = {
   home: {
     ...en.home,
     metadata: { title: "DESCO Compass — Opportunités structurées en RDC", description: "Examinez des opportunités sélectionnées en RDC grâce à une divulgation cohérente, un filtrage selon le mandat et une diligence contrôlée." },
-    featured: "Présentation d’une opportunité", publicTeaser: "Présentation publique", capitalSought: "Capital recherché", projectStage: "Stade du projet", sector: "Secteur", location: "Localisation", disclosure: "Divulgation", sponsorProvided: "Fourni par le porteur", dataRoom: "Data room", readinessNotPublic: "État de préparation non public", reviewOpportunity: "Examiner l’opportunité",
-    investorBenefits: ["Examiner les opportunités publiques structurées", "Comparer les opportunités à votre mandat", "Demander une diligence approfondie uniquement lorsqu’elle est justifiée"],
+    featured: "Présentation d’une opportunité", whyFeatured: "Pourquoi cette opportunité", featuredStatus: "Statut public actuel", featuredReason: "C’est la seule opportunité publiée étayée par une proposition technique datée et un budget préliminaire. Cette sélection ne constitue ni une approbation ni une indication de préparation à l’investissement.", publicTeaser: "Présentation publique", capitalSought: "Capital recherché", projectStage: "Stade du projet", sector: "Secteur", location: "Localisation", disclosure: "Divulgation", sponsorProvided: "Fourni par le porteur", dataRoom: "Data room", readinessNotPublic: "État de préparation non public", reviewOpportunity: "Examiner l’opportunité",
+    investorBenefits: ["Réduire le bruit d’origination grâce à une sélection de projets en RDC", "Comparer les opportunités selon une structure de divulgation commune", "Intégrer les dates des sources, les lacunes et la provenance au filtrage du comité d’investissement", "Demander une diligence approfondie uniquement lorsque le dossier public le justifie"],
     sponsorBenefits: ["Préparer un dossier institutionnel", "Contrôler l’accès aux informations confidentielles", "Coordonner les échanges investisseurs après examen des accès"],
     capitalRepresented: "opportunités publiques", projectCostCoverage: (_count, total) => `${total} opportunités utilisent une structure commune de divulgation publique.`, sponsorFigures: "Les besoins en capital sont présentés séparément par projet",
     processEyebrow: "Parcours de diligence investisseur", processTitle: "Un parcours contrôlé, du filtrage à l’examen approfondi.", processBody: "Nous organisons le filtrage, l’échange d’informations et les prises de contact. Les investisseurs restent responsables de leur propre diligence juridique, financière, technique et commerciale.",
@@ -465,6 +468,9 @@ function completeTranslation(locale: "es" | "pt" | "zh"): MarketingCopy {
         description: tr("Revise oportunidades seleccionadas en la RDC mediante divulgación coherente, selección según mandato y diligencia controlada.", "Analise oportunidades selecionadas na RDC através de divulgação coerente, seleção segundo o mandato e diligência controlada.", "通过一致的信息披露、基于投资授权的筛选和受控尽调，审阅刚果民主共和国的精选项目机会。"),
       },
       featured: tr("Ficha de oportunidad destacada", "Ficha de oportunidade em destaque", "重点项目简介"),
+      whyFeatured: tr("Por qué se destaca", "Por que está em destaque", "入选原因"),
+      featuredStatus: tr("Estado público actual", "Estado público atual", "当前公开状态"),
+      featuredReason: tr("Es la única oportunidad publicada respaldada por una propuesta técnica fechada y un presupuesto preliminar. La selección no constituye respaldo ni indica que esté lista para inversión.", "É a única oportunidade publicada sustentada por uma proposta técnica datada e um orçamento preliminar. A seleção não constitui aprovação nem indica preparação para investimento.", "这是唯一具有明确日期技术方案和初步预算支持的公开项目。入选不构成认可，也不表示项目已达到投资准备状态。"),
       publicTeaser: tr("Presentación pública", "Apresentação pública", "公开简介"),
       capitalSought: tr("Capital solicitado", "Capital procurado", "融资需求"),
       projectStage: tr("Etapa del proyecto", "Fase do projeto", "项目阶段"),
@@ -476,9 +482,10 @@ function completeTranslation(locale: "es" | "pt" | "zh"): MarketingCopy {
       readinessNotPublic: tr("Preparación no pública", "Preparação não pública", "准备状态未公开"),
       reviewOpportunity: tr("Revisar oportunidad", "Analisar oportunidade", "查看项目"),
       investorBenefits: [
-        tr("Revisar oportunidades públicas estructuradas", "Analisar oportunidades públicas estruturadas", "审阅结构化公开投资机会"),
-        tr("Comparar las oportunidades con su mandato", "Comparar as oportunidades com o seu mandato", "根据投资授权比较项目"),
-        tr("Solicitar diligencia adicional solo cuando esté justificada", "Solicitar diligência adicional apenas quando se justifique", "仅在有依据时申请进一步尽调"),
+        tr("Reducir el ruido de originación con una selección de proyectos de la RDC", "Reduzir o ruído de originação com uma seleção de projetos da RDC", "通过精选刚果民主共和国项目减少低效项目搜寻"),
+        tr("Comparar oportunidades mediante una estructura común de divulgación", "Comparar oportunidades através de uma estrutura comum de divulgação", "使用统一披露结构比较项目"),
+        tr("Incorporar fechas, lagunas de evidencia y procedencia al análisis del comité de inversión", "Levar datas, lacunas de evidência e proveniência para a análise do comité de investimento", "将来源日期、证据缺口和资料出处用于投委会筛选"),
+        tr("Solicitar diligencia adicional solo cuando el caso público lo justifique", "Solicitar diligência adicional apenas quando o caso público o justifique", "仅在公开资料支持时申请进一步尽调"),
       ],
       sponsorBenefits: [
         tr("Preparar una ficha institucional", "Preparar uma ficha institucional", "准备机构级项目资料"),

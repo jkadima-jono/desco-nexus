@@ -1,21 +1,43 @@
 export {};
 
+async function main() {
+
 const baseUrl = new URL(process.env.SMOKE_BASE_URL || process.env.NEXT_PUBLIC_SITE_URL || "");
 
 if (baseUrl.protocol !== "https:") {
   throw new Error("Set SMOKE_BASE_URL or NEXT_PUBLIC_SITE_URL to the HTTPS production origin.");
 }
 
-const routes = [
+const publicRoutes = [
   "/",
+  "/about",
+  "/contact",
+  "/diligence",
   "/opportunities",
   "/investors",
+  "/legal",
+  "/partners",
+  "/pillars",
+  "/pillars/agridesco",
+  "/pillars/investdesco",
+  "/pillars/phardesco",
+  "/pillars/waterdesco",
+  "/pricing",
+  "/resources",
+  "/sponsors",
+  "/trust",
   "/project/kasaji-kisenge-solar-50mw",
+  "/project/energulf-lotshi-block",
+  "/project/ldc-integrated-housing-drc",
   "/login",
+  "/signup",
+];
+
+const routes = [
+  ...publicRoutes,
   "/api/health/live",
   "/api/health/ready",
-  "/legal",
-  "/contact",
+  "/robots.txt",
   "/sitemap.xml",
 ];
 
@@ -63,20 +85,22 @@ for (const route of routes) {
 }
 
 for (const locale of ["en", "fr", "es", "pt", "zh"]) {
-  try {
-    const response = await fetch(new URL("/investors", baseUrl), {
-      redirect: "follow",
-      headers: {
-        cookie: `nexus_locale=${locale}`,
-        "user-agent": "DESCO-Compass-release-check/1.0",
-      },
-    });
-    const body = await response.text();
-    if (!response.ok || /This page could not be loaded|Cette page n.a pas pu être chargée/.test(body)) {
-      failures.push(`/investors [${locale}]: HTTP ${response.status} or error boundary rendered`);
+  for (const route of publicRoutes) {
+    try {
+      const response = await fetch(new URL(route, baseUrl), {
+        redirect: "follow",
+        headers: {
+          cookie: `nexus_locale=${locale}`,
+          "user-agent": "DESCO-Compass-release-check/1.0",
+        },
+      });
+      const body = await response.text();
+      if (!response.ok || /This page could not be loaded|Cette page n.a pas pu être chargée|Esta página no se pudo cargar|Esta página não pôde ser carregada|此页面无法加载/.test(body)) {
+        failures.push(`${route} [${locale}]: HTTP ${response.status} or error boundary rendered`);
+      }
+    } catch (error) {
+      failures.push(`${route} [${locale}]: ${error instanceof Error ? error.message : "request failed"}`);
     }
-  } catch (error) {
-    failures.push(`/investors [${locale}]: ${error instanceof Error ? error.message : "request failed"}`);
   }
 }
 
@@ -96,3 +120,9 @@ if (failures.length > 0) {
 }
 
 console.log(`Production routes verified at ${baseUrl.origin}.`);
+}
+
+main().catch((error) => {
+  console.error(error instanceof Error ? error.message : error);
+  process.exitCode = 1;
+});
