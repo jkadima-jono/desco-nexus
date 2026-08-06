@@ -145,7 +145,7 @@ const THESIS: Record<string, string> = {
   "ldc-integrated-housing-drc":
     "LDC proposes a multi-site housing and urban-infrastructure programme. Before capital formation, the sponsor needs one controlled scope, a phased pilot, confirmed land and planning rights, household demand and affordability evidence, bank participation, cost validation and a deliverable procurement plan.",
   "energulf-lotshi-block":
-    "Lotshi is an onshore exploration opportunity in Kongo Central Province, Democratic Republic of the Congo, with historical seismic coverage and seven prospects described in the available project material. The investment case depends on confirming current title and ownership, reviewing the underlying technical data and independent certification, and defining a financeable drilling, safeguards and appraisal programme.",
+    "Lotshi is a pre-drilling exploration file in western DRC. Sponsor material describes historical seismic coverage and seven prospects. Any financing case depends on current title and ownership, access to the underlying technical evidence, and a costed drilling and safeguards programme.",
 };
 
 const PROJECT_EVIDENCE: Record<
@@ -200,19 +200,19 @@ const PROJECT_EVIDENCE: Record<
   },
   "energulf-lotshi-block": {
     fields: [
-      { label: "Legal project entity", value: "EnerGulf Congo SARL is identified as the local project company", status: "partial", source: "EnerGulf Lotshi project one-pager" },
-      { label: "Ownership and development rights", value: "The material describes a 90% EnerGulf and 10% COHYDRO participation and a separate 2024 conditional share-transfer arrangement. Current ownership, licence validity and completed approvals require legal confirmation", status: "partial", source: "EnerGulf Lotshi project one-pager" },
-      { label: "Technical evidence", value: "The material refers to 202 km of 2010 seismic work, seven prospects and an independent DeGolyer & MacNaughton review. The underlying seismic data and certification report are not included", status: "partial", source: "EnerGulf Lotshi project one-pager" },
-      { label: "Development plan", value: "The Dallas prospect is identified as the first drilling target at a planned depth of 1,500–2,300 metres, followed by testing and a possible second well", status: "partial", source: "EnerGulf Lotshi project one-pager" },
+      { label: "Legal project entity", value: "The one-pager names EnerGulf Congo SARL as the local project company", status: "partial", source: "EnerGulf Lotshi project one-pager" },
+      { label: "Ownership and development rights", value: "The one-pager states 90% EnerGulf and 10% COHYDRO participation and describes a conditional 2024 share transfer. Current ownership, licence validity and approvals require legal confirmation", status: "partial", source: "EnerGulf Lotshi project one-pager" },
+      { label: "Technical evidence", value: "The one-pager cites 202 km of seismic acquired in 2010, seven prospects and a DeGolyer & MacNaughton review. The underlying data and report are not public", status: "partial", source: "EnerGulf Lotshi project one-pager" },
+      { label: "Development plan", value: "Dallas is identified as the first planned well at 1,500–2,300 metres, followed by testing and a possible second well", status: "partial", source: "EnerGulf Lotshi project one-pager" },
       { label: "Revenue and offtake evidence", value: NOT_DISCLOSED, status: "not-disclosed" },
       { label: "Implementation timetable", value: NOT_DISCLOSED, status: "not-disclosed" },
     ],
     risks: [
-      { label: "Legal, title and permitting", value: "Current licence standing, ownership, conditional transfer completion, government approvals and authority to raise capital require independent legal confirmation", status: "partial", source: "EnerGulf Lotshi project one-pager" },
-      { label: "Geology and resource", value: "Prospect and recoverable-volume figures in the one-pager are exploration estimates. The underlying technical report, assumptions and classification are not available for review", status: "partial", source: "DESCO folder review" },
-      { label: "Development and construction", value: "Well design, rig and service contracts, drilling budget, logistics plan, schedule and contingency are not disclosed", status: "not-disclosed" },
-      { label: "Environmental and social", value: "Current ESIA, demining clearance, emergency response, community engagement, spill prevention and abandonment plans are not disclosed", status: "not-disclosed" },
-      { label: "Commercial and financial", value: "Capital requirement, financing terms, fiscal assumptions, market route and independently reviewed economics are not disclosed", status: "not-disclosed" },
+      { label: "Legal, title and permitting", value: "Licence standing, ownership, transfer completion, government approvals and fundraising authority require independent legal confirmation", status: "partial", source: "EnerGulf Lotshi project one-pager" },
+      { label: "Geology and resource", value: "Prospect and recoverable-volume figures are exploration estimates. The supporting report, assumptions and classification are not public", status: "partial", source: "DESCO folder review" },
+      { label: "Development and construction", value: "Well design, service contracts, drilling budget, logistics, schedule and contingency are not public", status: "not-disclosed" },
+      { label: "Environmental and social", value: "The public file does not include an ESIA, demining clearance, emergency response, community engagement, spill-prevention or abandonment plans", status: "not-disclosed" },
+      { label: "Commercial and financial", value: "Capital requirement, financing terms, fiscal assumptions, market route and independently reviewed economics are not public", status: "not-disclosed" },
     ],
     provenance: {
       classification: "Project summary derived from historical and transaction-related materials",

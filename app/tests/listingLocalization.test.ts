@@ -3,14 +3,9 @@ import test from "node:test";
 import { listings } from "../src/lib/data";
 import { localizeListing, organizationPresentation } from "../src/lib/translations/listing-content";
 import { exampleProjectImages, localizeExampleProjectImageCaption } from "../src/lib/example-project-images";
+import { PUBLIC_OPPORTUNITY_IDS } from "../src/lib/public-listings";
 
 const locales = ["fr", "es", "pt", "zh"] as const;
-const descoVoice = {
-  fr: /^Nous (?:présentons|structurons)/,
-  es: /^(?:Presentamos|Estructuramos)/,
-  pt: /^(?:Apresentamos|Estruturamos)/,
-  zh: /^我们/,
-} as const;
 
 test("every public listing has a translated summary in every supported locale", () => {
   for (const listing of listings) {
@@ -67,18 +62,24 @@ test("material example-image captions are localized and wired into listing prese
   }
 });
 
-test("English project summaries use DESCO voice instead of detached promoter copy", () => {
-  const detachedVoice = /\b(the sponsor proposes|sponsor materials describe|sponsor proposes)\b/i;
-  for (const listing of listings) {
-    assert.doesNotMatch(listing.summary, detachedVoice, listing.id);
+test("published English summaries distinguish sourced facts from readiness judgments", () => {
+  for (const id of PUBLIC_OPPORTUNITY_IDS) {
+    const listing = listings.find((item) => item.id === id);
+    assert.ok(listing, id);
+    assert.match(listing.summary, /\b(?:proposal|sponsor material)\b/i, `${id}: source attribution`);
+    assert.match(listing.summary, /\b(?:needs|not ready|remain unconfirmed)\b/i, `${id}: readiness limitation`);
   }
 });
 
-test("translated project summaries retain DESCO's first-person institutional voice", () => {
-  for (const listing of listings) {
+test("published project summaries avoid canned presentation language in every locale", () => {
+  const cannedOpeners = /^(?:We are presenting|Nous présentons|Presentamos|Apresentamos|我们(?:展示|将))/i;
+  for (const id of PUBLIC_OPPORTUNITY_IDS) {
+    const listing = listings.find((item) => item.id === id);
+    assert.ok(listing, id);
+    assert.doesNotMatch(listing.summary, cannedOpeners, `${id} (en)`);
     for (const locale of locales) {
       const localized = localizeListing(listing, locale);
-      assert.match(localized.summary, descoVoice[locale], `${listing.id} (${locale})`);
+      assert.doesNotMatch(localized.summary, cannedOpeners, `${id} (${locale})`);
     }
   }
 });

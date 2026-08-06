@@ -300,9 +300,9 @@ const addedProjectTranslations: ListingTranslations = {
     "kasaji-kisenge-solar-50mw": {
       title: "Projet solaire et réseau électrique de Kasaji–Kisenge — 50 MW",
       sector: "Énergie", country: "RDC", instrument: "Besoin de financement de projet décrit dans la proposition technique 2023 ; structure de transaction non communiquée", stage: "Proposition technique et budget datés d’août 2023", irr: "Non communiqué publiquement",
-      summary: "Nous présentons une opportunité énergétique combinant 50 MW photovoltaïques, stockage, sous-stations moyenne tension, distribution et éclairage public pour Kasaji, Kisenge et les communautés voisines. La proposition technique d’août 2023 estime le coût à environ 86 M$ ; les prix d’achat exigent une nouvelle cotation. Avant d’avancer, nous exigeons la confirmation des droits fonciers, permis, accords avec l’opérateur, demande, prix d’achat et modèle financier.",
+      summary: "La proposition Kasaji–Kisenge combine 50 MW photovoltaïques, stockage, sous-stations, distribution et éclairage public. Son budget d’août 2023 estime le coût total à environ 86 M$. Le dossier exige de nouvelles cotations et la confirmation du foncier, des permis, des accords avec l’opérateur, de la demande et du modèle financier avant toute discussion de financement.",
       highlights: ["Capacité conçue : 50 MW photovoltaïques avec stockage et travaux de réseau", "Budget du porteur en août 2023 : environ 86 M$, taxes et coûts inclus ; nouvelle cotation requise", "Délai proposé : 11 mois après signature et financement", "Zone de service cible : Kasaji, Kisenge et les communautés voisines ; demande et raccordements à valider"],
-      whyMatch: "Nous considérons ce projet comme une opportunité énergétique potentielle pour Investdesco, sous réserve d’une validation technique, juridique, commerciale et financière actualisée.",
+      whyMatch: "Le projet peut correspondre à un mandat d’infrastructure énergétique après actualisation et examen indépendant des hypothèses techniques, juridiques, commerciales et financières.",
     },
     "ldc-integrated-housing-drc": {
       title: "Programme LDC par phases de logements et d’infrastructures urbaines",
@@ -314,18 +314,18 @@ const addedProjectTranslations: ListingTranslations = {
     "energulf-lotshi-block": {
       title: "Bloc d’exploration terrestre EnerGulf Lotshi",
       sector: "Énergie", country: "RDC", instrument: "Financement d’exploration et d’évaluation ; conditions non communiquées publiquement", stage: "Avant forage — titre et autorisations actuels à confirmer", irr: "Non communiqué publiquement",
-      summary: "Nous présentons Lotshi comme une opportunité d’exploration terrestre couvrant une zone décrite comme faisant environ 506 km² au Kongo Central, entre Moanda et Lukula. Les documents identifient sept prospects et placent Dallas comme première cible de forage, à 1 500–2 300 mètres. Avant toute mise en relation financière, nous exigeons la confirmation du titre, de la propriété et des autorisations, l’accès aux données techniques, un budget de forage indépendant et un plan environnemental et de sécurité complet.",
-      highlights: ["Zone décrite : environ 506 km² au Kongo Central", "Programme historique : 202 km de sismique réalisés en 2010", "Sept prospects identifiés ; Dallas est la première cible de forage", "Profondeur prévue : 1 500 à 2 300 mètres ; logistique via Banana, Moanda et Ntala"],
-      whyMatch: "Nous classons Lotshi comme une opportunité énergétique Investdesco à haut risque, adaptée aux investisseurs disposant des capacités de diligence requises.",
+      summary: "Lotshi est un dossier d’exploration terrestre avant forage dans l’ouest de la RDC, entre Moanda et Lukula. Les documents du porteur décrivent un bloc de 506 km², 202 km de sismique acquis en 2010 et sept prospects, Dallas étant le premier puits prévu à 1 500–2 300 mètres. Le dossier n’est pas prêt pour un examen financier : le titre, la propriété et les autorisations restent à confirmer, et le rapport sismique, le budget de forage, l’étude environnementale et le plan de sécurité ne sont pas publics.",
+      highlights: ["Zone déclarée par le porteur : environ 506 km² dans l’ouest de la RDC", "Programme historique : 202 km de sismique réalisés en 2010", "Sept prospects identifiés ; Dallas est la première cible de forage", "Profondeur prévue : 1 500 à 2 300 mètres ; logistique via Banana, Moanda et Ntala"],
+      whyMatch: "Lotshi peut correspondre à un mandat amont spécialisé uniquement après confirmation indépendante des droits, des preuves techniques, des garanties, du budget et de l’autorité transactionnelle.",
     },
   },
   es: {
     "kasaji-kisenge-solar-50mw": {
       title: "Proyecto solar y de red eléctrica de Kasaji–Kisenge — 50 MW",
       sector: "Energía", country: "R. D. del Congo", instrument: "Necesidad de financiación descrita en la propuesta técnica de 2023; estructura no divulgada", stage: "Propuesta técnica y presupuesto de agosto de 2023", irr: "No divulgado públicamente",
-      summary: "Presentamos una oportunidad energética que combina 50 MW solares, almacenamiento, subestaciones, distribución y alumbrado público para Kasaji, Kisenge y comunidades cercanas. La propuesta de agosto de 2023 estima aproximadamente 86 M$; los precios de compra requieren una nueva cotización. Antes de avanzar, exigimos confirmar suelo, permisos, acuerdos eléctricos, demanda, precios de compra y modelo financiero.",
+      summary: "La propuesta Kasaji–Kisenge combina 50 MW solares, almacenamiento, subestaciones, distribución y alumbrado público. Su presupuesto de agosto de 2023 estima un coste total aproximado de 86 M$. El expediente necesita nuevas cotizaciones y confirmar terrenos, permisos, acuerdos eléctricos, demanda y modelo financiero antes de cualquier conversación de financiación.",
       highlights: ["Capacidad diseñada: 50 MW solares con almacenamiento y red", "Presupuesto del promotor de agosto de 2023: aproximadamente 86 M$, con impuestos y costes; nueva cotización requerida", "Plazo propuesto: 11 meses desde la firma y financiación", "Zona de servicio: Kasaji, Kisenge y comunidades cercanas; demanda y conexiones por validar"],
-      whyMatch: "Consideramos este proyecto una posible oportunidad energética Investdesco, sujeta a validación técnica, jurídica, comercial y financiera.",
+      whyMatch: "El proyecto puede ajustarse a un mandato de infraestructura energética cuando sus supuestos técnicos, jurídicos, comerciales y financieros estén actualizados y revisados de forma independiente.",
     },
     "ldc-integrated-housing-drc": {
       title: "Programa LDC por fases de vivienda e infraestructura urbana",
@@ -337,18 +337,18 @@ const addedProjectTranslations: ListingTranslations = {
     "energulf-lotshi-block": {
       title: "Bloque de exploración terrestre EnerGulf Lotshi",
       sector: "Energía", country: "R. D. del Congo", instrument: "Financiación de exploración y evaluación; términos no divulgados", stage: "Preperforación; título y autorizaciones actuales por confirmar", irr: "No divulgado públicamente",
-      summary: "Presentamos Lotshi como una oportunidad de exploración terrestre de unos 506 km² en Kongo Central, entre Moanda y Lukula. Los materiales identifican siete prospectos y sitúan Dallas como primer objetivo, a 1.500–2.300 metros. Antes de introducir financiación, exigimos confirmar título, propiedad y aprobaciones, revisar los datos, validar el presupuesto y completar los planes ambientales y de seguridad.",
-      highlights: ["Área descrita: unos 506 km² en Kongo Central", "Programa histórico: 202 km de sísmica en 2010", "Siete prospectos identificados; Dallas es el primer objetivo", "Profundidad prevista: 1.500–2.300 metros; logística vía Banana, Moanda y Ntala"],
-      whyMatch: "Clasificamos Lotshi como una oportunidad energética Investdesco de alto riesgo para inversores con capacidad de diligencia especializada.",
+      summary: "Lotshi es un expediente de exploración terrestre previo a la perforación en el oeste de la RDC, entre Moanda y Lukula. Los documentos del promotor describen un bloque de 506 km², 202 km de sísmica adquirida en 2010 y siete prospectos; Dallas es el primer pozo previsto, a 1.500–2.300 metros. El expediente no está listo para revisión financiera: faltan confirmar título, propiedad y aprobaciones, y no son públicos el informe sísmico, el presupuesto de perforación, el estudio ambiental ni el plan de seguridad.",
+      highlights: ["Área declarada por el promotor: unos 506 km² en el oeste de la RDC", "Programa histórico: 202 km de sísmica en 2010", "Siete prospectos identificados; Dallas es el primer objetivo", "Profundidad prevista: 1.500–2.300 metros; logística vía Banana, Moanda y Ntala"],
+      whyMatch: "Lotshi puede ajustarse a un mandato especializado de exploración solo después de confirmar de forma independiente los derechos, la evidencia técnica, las salvaguardas, el presupuesto y la autoridad transaccional.",
     },
   },
   pt: {
     "kasaji-kisenge-solar-50mw": {
       title: "Projeto solar e de rede elétrica de Kasaji–Kisenge — 50 MW",
       sector: "Energia", country: "RD Congo", instrument: "Necessidade de financiamento descrita na proposta técnica de 2023; estrutura não divulgada", stage: "Proposta técnica e orçamento de agosto de 2023", irr: "Não divulgado publicamente",
-      summary: "Apresentamos uma oportunidade energética que combina 50 MW solares, armazenamento, subestações, distribuição e iluminação pública para Kasaji, Kisenge e comunidades próximas. A proposta de agosto de 2023 estima aproximadamente US$ 86 milhões; os preços de aquisição exigem nova cotação. Antes de avançar, exigimos confirmar terrenos, licenças, acordos elétricos, procura, preços de compra e modelo financeiro.",
+      summary: "A proposta Kasaji–Kisenge combina 50 MW solares, armazenamento, subestações, distribuição e iluminação pública. O orçamento de agosto de 2023 estima um custo total de cerca de US$ 86 milhões. O dossiê precisa de novas cotações e da confirmação de terrenos, licenças, acordos elétricos, procura e modelo financeiro antes de qualquer discussão de financiamento.",
       highlights: ["Capacidade projetada: 50 MW solares com armazenamento e rede", "Orçamento do promotor de agosto de 2023: aproximadamente US$ 86 milhões com impostos e custos; nova cotação necessária", "Prazo proposto: 11 meses após contrato e financiamento", "Área de serviço: Kasaji, Kisenge e comunidades próximas; procura e ligações por validar"],
-      whyMatch: "Consideramos este projeto uma potencial oportunidade energética Investdesco, sujeita a validação técnica, jurídica, comercial e financeira.",
+      whyMatch: "O projeto pode corresponder a um mandato de infraestrutura energética depois de os pressupostos técnicos, jurídicos, comerciais e financeiros serem atualizados e analisados de forma independente.",
     },
     "ldc-integrated-housing-drc": {
       title: "Programa LDC faseado de habitação e infraestrutura urbana",
@@ -360,18 +360,18 @@ const addedProjectTranslations: ListingTranslations = {
     "energulf-lotshi-block": {
       title: "Bloco de exploração terrestre EnerGulf Lotshi",
       sector: "Energia", country: "RD Congo", instrument: "Financiamento de exploração e avaliação; termos não divulgados", stage: "Pré-perfuração; título e aprovações atuais por confirmar", irr: "Não divulgado publicamente",
-      summary: "Apresentamos Lotshi como uma oportunidade de exploração terrestre de cerca de 506 km² no Kongo Central, entre Moanda e Lukula. Os materiais identificam sete prospetos e colocam Dallas como primeiro alvo, a 1.500–2.300 metros. Antes de introduzir financiamento, exigimos confirmar título, propriedade e aprovações, rever os dados, validar o orçamento e concluir os planos ambientais e de segurança.",
-      highlights: ["Área descrita: cerca de 506 km² no Kongo Central", "Programa histórico: 202 km de sísmica em 2010", "Sete prospetos identificados; Dallas é o primeiro alvo", "Profundidade prevista: 1.500–2.300 metros; logística via Banana, Moanda e Ntala"],
-      whyMatch: "Classificamos Lotshi como uma oportunidade energética Investdesco de alto risco para investidores com capacidade de diligência especializada.",
+      summary: "Lotshi é um dossiê de exploração terrestre anterior à perfuração no oeste da RDC, entre Moanda e Lukula. Os documentos do promotor descrevem um bloco de 506 km², 202 km de sísmica adquirida em 2010 e sete prospetos; Dallas é o primeiro poço previsto, a 1.500–2.300 metros. O dossiê não está pronto para análise financeira: título, propriedade e aprovações permanecem por confirmar, e o relatório sísmico, o orçamento de perfuração, o estudo ambiental e o plano de segurança não são públicos.",
+      highlights: ["Área declarada pelo promotor: cerca de 506 km² no oeste da RDC", "Programa histórico: 202 km de sísmica em 2010", "Sete prospetos identificados; Dallas é o primeiro alvo", "Profundidade prevista: 1.500–2.300 metros; logística via Banana, Moanda e Ntala"],
+      whyMatch: "Lotshi pode corresponder a um mandato especializado de exploração apenas depois da confirmação independente dos direitos, da evidência técnica, das salvaguardas, do orçamento e da autoridade transacional.",
     },
   },
   zh: {
     "kasaji-kisenge-solar-50mw": {
       title: "Kasaji–Kisenge 50 MW 太阳能与电网项目",
       sector: "能源", country: "刚果民主共和国", instrument: "2023 年技术方案所述项目融资需求；交易结构未披露", stage: "2023 年 8 月技术方案及预算", irr: "尚未公开披露",
-      summary: "我们展示一项能源基础设施机会，为 Kasaji、Kisenge 及周边社区建设 50 MW 光伏、储能、中压变电站、配电及公共照明。2023 年方案估算总成本为 8,621.6 万美元，合同签署及融资落实后工期 11 个月。推进前，我们要求确认土地权利、许可、公用事业安排、需求、采购价格及财务模型。",
+      summary: "Kasaji–Kisenge 方案包括 50 MW 光伏、储能、变电站、配电及公共照明。2023 年 8 月预算估算总成本约为 8,600 万美元。开展融资讨论前，项目档案需要更新供应商报价，并确认土地权利、许可、公用事业安排、需求及财务模型。",
       highlights: ["设计容量：50 MW 光伏发电、储能及电网工程", "发起方 2023 年预算约为 8,620 万美元，含税费及项目成本；当前价格仍须核实", "拟议工期：合同签署及融资落实后 11 个月", "目标服务区域：Kasaji、Kisenge 及周边社区；需求及接入须核实"],
-      whyMatch: "我们将其视为潜在 Investdesco 能源机会，但须完成最新技术、法律、商业及融资核验。",
+      whyMatch: "在技术、法律、商业及融资假设得到更新和独立审查后，该项目可能符合能源基础设施投资授权。",
     },
     "ldc-integrated-housing-drc": {
       title: "LDC 分阶段住房与城市基础设施计划",
@@ -383,9 +383,9 @@ const addedProjectTranslations: ListingTranslations = {
     "energulf-lotshi-block": {
       title: "EnerGulf Lotshi 陆上勘探区块",
       sector: "能源", country: "刚果民主共和国", instrument: "勘探及评价融资；交易条款未公开披露", stage: "钻探前阶段，须确认当前矿权及批准", irr: "尚未公开披露",
-      summary: "我们将 Lotshi 作为一项陆上勘探机会展示。资料称其位于 Kongo Central，面积约 506 平方公里，介于 Moanda 与 Lukula 之间，并识别出七个目标，Dallas 为首个钻探目标，计划深度 1,500–2,300 米。引入融资前，我们要求确认矿权、所有权及批准，审阅技术数据，独立验证预算，并完成环境及安全计划。",
-      highlights: ["资料所述面积：Kongo Central 约 506 平方公里", "历史工作：2010 年完成 202 公里地震勘测", "识别出七个目标；Dallas 为首个钻探目标", "计划深度：1,500–2,300 米；物流路线经 Banana、Moanda 及 Ntala"],
-      whyMatch: "我们将 Lotshi 归类为高风险 Investdesco 能源机会，适合具备专业尽调能力的投资者。",
+      summary: "Lotshi 是位于刚果民主共和国西部 Moanda 与 Lukula 之间的钻探前陆上勘探档案。发起方资料称区块面积为 506 平方公里，2010 年完成 202 公里地震勘测，并识别出七个目标；Dallas 是计划首钻井，深度为 1,500–2,300 米。该档案尚不足以进入融资审查：矿权、所有权及批准仍待确认，地震报告、钻探预算、环境研究及安全计划尚未公开。",
+      highlights: ["发起方所述面积：刚果民主共和国西部约 506 平方公里", "历史工作：2010 年完成 202 公里地震勘测", "识别出七个目标；Dallas 为首个钻探目标", "计划深度：1,500–2,300 米；物流路线经 Banana、Moanda 及 Ntala"],
+      whyMatch: "只有在权利、技术证据、保障措施、预算及交易权限得到独立确认后，Lotshi 才可能符合专业上游投资授权。",
     },
   },
 };

@@ -441,7 +441,7 @@ export const listings: Listing[] = [
     stage: "Technical proposal and budget dated August 2023",
     irr: "No public return projection published",
     summary:
-      "We are presenting an energy-infrastructure opportunity that combines 50 MW of photovoltaic generation and battery storage with medium-voltage substations, distribution works and public lighting for Kasaji, Kisenge and surrounding communities. The August 2023 technical proposal estimates total project cost at approximately $86 million; procurement pricing requires a current re-quote. Before advancing the opportunity, we require confirmation of land rights, permits, utility arrangements, demand, procurement pricing and the financial model.",
+      "The Kasaji–Kisenge proposal combines 50 MW of solar generation and battery storage with substations, distribution works and public lighting. Its August 2023 budget estimates a total project cost of approximately $86 million. The file needs updated supplier quotations and confirmation of land rights, permits, utility arrangements, demand and the financial model before it can support financing discussions.",
     useOfFunds:
       "Sponsor budget covers photovoltaic and battery equipment, substations, medium- and low-voltage distribution, public lighting, site works, logistics, taxes and project delivery costs.",
     verified: false,
@@ -455,7 +455,7 @@ export const listings: Listing[] = [
     ],
     docs: [],
     whyMatch:
-      "We see this as a potential Investdesco energy-infrastructure opportunity, subject to current technical, legal, commercial and financing validation.",
+      "The project may fit an energy-infrastructure mandate after its technical, legal, commercial and financing assumptions are updated and independently reviewed.",
   },
   {
     id: "ldc-integrated-housing-drc",
@@ -500,25 +500,25 @@ export const listings: Listing[] = [
     flag: "🇨🇩",
     raiseUsd: 0,
     currentCapitalAskUsd: null,
-    instrument: "Exploration and appraisal financing; transaction terms not publicly disclosed",
-    stage: "Pre-drilling opportunity requiring current title and approval confirmation",
+    instrument: "Proposed exploration and appraisal financing; amount and terms not disclosed",
+    stage: "Pre-drilling; current title and approvals unconfirmed",
     irr: "No public return projection published",
     summary:
-      "We are presenting the Lotshi opportunity as an onshore exploration asset covering an area described as approximately 506 km² in Kongo Central Province, Democratic Republic of the Congo, between Moanda and Lukula. Available materials identify seven prospects from historical seismic work and position Dallas as the first drilling target, at a planned depth of 1,500–2,300 metres. Before introducing financing, we require confirmation of current licence standing, ownership and transfer approvals, access to the underlying seismic and certification reports, an independently reviewed drilling budget and a complete environmental and safety plan.",
+      "Lotshi is a pre-drilling onshore exploration file in western DRC, between Moanda and Lukula. Sponsor material describes a 506 km² block, 202 km of seismic acquired in 2010 and seven prospects, with Dallas identified as the first planned well at 1,500–2,300 metres. The file is not ready for financing review: current title, ownership and transfer approvals remain unconfirmed, and the underlying seismic report, drilling budget, environmental study and safety plan are not public.",
     useOfFunds:
-      "Exploration and appraisal capital is expected to support legal and regulatory completion, technical-data review, site preparation, access and logistics, drilling of the Dallas prospect, testing, environmental and safety work, and contingency. A current itemised financing requirement is not publicly disclosed.",
+      "Proposed uses include legal and regulatory work, technical review, site preparation, logistics, drilling and testing of the Dallas prospect, environmental and safety work, and contingency. No current itemised capital requirement is public.",
     verified: false,
     governmentBacked: false,
     scores: { match: 0, readiness: 31, esg: 0, risk: 85 },
     highlights: [
-      "Exploration area described in the available material: approximately 506 km² in Kongo Central Province",
+      "Sponsor-stated exploration area: approximately 506 km² in western DRC",
       "Historical programme: 202 km of seismic acquisition completed in 2010",
       "Seven prospects identified in the source material; Dallas is presented as the initial drilling target",
       "Planned drilling depth: 1,500–2,300 metres, with logistics routed through Banana, Moanda and Ntala",
     ],
     docs: [],
     whyMatch:
-      "We classify Lotshi as a high-risk Investdesco energy opportunity suited to investors with upstream technical, legal, environmental and frontier-market diligence capability.",
+      "Lotshi may fit a specialist upstream mandate only after current rights, technical evidence, safeguards, budget and transaction authority are independently confirmed.",
   },
 ];
 
