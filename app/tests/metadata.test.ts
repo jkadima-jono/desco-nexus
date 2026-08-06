@@ -26,6 +26,16 @@ test("opportunity metadata describes preparation files in every language", () =>
   }
 });
 
+test("project metadata sentence fragments are localized", () => {
+  const spanish = investmentUi("es").project;
+  const portuguese = investmentUi("pt").project;
+
+  assert.equal(spanish.opportunityIn, "oportunidad en");
+  assert.equal(spanish.capitalNotDisclosed, "necesidad de capital no divulgada públicamente");
+  assert.equal(portuguese.opportunityIn, "oportunidade em");
+  assert.equal(portuguese.capitalNotDisclosed, "necessidade de capital não divulgada publicamente");
+});
+
 test("about and diligence publish canonical and social metadata", () => {
   for (const page of ["about", "diligence"] as const) {
     const metadata = getMarketingMetadata("en", page);

@@ -1,4 +1,4 @@
-export {};
+import { PUBLIC_OPPORTUNITY_IDS } from "../src/lib/public-listings";
 
 async function main() {
 
@@ -26,9 +26,7 @@ const publicRoutes = [
   "/resources",
   "/sponsors",
   "/trust",
-  "/project/kasaji-kisenge-solar-50mw",
-  "/project/energulf-lotshi-block",
-  "/project/ldc-integrated-housing-drc",
+  ...PUBLIC_OPPORTUNITY_IDS.map((id) => `/project/${id}`),
   "/login",
   "/signup",
 ];

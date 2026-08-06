@@ -125,12 +125,12 @@ const zh: InvestmentUi = {
 };
 
 const dictionaries = { en, fr, es, pt, zh } satisfies Record<Locale, InvestmentUi>;
-const projectFinanceLabels: Record<Locale, Pick<InvestmentUi["project"], "capitalSought" | "programmeAllocation" | "returnInformation">> = {
-  en: { capitalSought: "Project capital sought", programmeAllocation: "Programme allocation, not a project-specific ask", returnInformation: "Return information" },
-  fr: { capitalSought: "Capital recherché pour le projet", programmeAllocation: "Allocation de programme, non spécifique au projet", returnInformation: "Informations de rendement" },
-  es: { capitalSought: "Capital solicitado para el proyecto", programmeAllocation: "Asignación del programa, no específica del proyecto", returnInformation: "Información de rendimiento" },
-  pt: { capitalSought: "Capital procurado para o projeto", programmeAllocation: "Alocação do programa, não específica do projeto", returnInformation: "Informação de retorno" },
-  zh: { capitalSought: "项目融资需求", programmeAllocation: "项目群资金分配，并非单一项目融资需求", returnInformation: "回报信息" },
+const projectFinanceLabels: Record<Locale, Pick<InvestmentUi["project"], "capitalSought" | "programmeAllocation" | "returnInformation" | "sought" | "capitalNotDisclosed" | "opportunityIn">> = {
+  en: { capitalSought: "Project capital sought", programmeAllocation: "Programme allocation, not a project-specific ask", returnInformation: "Return information", sought: "sought", capitalNotDisclosed: "capital requirement not publicly disclosed", opportunityIn: "opportunity in" },
+  fr: { capitalSought: "Capital recherché pour le projet", programmeAllocation: "Allocation de programme, non spécifique au projet", returnInformation: "Informations de rendement", sought: "recherchés", capitalNotDisclosed: "besoin en capital non communiqué publiquement", opportunityIn: "opportunité en" },
+  es: { capitalSought: "Capital solicitado para el proyecto", programmeAllocation: "Asignación del programa, no específica del proyecto", returnInformation: "Información de rendimiento", sought: "solicitado", capitalNotDisclosed: "necesidad de capital no divulgada públicamente", opportunityIn: "oportunidad en" },
+  pt: { capitalSought: "Capital procurado para o projeto", programmeAllocation: "Alocação do programa, não específica do projeto", returnInformation: "Informação de retorno", sought: "procurado", capitalNotDisclosed: "necessidade de capital não divulgada publicamente", opportunityIn: "oportunidade em" },
+  zh: { capitalSought: "项目融资需求", programmeAllocation: "项目群资金分配，并非单一项目融资需求", returnInformation: "回报信息", sought: "融资", capitalNotDisclosed: "融资需求尚未公开披露", opportunityIn: "投资机会，地区：" },
 };
 
 const preparationSurfaceLabels: Record<Locale, Pick<InvestmentUi["opportunities"], "metadataTitle" | "metadataDescription" | "browse" | "result">> = {
