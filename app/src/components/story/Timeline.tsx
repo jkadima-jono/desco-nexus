@@ -3,7 +3,7 @@ import Reveal from "./Reveal";
 
 export default function Timeline({ milestones, pendingLabel = "In progress" }: { milestones: Milestone[]; pendingLabel?: string }) {
   return (
-    <ol className="relative border-l-2 border-charcoal/10 ml-3 space-y-8">
+    <ol className="relative ml-3 list-none space-y-8 border-l-2 border-charcoal/10">
       {milestones.map((m, i) => (
         <Reveal key={m.year} delay={i * 100}>
           <li className="ml-6 relative">

@@ -5,7 +5,7 @@ import { prisma, toListing } from "@/lib/db";
 import { getLocale } from "@/lib/i18n-server";
 import { getPublicHero } from "@/lib/public-copy";
 import ComparisonGrid from "./ComparisonGrid";
-import { catalogueReviewNote, instrumentCategory, instrumentCategoryCopy, investmentUi, screeningReadinessCopy } from "@/lib/translations/investment-ui";
+import { catalogueReviewNote, instrumentCategory, instrumentCategoryCopy, investmentUi, readinessSummaryCopy, screeningReadinessCopy } from "@/lib/translations/investment-ui";
 import { localizeListing } from "@/lib/translations/listing-content";
 import { publicListingWhere } from "@/lib/public-listings";
 import { t } from "@/lib/i18n";
@@ -14,6 +14,7 @@ import { openSignupConfig } from "@/lib/openSignup";
 import { accountCopy } from "@/lib/translations/account";
 import { releaseReadinessCopy } from "@/lib/translations/release-readiness";
 import { isDescoRelatedOpportunity } from "@/lib/data";
+import { getInvestmentEvidence, screeningReadiness } from "@/lib/investment-evidence";
 
 export const dynamic = "force-dynamic";
 
@@ -112,6 +113,9 @@ export default async function Opportunities({ searchParams }: { searchParams: Pr
   const hasDifferentiatingReviewStatus = reviewStatuses.size > 1;
   const commonReviewStatus = allListings[0]?.verified ?? false;
   const hasDisclosedCapitalAsk = allListings.some((item) => (item.currentCapitalAskUsd ?? 0) > 0);
+  const readyCount = allListings.filter((item) =>
+    screeningReadiness(getInvestmentEvidence(item), item.currentCapitalAskUsd).ready
+  ).length;
 
   let listings = allListings.filter((item) => {
     if (sector !== "All" && item.sector !== sector) return false;
@@ -183,6 +187,9 @@ export default async function Opportunities({ searchParams }: { searchParams: Pr
           <div className="mt-5 max-w-4xl">
             <QuietNotice>{screeningStandard.rule}</QuietNotice>
           </div>
+          <p className="mt-5 text-sm font-bold text-ink">
+            {readinessSummaryCopy(locale, readyCount, allListings.length - readyCount)}
+          </p>
           {!hasDifferentiatingReviewStatus && allListings.length > 0 && (
             <div className="mt-5 max-w-4xl">
               <QuietNotice>{catalogueReviewNote(locale, commonReviewStatus)}</QuietNotice>
@@ -199,7 +206,7 @@ export default async function Opportunities({ searchParams }: { searchParams: Pr
             </aside>
           )}
 
-          <form method="get" className="mt-8 rounded-lg border border-ink/10 bg-white p-4" aria-label={ui.filterLabel}>
+          {allListings.length >= 6 && <form method="get" className="mt-8 rounded-lg border border-ink/10 bg-white p-4" aria-label={ui.filterLabel}>
             <div className={`grid gap-3 ${hasDisclosedCapitalAsk ? "sm:grid-cols-3" : "sm:grid-cols-2"}`}>
               {[["sector", ui.sector, sector, sectors]].map(([name, label, value, options]) => (
                 <label key={name as string}>
@@ -290,7 +297,7 @@ export default async function Opportunities({ searchParams }: { searchParams: Pr
               <button className="button-primary" type="submit">{ui.apply}</button>
               <Link href="/opportunities" className="button-secondary">{ui.clear}</Link>
             </div>
-          </form>
+          </form>}
 
           <ComparisonGrid listings={localizedListings} locale={locale} showReviewStatus={hasDifferentiatingReviewStatus} />
 

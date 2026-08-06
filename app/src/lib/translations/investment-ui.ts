@@ -314,6 +314,17 @@ export function screeningReadinessCopy(locale: Locale) {
   return readinessLabels[locale];
 }
 
+export function readinessSummaryCopy(locale: Locale, ready: number, preparation: number): string {
+  const copy: Record<Locale, string> = {
+    en: `${ready} files currently meet the Compass Disclosure Standard · ${preparation} in preparation`,
+    fr: `${ready} dossiers respectent actuellement la norme de divulgation Compass · ${preparation} en préparation`,
+    es: `${ready} expedientes cumplen actualmente la Norma de divulgación Compass · ${preparation} en preparación`,
+    pt: `${ready} dossiês cumprem atualmente a Norma de divulgação Compass · ${preparation} em preparação`,
+    zh: `目前 ${ready} 个项目文件达到 Compass 披露标准 · ${preparation} 个准备中`,
+  };
+  return copy[locale];
+}
+
 const catalogueReviewNotes: Record<Locale, { pending: string; reviewed: string }> = {
   en: { pending: "All published briefings contain sponsor-provided information. DESCO source review is recorded; independent verification is not recorded.", reviewed: "DESCO evidence review is recorded for all published briefings." },
   fr: { pending: "Toutes les présentations publiées contiennent des informations fournies par les porteurs. L’examen des sources par DESCO est enregistré ; aucune vérification indépendante n’est enregistrée.", reviewed: "L’examen des preuves par DESCO est enregistré pour toutes les présentations publiées." },

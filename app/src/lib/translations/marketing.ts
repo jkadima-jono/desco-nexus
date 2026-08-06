@@ -150,7 +150,7 @@ export type HomeMarketingCopy = MarketingCopy["home"];
 const en: MarketingCopy = {
   home: {
     metadata: { title: "DESCO Compass — Structured DRC opportunities", description: "Review selected DRC opportunities through consistent disclosure, mandate-based screening and controlled due diligence." },
-    featured: "Featured opportunity briefing", whyFeatured: "Why featured", featuredStatus: "Current public status", featuredReason: "It is the only published opportunity supported by a dated technical proposal and preliminary budget. Selection is not an endorsement or a statement of investment readiness.", publicTeaser: "Public teaser", capitalSought: "Capital sought",
+    featured: "File in focus", whyFeatured: "Preparation gaps", featuredStatus: "Current preparation status", featuredReason: "This file is shown to make the preparation work and missing evidence visible. Selection is not an endorsement or a statement of investment readiness.", publicTeaser: "Public teaser", capitalSought: "Capital sought",
     projectStage: "Project stage", sector: "Sector", location: "Location", disclosure: "Disclosure",
     sponsorProvided: "Sponsor-provided", dataRoom: "Data room", readinessNotPublic: "Readiness not public",
     reviewOpportunity: "Review opportunity", investorBenefits: ["Reduce origination noise with a curated DRC pipeline", "Compare opportunities through one disclosure structure", "Carry source dates, evidence gaps and provenance into investment-committee screening", "Request deeper due diligence only when the public case supports it"],
@@ -324,7 +324,7 @@ const fr: MarketingCopy = {
   home: {
     ...en.home,
     metadata: { title: "DESCO Compass — Opportunités structurées en RDC", description: "Examinez des opportunités sélectionnées en RDC grâce à une divulgation cohérente, un filtrage selon le mandat et une diligence contrôlée." },
-    featured: "Présentation d’une opportunité", whyFeatured: "Pourquoi cette opportunité", featuredStatus: "Statut public actuel", featuredReason: "C’est la seule opportunité publiée étayée par une proposition technique datée et un budget préliminaire. Cette sélection ne constitue ni une approbation ni une indication de préparation à l’investissement.", publicTeaser: "Présentation publique", capitalSought: "Capital recherché", projectStage: "Stade du projet", sector: "Secteur", location: "Localisation", disclosure: "Divulgation", sponsorProvided: "Fourni par le porteur", dataRoom: "Data room", readinessNotPublic: "État de préparation non public", reviewOpportunity: "Examiner l’opportunité",
+    featured: "Dossier à suivre", whyFeatured: "Lacunes de préparation", featuredStatus: "État actuel de préparation", featuredReason: "Ce dossier est présenté pour rendre visibles le travail de préparation et les preuves manquantes. Cette sélection ne constitue ni une approbation ni une indication de préparation à l’investissement.", publicTeaser: "Présentation publique", capitalSought: "Capital recherché", projectStage: "Stade du projet", sector: "Secteur", location: "Localisation", disclosure: "Divulgation", sponsorProvided: "Fourni par le porteur", dataRoom: "Data room", readinessNotPublic: "État de préparation non public", reviewOpportunity: "Examiner l’opportunité",
     investorBenefits: ["Réduire le bruit d’origination grâce à une sélection de projets en RDC", "Comparer les opportunités selon une structure de divulgation commune", "Intégrer les dates des sources, les lacunes et la provenance au filtrage du comité d’investissement", "Demander une diligence approfondie uniquement lorsque le dossier public le justifie"],
     sponsorBenefits: ["Préparer un dossier institutionnel", "Contrôler l’accès aux informations confidentielles", "Coordonner les échanges investisseurs après examen des accès"],
     capitalRepresented: "opportunités publiques", projectCostCoverage: (_count, total) => `${total} opportunités utilisent une structure commune de divulgation publique.`, sponsorFigures: "Les besoins en capital sont présentés séparément par projet",
@@ -467,10 +467,10 @@ function completeTranslation(locale: "es" | "pt" | "zh"): MarketingCopy {
         title: tr("DESCO Compass — Oportunidades estructuradas en la RDC", "DESCO Compass — Oportunidades estruturadas na RDC", "DESCO Compass — 刚果（金）结构化投资机会"),
         description: tr("Revise oportunidades seleccionadas en la RDC mediante divulgación coherente, selección según mandato y diligencia controlada.", "Analise oportunidades selecionadas na RDC através de divulgação coerente, seleção segundo o mandato e diligência controlada.", "通过一致的信息披露、基于投资授权的筛选和受控尽调，审阅刚果民主共和国的精选项目机会。"),
       },
-      featured: tr("Ficha de oportunidad destacada", "Ficha de oportunidade em destaque", "重点项目简介"),
-      whyFeatured: tr("Por qué se destaca", "Por que está em destaque", "入选原因"),
-      featuredStatus: tr("Estado público actual", "Estado público atual", "当前公开状态"),
-      featuredReason: tr("Es la única oportunidad publicada respaldada por una propuesta técnica fechada y un presupuesto preliminar. La selección no constituye respaldo ni indica que esté lista para inversión.", "É a única oportunidade publicada sustentada por uma proposta técnica datada e um orçamento preliminar. A seleção não constitui aprovação nem indica preparação para investimento.", "这是唯一具有明确日期技术方案和初步预算支持的公开项目。入选不构成认可，也不表示项目已达到投资准备状态。"),
+      featured: tr("Expediente en foco", "Dossiê em foco", "重点档案"),
+      whyFeatured: tr("Brechas de preparación", "Lacunas de preparação", "准备缺口"),
+      featuredStatus: tr("Estado actual de preparación", "Estado atual de preparação", "当前准备状态"),
+      featuredReason: tr("Este expediente se muestra para hacer visibles el trabajo de preparación y la evidencia pendiente. La selección no constituye respaldo ni indica que esté listo para inversión.", "Este dossiê é apresentado para tornar visíveis o trabalho de preparação e as evidências pendentes. A seleção não constitui aprovação nem indica preparação para investimento.", "展示此档案是为了明确准备工作和缺失证据。入选不构成认可，也不表示项目已达到投资准备状态。"),
       publicTeaser: tr("Presentación pública", "Apresentação pública", "公开简介"),
       capitalSought: tr("Capital solicitado", "Capital procurado", "融资需求"),
       projectStage: tr("Etapa del proyecto", "Fase do projeto", "项目阶段"),

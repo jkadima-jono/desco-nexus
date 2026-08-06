@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import { metadataBaseUrl, publicPageMetadata } from "../src/lib/metadata";
 import { investmentUi } from "../src/lib/translations/investment-ui";
+import { getMarketingMetadata } from "../src/lib/translations/marketing";
 
 test("public pages publish page-specific Open Graph and Twitter metadata", () => {
   const metadata = publicPageMetadata("Water project — DESCO Compass", "A controlled project summary.", {
@@ -22,6 +23,15 @@ test("opportunity metadata describes preparation files in every language", () =>
     assert.match(metadata.metadataTitle, /Compass/);
     assert.doesNotMatch(metadata.metadataDescription, /selected DRC investment opportunities/i);
     assert.ok(metadata.metadataDescription.length > 25, locale);
+  }
+});
+
+test("about and diligence publish canonical and social metadata", () => {
+  for (const page of ["about", "diligence"] as const) {
+    const metadata = getMarketingMetadata("en", page);
+    assert.deepEqual(metadata.alternates, { canonical: `/${page}` });
+    assert.ok(metadata.openGraph?.description, `${page}: Open Graph description`);
+    assert.equal(metadata.openGraph?.url, `/${page}`);
   }
 });
 

@@ -17,8 +17,8 @@ import {
 import { projectHref } from "@/lib/project-slugs";
 import { orderPublicOpportunities, publicListingWhere } from "@/lib/public-listings";
 import { localizeListing } from "@/lib/translations/listing-content";
-import { catalogueReviewNote, materialFactCopy } from "@/lib/translations/investment-ui";
-import { getInvestmentEvidence } from "@/lib/investment-evidence";
+import { catalogueReviewNote, materialFactCopy, screeningReadinessCopy } from "@/lib/translations/investment-ui";
+import { getInvestmentEvidence, screeningReadiness } from "@/lib/investment-evidence";
 
 export const dynamic = "force-dynamic";
 
@@ -29,6 +29,8 @@ export async function generateMetadata(): Promise<Metadata> {
 
 function FeaturedBrief({ listing, copy, locale }: { listing: Listing; copy: HomeMarketingCopy; locale: Awaited<ReturnType<typeof getLocale>> }) {
   const evidence = getInvestmentEvidence(listing);
+  const readiness = screeningReadiness(evidence, listing.currentCapitalAskUsd);
+  const readinessUi = screeningReadinessCopy(locale);
   const fact = materialFactPresentation(listing, evidence.provenance.sourceDate);
   const factCopy = materialFactCopy(locale, fact.kind, fact.sourceDate);
   return (
@@ -73,6 +75,9 @@ function FeaturedBrief({ listing, copy, locale }: { listing: Listing; copy: Home
       <div className="border-t border-ink/10 bg-mist/60 px-4 py-4 text-xs leading-5 text-slate">
         <p className="font-bold text-ink">{copy.whyFeatured}</p>
         <p className="mt-1">{copy.featuredReason}</p>
+        {readiness.gaps.length > 0 && (
+          <p className="mt-2"><span className="font-semibold text-ink">{readinessUi.preparation}:</span> {readiness.gaps.map((gap) => readinessUi.gaps[gap]).join(" · ")}</p>
+        )}
         <p className="mt-2"><span className="font-semibold text-ink">{copy.featuredStatus}:</span> {listing.stage}. {factCopy.capitalGap}</p>
       </div>
       <div className="border-t border-ink/10 px-4 py-3">
@@ -182,7 +187,7 @@ export default async function Home() {
           )}
 
           <div className="mt-10 grid gap-5 lg:grid-cols-2">
-            {localizedFeatured.slice(user ? 0 : 1).map((listing, index) => (
+            {localizedFeatured.map((listing, index) => (
               <ProjectCard key={listing.id} listing={listing} index={index} locale={locale} showReviewStatus={hasDifferentiatingReviewStatus} />
             ))}
           </div>
