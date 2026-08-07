@@ -39,3 +39,13 @@ test("visible brand marks and install icons use the supplied Compass artwork", (
   assert.match(sidebar, /desco-compass-logo\.jpg/);
   assert.doesNotMatch(`${brandMark}\n${sidebar}\n${manifest}`, /desco-mark|desco-globe|desco-coin/);
 });
+
+test("production smoke checks cover release-critical public contracts", () => {
+  const smoke = readFileSync("scripts/smoke-production.ts", "utf8");
+  assert.match(smoke, /canonicalFromHtml/);
+  assert.match(smoke, /submit-project/);
+  assert.match(smoke, /not-a-real-route/);
+  assert.match(smoke, /localized 404 contract failed/);
+  assert.match(smoke, /unauthenticated request returned/);
+  assert.match(smoke, /mailto:support@desco\.global/);
+});
