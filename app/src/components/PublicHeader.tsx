@@ -33,9 +33,9 @@ export default function PublicHeader({ user, signupEnabled }: { user?: { role?: 
   const workspaceLabel = user ? account.openWorkspace : signupEnabled ? account.createAccount : t("nav.enterWorkspace");
   useModalFocus({ open, container: mobileNavigation, initialFocus: closeButton, returnFocus: menuButton, onClose: closeMenu });
 
-  const nav = (
-    <nav aria-label={t("nav.public")} className="flex flex-col gap-1 xl:flex-row xl:items-center xl:gap-1">
-      {LINKS.map(([href, labelKey]) => {
+  const navigation = (desktop = false) => (
+    <nav aria-label={t("nav.public")} className={desktop ? "flex items-center gap-1" : "flex flex-col gap-1"}>
+      {LINKS.map(([href, labelKey], index) => {
         const active = pathname.startsWith(href);
         return (
           <Link
@@ -43,7 +43,7 @@ export default function PublicHeader({ user, signupEnabled }: { user?: { role?: 
             href={href}
             onClick={() => setOpen(false)}
             aria-current={active ? "page" : undefined}
-            className={`min-h-11 whitespace-nowrap rounded-md px-2.5 py-3 text-sm font-semibold lg:min-h-0 lg:px-1.5 lg:py-2 lg:text-[11px] xl:px-2 xl:text-xs 2xl:px-2.5 2xl:text-sm ${
+            className={`${desktop && index >= 3 ? "hidden 2xl:inline-flex" : ""} min-h-11 whitespace-nowrap rounded-md px-2.5 py-3 text-sm font-semibold lg:min-h-0 lg:px-1.5 lg:py-2 lg:text-[11px] xl:px-2 xl:text-xs 2xl:px-2.5 2xl:text-sm ${
               active ? "bg-gold-soft text-ink" : "text-white/75 hover:bg-white/8 hover:text-white"
             }`}
           >
@@ -61,9 +61,9 @@ export default function PublicHeader({ user, signupEnabled }: { user?: { role?: 
           <Link href="/" className="flex shrink-0 items-center gap-3" aria-label={`DESCO Compass — ${t("common.home")}`}>
             <BrandMark compactDesktop />
           </Link>
-          <div className="hidden min-w-0 items-center gap-2 xl:flex">
-            {nav}
-            <div className="w-24 shrink-0 xl:w-28 2xl:w-32"><LanguageSwitcher /></div>
+          <div className="hidden min-w-0 items-center gap-2 lg:flex">
+            {navigation(true)}
+            <div className="hidden w-24 shrink-0 xl:block xl:w-28 2xl:w-32"><LanguageSwitcher /></div>
             {!user && signupEnabled && <Link href="/login" className="shrink-0 px-2 py-2 text-[11px] font-bold text-white underline-offset-4 hover:underline xl:text-xs">{account.signIn}</Link>}
             <Link href={workspaceHref} className="button-primary shrink-0 px-2 text-[11px] xl:px-3 xl:text-xs 2xl:px-4 2xl:text-[0.82rem]">{workspaceLabel}</Link>
           </div>
@@ -73,7 +73,7 @@ export default function PublicHeader({ user, signupEnabled }: { user?: { role?: 
             onClick={() => setOpen(true)}
             aria-expanded={open}
             aria-controls="public-mobile-navigation"
-            className="grid min-h-11 min-w-11 place-items-center rounded-lg border border-white/20 text-xl xl:hidden"
+            className="grid min-h-11 min-w-11 shrink-0 place-items-center rounded-lg border border-white/20 text-xl 2xl:hidden"
             aria-label={t("nav.open")}
           >
             ☰
@@ -81,7 +81,7 @@ export default function PublicHeader({ user, signupEnabled }: { user?: { role?: 
         </div>
       </header>
       {open && (
-        <div className="fixed inset-0 z-50 bg-black/55 xl:hidden" onClick={() => setOpen(false)}>
+        <div className="fixed inset-0 z-50 bg-black/55 2xl:hidden" onClick={() => setOpen(false)}>
           <aside
             ref={mobileNavigation}
             id="public-mobile-navigation"
@@ -104,7 +104,7 @@ export default function PublicHeader({ user, signupEnabled }: { user?: { role?: 
                 ×
               </button>
             </div>
-            {nav}
+            {navigation()}
             <div className="mt-auto space-y-3 border-t border-white/10 pt-5">
               <LanguageSwitcher />
               {!user && signupEnabled && <Link href="/login" onClick={() => setOpen(false)} className="button-on-dark w-full">{account.signIn}</Link>}

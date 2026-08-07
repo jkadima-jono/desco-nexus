@@ -337,7 +337,7 @@ export function catalogueReviewNote(locale: Locale, verified: boolean) {
   return verified ? catalogueReviewNotes[locale].reviewed : catalogueReviewNotes[locale].pending;
 }
 
-const relatedPartyDisclosures: Record<Locale, string> = {
+const sponsorRelatedPartyDisclosures: Record<Locale, string> = {
   en: "DESCO is connected to the project sponsor or development platform. DESCO review is an internal completeness review, not independent verification.",
   fr: "DESCO est lié au porteur ou à la plateforme de développement du projet. L’examen DESCO porte sur l’exhaustivité interne et ne constitue pas une vérification indépendante.",
   es: "DESCO está vinculado al promotor o a la plataforma de desarrollo del proyecto. La revisión DESCO es interna y no constituye una verificación independiente.",
@@ -345,8 +345,28 @@ const relatedPartyDisclosures: Record<Locale, string> = {
   zh: "DESCO 与项目发起方或开发平台存在关联。DESCO 审查属于内部完整性审查，不构成独立核实。",
 };
 
-export function relatedPartyDisclosure(locale: Locale): string {
-  return relatedPartyDisclosures[locale];
+const mandateRelatedPartyDisclosures: Record<Locale, string> = {
+  en: "Available source material records a DESCO mandate, facilitation or advisory relationship. The exact current scope, authority and compensation require contract-level confirmation.",
+  fr: "Les sources disponibles font état d’un mandat, d’une mission de facilitation ou d’une relation de conseil avec DESCO. Le périmètre actuel, l’autorité et la rémunération doivent être confirmés au niveau contractuel.",
+  es: "Las fuentes disponibles registran un mandato, una labor de facilitación o una relación de asesoramiento con DESCO. El alcance actual, la autoridad y la remuneración requieren confirmación contractual.",
+  pt: "As fontes disponíveis registam um mandato, uma função de facilitação ou uma relação de assessoria com a DESCO. O âmbito atual, a autoridade e a remuneração exigem confirmação contratual.",
+  zh: "现有来源记录了 DESCO 的委托、协调或顾问关系。当前职责范围、授权及报酬安排仍需通过合同文件确认。",
+};
+
+export function relatedPartyDisclosure(locale: Locale, relationshipType?: string | null): string {
+  return relationshipType?.toLowerCase().includes("mandate")
+    ? mandateRelatedPartyDisclosures[locale]
+    : sponsorRelatedPartyDisclosures[locale];
+}
+
+export function pageUpdatedLabel(locale: Locale): string {
+  return {
+    en: "Page updated",
+    fr: "Page mise à jour",
+    es: "Página actualizada",
+    pt: "Página atualizada",
+    zh: "页面更新",
+  }[locale];
 }
 
 const inaccurateInformationLabels: Record<Locale, string> = {

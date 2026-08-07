@@ -1,4 +1,5 @@
 import { DESCO_COLORS, sectorColor as colorForSector } from "./theme";
+import { relatedPartyMetadata } from "./related-parties";
 
 export type Scores = {
   match: number;      // 0-100 AI match vs. current mandate
@@ -124,9 +125,9 @@ export function controlledCapitalFields(
 }
 
 export function isDescoRelatedOpportunity(
-  listing: Pick<Listing, "org"> & Partial<Pick<Listing, "relatedParty">>,
+  listing: Pick<Listing, "id" | "org"> & Partial<Pick<Listing, "relatedParty">>,
 ): boolean {
-  return listing.relatedParty ?? /\bdesco global\b/i.test(listing.org);
+  return listing.relatedParty === true || relatedPartyMetadata(listing.id).relatedParty || /\bdesco global\b/i.test(listing.org);
 }
 
 export function capitalPresentation(

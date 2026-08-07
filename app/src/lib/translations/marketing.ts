@@ -152,7 +152,7 @@ const en: MarketingCopy = {
     featured: "File in focus", whyFeatured: "Preparation gaps", featuredStatus: "Current preparation status", featuredReason: "This file is shown to make the preparation work and missing evidence visible. Selection is not an endorsement or a statement of investment readiness.", publicTeaser: "Public teaser", capitalSought: "Capital sought",
     projectStage: "Project stage", sector: "Sector", location: "Location", disclosure: "Disclosure",
     sponsorProvided: "Sponsor-provided", dataRoom: "Data room", readinessNotPublic: "Readiness not public",
-    reviewOpportunity: "Review opportunity", investorBenefits: ["Reduce origination noise with a curated DRC pipeline", "Compare opportunities through one disclosure structure", "Carry source dates, evidence gaps and provenance into investment-committee screening", "Request deeper due diligence only when the public case supports it"],
+    reviewOpportunity: "Review opportunity", investorBenefits: ["Reduce origination noise with selected DRC preparation files", "Compare opportunities through one disclosure structure", "Carry source dates, evidence gaps and provenance into investment-committee screening", "Request deeper due diligence only when the public case supports it"],
     sponsorBenefits: ["Prepare an institutional listing", "Control access to confidential information", "Coordinate investor engagement following access review"],
     capitalRepresented: "public opportunities", projectCostCoverage: (_count, total) => `${total} opportunities use a common public-disclosure structure.`, sponsorFigures: "Capital requirements are shown separately by project",
     processEyebrow: "Investor due diligence pathway", processTitle: "A controlled path from screening to deeper review.",
@@ -222,7 +222,7 @@ const en: MarketingCopy = {
     sectionEyebrow: "Investor operating model", sectionTitle: "Review opportunities against defined mandate criteria.",
     cards: [
       { title: "Reduce origination noise", body: "Start with comparable public briefings, named sponsors and visible information gaps before allocating analyst time." },
-      { title: "Prepare an IC-ready screening record", body: "Retain source dates, disclosure status and mandate-fit criteria in a consistent review format." },
+      { title: "Prepare a preliminary screening record", body: "Retain source dates, disclosure status and mandate-fit criteria in a consistent review format." },
       { title: "Control the cost of deeper diligence", body: "Request restricted material and sponsor engagement only when the public case supports further work." },
     ],
     steps: [
@@ -380,7 +380,7 @@ const fr: MarketingCopy = {
     matchingNote: "Le rapprochement utilise les champs divulgués et des critères déterministes. Le critère de ticket ne s’applique que lorsqu’un besoin actuel en capital est communiqué. Il s’agit d’un outil de filtrage, pas d’un conseil en investissement.",
     previewCopy: { title: "Tester les dossiers en préparation", instruction: "Choisissez des critères pour voir quels dossiers publics restent dans le périmètre.", sector: "Secteur", stage: "Stade du projet", instrument: "Instrument", all: "Tous", resultOne: "{count} dossier correspond", resultMany: "{count} dossiers correspondent", empty: "Aucun dossier en préparation ne correspond à cette combinaison.", capitalNote: "Le filtrage par ticket est indisponible car aucun dossier public ne communique actuellement un besoin en capital. Une donnée manquante n’est pas traitée comme une correspondance.", review: "Examiner" },
     sectionEyebrow: "Modèle opérationnel investisseur", sectionTitle: "Examiner les opportunités selon des critères de mandat définis.",
-    cards: [{ title: "Réduire le bruit d’origination", body: "Commencer par des présentations comparables, des porteurs identifiés et des lacunes visibles avant de mobiliser les analystes." }, { title: "Préparer une note de filtrage pour le comité", body: "Conserver les dates des sources, le statut de divulgation et les critères d’adéquation au mandat dans un format cohérent." }, { title: "Maîtriser le coût de la diligence approfondie", body: "Demander les documents restreints et l’échange avec le porteur uniquement lorsque le dossier public justifie la suite." }],
+    cards: [{ title: "Réduire le bruit d’origination", body: "Commencer par des présentations comparables, des porteurs identifiés et des lacunes visibles avant de mobiliser les analystes." }, { title: "Préparer une note de filtrage préliminaire", body: "Conserver les dates des sources, le statut de divulgation et les critères d’adéquation au mandat dans un format cohérent." }, { title: "Maîtriser le coût de la diligence approfondie", body: "Demander les documents restreints et l’échange avec le porteur uniquement lorsque le dossier public justifie la suite." }],
     steps: [
       { title: "Définir les critères d’investissement", body: "Enregistrer secteurs, géographies, ticket, instrument, stade et exclusions." },
       { title: "Examiner les opportunités publiques", body: "Comparer thèses, besoins en capital, porteurs, risques et divulgation." },
@@ -479,7 +479,7 @@ function completeTranslation(locale: "es" | "pt" | "zh"): MarketingCopy {
       readinessNotPublic: tr("Preparación no pública", "Preparação não pública", "准备状态未公开"),
       reviewOpportunity: tr("Revisar oportunidad", "Analisar oportunidade", "查看项目"),
       investorBenefits: [
-        tr("Reducir el ruido de originación con una selección de proyectos de la RDC", "Reduzir o ruído de originação com uma seleção de projetos da RDC", "通过精选刚果民主共和国项目减少低效项目搜寻"),
+        tr("Reducir el ruido de originación con expedientes seleccionados de preparación en la RDC", "Reduzir o ruído de originação com dossiês selecionados de preparação na RDC", "通过选定的刚果民主共和国项目准备档案减少低效项目搜寻"),
         tr("Comparar oportunidades mediante una estructura común de divulgación", "Comparar oportunidades através de uma estrutura comum de divulgação", "使用统一披露结构比较项目"),
         tr("Incorporar fechas, lagunas de evidencia y procedencia al análisis del comité de inversión", "Levar datas, lacunas de evidência e proveniência para a análise do comité de investimento", "将来源日期、证据缺口和资料出处用于投委会筛选"),
         tr("Solicitar diligencia adicional solo cuando el caso público lo justifique", "Solicitar diligência adicional apenas quando o caso público o justifique", "仅在公开资料支持时申请进一步尽调"),
@@ -602,7 +602,7 @@ function translatedInvestors(locale: "es" | "pt" | "zh", tr: Tr, card: CardFacto
     sectionTitle: tr("Revise oportunidades con criterios de mandato definidos.", "Analise oportunidades com critérios de mandato definidos.", "按照明确的授权标准审阅项目。"),
     cards: [
       card("Reducir el ruido de originación", "Reduzir o ruído da originação", "减少项目搜寻噪音", "Empiece con presentaciones comparables, promotores identificados y carencias visibles antes de dedicar tiempo de análisis.", "Comece com apresentações comparáveis, promotores identificados e lacunas visíveis antes de mobilizar analistas.", "在投入分析资源前，先审阅可比较的公开简介、明确的发起方及可见的信息缺口。"),
-      card("Preparar un registro para el comité", "Preparar um registo para o comité", "形成投委会筛选记录", "Conserve fechas de fuentes, estados de divulgación y criterios de mandato en un formato coherente.", "Registe datas das fontes, estados de divulgação e critérios do mandato num formato coerente.", "以统一格式保留来源日期、披露状态及投资授权匹配标准。"),
+      card("Preparar un registro preliminar de selección", "Preparar um registo preliminar de seleção", "形成初步筛选记录", "Conserve fechas de fuentes, estados de divulgación y criterios de mandato en un formato coherente.", "Registe datas das fontes, estados de divulgação e critérios do mandato num formato coerente.", "以统一格式保留来源日期、披露状态及投资授权匹配标准。"),
       card("Controlar el coste de la diligencia", "Controlar o custo da diligência", "控制深入尽调成本", "Solicite material restringido y contacto con el promotor solo cuando el caso público justifique avanzar.", "Solicite material restrito e contacto com o promotor apenas quando o caso público justificar o avanço.", "仅在公开资料支持进一步工作时申请受限材料及与项目发起方沟通。"),
     ],
     steps: [

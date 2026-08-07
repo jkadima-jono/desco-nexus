@@ -5,12 +5,12 @@ import type { Listing } from "@/lib/data";
 import ProjectCard from "@/components/ProjectCard";
 import { useI18n } from "@/components/I18nProvider";
 
-const SUGGESTIONS = [
-  "Infrastructure in DR Congo between $20M and $100M",
-  "Agriculture in DR Congo under $10M",
-  "Mining opportunities in DR Congo",
-  "Healthcare in DR Congo under $20M",
-];
+const SUGGESTION_KEYS = [
+  "search.suggestion1",
+  "search.suggestion2",
+  "search.suggestion3",
+  "search.suggestion4",
+] as const;
 
 export default function Search() {
   const { locale, t } = useI18n();
@@ -34,7 +34,7 @@ export default function Search() {
       setOut(await res.json());
     } catch {
       setOut(null);
-      setError("Search failed — retry.");
+      setError(t("search.error"));
     } finally {
       setLoading(false);
     }
@@ -54,7 +54,7 @@ export default function Search() {
         }}
         className="flex flex-col sm:flex-row gap-3"
       >
-        <label htmlFor="investment-search" className="sr-only">Describe your investment mandate</label>
+        <label htmlFor="investment-search" className="sr-only">{t("search.label")}</label>
         <input
           id="investment-search"
           name="q"
@@ -71,15 +71,18 @@ export default function Search() {
 
       {!submitted && (
         <div className="mt-5 flex flex-wrap gap-2">
-          {SUGGESTIONS.map((sug) => (
-            <button
-              key={sug}
-              onClick={() => { setQ(sug); run(sug); }}
-              className="text-xs bg-white px-3.5 py-2 rounded-full shadow-[0_1px_3px_rgb(44_62_80/0.08)] hover:ring-2 hover:ring-gold text-charcoal/80"
-            >
-              {sug}
-            </button>
-          ))}
+          {SUGGESTION_KEYS.map((key) => {
+            const suggestion = t(key);
+            return (
+              <button
+                key={key}
+                onClick={() => { setQ(suggestion); run(suggestion); }}
+                className="text-xs bg-white px-3.5 py-2 rounded-full shadow-[0_1px_3px_rgb(44_62_80/0.08)] hover:ring-2 hover:ring-gold text-charcoal/80"
+              >
+                {suggestion}
+              </button>
+            );
+          })}
         </div>
       )}
 

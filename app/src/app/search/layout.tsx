@@ -1,10 +1,15 @@
 import type { Metadata } from "next";
+import { getLocale } from "@/lib/i18n-server";
+import { t } from "@/lib/i18n";
 
-export const metadata: Metadata = {
-  title: "Search — DESCO Compass",
-  description: "Describe an investment mandate in plain language and Compass parses sector, ticket size, and geography criteria to rank live opportunities.",
-  alternates: { canonical: "/search" },
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const locale = await getLocale();
+  return {
+    title: `${t(locale, "search.title")} — DESCO Compass`,
+    description: t(locale, "search.subtitle"),
+    robots: { index: false, follow: false },
+  };
+}
 
 export default function SearchLayout({ children }: { children: React.ReactNode }) {
   return children;

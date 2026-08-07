@@ -28,12 +28,15 @@ test("DESCO-sponsored opportunities are identifiable as related-party opportunit
   assert.ok(related);
   assert.ok(thirdParty);
   assert.equal(isDescoRelatedOpportunity(related), true);
-  assert.equal(isDescoRelatedOpportunity(thirdParty), false);
+  assert.equal(isDescoRelatedOpportunity(thirdParty), true);
 });
 
 test("related-party and institutional risk disclosures are translated", () => {
   for (const locale of ["en", "fr", "es", "pt", "zh"] as const) {
     assert.ok(relatedPartyDisclosure(locale).length > 40);
+    const mandateDisclosure = relatedPartyDisclosure(locale, "DESCO mandate, facilitation or advisory relationship");
+    assert.ok(mandateDisclosure.length > 25, locale);
+    assert.notEqual(mandateDisclosure, relatedPartyDisclosure(locale), locale);
     const controls = getMarketingCopy(locale, "trust").controls;
     assert.ok(controls.length >= 7, locale);
   }

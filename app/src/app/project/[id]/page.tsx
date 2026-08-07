@@ -1,5 +1,5 @@
 import { notFound, redirect } from "next/navigation";
-import { capitalPresentation, fmtUsd, isDescoRelatedOpportunity, materialFactPresentation } from "@/lib/data";
+import { capitalPresentation, fmtUsd, materialFactPresentation } from "@/lib/data";
 import { prisma, toListing } from "@/lib/db";
 import { UploadDoc, TeaserGenerator } from "./RoomTools";
 import Comments from "./Comments";
@@ -22,7 +22,7 @@ import { hasDataRoomAccess } from "@/lib/dataroom";
 import type { Metadata } from "next";
 import { getInvestmentEvidence, normalizeStage, summarizeEvidence } from "@/lib/investment-evidence";
 import { sectorForeground } from "@/lib/theme";
-import { inaccurateInformationLabel, investmentUi, localizedCapitalPresentation, localizedReturnValue, materialFactCopy, relatedPartyDisclosure } from "@/lib/translations/investment-ui";
+import { inaccurateInformationLabel, investmentUi, localizedCapitalPresentation, localizedReturnValue, materialFactCopy, pageUpdatedLabel, relatedPartyDisclosure } from "@/lib/translations/investment-ui";
 import { localizeInvestmentEvidence, localizeListing, organizationPresentation } from "@/lib/translations/listing-content";
 import { localizedMatchReason, matchPanelCopy } from "@/lib/translations/matching";
 import { internalProjectId, projectHref, publicProjectId } from "@/lib/project-slugs";
@@ -30,6 +30,7 @@ import { PUBLIC_LISTING_STATUS, isPublicOpportunityId, publicListingWhere } from
 import { sharedCopy } from "@/lib/translations/shared";
 import DisclosureCompleteness from "@/components/DisclosureCompleteness";
 import { publicPageMetadata } from "@/lib/metadata";
+import { relatedPartyMetadata } from "@/lib/related-parties";
 
 export const dynamic = "force-dynamic";
 
@@ -113,6 +114,7 @@ export default async function ProjectDetail({
   const evidenceSummary = summarizeEvidence(evidence);
   const materialFact = materialFactPresentation(l, evidence.provenance.sourceDate);
   const materialCopy = materialFactCopy(locale, materialFact.kind, materialFact.sourceDate);
+  const relationship = relatedPartyMetadata(l.id);
 
   const folders = [...new Set(docs.map((d) => d.folder))];
 
@@ -189,14 +191,15 @@ export default async function ProjectDetail({
             </div>
           </div>
           <div className="mt-6 flex flex-wrap gap-x-5 gap-y-2 border-t border-white/15 pt-4 text-xs text-white/70">
-            <span>{ui.lastUpdated} {new Date(row.updatedAt).toLocaleDateString(locale, { year: "numeric", month: "short", day: "numeric" })}</span>
+            <span>{pageUpdatedLabel(locale)} {new Date(row.updatedAt).toLocaleDateString(locale, { year: "numeric", month: "short", day: "numeric" })}</span>
+            <span>{ui.sourceDate}: {evidence.provenance.sourceDate}</span>
             <span>{organization?.role ?? ui.sponsor}: {l.org}</span>
             {organization?.context && <span>{organization.context}</span>}
             <span>{ui.publicRestricted}</span>
           </div>
-          {isDescoRelatedOpportunity(l) && (
+          {relationship.relatedParty && (
             <p className="mt-4 max-w-3xl border-l-2 border-gold pl-3 text-xs leading-5 text-white/75">
-              {relatedPartyDisclosure(locale)}
+              {relatedPartyDisclosure(locale, relationship.relatedPartyType)}
             </p>
           )}
         </div>

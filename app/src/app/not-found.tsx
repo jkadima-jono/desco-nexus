@@ -1,6 +1,16 @@
 import Link from "next/link";
 import { getLocale } from "@/lib/i18n-server";
 import { t } from "@/lib/i18n";
+import type { Metadata } from "next";
+
+export async function generateMetadata(): Promise<Metadata> {
+  const locale = await getLocale();
+  return {
+    title: `${t(locale, "notFound.title")} — DESCO Compass`,
+    description: t(locale, "notFound.body"),
+    robots: { index: false, follow: false },
+  };
+}
 
 export default async function NotFound() {
   const locale = await getLocale();

@@ -12,7 +12,6 @@ export const dynamic = "force-dynamic";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const base = metadataBaseUrl().origin;
-  const now = new Date();
   const listings = await prisma.listing.findMany({
     where: publicListingWhere,
     select: { id: true, updatedAt: true },
@@ -20,19 +19,17 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   return [
     ...PUBLIC_SITEMAP_ROUTES.map((route) => ({
       url: `${base}${route}`,
-      lastModified: now,
       changeFrequency: route === "" || route === "/opportunities" ? "weekly" as const : "monthly" as const,
       priority: route === "" ? 1 : 0.7,
     })),
     ...PILLARS.map((pillar) => ({
       url: `${base}/pillars/${pillar.slug}`,
-      lastModified: now,
       changeFrequency: "monthly" as const,
       priority: 0.6,
     })),
     ...listings.map((listing) => ({
       url: `${base}${projectHref(listing.id)}`,
-      lastModified: listing.updatedAt ?? now,
+      lastModified: listing.updatedAt,
       changeFrequency: "weekly" as const,
       priority: 0.8,
     })),
