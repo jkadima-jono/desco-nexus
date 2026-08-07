@@ -64,13 +64,13 @@ async function prismaDealLookup(adminCookie, listingId) {
 }
 
 // ---------- Security: unauthenticated access ----------
-test("unverified email login is disabled", async () => {
+test("email login fails closed when delivery is not configured", async () => {
   const res = await fetch(BASE + "/api/auth/login", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ email: "victim@example.com", fullName: "Impersonator" }),
   });
-  assert.equal(res.status, 410);
+  assert.equal(res.status, 503);
   assert.equal(res.headers.get("set-cookie"), null);
 });
 
@@ -113,16 +113,16 @@ test("protected pages redirect signed-out visitors to /login", async () => {
 });
 
 test("signed-out project page hides confidential material", async () => {
-  const res = await fetch(BASE + "/project/port-de-ndomba");
+  const res = await fetch(BASE + "/project/kasaji-kisenge-solar-50mw");
   assert.equal(res.status, 200);
   const html = await res.text();
-  assert.ok(!html.includes("Investdesco Confidential Investment Memorandum"), "data-room filenames must be hidden");
+  assert.ok(!html.includes("Confidential Investment Memorandum"), "data-room filenames must be hidden");
   assert.ok(!html.includes("/api/documents/"), "document URLs must be hidden");
   assert.ok(!html.includes("your mandate") || html.includes("Sign in"), "no personalization signed out");
 });
 
 test("signed-out search results carry no personalized whyMatch", async () => {
-  const res = await fetch(BASE + "/api/search?q=" + encodeURIComponent("port projects in DR Congo between $20M and $100M"));
+  const res = await fetch(BASE + "/api/search?q=" + encodeURIComponent("solar energy in DR Congo"));
   assert.equal(res.status, 200);
   const data = await res.json();
   assert.ok(data.results.length >= 1);
@@ -210,7 +210,7 @@ test("stage transitions validated against a nonexistent deal", async () => {
 test("investor match action auto-advances a deal through the pipeline forward-only", async () => {
   // This test and the next drive a real Deal through a full forward
   // pipeline (Saved -> Interested -> ... -> Passed or Withdrawn), so
-  // re-running the suite against the same dev.db without a reset finds
+  // re-running the suite against the same isolated test database without a reset finds
   // the deal already terminal. Reset first so both tests are idempotent
   // across repeated runs, not just within a single run.
   await prisma.deal.deleteMany({ where: { listingId: "port-de-kasenga" } });
