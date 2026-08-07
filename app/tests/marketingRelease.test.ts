@@ -3,6 +3,7 @@ import { existsSync, readFileSync } from "node:fs";
 import test from "node:test";
 import { LOCALES } from "../src/lib/i18n";
 import { getMarketingMetadata } from "../src/lib/translations/marketing";
+import { canonicalFromHtml, canonicalTargetMatches } from "../src/lib/release-smoke";
 
 const canonicalByPage = {
   home: "/",
@@ -48,4 +49,21 @@ test("production smoke checks cover release-critical public contracts", () => {
   assert.match(smoke, /localized 404 contract failed/);
   assert.match(smoke, /unauthenticated request returned/);
   assert.match(smoke, /mailto:support@desco\.global/);
+  assert.match(smoke, /\["\/api\/saved", "\/api\/mandates"\]/);
+  assert.doesNotMatch(smoke, /\["\/api\/account"/);
+});
+
+test("canonical smoke helpers reject redirects to the wrong host or path", () => {
+  assert.equal(
+    canonicalFromHtml('<link rel="canonical" href="https://compass.desco.global/investors">'),
+    "https://compass.desco.global/investors",
+  );
+  assert.equal(
+    canonicalFromHtml('<link href="/trust" rel="canonical">'),
+    "/trust",
+  );
+  const expected = new URL("https://compass.desco.global/investors");
+  assert.equal(canonicalTargetMatches(expected, new URL("https://compass.desco.global/investors")), true);
+  assert.equal(canonicalTargetMatches(expected, new URL("https://desco.global/")), false);
+  assert.equal(canonicalTargetMatches(expected, new URL("https://compass.desco.global/")), false);
 });

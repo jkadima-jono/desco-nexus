@@ -353,10 +353,16 @@ const mandateRelatedPartyDisclosures: Record<Locale, string> = {
   zh: "现有来源记录了 DESCO 的委托、协调或顾问关系。当前职责范围、授权及报酬安排仍需通过合同文件确认。",
 };
 
-export function relatedPartyDisclosure(locale: Locale, relationshipType?: string | null): string {
-  return relationshipType?.toLowerCase().includes("mandate")
-    ? mandateRelatedPartyDisclosures[locale]
-    : sponsorRelatedPartyDisclosures[locale];
+export function relatedPartyDisclosure(
+  locale: Locale,
+  relationshipType?: string | null,
+  approvedDisclosure?: string | null,
+): string {
+  const approved = approvedDisclosure?.trim();
+  if (locale === "en" && approved) return approved;
+  if (relationshipType?.toLowerCase().includes("mandate")) return mandateRelatedPartyDisclosures[locale];
+  if (relationshipType?.toLowerCase().match(/sponsor|development/)) return sponsorRelatedPartyDisclosures[locale];
+  return approved || sponsorRelatedPartyDisclosures[locale];
 }
 
 export function pageUpdatedLabel(locale: Locale): string {

@@ -42,6 +42,14 @@ test("related-party and institutional risk disclosures are translated", () => {
   }
 });
 
+test("approved English related-party disclosure remains the public source of truth", () => {
+  const approved = "Counsel-approved relationship wording for the published record.";
+  assert.equal(
+    relatedPartyDisclosure("en", "DESCO mandate, facilitation or advisory relationship", approved),
+    approved,
+  );
+});
+
 test("the public investor preview and conflict policy are complete in every language", () => {
   for (const locale of ["en", "fr", "es", "pt", "zh"] as const) {
     const preview = getMarketingCopy(locale, "investors").previewCopy;

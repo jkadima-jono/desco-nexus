@@ -30,7 +30,6 @@ import { PUBLIC_LISTING_STATUS, isPublicOpportunityId, publicListingWhere } from
 import { sharedCopy } from "@/lib/translations/shared";
 import DisclosureCompleteness from "@/components/DisclosureCompleteness";
 import { publicPageMetadata } from "@/lib/metadata";
-import { relatedPartyMetadata } from "@/lib/related-parties";
 
 export const dynamic = "force-dynamic";
 
@@ -86,6 +85,13 @@ export default async function ProjectDetail({
   ) {
     notFound();
   }
+  if (
+    row.publicationStatus === PUBLIC_LISTING_STATUS &&
+    row.relatedParty &&
+    !row.relatedPartyDisclosure.trim()
+  ) {
+    notFound();
+  }
   const canManageListing = canManage(user, row);
   // Presentation object: confidential fields never leave the server for
   // unauthenticated visitors, and docs/whyMatch are never serialized into
@@ -114,7 +120,6 @@ export default async function ProjectDetail({
   const evidenceSummary = summarizeEvidence(evidence);
   const materialFact = materialFactPresentation(l, evidence.provenance.sourceDate);
   const materialCopy = materialFactCopy(locale, materialFact.kind, materialFact.sourceDate);
-  const relationship = relatedPartyMetadata(l.id);
 
   const folders = [...new Set(docs.map((d) => d.folder))];
 
@@ -197,9 +202,9 @@ export default async function ProjectDetail({
             {organization?.context && <span>{organization.context}</span>}
             <span>{ui.publicRestricted}</span>
           </div>
-          {relationship.relatedParty && (
+          {row.relatedParty && (
             <p className="mt-4 max-w-3xl border-l-2 border-gold pl-3 text-xs leading-5 text-white/75">
-              {relatedPartyDisclosure(locale, relationship.relatedPartyType)}
+              {relatedPartyDisclosure(locale, row.relatedPartyType, row.relatedPartyDisclosure)}
             </p>
           )}
         </div>

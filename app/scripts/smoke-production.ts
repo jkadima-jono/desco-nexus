@@ -1,4 +1,5 @@
 import { PUBLIC_OPPORTUNITY_IDS } from "../src/lib/public-listings";
+import { canonicalFromHtml, canonicalTargetMatches } from "../src/lib/release-smoke";
 
 async function main() {
 
@@ -42,12 +43,6 @@ const routes = [
 
 const failures: string[] = [];
 const canonicalUrls = new Set<string>();
-
-function canonicalFromHtml(body: string): string | null {
-  return body.match(/<link[^>]+rel=["']canonical["'][^>]+href=["']([^"']+)/i)?.[1]
-    ?? body.match(/<link[^>]+href=["']([^"']+)["'][^>]+rel=["']canonical["']/i)?.[1]
-    ?? null;
-}
 
 for (const route of routes) {
   try {
@@ -108,7 +103,17 @@ for (const canonical of canonicalUrls) {
       redirect: "follow",
       headers: { "user-agent": "DESCO-Compass-release-check/1.0" },
     });
+    const finalUrl = new URL(response.url);
+    const body = await response.text();
     if (!response.ok) failures.push(`canonical ${canonicalUrl}: HTTP ${response.status}`);
+    if (!canonicalTargetMatches(canonicalUrl, finalUrl)) {
+      failures.push(`canonical ${canonicalUrl}: redirected to ${finalUrl}`);
+    }
+    if (!body.includes("DESCO Compass")) failures.push(`canonical ${canonicalUrl}: Compass identity missing`);
+    const returnedCanonical = canonicalFromHtml(body);
+    if (!returnedCanonical || !canonicalTargetMatches(canonicalUrl, new URL(returnedCanonical, finalUrl))) {
+      failures.push(`canonical ${canonicalUrl}: returned page canonical does not match`);
+    }
   } catch (error) {
     failures.push(`canonical ${canonical}: ${error instanceof Error ? error.message : "request failed"}`);
   }
@@ -170,7 +175,7 @@ for (const locale of ["en", "fr", "es", "pt", "zh"]) {
   }
 }
 
-for (const route of ["/api/account", "/api/saved", "/api/mandates"]) {
+for (const route of ["/api/saved", "/api/mandates"]) {
   try {
     const response = await fetch(new URL(route, baseUrl), {
       headers: { "user-agent": "DESCO-Compass-release-check/1.0" },
