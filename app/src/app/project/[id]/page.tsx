@@ -164,18 +164,18 @@ export default async function ProjectDetail({
             <TrustBadges locale={locale} verified={l.verified} verifiedBy={row.verifiedBy} verifiedAt={row.verifiedAt ? row.verifiedAt.toISOString() : null} verificationNote={row.verificationNote} governmentBacked={l.governmentBacked} govMechanism={row.govMechanism} sponsor={l.org} />
             <span className="ml-auto"><SectorBadge sector={sectorKey} size={34} /></span>
           </div>
-          <div className="flex flex-col lg:flex-row items-start justify-between gap-6 lg:gap-8">
-            <div>
+          <div className="grid items-start gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(16rem,22rem)] lg:gap-10">
+            <div className="min-w-0">
               <div className="mb-3 text-xs font-bold uppercase tracking-[0.18em] text-gold">
                 {ui.publicBriefing}
               </div>
-              <h1 className="font-display font-extrabold text-3xl tracking-tight max-w-xl">
+              <h1 className="max-w-xl break-words font-display text-3xl font-extrabold leading-tight tracking-tight sm:text-4xl">
                 {l.title}
               </h1>
-              <p className="text-white/70 mt-3 max-w-xl">{l.summary}</p>
+              <p className="mt-3 max-w-xl break-words text-white/70">{l.summary}</p>
             </div>
-            <div className="text-left lg:text-right shrink-0">
-              <div className={materialFact.kind === "not_disclosed" ? "text-sm font-semibold text-white/70" : "font-display text-4xl font-extrabold text-gold"}>
+            <div className="min-w-0 text-left lg:text-right">
+              <div className={materialFact.kind === "not_disclosed" ? "break-words text-sm font-semibold text-white/70" : materialFact.kind === "physical_scale" ? "break-words font-display text-3xl font-extrabold leading-tight text-gold sm:text-4xl" : "break-words font-display text-4xl font-extrabold leading-tight text-gold"}>
                 {materialFact.value}
               </div>
               {materialFact.kind !== "not_disclosed" && <div className="mt-1 text-xs font-semibold text-white/70">{materialCopy.label}</div>}

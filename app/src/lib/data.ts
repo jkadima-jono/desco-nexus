@@ -100,9 +100,10 @@ export function materialFactPresentation(
   if (listing.estimatedProjectCostUsd != null && listing.estimatedProjectCostUsd > 0) {
     return { kind: "estimated_cost", value: fmtUsd(listing.estimatedProjectCostUsd), sourceDate };
   }
-  const physicalScale = listing.highlights.find((highlight) =>
-    /\b\d[\d,.]*\s*(?:MW|GW|km(?:\u00b2)?|hectares?|ha|homes?|housing units?|hubs?|stations?|beds?|sites?|prospects?|wells?)\b/i.test(highlight),
-  );
+  const physicalScalePattern = /\b\d[\d,.]*\s*(?:MW|GW|km(?:\u00b2)?|hectares?|ha|homes?|housing units?|hubs?|stations?|beds?|sites?|prospects?|wells?)(?=\s|$|[.,;:)])/i;
+  const physicalScale = listing.highlights
+    .map((highlight) => highlight.match(physicalScalePattern)?.[0] ?? null)
+    .find((value): value is string => value !== null);
   if (physicalScale) {
     return { kind: "physical_scale", value: physicalScale, sourceDate };
   }

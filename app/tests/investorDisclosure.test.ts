@@ -118,7 +118,15 @@ test("material fact presentation falls back to physical scale, then a muted disc
     highlights: ["50 MW planned generation capacity"],
   });
   assert.equal(scaleFact.kind, "physical_scale");
-  assert.equal(scaleFact.value, "50 MW planned generation capacity");
+  assert.equal(scaleFact.value, "50 MW");
+
+  const longScaleFact = materialFactPresentation({
+    ...base,
+    currentCapitalAskUsd: null,
+    estimatedProjectCostUsd: null,
+    highlights: ["Exploration area described in the available material: approximately 506 km² in western DRC"],
+  });
+  assert.equal(longScaleFact.value, "506 km²");
 
   const missingFact = materialFactPresentation({
     ...base,
