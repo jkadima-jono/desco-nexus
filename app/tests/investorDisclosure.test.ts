@@ -176,8 +176,8 @@ test("source dates use the document date and calculate age at render time", () =
 test("the public catalogue excludes projects with unresolved scope conflicts", () => {
   assert.deepEqual([...PUBLIC_OPPORTUNITY_IDS], [
     "kasaji-kisenge-solar-50mw",
-    "energulf-lotshi-block",
   ]);
+  assert.equal(isPublicOpportunityId("energulf-lotshi-block"), false);
   assert.equal(isPublicOpportunityId("ldc-integrated-housing-drc"), false);
   assert.equal(isPublicOpportunityId("sciress-kolwezi-12423"), false);
   assert.equal(isPublicOpportunityId("port-de-ndomba"), false);

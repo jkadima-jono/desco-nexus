@@ -15,7 +15,9 @@ test("homepage positioning retains DESCO voice in every locale", () => {
   for (const locale of Object.keys(voiceMarkers) as Locale[]) {
     assert.match(t(locale, "home.heroBody"), voiceMarkers[locale], locale);
     assert.match(t(locale, "home.opportunitiesBody"), voiceMarkers[locale], locale);
+    assert.notEqual(t(locale, "home.platform"), "", locale);
   }
+  assert.doesNotMatch(t("en", "home.platform"), /investment platform/i);
 });
 
 test("public marketing journeys retain DESCO voice in every locale", () => {
@@ -31,4 +33,12 @@ test("public marketing journeys retain DESCO voice in every locale", () => {
 test("Chinese workspace copy does not inherit the English teaser explanation", () => {
   assert.notEqual(t("zh", "project.teaserHint"), t("en", "project.teaserHint"));
   assert.match(t("zh", "project.teaserHint"), /[\u3400-\u9fff]/);
+});
+
+test("the commercial model leads with sponsor preparation in every locale", () => {
+  for (const locale of Object.keys(voiceMarkers) as Locale[]) {
+    const pricing = getMarketingCopy(locale, "pricing");
+    assert.match(pricing.paths[0].audience, /Project sponsors|Porteurs|Promotores|项目发起方/i, locale);
+    assert.ok(pricing.pathsTitle.length > 8, locale);
+  }
 });

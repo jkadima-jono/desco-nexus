@@ -316,7 +316,11 @@ export default async function ProjectDetail({
           )}
 
           <div id="project-photos" className="scroll-mt-6">
-            <PhotoGallery listingId={l.id} photos={l.photos ?? []} canUpload={canManageListing} />
+            <PhotoGallery
+              listingId={l.id}
+              photos={(l.photos ?? []).filter((photo) => !photo.isExample)}
+              canUpload={canManageListing}
+            />
           </div>
 
           <section id="data-room" className="scroll-mt-6 bg-white rounded-2xl p-6 shadow-[0_1px_3px_rgb(44_62_80/0.08)]">

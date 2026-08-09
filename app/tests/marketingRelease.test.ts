@@ -41,6 +41,16 @@ test("visible brand marks and install icons use the supplied Compass artwork", (
   assert.doesNotMatch(`${brandMark}\n${sidebar}\n${manifest}`, /desco-mark|desco-globe|desco-coin/);
 });
 
+test("public navigation promotes preparation resources and public files do not fall back to concept art", () => {
+  const header = readFileSync("src/components/PublicHeader.tsx", "utf8");
+  const heroVisual = readFileSync("src/components/HeroVisual.tsx", "utf8");
+  const projectPage = readFileSync("src/app/project/[id]/page.tsx", "utf8");
+  assert.match(header, /\["\/resources", "nav\.resources"\]/);
+  assert.doesNotMatch(header, /\["\/pricing", "nav\.billing"\]/);
+  assert.match(heroVisual, /listing\.photos\?\.find\(\(item\) => !item\.isExample\)/);
+  assert.match(projectPage, /filter\(\(photo\) => !photo\.isExample\)/);
+});
+
 test("production smoke checks cover release-critical public contracts", () => {
   const smoke = readFileSync("scripts/smoke-production.ts", "utf8");
   assert.match(smoke, /canonicalFromHtml/);

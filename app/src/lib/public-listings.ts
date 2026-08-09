@@ -6,7 +6,6 @@ export const PUBLIC_LISTING_STATUS = "public_teaser";
 // workspace users as projects under preparation.
 export const PUBLIC_OPPORTUNITY_IDS = [
   "kasaji-kisenge-solar-50mw",
-  "energulf-lotshi-block",
 ] as const;
 
 export const publicListingWhere = {

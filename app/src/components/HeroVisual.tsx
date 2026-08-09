@@ -78,7 +78,7 @@ export default function HeroVisual({
   const ui = investmentUi(locale).images;
   const controlledExample = exampleProjectImages(listing.id)[0];
   const photo = isPublicOpportunityId(listing.id)
-    ? controlledExample
+    ? listing.photos?.find((item) => !item.isExample)
     : listing.photos?.[0] ?? controlledExample;
   if (photo) {
     return (

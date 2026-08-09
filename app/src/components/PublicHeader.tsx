@@ -14,8 +14,7 @@ const LINKS = [
   ["/investors", "nav.forInvestors"],
   ["/sponsors", "nav.forOwners"],
   ["/diligence", "nav.howItWorks"],
-  ["/trust", "nav.trust"],
-  ["/pricing", "nav.billing"],
+  ["/resources", "nav.resources"],
 ] as const;
 
 export default function PublicHeader({ user, signupEnabled }: { user?: { role?: string } | null; signupEnabled: boolean }) {

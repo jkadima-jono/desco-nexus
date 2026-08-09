@@ -213,11 +213,11 @@ export function comparisonRegionLabel(locale: Locale): string {
 }
 
 const capitalLabels: Record<Locale, Record<CapitalPresentation["kind"], string>> = {
-  en: { current_ask: "Current capital sought", estimated_cost: "Preliminary project cost; current capital ask not publicly disclosed", not_disclosed: "Current capital ask not publicly disclosed" },
-  fr: { current_ask: "Capital actuellement recherché", estimated_cost: "Coût préliminaire du projet; besoin actuel en capital non communiqué publiquement", not_disclosed: "Besoin actuel en capital non communiqué publiquement" },
-  es: { current_ask: "Capital solicitado actualmente", estimated_cost: "Coste preliminar del proyecto; necesidad actual de capital no divulgada públicamente", not_disclosed: "Necesidad actual de capital no divulgada públicamente" },
-  pt: { current_ask: "Capital atualmente procurado", estimated_cost: "Custo preliminar do projeto; necessidade atual de capital não divulgada publicamente", not_disclosed: "Necessidade atual de capital não divulgada publicamente" },
-  zh: { current_ask: "当前融资需求", estimated_cost: "项目初步成本；当前融资需求尚未公开披露", not_disclosed: "当前融资需求尚未公开披露" },
+  en: { current_ask: "Current capital sought", estimated_cost: "Historical estimated project cost; current capital ask not publicly disclosed", not_disclosed: "Current capital ask not publicly disclosed" },
+  fr: { current_ask: "Capital actuellement recherché", estimated_cost: "Estimation historique du coût du projet; besoin actuel en capital non communiqué publiquement", not_disclosed: "Besoin actuel en capital non communiqué publiquement" },
+  es: { current_ask: "Capital solicitado actualmente", estimated_cost: "Estimación histórica del coste del proyecto; necesidad actual de capital no divulgada públicamente", not_disclosed: "Necesidad actual de capital no divulgada públicamente" },
+  pt: { current_ask: "Capital atualmente procurado", estimated_cost: "Estimativa histórica do custo do projeto; necessidade atual de capital não divulgada publicamente", not_disclosed: "Necessidade atual de capital não divulgada publicamente" },
+  zh: { current_ask: "当前融资需求", estimated_cost: "历史项目成本估算；当前融资需求尚未公开披露", not_disclosed: "当前融资需求尚未公开披露" },
 };
 
 const returnValues: Record<Locale, string> = {
@@ -243,11 +243,11 @@ export function localizedReturnValue(locale: Locale): string {
 const materialFactLabels: Record<Locale, {
   currentAsk: string; projectCost: string; projectScale: string; capitalGap: string; source: string;
 }> = {
-  en: { currentAsk: "Current capital sought", projectCost: "Preliminary project cost", projectScale: "Project scale", capitalGap: "Current capital ask not publicly disclosed", source: "source" },
-  fr: { currentAsk: "Capital actuellement recherché", projectCost: "Coût préliminaire du projet", projectScale: "Échelle du projet", capitalGap: "Besoin actuel en capital non communiqué publiquement", source: "source" },
-  es: { currentAsk: "Capital solicitado actualmente", projectCost: "Coste preliminar del proyecto", projectScale: "Escala del proyecto", capitalGap: "Necesidad actual de capital no divulgada públicamente", source: "fuente" },
-  pt: { currentAsk: "Capital atualmente procurado", projectCost: "Custo preliminar do projeto", projectScale: "Escala do projeto", capitalGap: "Necessidade atual de capital não divulgada publicamente", source: "fonte" },
-  zh: { currentAsk: "当前融资需求", projectCost: "项目初步成本", projectScale: "项目规模", capitalGap: "当前融资需求尚未公开披露", source: "来源" },
+  en: { currentAsk: "Current capital sought", projectCost: "Historical estimated project cost", projectScale: "Project scale", capitalGap: "Current capital ask not publicly disclosed", source: "source" },
+  fr: { currentAsk: "Capital actuellement recherché", projectCost: "Estimation historique du coût du projet", projectScale: "Échelle du projet", capitalGap: "Besoin actuel en capital non communiqué publiquement", source: "source" },
+  es: { currentAsk: "Capital solicitado actualmente", projectCost: "Estimación histórica del coste del proyecto", projectScale: "Escala del proyecto", capitalGap: "Necesidad actual de capital no divulgada públicamente", source: "fuente" },
+  pt: { currentAsk: "Capital atualmente procurado", projectCost: "Estimativa histórica do custo do projeto", projectScale: "Escala do projeto", capitalGap: "Necessidade atual de capital não divulgada publicamente", source: "fonte" },
+  zh: { currentAsk: "当前融资需求", projectCost: "历史项目成本估算", projectScale: "项目规模", capitalGap: "当前融资需求尚未公开披露", source: "来源" },
 };
 
 export function materialFactCopy(
@@ -314,13 +314,13 @@ export function screeningReadinessCopy(locale: Locale) {
   return readinessLabels[locale];
 }
 
-export function readinessSummaryCopy(locale: Locale, ready: number, preparation: number): string {
+export function readinessSummaryCopy(locale: Locale, _ready: number, _preparation: number): string {
   const copy: Record<Locale, string> = {
-    en: `${ready} files currently meet the Compass Disclosure Standard · ${preparation} in preparation`,
-    fr: `${ready} dossiers respectent actuellement la norme de divulgation Compass · ${preparation} en préparation`,
-    es: `${ready} expedientes cumplen actualmente la Norma de divulgación Compass · ${preparation} en preparación`,
-    pt: `${ready} dossiês cumprem atualmente a Norma de divulgação Compass · ${preparation} em preparação`,
-    zh: `目前 ${ready} 个项目文件达到 Compass 披露标准 · ${preparation} 个准备中`,
+    en: "Published files are worked examples of the Compass Disclosure Standard. A file remains in preparation until every readiness requirement is met.",
+    fr: "Les dossiers publiés sont des exemples d’application de la norme de divulgation Compass. Un dossier reste en préparation tant que toutes les exigences ne sont pas remplies.",
+    es: "Los expedientes publicados muestran cómo se aplica la Norma de divulgación Compass. Un expediente permanece en preparación hasta cumplir todos los requisitos.",
+    pt: "Os dossiês publicados mostram como a Norma de divulgação Compass é aplicada. Um dossiê permanece em preparação até cumprir todos os requisitos.",
+    zh: "已发布文件用于展示 Compass 披露标准的应用方式。在满足全部准备要求之前，文件均保持准备中状态。",
   };
   return copy[locale];
 }

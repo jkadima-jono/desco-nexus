@@ -20,10 +20,10 @@ test("DESCO self-disclosure exposes the same corporate fields in every language"
   assert.match(english.note, /must be completed before any paid engagement/i);
 });
 
-test("catalogue readiness summary displays ready and preparation counts in every language", () => {
+test("catalogue readiness summary frames public files as worked examples in every language", () => {
   for (const locale of locales) {
     const summary = readinessSummaryCopy(locale, 0, 2);
-    assert.match(summary, /0/, `${locale}: ready count`);
-    assert.match(summary, /2/, `${locale}: preparation count`);
+    assert.ok(summary.length > 20, locale);
+    assert.doesNotMatch(summary, /0\s*(?:of|sur|de|\/)|0\s*个/, `${locale}: no empty-marketplace score`);
   }
 });
