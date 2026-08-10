@@ -3,7 +3,7 @@ import Link from "next/link";
 import { PageHero, QuietNotice, SectionHeading } from "@/components/public/PublicPrimitives";
 import { prisma, toListing } from "@/lib/db";
 import { getLocale } from "@/lib/i18n-server";
-import { getPublicHero } from "@/lib/public-copy";
+import { getOpportunityHero } from "@/lib/public-copy";
 import ComparisonGrid from "./ComparisonGrid";
 import { catalogueReviewNote, instrumentCategory, instrumentCategoryCopy, investmentUi, readinessSummaryCopy, screeningReadinessCopy } from "@/lib/translations/investment-ui";
 import { localizeListing } from "@/lib/translations/listing-content";
@@ -66,7 +66,7 @@ function matchesUpdated(value: Date | undefined, band: string) {
 export default async function Opportunities({ searchParams }: { searchParams: Promise<Params> }) {
   const params = await searchParams;
   const locale = await getLocale();
-  const hero = getPublicHero(locale, "opportunities");
+  const hero = getOpportunityHero(locale);
   const ui = investmentUi(locale).opportunities;
   const account = accountCopy(locale);
   const readiness = releaseReadinessCopy(locale);

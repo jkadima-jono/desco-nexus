@@ -3,6 +3,7 @@ import test from "node:test";
 import { t, type Locale } from "../src/lib/i18n";
 import { getMarketingCopy } from "../src/lib/translations/marketing";
 import { investmentUi } from "../src/lib/translations/investment-ui";
+import { getOpportunityHero } from "../src/lib/public-copy";
 
 const voiceMarkers: Record<Locale, RegExp> = {
   en: /\b(?:We|we)\b/,
@@ -64,5 +65,12 @@ test("about and account surfaces do not revert to marketplace positioning", () =
 test("project detail headings describe preparation files in every locale", () => {
   for (const locale of Object.keys(voiceMarkers) as Locale[]) {
     assert.match(investmentUi(locale).project.publicBriefing, /preparation|préparation|preparación|preparação|准备/i, locale);
+  }
+});
+
+test("the separate catalogue hero contains only preparation-file positioning", () => {
+  for (const locale of Object.keys(voiceMarkers) as Locale[]) {
+    const hero = getOpportunityHero(locale);
+    assert.match(`${hero.eyebrow} ${hero.title} ${hero.body}`, /preparation|préparation|preparación|preparação|准备/i, locale);
   }
 });

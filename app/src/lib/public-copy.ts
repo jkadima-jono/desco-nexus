@@ -8,61 +8,46 @@ type HeroCopy = {
   secondary: string;
 };
 
-type PublicPage = "about" | "diligence" | "investors" | "opportunities" | "partners" | "pricing" | "sponsors" | "trust";
-
-const copy: Record<Locale, Record<PublicPage, HeroCopy>> = {
+// Opportunities is the only public route whose filter-led hero is maintained
+// separately. All narrative marketing pages use the governed marketing copy.
+const opportunityHero: Record<Locale, HeroCopy> = {
   en: {
-    opportunities: { eyebrow: "Current preparation files", title: "Project files under active preparation.", body: "Review the available public information, dated sources and named blocking gaps. A file remains in preparation until it passes the Compass Disclosure Standard.", primary: "Apply for investor access", secondary: "Understand the diligence process" },
-    investors: { eyebrow: "Investor pathway", title: "Find mandate fit before committing to full diligence.", body: "DESCO Compass helps institutional investors, funds, family offices, lenders and strategic capital providers screen structured opportunities and control the transition into deeper review.", primary: "Apply for investor access", secondary: "Review opportunities" },
-    sponsors: { eyebrow: "Sponsor pathway", title: "Prepare your project for serious investor review.", body: "Move from fragmented project information to a structured institutional listing, a clear public teaser and permission-controlled diligence.", primary: "Assess project readiness", secondary: "Discuss sponsor support" },
-    diligence: { eyebrow: "Controlled diligence", title: "Information access should follow a justified screening decision.", body: "DESCO Compass separates public screening information from permission-controlled financial, technical, legal and transaction material.", primary: "Review public opportunities", secondary: "Read disclosure standards" },
-    trust: { eyebrow: "Trust and disclosure architecture", title: "Clear status. Defined scope. No implied endorsement.", body: "DESCO Compass describes project information and access controls by what has actually occurred, who supplied the information and what evidence supports the status.", primary: "Read the legal methodology", secondary: "How controlled access works" },
-    about: { eyebrow: "About DESCO Global", title: "Connecting structured projects, capital and strategic partners.", body: "DESCO Global operates DESCO Compass as a project-preparation and disclosure platform focused initially on the Democratic Republic of the Congo, with the capacity to support selected African markets.", primary: "Contact DESCO Global", secondary: "Review investment pillars" },
-    partners: { eyebrow: "Advisory model", title: "Specialist work is defined by project, scope and authority.", body: "DESCO can coordinate approved specialists for project preparation, diligence and investor engagement. Affiliations are published only after appointment and publication authority are documented.", primary: "Discuss a specialist mandate", secondary: "Review the diligence model" },
-    pricing: { eyebrow: "Commercial model", title: "Institutional access should be scoped, contracted and evidence-led.", body: "DESCO Compass does not currently process payments, issue invoices or offer self-serve subscriptions. These pathways describe a proposed sales-assisted model for discussion, not binding prices or an offer.", primary: "Discuss commercial scope", secondary: "Review the investor pathway" },
+    eyebrow: "Current preparation files",
+    title: "Project files under active preparation.",
+    body: "Review the available public information, dated sources and named blocking gaps. A file remains in preparation until it passes the Compass Disclosure Standard.",
+    primary: "Apply for investor access",
+    secondary: "Understand the diligence process",
   },
   fr: {
-    opportunities: { eyebrow: "Dossiers en préparation", title: "Dossiers de projets en cours de préparation.", body: "Examinez les informations publiques, les sources datées et les blocages nommés. Un dossier reste en préparation jusqu’à ce qu’il respecte la norme de divulgation Compass.", primary: "Demander un accès investisseur", secondary: "Comprendre la diligence" },
-    investors: { eyebrow: "Parcours investisseur", title: "Évaluez l’adéquation au mandat avant d’engager une diligence complète.", body: "DESCO Compass aide les investisseurs institutionnels, fonds, family offices, prêteurs et investisseurs stratégiques à filtrer les opportunités et à contrôler le passage vers un examen approfondi.", primary: "Demander un accès investisseur", secondary: "Examiner les opportunités" },
-    sponsors: { eyebrow: "Parcours porteur de projet", title: "Préparez votre projet à un examen investisseur rigoureux.", body: "Transformez des informations fragmentées en dossier institutionnel structuré, présentation publique claire et diligence à accès contrôlé.", primary: "Évaluer la maturité du projet", secondary: "Discuter de l’accompagnement" },
-    diligence: { eyebrow: "Diligence contrôlée", title: "L’accès à l’information doit suivre une décision de filtrage justifiée.", body: "DESCO Compass sépare les informations publiques des documents financiers, techniques, juridiques et transactionnels soumis à autorisation.", primary: "Examiner les opportunités publiques", secondary: "Lire les normes de divulgation" },
-    trust: { eyebrow: "Confiance et divulgation", title: "Statut clair. Périmètre défini. Aucune approbation implicite.", body: "DESCO Compass décrit les informations et contrôles d’accès selon les actions réellement effectuées, leur source et les preuves disponibles.", primary: "Lire la méthodologie juridique", secondary: "Comprendre l’accès contrôlé" },
-    about: { eyebrow: "À propos de DESCO Global", title: "Relier projets structurés, capitaux et partenaires stratégiques.", body: "DESCO Global exploite DESCO Compass comme plateforme de préparation et de divulgation des projets, initialement centrée sur la République démocratique du Congo et certains marchés africains.", primary: "Contacter DESCO Global", secondary: "Examiner les piliers d’investissement" },
-    partners: { eyebrow: "Modèle de conseil", title: "Chaque intervention spécialisée repose sur un projet, un périmètre et une autorisation définis.", body: "DESCO peut coordonner des spécialistes approuvés pour la préparation, la diligence et les échanges investisseurs. Une affiliation n’est publiée qu’après documentation de la mission et de l’autorisation.", primary: "Discuter d’un mandat spécialisé", secondary: "Examiner le modèle de diligence" },
-    pricing: { eyebrow: "Modèle commercial", title: "L’accès institutionnel doit être défini, contractualisé et fondé sur des preuves.", body: "DESCO Compass ne traite actuellement aucun paiement, n’émet aucune facture et ne propose aucun abonnement en libre-service. Ces parcours décrivent un modèle assisté proposé à la discussion.", primary: "Discuter du périmètre commercial", secondary: "Examiner le parcours investisseur" },
+    eyebrow: "Dossiers en préparation",
+    title: "Dossiers de projets en cours de préparation.",
+    body: "Examinez les informations publiques, les sources datées et les blocages nommés. Un dossier reste en préparation jusqu’à ce qu’il respecte la norme de divulgation Compass.",
+    primary: "Demander un accès investisseur",
+    secondary: "Comprendre la diligence",
   },
   es: {
-    opportunities: { eyebrow: "Expedientes en preparación", title: "Expedientes de proyectos en preparación activa.", body: "Revise la información pública, las fuentes fechadas y los bloqueos identificados. Un expediente permanece en preparación hasta cumplir la Norma de divulgación Compass.", primary: "Solicitar acceso de inversor", secondary: "Entender la diligencia" },
-    investors: { eyebrow: "Recorrido del inversor", title: "Evalúe el encaje con el mandato antes de una diligencia completa.", body: "DESCO Compass ayuda a inversores institucionales, fondos, family offices, prestamistas y capital estratégico a filtrar oportunidades y controlar el paso a una revisión profunda.", primary: "Solicitar acceso de inversor", secondary: "Revisar oportunidades" },
-    sponsors: { eyebrow: "Recorrido del promotor", title: "Prepare su proyecto para una revisión rigurosa.", body: "Convierta información fragmentada en un expediente institucional estructurado, una presentación pública clara y diligencia con acceso controlado.", primary: "Evaluar la preparación", secondary: "Hablar sobre apoyo al promotor" },
-    diligence: { eyebrow: "Diligencia controlada", title: "El acceso a la información debe seguir una decisión de filtrado justificada.", body: "DESCO Compass separa la información pública del material financiero, técnico, jurídico y transaccional sujeto a permisos.", primary: "Revisar oportunidades públicas", secondary: "Leer las normas de divulgación" },
-    trust: { eyebrow: "Confianza y divulgación", title: "Estado claro. Alcance definido. Sin respaldo implícito.", body: "DESCO Compass describe la información y los controles de acceso según lo ocurrido, quién aportó los datos y qué evidencia respalda el estado.", primary: "Leer la metodología jurídica", secondary: "Cómo funciona el acceso controlado" },
-    about: { eyebrow: "Acerca de DESCO Global", title: "Conectar proyectos estructurados, capital y socios estratégicos.", body: "DESCO Global opera DESCO Compass como plataforma de preparación y divulgación de proyectos, centrada inicialmente en la República Democrática del Congo y mercados africanos seleccionados.", primary: "Contactar con DESCO Global", secondary: "Revisar los pilares de inversión" },
-    partners: { eyebrow: "Modelo de asesoramiento", title: "El trabajo especializado se define por proyecto, alcance y autoridad.", body: "DESCO puede coordinar especialistas aprobados para la preparación, la diligencia y la relación con inversores. Las afiliaciones solo se publican tras documentar el nombramiento y la autorización.", primary: "Analizar un mandato especializado", secondary: "Revisar el modelo de diligencia" },
-    pricing: { eyebrow: "Modelo comercial", title: "El acceso institucional debe definirse, contratarse y basarse en evidencia.", body: "DESCO Compass no procesa actualmente pagos, no emite facturas ni ofrece suscripciones autoservicio. Estos recorridos describen un modelo asistido propuesto para discusión.", primary: "Hablar del alcance comercial", secondary: "Revisar el recorrido del inversor" },
+    eyebrow: "Expedientes en preparación",
+    title: "Expedientes de proyectos en preparación activa.",
+    body: "Revise la información pública, las fuentes fechadas y los bloqueos identificados. Un expediente permanece en preparación hasta cumplir la Norma de divulgación Compass.",
+    primary: "Solicitar acceso de inversor",
+    secondary: "Entender la diligencia",
   },
   pt: {
-    opportunities: { eyebrow: "Dossiês em preparação", title: "Dossiês de projetos em preparação ativa.", body: "Analise a informação pública, as fontes datadas e os bloqueios identificados. Um dossiê permanece em preparação até cumprir a Norma de divulgação Compass.", primary: "Solicitar acesso de investidor", secondary: "Compreender a diligência" },
-    investors: { eyebrow: "Percurso do investidor", title: "Avalie o alinhamento com o mandato antes da diligência completa.", body: "A DESCO Compass ajuda investidores institucionais, fundos, family offices, credores e capital estratégico a filtrar oportunidades e controlar a transição para uma análise aprofundada.", primary: "Solicitar acesso de investidor", secondary: "Analisar oportunidades" },
-    sponsors: { eyebrow: "Percurso do promotor", title: "Prepare o seu projeto para uma análise rigorosa.", body: "Transforme informação fragmentada num dossiê institucional estruturado, numa apresentação pública clara e em diligência com acesso controlado.", primary: "Avaliar a preparação", secondary: "Discutir apoio ao promotor" },
-    diligence: { eyebrow: "Diligência controlada", title: "O acesso à informação deve seguir uma decisão de filtragem justificada.", body: "A DESCO Compass separa a informação pública do material financeiro, técnico, jurídico e transacional sujeito a autorização.", primary: "Analisar oportunidades públicas", secondary: "Ler as normas de divulgação" },
-    trust: { eyebrow: "Confiança e divulgação", title: "Estado claro. Âmbito definido. Sem aprovação implícita.", body: "A DESCO Compass descreve informações e controlos de acesso segundo o que ocorreu, quem forneceu os dados e que evidência sustenta o estado.", primary: "Ler a metodologia jurídica", secondary: "Como funciona o acesso controlado" },
-    about: { eyebrow: "Sobre a DESCO Global", title: "Ligar projetos estruturados, capital e parceiros estratégicos.", body: "A DESCO Global opera a DESCO Compass como plataforma de preparação e divulgação de projetos, inicialmente centrada na República Democrática do Congo e em mercados africanos selecionados.", primary: "Contactar a DESCO Global", secondary: "Analisar os pilares de investimento" },
-    partners: { eyebrow: "Modelo de assessoria", title: "O trabalho especializado é definido por projeto, âmbito e autoridade.", body: "A DESCO pode coordenar especialistas aprovados para preparação, diligência e contacto com investidores. As afiliações só são publicadas após documentar a nomeação e a autorização.", primary: "Discutir um mandato especializado", secondary: "Analisar o modelo de diligência" },
-    pricing: { eyebrow: "Modelo comercial", title: "O acesso institucional deve ser definido, contratado e baseado em evidência.", body: "A DESCO Compass não processa atualmente pagamentos, não emite faturas nem oferece subscrições self-service. Estes percursos descrevem um modelo assistido proposto para discussão.", primary: "Discutir o âmbito comercial", secondary: "Analisar o percurso do investidor" },
+    eyebrow: "Dossiês em preparação",
+    title: "Dossiês de projetos em preparação ativa.",
+    body: "Analise a informação pública, as fontes datadas e os bloqueios identificados. Um dossiê permanece em preparação até cumprir a Norma de divulgação Compass.",
+    primary: "Solicitar acesso de investidor",
+    secondary: "Compreender a diligência",
   },
   zh: {
-    opportunities: { eyebrow: "当前准备文件", title: "正在准备中的项目文件。", body: "请审阅公开信息、注明日期的来源及明确列出的阻碍事项。项目文件达到 Compass 披露标准前均标记为准备中。", primary: "申请投资者权限", secondary: "了解尽职调查流程" },
-    investors: { eyebrow: "投资者路径", title: "在开展全面尽调前，先判断项目是否符合投资授权。", body: "DESCO Compass 帮助机构投资者、基金、家族办公室、贷款机构和战略资本筛选结构化机会，并控制进入深入审查的过程。", primary: "申请投资者权限", secondary: "查看投资机会" },
-    sponsors: { eyebrow: "项目发起方路径", title: "为严谨的投资者审查做好项目准备。", body: "将分散的项目信息整理为结构化机构资料、清晰的公开简介和基于权限的尽职调查流程。", primary: "评估项目准备度", secondary: "讨论项目支持方案" },
-    diligence: { eyebrow: "受控尽职调查", title: "信息访问应建立在有依据的筛选决定之上。", body: "DESCO Compass 将公开筛选信息与需要权限的财务、技术、法律和交易资料分开管理。", primary: "查看公开投资机会", secondary: "阅读披露标准" },
-    trust: { eyebrow: "信任与披露架构", title: "状态清晰，范围明确，不暗示认可。", body: "DESCO Compass 根据实际完成的工作、信息提供方和支持该状态的证据，说明项目信息和访问控制。", primary: "阅读法律方法说明", secondary: "了解受控访问" },
-    about: { eyebrow: "关于 DESCO Global", title: "连接结构化项目、资本与战略合作伙伴。", body: "DESCO Global 运营 DESCO Compass 项目准备与信息披露平台，初期重点覆盖刚果民主共和国，并可支持部分非洲市场。", primary: "联系 DESCO Global", secondary: "查看投资业务支柱" },
-    partners: { eyebrow: "顾问协作模式", title: "专业工作按项目、范围和授权进行界定。", body: "DESCO 可协调获批专家参与项目准备、尽调和投资者沟通。只有在委任及发布授权形成文件后，才会公布关联关系。", primary: "讨论专项委任", secondary: "查看尽职调查模式" },
-    pricing: { eyebrow: "商业模式", title: "机构访问应明确范围、签订合同并以证据为基础。", body: "DESCO Compass 目前不处理付款、不出具发票，也不提供自助订阅。以下路径仅说明拟议的销售支持模式，不构成约束性报价或要约。", primary: "讨论商业合作范围", secondary: "查看投资者路径" },
+    eyebrow: "当前准备文件",
+    title: "正在准备中的项目文件。",
+    body: "请审阅公开信息、注明日期的来源及明确列出的阻碍事项。项目文件达到 Compass 披露标准前均标记为准备中。",
+    primary: "申请投资者权限",
+    secondary: "了解尽职调查流程",
   },
 };
 
-export function getPublicHero(locale: Locale, page: PublicPage) {
-  return copy[locale][page];
+export function getOpportunityHero(locale: Locale): HeroCopy {
+  return opportunityHero[locale];
 }
