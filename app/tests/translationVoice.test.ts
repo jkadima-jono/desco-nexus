@@ -51,3 +51,12 @@ test("opportunity metadata and image guidance match the preparation-led public p
     assert.doesNotMatch(ui.images.uploadHelp, /replaces the current|remplacera|sustituirá|substituirá|替换.*概念图/i, locale);
   }
 });
+
+test("about and account surfaces do not revert to marketplace positioning", () => {
+  for (const locale of Object.keys(voiceMarkers) as Locale[]) {
+    const about = getMarketingCopy(locale, "about");
+    assert.doesNotMatch(about.hero.body, /investment-opportunity|plateforme d.opportunités|plataforma de oportunidades|投资机会与尽调平台/i, locale);
+    assert.notEqual(t(locale, "login.tagline"), "", locale);
+  }
+  assert.doesNotMatch(t("en", "login.tagline"), /capital meets opportunity/i);
+});
