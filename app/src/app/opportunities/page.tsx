@@ -185,16 +185,16 @@ export default async function Opportunities({ searchParams }: { searchParams: Pr
             body={ui.disclosureBody}
           />
           <div className="mt-5 max-w-4xl">
-            <QuietNotice>{screeningStandard.rule}</QuietNotice>
+            <QuietNotice>
+              {screeningStandard.rule}
+              {!hasDifferentiatingReviewStatus && allListings.length > 0
+                ? ` ${catalogueReviewNote(locale, commonReviewStatus)}`
+                : ""}
+            </QuietNotice>
           </div>
           <p className="mt-5 text-sm font-bold text-ink">
             {readinessSummaryCopy(locale, readyCount, allListings.length - readyCount)}
           </p>
-          {!hasDifferentiatingReviewStatus && allListings.length > 0 && (
-            <div className="mt-5 max-w-4xl">
-              <QuietNotice>{catalogueReviewNote(locale, commonReviewStatus)}</QuietNotice>
-            </div>
-          )}
 
           {allListings.some(isDescoRelatedOpportunity) && (
             <aside className="mt-5 max-w-4xl rounded-xl border border-rust/25 bg-rust/5 p-5" aria-labelledby="related-party-disclosure">
