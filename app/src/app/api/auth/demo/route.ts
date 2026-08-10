@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
 import { createSessionToken, SESSION_COOKIE } from "@/lib/auth";
 import { isDemoAdminEnabled, isDemoAuthEnabled } from "@/lib/demoAuth";
+import { applyRateLimit, rejectUntrustedOrigin } from "@/lib/request-security";
 
 // Clearly fictional, isolated demo identities. This endpoint is available only
 // in development, preview deployments, or when explicitly enabled.
@@ -45,6 +46,10 @@ export async function POST(req: Request) {
   if (!demoEnabled) {
     return NextResponse.json({ error: "Demo authentication is disabled" }, { status: 404 });
   }
+  const originRejection = rejectUntrustedOrigin(req);
+  if (originRejection) return originRejection;
+  const limited = await applyRateLimit(req, "auth-demo-ip", 20, 15 * 60_000);
+  if (limited) return limited;
 
   let body: { persona?: string };
   try {
