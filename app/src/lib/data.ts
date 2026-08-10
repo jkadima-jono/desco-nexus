@@ -145,7 +145,7 @@ export function capitalPresentation(
   }
   if (listing.estimatedProjectCostUsd != null && listing.estimatedProjectCostUsd > 0) {
     return {
-      label: "Preliminary project cost; current capital ask not publicly disclosed",
+      label: "Historical estimated project cost; current capital ask not publicly disclosed",
       value: fmtUsd(listing.estimatedProjectCostUsd),
       includeInProjectTotal: false,
       amountUsd: listing.estimatedProjectCostUsd,

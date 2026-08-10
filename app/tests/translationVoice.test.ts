@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import { t, type Locale } from "../src/lib/i18n";
 import { getMarketingCopy } from "../src/lib/translations/marketing";
+import { investmentUi } from "../src/lib/translations/investment-ui";
 
 const voiceMarkers: Record<Locale, RegExp> = {
   en: /\b(?:We|we)\b/,
@@ -40,5 +41,13 @@ test("the commercial model leads with sponsor preparation in every locale", () =
     const pricing = getMarketingCopy(locale, "pricing");
     assert.match(pricing.paths[0].audience, /Project sponsors|Porteurs|Promotores|项目发起方/i, locale);
     assert.ok(pricing.pathsTitle.length > 8, locale);
+  }
+});
+
+test("opportunity metadata and image guidance match the preparation-led public product", () => {
+  for (const locale of Object.keys(voiceMarkers) as Locale[]) {
+    const ui = investmentUi(locale);
+    assert.match(ui.opportunities.metadataDescription, /project|projet|proyecto|projeto|项目/i, locale);
+    assert.doesNotMatch(ui.images.uploadHelp, /replaces the current|remplacera|sustituirá|substituirá|替换.*概念图/i, locale);
   }
 });
