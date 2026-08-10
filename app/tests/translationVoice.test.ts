@@ -60,3 +60,9 @@ test("about and account surfaces do not revert to marketplace positioning", () =
   }
   assert.doesNotMatch(t("en", "login.tagline"), /capital meets opportunity/i);
 });
+
+test("project detail headings describe preparation files in every locale", () => {
+  for (const locale of Object.keys(voiceMarkers) as Locale[]) {
+    assert.match(investmentUi(locale).project.publicBriefing, /preparation|préparation|preparación|preparação|准备/i, locale);
+  }
+});

@@ -12,11 +12,11 @@ export default function ErrorBoundary({
 }) {
   const { locale } = useI18n();
   const copy = {
-    en: ["Service interruption", "This page could not be loaded.", "No information was submitted. Retry the request, or return to the opportunity overview if the problem continues.", "Retry", "Review opportunities"],
-    fr: ["Interruption du service", "Cette page n’a pas pu être chargée.", "Aucune information n’a été envoyée. Réessayez ou revenez aux opportunités si le problème persiste.", "Réessayer", "Examiner les opportunités"],
-    es: ["Interrupción del servicio", "No se pudo cargar esta página.", "No se envió ninguna información. Vuelva a intentarlo o regrese a las oportunidades si el problema continúa.", "Reintentar", "Revisar oportunidades"],
-    pt: ["Interrupção do serviço", "Não foi possível carregar esta página.", "Nenhuma informação foi enviada. Tente novamente ou volte às oportunidades se o problema persistir.", "Tentar novamente", "Analisar oportunidades"],
-    zh: ["服务中断", "无法加载此页面。", "未提交任何信息。请重试；如问题持续，请返回项目机会页面。", "重试", "查看项目机会"],
+    en: ["Service interruption", "This page could not be loaded.", "No information was submitted. Retry the request, or return to the current project files if the problem continues.", "Retry", "Review project files"],
+    fr: ["Interruption du service", "Cette page n’a pas pu être chargée.", "Aucune information n’a été envoyée. Réessayez ou revenez aux dossiers de projets si le problème persiste.", "Réessayer", "Examiner les dossiers"],
+    es: ["Interrupción del servicio", "No se pudo cargar esta página.", "No se envió ninguna información. Vuelva a intentarlo o regrese a los expedientes de proyectos si el problema continúa.", "Reintentar", "Revisar expedientes"],
+    pt: ["Interrupção do serviço", "Não foi possível carregar esta página.", "Nenhuma informação foi enviada. Tente novamente ou volte aos dossiês de projetos se o problema persistir.", "Tentar novamente", "Analisar dossiês"],
+    zh: ["服务中断", "无法加载此页面。", "未提交任何信息。请重试；如问题持续，请返回当前项目文件。", "重试", "查看项目文件"],
   }[locale];
   useEffect(() => {
     console.error("Application route error", error.digest ?? error.name);
