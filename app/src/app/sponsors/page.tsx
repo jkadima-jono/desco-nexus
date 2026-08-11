@@ -11,6 +11,8 @@ import {
 import { getLocale } from "@/lib/i18n-server";
 import { getMarketingCopy, getMarketingMetadata } from "@/lib/translations/marketing";
 import { sponsorReadinessCopy } from "@/lib/translations/sponsor-readiness";
+import { pathwayCopy } from "@/lib/translations/pathways";
+import { t } from "@/lib/i18n";
 
 export async function generateMetadata(): Promise<Metadata> {
   return getMarketingMetadata(await getLocale(), "sponsors");
@@ -21,9 +23,11 @@ export default async function SponsorsPage() {
   const copy = getMarketingCopy(locale, "sponsors");
   const readiness = sponsorReadinessCopy(locale);
   const hero = copy.hero;
+  const paths = pathwayCopy(locale);
   return (
     <>
       <PageHero
+        pathTone="owner"
         eyebrow={hero.eyebrow}
         title={hero.title}
         body={hero.body}
@@ -56,8 +60,11 @@ export default async function SponsorsPage() {
           <div className="mt-8 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
             {readiness.areas.map((item) => <InstitutionalCard key={item.title} title={item.title} body={item.body} />)}
           </div>
-          <div className="mt-10"><NumberedProcess items={copy.process} /></div>
+          <div className="mt-10"><NumberedProcess items={copy.process} pathTone="owner" /></div>
           <div className="mt-8"><QuietNotice>{copy.notice}</QuietNotice></div>
+          <p className="mt-10 border-t border-ink/10 pt-7 text-sm text-slate">
+            {paths.investorCrossLink} <Link href="/investors" className="font-bold text-[#9f3025] underline underline-offset-4">{t(locale, "home.investorCta")} →</Link>
+          </p>
         </div>
       </section>
       <section className="border-t border-ink/10 bg-white py-14 lg:py-18">

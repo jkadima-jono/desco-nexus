@@ -4,6 +4,8 @@
   --color-gold: #B9964A;
   --color-gold-soft: #F3ECDD;
   --color-brandred: #C41E3A;
+  --color-investor: #C0392B;
+  --color-owner: #0E6E6B;
   --color-charcoal: #263540;
   --color-ink: #0D151C;
   --color-ink-2: #14212B;
@@ -104,6 +106,65 @@ html[lang="zh"] h4 {
 .button-secondary:hover { border-color: var(--color-gold); color: #8a6a25; }
 .button-on-dark { border: 1px solid rgb(255 255 255 / 0.28); color: white; }
 .button-on-dark:hover { border-color: rgb(255 255 255 / 0.62); background: rgb(255 255 255 / 0.08); }
+
+.path-hero {
+  --path-accent: var(--color-gold);
+  --path-accent-soft: rgb(185 150 74 / 0.18);
+}
+.path-hero-investor,
+.process-investor { --path-accent: var(--color-investor); }
+.path-hero-owner,
+.process-owner { --path-accent: var(--color-owner); }
+.path-hero-investor {
+  background:
+    radial-gradient(circle at 82% 12%, rgb(192 57 43 / 0.22), transparent 28rem),
+    linear-gradient(145deg, var(--color-ink) 0%, #241c20 66%, var(--color-ink) 100%);
+}
+.path-hero-owner {
+  background:
+    radial-gradient(circle at 82% 12%, rgb(14 110 107 / 0.24), transparent 28rem),
+    linear-gradient(145deg, var(--color-ink) 0%, #10282a 66%, var(--color-ink) 100%);
+}
+.path-accent-text { color: var(--path-accent); }
+.path-button { background: var(--path-accent); color: white; }
+.path-button:hover { background: color-mix(in srgb, var(--path-accent) 88%, white); }
+.process-investor .process-number { color: var(--color-investor); }
+.process-owner .process-number { color: var(--color-owner); }
+
+.path-card {
+  border-top: 3px solid var(--path-accent);
+  background: white;
+  box-shadow: 0 8px 30px rgb(13 21 28 / 0.045);
+}
+.path-card-investor { --path-accent: var(--color-investor); }
+.path-card-owner { --path-accent: var(--color-owner); }
+.path-card .path-label { color: var(--path-accent); }
+.path-card .path-card-cta {
+  border-color: var(--path-accent);
+  background: var(--path-accent);
+  color: white;
+}
+.path-card .path-card-cta:hover {
+  background: color-mix(in srgb, var(--path-accent) 88%, white);
+  color: white;
+}
+
+.convergence-grid {
+  display: grid;
+  gap: 1rem;
+}
+.convergence-path,
+.convergence-room {
+  border-radius: 0.65rem;
+  padding: 1.25rem;
+}
+.convergence-path { border: 1px solid rgb(13 21 28 / 0.11); background: white; }
+.convergence-investor { border-top: 3px solid var(--color-investor); }
+.convergence-owner { border-top: 3px solid var(--color-owner); }
+.convergence-room { background: var(--color-navy); color: white; }
+@media (min-width: 768px) {
+  .convergence-grid { grid-template-columns: minmax(0, 1fr) minmax(12rem, .8fr) minmax(0, 1fr); align-items: stretch; }
+}
 
 .briefing-card {
   border: 1px solid rgb(13 21 28 / 0.10);

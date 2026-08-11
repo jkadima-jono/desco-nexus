@@ -12,12 +12,12 @@ export default function BrandMark({
   return (
     <span className="inline-flex items-center gap-3">
       <Image
-        src="/brand/desco-compass-logo.jpg"
+        src="/brand/desco-coin.png"
         alt=""
         width={size}
         height={size}
         sizes={`${size}px`}
-        className="rounded-full object-cover"
+        className="object-contain"
       />
       {showName && (
         <span className={`font-display font-extrabold text-white ${compactDesktop ? "lg:hidden 2xl:inline" : ""}`}>

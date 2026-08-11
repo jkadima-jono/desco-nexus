@@ -36,9 +36,9 @@ test("visible brand marks and install icons use the supplied Compass artwork", (
   const brandMark = readFileSync("src/components/BrandMark.tsx", "utf8");
   const sidebar = readFileSync("src/components/Sidebar.tsx", "utf8");
   const manifest = readFileSync("src/app/manifest.ts", "utf8");
-  assert.match(brandMark, /desco-compass-logo\.jpg/);
-  assert.match(sidebar, /desco-compass-logo\.jpg/);
-  assert.doesNotMatch(`${brandMark}\n${sidebar}\n${manifest}`, /desco-mark|desco-globe|desco-coin/);
+  assert.match(brandMark, /desco-coin\.png/);
+  assert.match(sidebar, /desco-coin\.png/);
+  assert.doesNotMatch(`${brandMark}\n${sidebar}\n${manifest}`, /desco-mark|desco-globe/);
 });
 
 test("public navigation promotes preparation resources and public files do not fall back to concept art", () => {

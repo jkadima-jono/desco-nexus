@@ -28,13 +28,13 @@ export const metadata: Metadata = {
     siteName: "DESCO Compass",
     title: "DESCO Compass — Structured DRC project screening",
     description: "Review public DRC project records through consistent disclosure and controlled diligence.",
-    images: [{ url: "/brand/desco-compass-logo.jpg", width: 800, height: 800, alt: "Official DESCO Compass logo" }],
+    images: [{ url: "/brand/desco-coin.png", width: 400, height: 400, alt: "DESCO Compass seal" }],
   },
   twitter: {
     card: "summary",
     title: "DESCO Compass — Structured DRC project screening",
     description: "Review public DRC project records through consistent disclosure and controlled diligence.",
-    images: ["/brand/desco-compass-logo.jpg"],
+    images: ["/brand/desco-coin.png"],
   },
 };
 
@@ -53,7 +53,7 @@ export default async function RootLayout({
             "@type": "Organization",
             name: "DESCO Global",
             url: metadataBaseUrl().toString(),
-            logo: new URL("/brand/desco-compass-logo.jpg", metadataBaseUrl()).toString(),
+            logo: new URL("/brand/desco-coin.png", metadataBaseUrl()).toString(),
           },
           {
             "@context": "https://schema.org",

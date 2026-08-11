@@ -19,6 +19,7 @@ import { orderPublicOpportunities, publicListingWhere } from "@/lib/public-listi
 import { localizeListing } from "@/lib/translations/listing-content";
 import { catalogueReviewNote, materialFactCopy, screeningReadinessCopy } from "@/lib/translations/investment-ui";
 import { getInvestmentEvidence, screeningReadiness } from "@/lib/investment-evidence";
+import { pathwayCopy } from "@/lib/translations/pathways";
 
 export const dynamic = "force-dynamic";
 
@@ -93,6 +94,7 @@ export default async function Home() {
   const user = await getSessionUser();
   const locale = await getLocale();
   const copy = getMarketingCopy(locale, "home");
+  const paths = pathwayCopy(locale);
   const rows = await prisma.listing.findMany({
     where: publicListingWhere,
     include: { org: true, images: true },
@@ -131,24 +133,30 @@ export default async function Home() {
             </div>
           </section>
 
-          <section className="bg-ivory py-12">
+          <section className="bg-ivory py-12" aria-labelledby="choose-pathway">
             <div className="public-container">
+              <p className="eyebrow text-slate">{paths.forkEyebrow}</p>
+              <h2 id="choose-pathway" className="editorial-heading mt-3 text-3xl text-ink lg:text-4xl">{paths.forkTitle}</h2>
               <div className="grid gap-5 lg:grid-cols-2">
-                <article className="group border-t-2 border-ink bg-white p-7 shadow-[0_8px_30px_rgb(13_21_28/0.045)]">
-                  <p className="eyebrow text-teal">{t(locale, "nav.forInvestors")}</p>
+                <article className="path-card path-card-investor group mt-7 p-7">
+                  <p className="path-label eyebrow">{t(locale, "nav.forInvestors")}</p>
                   <h2 className="editorial-heading mt-4 text-3xl text-ink">{t(locale, "home.investorTitle")}</h2>
+                  <p className="mt-4 text-base font-semibold text-ink">{paths.investorLead}</p>
+                  <p className="mt-2 text-sm leading-6 text-slate">{paths.investorQualifier}</p>
                   <ul className="mt-5 space-y-2 text-sm text-slate">
                     {copy.investorBenefits.map((item) => <li key={item}>{item}</li>)}
                   </ul>
-                  <Link href="/investors" className="button-secondary mt-7">{t(locale, "home.investorCta")}</Link>
+                  <Link href="/investors" className="button-secondary path-card-cta mt-7">{t(locale, "home.investorCta")}</Link>
                 </article>
-                <article className="group border-t-2 border-gold bg-white p-7 shadow-[0_8px_30px_rgb(13_21_28/0.045)]">
-                  <p className="eyebrow text-gold">{t(locale, "nav.forOwners")}</p>
+                <article className="path-card path-card-owner group mt-7 p-7">
+                  <p className="path-label eyebrow">{t(locale, "nav.forOwners")}</p>
                   <h2 className="editorial-heading mt-4 text-3xl text-ink">{t(locale, "home.sponsorTitle")}</h2>
+                  <p className="mt-4 text-base font-semibold text-ink">{paths.ownerLead}</p>
+                  <p className="mt-2 text-sm leading-6 text-slate">{paths.ownerQualifier}</p>
                   <ul className="mt-5 space-y-2 text-sm text-slate">
                     {copy.sponsorBenefits.map((item) => <li key={item}>{item}</li>)}
                   </ul>
-                  <Link href="/sponsors" className="button-secondary mt-7">{t(locale, "home.sponsorCta")}</Link>
+                  <Link href="/sponsors" className="button-secondary path-card-cta mt-7">{t(locale, "home.sponsorCta")}</Link>
                 </article>
               </div>
             </div>
@@ -209,6 +217,26 @@ export default async function Home() {
               />
               <div className="mt-9"><NumberedProcess items={copy.process} /></div>
               <div className="mt-7"><Link href="/diligence" className="button-secondary">{copy.processCta}</Link></div>
+              <div className="mt-14 border-t border-ink/10 pt-12">
+                <SectionHeading eyebrow={paths.convergenceEyebrow} title={paths.convergenceTitle} body={paths.convergenceBody} />
+                <div className="convergence-grid mt-8">
+                  <article className="convergence-path convergence-investor">
+                    <p className="eyebrow text-[#9f3025]">{t(locale, "nav.forInvestors")}</p>
+                    <h3 className="mt-3 font-display text-lg font-bold text-ink">{paths.investorStep}</h3>
+                    <p className="mt-2 text-sm leading-6 text-slate">{paths.investorStepBody}</p>
+                  </article>
+                  <article className="convergence-room">
+                    <p className="eyebrow text-white/65">DESCO Compass</p>
+                    <h3 className="mt-3 font-display text-lg font-bold">{paths.room}</h3>
+                    <p className="mt-2 text-sm leading-6 text-white/72">{paths.roomBody}</p>
+                  </article>
+                  <article className="convergence-path convergence-owner">
+                    <p className="eyebrow text-[#0e6e6b]">{t(locale, "nav.forOwners")}</p>
+                    <h3 className="mt-3 font-display text-lg font-bold text-ink">{paths.ownerStep}</h3>
+                    <p className="mt-2 text-sm leading-6 text-slate">{paths.ownerStepBody}</p>
+                  </article>
+                </div>
+              </div>
             </div>
           </section>
 

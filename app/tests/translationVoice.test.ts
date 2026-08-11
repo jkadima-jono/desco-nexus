@@ -4,6 +4,7 @@ import { t, type Locale } from "../src/lib/i18n";
 import { getMarketingCopy } from "../src/lib/translations/marketing";
 import { investmentUi } from "../src/lib/translations/investment-ui";
 import { getOpportunityHero } from "../src/lib/public-copy";
+import { pathwayCopy } from "../src/lib/translations/pathways";
 
 const voiceMarkers: Record<Locale, RegExp> = {
   en: /\b(?:We|we)\b/,
@@ -20,6 +21,17 @@ test("homepage positioning retains DESCO voice in every locale", () => {
     assert.notEqual(t(locale, "home.platform"), "", locale);
   }
   assert.doesNotMatch(t("en", "home.platform"), /investment platform/i);
+});
+
+test("the two public pathways are complete in every supported language", () => {
+  for (const locale of Object.keys(voiceMarkers) as Locale[]) {
+    const paths = pathwayCopy(locale);
+    assert.ok(paths.forkTitle.length > 8, locale);
+    assert.ok(paths.investorQualifier.length > 20, locale);
+    assert.ok(paths.ownerQualifier.length > 20, locale);
+    assert.ok(paths.roomBody.length > 20, locale);
+    if (locale !== "en") assert.notEqual(paths.forkTitle, pathwayCopy("en").forkTitle, locale);
+  }
 });
 
 test("public marketing journeys retain DESCO voice in every locale", () => {

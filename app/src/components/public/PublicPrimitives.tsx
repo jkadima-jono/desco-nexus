@@ -10,6 +10,7 @@ export function PageHero({
   primaryNote,
   secondary,
   aside,
+  pathTone = "shared",
 }: {
   eyebrow: string;
   title: string;
@@ -18,9 +19,10 @@ export function PageHero({
   primaryNote?: string;
   secondary?: { href: string; label: string };
   aside?: ReactNode;
+  pathTone?: "shared" | "investor" | "owner";
 }) {
   return (
-    <header className="institutional-hero">
+    <header className={`institutional-hero path-hero path-hero-${pathTone}`}>
       <div className="public-container grid gap-10 py-14 lg:grid-cols-[minmax(0,1.15fr)_minmax(19rem,.85fr)] lg:items-center lg:py-20">
         <div>
           <nav aria-label={eyebrow} className="mb-7 flex items-center gap-2 text-xs font-semibold text-white/65">
@@ -28,7 +30,7 @@ export function PageHero({
             <span aria-hidden="true">/</span>
             <span aria-current="page" className="text-white/72">{eyebrow}</span>
           </nav>
-          <p className="eyebrow text-gold">{eyebrow}</p>
+          <p className="eyebrow path-accent-text">{eyebrow}</p>
           <h1 className="editorial-display mt-4 max-w-4xl text-4xl text-white sm:text-5xl lg:text-6xl">
             {title}
           </h1>
@@ -37,7 +39,7 @@ export function PageHero({
           </p>
           {(primary || secondary) && (
             <div className="mt-8 flex flex-wrap gap-3">
-              {primary && <Link href={primary.href} className="button-primary">{primary.label}</Link>}
+              {primary && <Link href={primary.href} className={`button-primary ${pathTone === "shared" ? "" : "path-button"}`}>{primary.label}</Link>}
               {secondary && <Link href={secondary.href} className="button-on-dark">{secondary.label}</Link>}
             </div>
           )}
@@ -81,11 +83,13 @@ export function DisclosureChip({
 
 export function NumberedProcess({
   items,
+  pathTone = "shared",
 }: {
   items: { title: string; body: string }[];
+  pathTone?: "shared" | "investor" | "owner";
 }) {
   return (
-    <ol className="process-grid list-none">
+    <ol className={`process-grid process-${pathTone} list-none`}>
       {items.map((item, index) => (
         <li key={item.title} className="process-step">
           <span className="process-number">{String(index + 1).padStart(2, "0")}</span>

@@ -102,7 +102,7 @@ export default function Sidebar({ user }: { user: SidebarUser }) {
       <div className="px-6 pt-7 pb-6">
         <div className="flex items-center gap-3">
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/brand/desco-compass-logo.jpg" alt="" className="h-11 w-11 rounded-full object-cover shadow-[0_2px_8px_rgb(184_149_61/0.5)]" />
+          <img src="/brand/desco-coin.png" alt="" className="h-11 w-11 object-contain drop-shadow-[0_2px_8px_rgb(184_149_61/0.45)]" />
           <div>
             <div className="font-display font-extrabold text-lg tracking-tight leading-tight">DESCO <span className="text-gold">Compass</span></div>
             <div className="text-[10px] text-white/50 font-body">{t("brand.tagline")}</div>

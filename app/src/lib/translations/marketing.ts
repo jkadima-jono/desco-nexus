@@ -237,8 +237,8 @@ const en: MarketingCopy = {
     applyCta: "Apply for an investor workspace",
   },
   sponsors: {
-    metadata: { title: "For project sponsors — DESCO Compass", description: "Prepare a structured project listing and manage controlled investor due diligence." },
-    hero: { eyebrow: "Project-company pathway", title: "We prepare projects for institutional investor review.", body: "We turn fragmented project information into a structured institutional listing, a clear public briefing and permission-controlled due diligence.", primary: "Assess project readiness", secondary: "Discuss project support" },
+    metadata: { title: "For project and asset owners — DESCO Compass", description: "Prepare a structured project record and manage controlled investor due diligence." },
+    hero: { eyebrow: "Project & asset owner pathway", title: "We prepare projects for institutional investor review.", body: "We turn fragmented project information into a structured institutional record, a clear public briefing and permission-controlled due diligence.", primary: "Assess project readiness", secondary: "Discuss project support" },
     framework: "Readiness framework", underReview: "Under review", required: "Required",
     readiness: ["Sponsor information", "Project structure", "Market case", "Technical readiness", "Financial model", "Legal and regulatory position", "Land and permits", "ESG and community", "Risk disclosure", "Supporting documents"],
     sectionEyebrow: "Project preparation", sectionTitle: "Structure the public case, then control the deeper review.",
@@ -395,7 +395,7 @@ const fr: MarketingCopy = {
   sponsors: {
     ...en.sponsors,
     metadata: { title: "Pour les porteurs de projet — DESCO Compass", description: "Préparer un dossier structuré et gérer une diligence investisseur contrôlée." },
-    hero: { eyebrow: "Parcours porteur de projet", title: "Préparez votre projet à un examen investisseur institutionnel.", body: "Transformez des informations fragmentées en dossier institutionnel structuré, présentation publique claire et diligence à accès contrôlé.", primary: "Évaluer la maturité du projet", secondary: "Discuter de l’accompagnement" },
+    hero: { eyebrow: "Parcours porteur de projet ou d’actif", title: "Préparez votre projet à un examen investisseur institutionnel.", body: "Nous transformons des informations fragmentées en dossier institutionnel structuré, présentation publique claire et diligence à accès contrôlé.", primary: "Évaluer la maturité du projet", secondary: "Discuter de l’accompagnement" },
     framework: "Cadre de préparation", underReview: "En cours d’examen", required: "Requis",
     readiness: ["Informations sur le porteur", "Structure du projet", "Analyse de marché", "Maturité technique", "Modèle financier", "Position juridique et réglementaire", "Terrains et permis", "ESG et communautés", "Divulgation des risques", "Documents justificatifs"],
     sectionEyebrow: "Préparation du projet", sectionTitle: "Structurez le dossier public, puis contrôlez l’examen approfondi.", sectionBody: "Le parcours couvre la préparation, la soumission, la divulgation, la fiche publique, les documents confidentiels, les décisions d’accès et les échanges investisseurs.",
@@ -621,7 +621,7 @@ function translatedInvestors(locale: "es" | "pt" | "zh", tr: Tr, card: CardFacto
 function translatedSponsors(locale: "es" | "pt" | "zh", tr: Tr, card: CardFactory, step: CardFactory): MarketingCopy["sponsors"] {
   return {
     metadata: { title: tr("Para promotores de proyectos — DESCO Compass", "Para promotores de projetos — DESCO Compass", "项目发起方 — DESCO Compass"), description: tr("Prepare una ficha estructurada y gestione una diligencia controlada.", "Prepare uma ficha estruturada e faça a gestão de uma diligência controlada.", "准备结构化项目资料并管理受控投资者尽调。") },
-    hero: { eyebrow: tr("Recorrido del promotor", "Percurso do promotor", "项目发起方路径"), title: tr("Prepare su proyecto para la revisión de inversores institucionales.", "Prepare o seu projeto para a análise de investidores institucionais.", "为机构投资者审查做好项目准备。"), body: tr("Convierta información fragmentada en una ficha institucional, una presentación pública clara y una diligencia con permisos.", "Transforme informação fragmentada numa ficha institucional, numa apresentação pública clara e numa diligência com permissões.", "将分散信息整理为机构级项目资料、清晰的公开简介和权限受控的尽调流程。"), primary: tr("Evaluar la preparación", "Avaliar a preparação", "评估项目准备度"), secondary: tr("Hablar sobre apoyo al promotor", "Discutir apoio ao promotor", "讨论项目支持") },
+    hero: { eyebrow: tr("Recorrido del propietario de proyectos y activos", "Percurso do proprietário de projetos e ativos", "项目及资产所有方路径"), title: tr("Prepare su proyecto para la revisión de inversores institucionales.", "Prepare o seu projeto para a análise de investidores institucionais.", "为机构投资者审查做好项目准备。"), body: tr("Organizamos información fragmentada en una ficha institucional, una presentación pública clara y una diligencia con permisos.", "Organizamos informação fragmentada numa ficha institucional, numa apresentação pública clara e numa diligência com permissões.", "我们将分散信息整理为机构级项目资料、清晰的公开简介和权限受控的尽调流程。"), primary: tr("Evaluar la preparación", "Avaliar a preparação", "评估项目准备度"), secondary: tr("Hablar sobre apoyo al proyecto", "Discutir apoio ao projeto", "讨论项目支持") },
     framework: tr("Marco de preparación", "Quadro de preparação", "准备度框架"),
     underReview: tr("En revisión", "Em análise", "审核中"),
     required: tr("Obligatorio", "Obrigatório", "必需"),
