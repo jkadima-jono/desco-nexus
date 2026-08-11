@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
 import { applyRateLimit, rejectUntrustedOrigin } from "@/lib/request-security";
+import { sanitizeProductEventContext, sanitizeProductEventPath } from "@/lib/product-analytics";
 
 const EVENTS = new Set([
   "page_view",
@@ -42,13 +43,8 @@ export async function POST(req: Request) {
   if (!EVENTS.has(body.event ?? "")) {
     return NextResponse.json({ error: "Unsupported event" }, { status: 400 });
   }
-  const path = body.path?.startsWith("/") ? body.path.slice(0, 240) : "/";
-  const context = Object.fromEntries(
-    Object.entries(body.context ?? {})
-      .filter(([key, value]) => key.length <= 40 && ["string", "number", "boolean"].includes(typeof value))
-      .slice(0, 10)
-      .map(([key, value]) => [key, typeof value === "string" ? value.slice(0, 120) : value]),
-  );
+  const path = sanitizeProductEventPath(body.path);
+  const context = sanitizeProductEventContext(body.context);
   await prisma.productEvent.create({
     data: { event: body.event!, path, context: JSON.stringify(context) },
   });
