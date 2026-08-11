@@ -4,6 +4,7 @@ import { getSessionUser } from "@/lib/auth";
 import { generateTeaser } from "@/lib/ai";
 import { canManageListing, forbidden } from "@/lib/authz";
 import { applyRateLimit, rejectUntrustedOrigin } from "@/lib/request-security";
+import { boundedString } from "@/lib/request-input";
 
 export async function POST(req: Request) {
   const originError = rejectUntrustedOrigin(req);
@@ -20,11 +21,12 @@ export async function POST(req: Request) {
   } catch {
     return NextResponse.json({ error: "Invalid JSON body" }, { status: 400 });
   }
-  if (!body.listingId) {
+  const listingId = boundedString(body.listingId, 100);
+  if (!listingId) {
     return NextResponse.json({ error: "listingId required" }, { status: 400 });
   }
   const row = await prisma.listing.findUnique({
-    where: { id: body.listingId },
+    where: { id: listingId },
     include: { org: true },
   });
   if (!row) {

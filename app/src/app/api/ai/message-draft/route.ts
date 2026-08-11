@@ -3,6 +3,7 @@ import { prisma } from "@/lib/db";
 import { getSessionUser } from "@/lib/auth";
 import { generateMessageDraft } from "@/lib/ai";
 import { applyRateLimit, rejectUntrustedOrigin } from "@/lib/request-security";
+import { boundedString } from "@/lib/request-input";
 
 export async function POST(req: Request) {
   const originError = rejectUntrustedOrigin(req);
@@ -19,12 +20,13 @@ export async function POST(req: Request) {
   } catch {
     return NextResponse.json({ error: "Invalid JSON body" }, { status: 400 });
   }
-  if (!body.threadId) {
+  const threadId = boundedString(body.threadId, 100);
+  if (!threadId) {
     return NextResponse.json({ error: "threadId required" }, { status: 400 });
   }
   const thread = await prisma.thread.findFirst({
-    where: { id: body.threadId, ownerId: user.id },
-    include: { messages: { orderBy: { createdAt: "asc" } } },
+    where: { id: threadId, ownerId: user.id },
+    include: { messages: { orderBy: { createdAt: "desc" }, take: 30 } },
   });
   if (!thread) {
     return NextResponse.json({ error: "Thread not found" }, { status: 404 });
@@ -33,7 +35,10 @@ export async function POST(req: Request) {
   const { draft, source } = await generateMessageDraft(
     thread.name,
     thread.org,
-    thread.messages.map((m) => ({ from: m.sender as "them" | "me" | "system", text: m.text }))
+    thread.messages.toReversed().map((m) => ({
+      from: m.sender as "them" | "me" | "system",
+      text: m.text.slice(0, 4000),
+    }))
   );
   await prisma.aiGenerationLog.create({
     data: { userId: user.id, kind: "message_draft", source, threadId: thread.id },

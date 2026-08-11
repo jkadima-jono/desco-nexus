@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
 import { getSessionUser } from "@/lib/auth";
 import { applyRateLimit, rejectUntrustedOrigin } from "@/lib/request-security";
+import { boundedString } from "@/lib/request-input";
 
 export async function POST(req: Request) {
   const originError = rejectUntrustedOrigin(req);
@@ -18,8 +19,8 @@ export async function POST(req: Request) {
   } catch {
     return NextResponse.json({ error: "Invalid JSON body" }, { status: 400 });
   }
-  const { threadId, text } = body;
-  const trimmed = text?.trim();
+  const threadId = boundedString(body.threadId, 100);
+  const trimmed = boundedString(body.text, 4001);
   if (!threadId || !trimmed) {
     return NextResponse.json(
       { error: "threadId and non-empty text required" },

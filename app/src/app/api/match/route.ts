@@ -8,6 +8,7 @@ import { institutionalAccessDecision } from "@/lib/institutional-access";
 import { DEMO_NDA_HASH, DEMO_NDA_VERSION, RESTRICTED_ACCESS_NOTICE_VERSION } from "@/lib/restricted-access";
 import { Prisma } from "@prisma/client";
 import { applyRateLimit, rejectUntrustedOrigin } from "@/lib/request-security";
+import { boundedString } from "@/lib/request-input";
 
 const ACTIONS = new Set(["interested", "pass", "saved", "follow", "info_requested", "dataroom_requested"]);
 
@@ -38,14 +39,15 @@ export async function POST(req: Request) {
   } catch {
     return NextResponse.json({ error: "Invalid JSON body" }, { status: 400 });
   }
-  const { listingId, action } = body;
+  const listingId = boundedString(body.listingId, 100);
+  const action = boundedString(body.action, 40);
   if (!listingId || !action || !ACTIONS.has(action)) {
     return NextResponse.json(
       { error: "listingId and action (interested|pass|saved|follow|info_requested|dataroom_requested) required" },
       { status: 400 }
     );
   }
-  const requestKey = body.requestKey?.trim();
+  const requestKey = boundedString(body.requestKey, 101);
   if (!requestKey || requestKey.length < 16 || requestKey.length > 100) {
     return NextResponse.json({ error: "A valid requestKey is required." }, { status: 400 });
   }
