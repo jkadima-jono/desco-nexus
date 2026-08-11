@@ -44,7 +44,10 @@ export async function revokeCurrentSession(): Promise<void> {
       audience: SESSION_AUDIENCE,
     });
     if (typeof payload.jti === "string") {
-      await prisma.session.update({ where: { id: payload.jti }, data: { revokedAt: new Date() } });
+      await prisma.session.updateMany({
+        where: { id: payload.jti, revokedAt: null },
+        data: { revokedAt: new Date() },
+      });
     }
   } catch {
     // Invalid/expired token — nothing to revoke.

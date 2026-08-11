@@ -79,3 +79,9 @@ test("global middleware prevents caching of every API response", () => {
   assert.match(middleware, /secureApiResponse\(\s*NextResponse\.next/);
   assert.match(middleware, /secureApiResponse\(\s*NextResponse\.json/);
 });
+
+test("logout revocation remains idempotent when a session is already absent or revoked", () => {
+  const auth = readFileSync(new URL("../src/lib/auth.ts", import.meta.url), "utf8");
+  assert.match(auth, /session\.updateMany\(/);
+  assert.match(auth, /where:\s*\{ id: payload\.jti, revokedAt: null \}/);
+});
