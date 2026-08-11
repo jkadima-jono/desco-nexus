@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
 import { getSessionUser } from "@/lib/auth";
 import { effectivePlan } from "@/lib/plans";
+import { boundedString } from "@/lib/request-input";
 
 export async function GET() {
   const user = await getSessionUser();
@@ -22,7 +23,7 @@ export async function POST(req: Request) {
   } catch {
     return NextResponse.json({ error: "Invalid JSON body" }, { status: 400 });
   }
-  const name = body.name?.trim().slice(0, 60);
+  const name = boundedString(body.name, 60);
   if (!name) return NextResponse.json({ error: "name required" }, { status: 400 });
   const existing = await prisma.collection.findFirst({ where: { userId: user.id, name } });
   if (existing) return NextResponse.json({ ok: true, collection: existing });

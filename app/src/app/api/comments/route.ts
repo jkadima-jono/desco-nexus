@@ -3,6 +3,7 @@ import { prisma } from "@/lib/db";
 import { getSessionUser } from "@/lib/auth";
 import { canParticipateInListing } from "@/lib/listing-participation";
 import { applyRateLimit, rejectUntrustedOrigin } from "@/lib/request-security";
+import { boundedString } from "@/lib/request-input";
 
 export async function GET(req: Request) {
   const listingId = new URL(req.url).searchParams.get("listingId");
@@ -67,28 +68,30 @@ export async function POST(req: Request) {
   } catch {
     return NextResponse.json({ error: "Invalid JSON body" }, { status: 400 });
   }
-  const text = body.text?.trim() ?? "";
-  if (!body.listingId || !text) {
+  const text = boundedString(body.text, 2001);
+  const listingId = boundedString(body.listingId, 100);
+  const parentId = boundedString(body.parentId, 100);
+  if (!listingId || !text) {
     return NextResponse.json({ error: "listingId and text required" }, { status: 400 });
   }
   if (text.length > 2000) {
     return NextResponse.json({ error: "Comment too long (max 2000)" }, { status: 400 });
   }
-  const listing = await prisma.listing.findUnique({ where: { id: body.listingId } });
+  const listing = await prisma.listing.findUnique({ where: { id: listingId } });
   if (!listing || !(await canParticipateInListing(user, listing))) {
     return NextResponse.json({ error: "Listing not found" }, { status: 404 });
   }
-  if (body.parentId) {
-    const parent = await prisma.comment.findUnique({ where: { id: body.parentId } });
-    if (!parent || parent.listingId !== body.listingId || parent.parentId) {
+  if (parentId) {
+    const parent = await prisma.comment.findUnique({ where: { id: parentId } });
+    if (!parent || parent.listingId !== listingId || parent.parentId) {
       return NextResponse.json({ error: "Invalid parent comment" }, { status: 400 });
     }
   }
   const comment = await prisma.comment.create({
     data: {
-      listingId: body.listingId,
+      listingId,
       userId: user.id,
-      parentId: body.parentId ?? null,
+      parentId: parentId || null,
       body: text,
     },
   });

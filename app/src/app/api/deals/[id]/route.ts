@@ -7,6 +7,7 @@ import { projectHref } from "@/lib/project-slugs";
 import { enqueueOutbox } from "@/lib/outbox";
 import { processOutbox } from "@/lib/outbox-worker";
 import { logOperationalEvent } from "@/lib/observability";
+import { boundedString } from "@/lib/request-input";
 
 export async function PATCH(
   req: Request,
@@ -34,8 +35,8 @@ export async function PATCH(
   const data: { stage?: string; history?: string; dueDate?: Date | null; decisionNotes?: string } = {};
 
   if (body.stage !== undefined) {
-    const to = body.stage as Stage;
-    const reason = body.reason?.trim() ?? "";
+    const to = boundedString(body.stage, 60) as Stage;
+    const reason = boundedString(body.reason, 1000);
     if (!STAGES.includes(to)) {
       return NextResponse.json({ error: "Unknown stage" }, { status: 400 });
     }
@@ -59,12 +60,23 @@ export async function PATCH(
   }
 
   if (body.dueDate !== undefined) {
-    data.dueDate = body.dueDate ? new Date(body.dueDate) : null;
+    if (body.dueDate !== null && typeof body.dueDate !== "string") {
+      return NextResponse.json({ error: "dueDate must be an ISO date or null" }, { status: 400 });
+    }
+    const dueDate = body.dueDate ? new Date(body.dueDate) : null;
+    if (dueDate && Number.isNaN(dueDate.getTime())) {
+      return NextResponse.json({ error: "dueDate must be a valid date" }, { status: 400 });
+    }
+    data.dueDate = dueDate;
   }
 
-  if (body.note !== undefined && body.note.trim()) {
+  if (body.note !== undefined && typeof body.note !== "string") {
+    return NextResponse.json({ error: "note must be text" }, { status: 400 });
+  }
+  const note = boundedString(body.note, 2000);
+  if (note) {
     const notes = JSON.parse(deal.decisionNotes || "[]") as unknown[];
-    notes.push({ by: user.fullName, note: body.note.trim().slice(0, 2000), at: new Date().toISOString() });
+    notes.push({ by: user.fullName, note, at: new Date().toISOString() });
     data.decisionNotes = JSON.stringify(notes);
   }
 

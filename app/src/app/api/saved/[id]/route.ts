@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
 import { getSessionUser } from "@/lib/auth";
+import { boundedString, sanitizeStringArray } from "@/lib/request-input";
 
 export async function PATCH(
   req: Request,
@@ -19,8 +20,18 @@ export async function PATCH(
   } catch {
     return NextResponse.json({ error: "Invalid JSON body" }, { status: 400 });
   }
-  if (body.collectionId) {
-    const collection = await prisma.collection.findUnique({ where: { id: body.collectionId } });
+  if (body.notes !== undefined && typeof body.notes !== "string") {
+    return NextResponse.json({ error: "notes must be text" }, { status: 400 });
+  }
+  if (body.tags !== undefined && !Array.isArray(body.tags)) {
+    return NextResponse.json({ error: "tags must be an array" }, { status: 400 });
+  }
+  if (body.collectionId !== undefined && body.collectionId !== null && typeof body.collectionId !== "string") {
+    return NextResponse.json({ error: "collectionId must be text or null" }, { status: 400 });
+  }
+  const collectionId = body.collectionId === null ? null : boundedString(body.collectionId, 100) || undefined;
+  if (collectionId) {
+    const collection = await prisma.collection.findUnique({ where: { id: collectionId } });
     if (!collection || collection.userId !== user.id) {
       return NextResponse.json({ error: "Collection not found" }, { status: 404 });
     }
@@ -28,9 +39,9 @@ export async function PATCH(
   const updated = await prisma.savedOpportunity.update({
     where: { id },
     data: {
-      notes: body.notes !== undefined ? body.notes.trim().slice(0, 1000) : undefined,
-      tags: body.tags !== undefined ? JSON.stringify(body.tags.filter((t) => typeof t === "string").slice(0, 10).map((t) => t.trim().slice(0, 30))) : undefined,
-      collectionId: body.collectionId !== undefined ? body.collectionId : undefined,
+      notes: body.notes !== undefined ? boundedString(body.notes, 1000) : undefined,
+      tags: body.tags !== undefined ? JSON.stringify(sanitizeStringArray(body.tags, undefined, 30).slice(0, 10)) : undefined,
+      collectionId: body.collectionId !== undefined ? collectionId ?? null : undefined,
     },
   });
   return NextResponse.json({ ok: true, saved: updated });
