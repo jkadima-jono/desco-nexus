@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
 import { getSessionUser } from "@/lib/auth";
 import { publicationContentHash } from "@/lib/publication-content";
+import { boundedString } from "@/lib/request-input";
 
 type PublicationAction = "record_clearance" | "publish" | "pause" | "withdraw" | "archive";
 
@@ -54,19 +55,21 @@ export async function PATCH(
   } catch {
     return NextResponse.json({ error: "Invalid JSON body" }, { status: 400 });
   }
+  const action = boundedString(body.action, 30) as PublicationAction;
 
-  if (body.action === "record_clearance") {
-    const sponsorApprovalNote = body.sponsorApprovalNote?.trim() ?? "";
-    const legalClearanceScope = body.legalClearanceScope?.trim() ?? "";
-    const relatedPartyDisclosure = body.relatedPartyDisclosure?.trim() ?? "";
-    const sponsorSignatoryName = body.sponsorSignatoryName?.trim() ?? "";
-    const sponsorSignatoryCapacity = body.sponsorSignatoryCapacity?.trim() ?? "";
-    const sponsorApprovalEvidenceRef = body.sponsorApprovalEvidenceRef?.trim() ?? "";
-    const legalCounselName = body.legalCounselName?.trim() ?? "";
-    const legalJurisdiction = body.legalJurisdiction?.trim() ?? "";
-    const legalApprovalEvidenceRef = body.legalApprovalEvidenceRef?.trim() ?? "";
-    const relatedPartyReviewerName = body.relatedPartyReviewerName?.trim() ?? "";
-    const relatedPartyReviewerIndependence = body.relatedPartyReviewerIndependence?.trim() ?? "";
+  if (action === "record_clearance") {
+    const sponsorApprovalNote = boundedString(body.sponsorApprovalNote, 2000);
+    const legalClearanceScope = boundedString(body.legalClearanceScope, 2000);
+    const relatedPartyDisclosure = boundedString(body.relatedPartyDisclosure, 2000);
+    const sponsorSignatoryName = boundedString(body.sponsorSignatoryName, 200);
+    const sponsorSignatoryCapacity = boundedString(body.sponsorSignatoryCapacity, 200);
+    const sponsorApprovalEvidenceRef = boundedString(body.sponsorApprovalEvidenceRef, 300);
+    const legalCounselName = boundedString(body.legalCounselName, 200);
+    const legalJurisdiction = boundedString(body.legalJurisdiction, 200);
+    const legalApprovalEvidenceRef = boundedString(body.legalApprovalEvidenceRef, 300);
+    const relatedPartyReviewerName = boundedString(body.relatedPartyReviewerName, 200);
+    const relatedPartyReviewerIndependence = boundedString(body.relatedPartyReviewerIndependence, 1000);
+    const relatedPartyType = boundedString(body.relatedPartyType, 300);
     if (
       !sponsorApprovalNote ||
       !legalClearanceScope ||
@@ -85,6 +88,13 @@ export async function PATCH(
         { status: 400 },
       );
     }
+    if (typeof body.relatedParty !== "boolean") {
+      return NextResponse.json({ error: "A true or false related-party conclusion is required" }, { status: 400 });
+    }
+    if (body.relatedParty && !relatedPartyType) {
+      return NextResponse.json({ error: "The relationship type is required for a related-party listing" }, { status: 400 });
+    }
+    const relatedParty = body.relatedParty;
     const reviewerIdentities = [
       sponsorSignatoryName.toLowerCase(),
       legalCounselName.toLowerCase(),
@@ -102,8 +112,8 @@ export async function PATCH(
     const at = new Date();
     const contentHash = publicationContentHash({
       ...listing,
-      relatedParty: body.relatedParty === true,
-      relatedPartyType: body.relatedParty === true ? body.relatedPartyType?.trim() || "Relationship disclosed" : null,
+      relatedParty,
+      relatedPartyType: relatedParty ? relatedPartyType : null,
       relatedPartyDisclosure,
     });
     const updated = await prisma.$transaction(async (tx) => {
@@ -149,8 +159,8 @@ export async function PATCH(
           listingId: id,
           contentVersion: listing.contentVersion,
           contentHash,
-          relatedParty: body.relatedParty === true,
-          relationshipType: body.relatedParty === true ? body.relatedPartyType?.trim() || "Relationship disclosed" : null,
+          relatedParty,
+          relationshipType: relatedParty ? relatedPartyType : null,
           publicDisclosure: relatedPartyDisclosure,
           reviewerName: relatedPartyReviewerName,
           reviewerIndependence: relatedPartyReviewerIndependence,
@@ -168,8 +178,8 @@ export async function PATCH(
           legalClearedAt: at,
           legalClearedBy: user.id,
           legalClearanceScope,
-          relatedParty: body.relatedParty === true,
-          relatedPartyType: body.relatedParty === true ? body.relatedPartyType?.trim() || "Relationship disclosed" : null,
+          relatedParty,
+          relatedPartyType: relatedParty ? relatedPartyType : null,
           relatedPartyDisclosure,
           relatedPartyReviewedAt: at,
           relatedPartyReviewedBy: user.id,
@@ -185,7 +195,7 @@ export async function PATCH(
     return NextResponse.json({ ok: true, listing: updated });
   }
 
-  if (body.action === "publish") {
+  if (action === "publish") {
     const currentContentHash = publicationContentHash(listing);
     const hasCurrentSponsorConsent = listing.sponsorConsents.some(
       (approval) =>
@@ -223,7 +233,8 @@ export async function PATCH(
         !!document.storageKey &&
         !!document.sha256 &&
         !!document.approvedAt &&
-        !!document.approvedBy,
+        !!document.approvedBy &&
+        (document.scanStatus === "clean" || document.scanStatus === "not_required"),
     );
     if (!hasUsableSource) {
       return NextResponse.json({ error: "At least one controlled, checksummed and approved source document is required before publication" }, { status: 409 });
@@ -247,21 +258,21 @@ export async function PATCH(
     return NextResponse.json({ ok: true, listing: updated });
   }
 
-  if (body.action === "pause" || body.action === "withdraw" || body.action === "archive") {
-    const reason = body.reason?.trim();
+  if (action === "pause" || action === "withdraw" || action === "archive") {
+    const reason = boundedString(body.reason, 2000);
     if (!reason) return NextResponse.json({ error: "A reason is required" }, { status: 400 });
     const publicationStatus =
-      body.action === "pause" ? "paused" : body.action === "withdraw" ? "withdrawn" : "archived";
+      action === "pause" ? "paused" : action === "withdraw" ? "withdrawn" : "archived";
     const at = new Date();
     const updated = await prisma.listing.update({
       where: { id },
       data: {
         publicationStatus,
-        designation: body.action === "pause" ? "paused" : "removed",
+        designation: action === "pause" ? "paused" : "removed",
         contentVersion: { increment: 1 },
         publicationHistory: appendHistory(listing.publicationHistory, {
           by: user.id,
-          action: body.action,
+          action,
           reason,
           at: at.toISOString(),
         }),
