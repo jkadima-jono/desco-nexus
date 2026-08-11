@@ -3,6 +3,7 @@ import { prisma } from "@/lib/db";
 import { getSessionUser } from "@/lib/auth";
 import { SECTORS, INSTRUMENTS, RISK_LEVELS, INVESTOR_TYPES, CO_INVEST_PREFERENCES } from "@/lib/mandateOptions";
 import { effectivePlan } from "@/lib/plans";
+import { boundedString, sanitizeStringArray } from "@/lib/mandate-input";
 
 type MandateBody = {
   name?: string;
@@ -28,15 +29,13 @@ type MandateBody = {
   coInvestPreference?: string;
 };
 
-function sanitizeStringArray(input: unknown, allowlist?: string[]): string[] {
-  if (!Array.isArray(input)) return [];
-  const strings = input.filter((v): v is string => typeof v === "string").slice(0, 20);
-  return allowlist ? strings.filter((v) => allowlist.includes(v)) : strings;
+function finiteNonNegative(input: unknown): number | null {
+  return typeof input === "number" && Number.isFinite(input) ? Math.max(0, input) : null;
 }
 
 function buildMandateData(body: MandateBody) {
-  const ticketMinUsd = typeof body.ticketMinUsd === "number" ? Math.max(0, body.ticketMinUsd) : null;
-  const ticketMaxUsdRaw = typeof body.ticketMaxUsd === "number" ? Math.max(0, body.ticketMaxUsd) : null;
+  const ticketMinUsd = finiteNonNegative(body.ticketMinUsd);
+  const ticketMaxUsdRaw = finiteNonNegative(body.ticketMaxUsd);
   const ticketMaxUsd =
     ticketMinUsd !== null && ticketMaxUsdRaw !== null && ticketMaxUsdRaw < ticketMinUsd
       ? ticketMinUsd
@@ -49,11 +48,11 @@ function buildMandateData(body: MandateBody) {
     ticketMinUsd,
     ticketMaxUsd,
     instruments: JSON.stringify(sanitizeStringArray(body.instruments, INSTRUMENTS)),
-    stagePreference: body.stagePreference?.trim().slice(0, 60) || null,
-    targetReturn: body.targetReturn?.trim().slice(0, 40) || null,
-    horizonYears: typeof body.horizonYears === "number" ? Math.max(0, Math.min(50, body.horizonYears)) : null,
+    stagePreference: boundedString(body.stagePreference, 60) || null,
+    targetReturn: boundedString(body.targetReturn, 40) || null,
+    horizonYears: typeof body.horizonYears === "number" && Number.isFinite(body.horizonYears) ? Math.max(0, Math.min(50, body.horizonYears)) : null,
     riskTolerance: RISK_LEVELS.includes(body.riskTolerance ?? "") ? body.riskTolerance : null,
-    currency: body.currency?.trim().slice(0, 6) || "USD",
+    currency: boundedString(body.currency, 6) || "USD",
     esgRequired: !!body.esgRequired,
     govSupportRequired: !!body.govSupportRequired,
     excludedSectors: JSON.stringify(sanitizeStringArray(body.excludedSectors, SECTORS)),
@@ -87,8 +86,8 @@ export async function POST(req: Request) {
   } catch {
     return NextResponse.json({ error: "Invalid JSON body" }, { status: 400 });
   }
-  const name = body.name?.trim() ?? "";
-  const query = body.query?.trim() ?? "";
+  const name = boundedString(body.name, 81);
+  const query = boundedString(body.query, 501);
   if (!name || name.length > 80) {
     return NextResponse.json({ error: "name (1-80 chars) required" }, { status: 400 });
   }
@@ -105,14 +104,16 @@ export async function POST(req: Request) {
       );
     }
   }
-  const threshold = Math.min(100, Math.max(0, body.threshold ?? 70));
+  const threshold = typeof body.threshold === "number" && Number.isFinite(body.threshold)
+    ? Math.min(100, Math.max(0, body.threshold))
+    : 70;
   const frequency = ["daily", "weekly"].includes(body.frequency ?? "") ? body.frequency! : "weekly";
   const mandate = await prisma.standingMandate.create({
     data: {
       userId: user.id,
       name,
       query,
-      criteria: JSON.stringify(body.criteria ?? []),
+      criteria: JSON.stringify(sanitizeStringArray(body.criteria, undefined, 160)),
       threshold,
       frequency,
       ...buildMandateData(body),
@@ -207,7 +208,7 @@ export async function PATCH(req: Request) {
     where: { id: body.id },
     data: {
       active: body.active ?? mandate.active,
-      name: body.name?.trim() ? body.name.trim().slice(0, 80) : mandate.name,
+      name: boundedString(body.name, 80) || mandate.name,
       ...(hasStructuredEdits ? buildMandateData({ ...mandate, ...body } as MandateBody) : {}),
     },
   });

@@ -21,6 +21,12 @@ const unauthenticatedMutationRoutes = new Set([
   "events/route.ts",
 ]);
 
+const unauthenticatedReadRoutes = new Set([
+  "health/live/route.ts",
+  "health/ready/route.ts",
+  "search/route.ts",
+]);
+
 test("every API mutation is authenticated or explicitly governed as a public write", () => {
   for (const file of routeFiles(apiRoot.pathname)) {
     const source = readFileSync(file, "utf8");
@@ -42,6 +48,21 @@ test("every mutating admin route enforces an administrator review boundary", () 
     const source = readFileSync(file, "utf8");
     if (!/export async function (?:POST|PUT|PATCH|DELETE)/.test(source)) continue;
     assert.match(source, /canReviewSubmissions\(|role !== "admin"/, relative(apiRoot.pathname, file));
+  }
+});
+
+test("every API read is authenticated or explicitly governed as public", () => {
+  for (const file of routeFiles(apiRoot.pathname)) {
+    const source = readFileSync(file, "utf8");
+    if (!/export async function GET/.test(source)) continue;
+    const route = relative(apiRoot.pathname, file);
+    const authenticated = /getSessionUser\(|authorized\(req\)/.test(source);
+    assert.ok(authenticated || unauthenticatedReadRoutes.has(route), route);
+    if (route === "search/route.ts") {
+      assert.match(source, /publicListingWhere/, "public search publication boundary");
+      assert.match(source, /sanitizePublicListing/, "public search response sanitization");
+      assert.match(source, /applyRateLimit/, "public search rate limit");
+    }
   }
 });
 
