@@ -11,6 +11,10 @@ export function boundedInteger(input: unknown, minimum: number, maximum: number)
   return Math.min(maximum, Math.max(minimum, Math.round(input)));
 }
 
+export function strictBoolean(input: unknown): boolean {
+  return input === true;
+}
+
 export function sanitizeStringArray(
   input: unknown,
   allowlist?: string[],

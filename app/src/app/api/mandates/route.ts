@@ -3,7 +3,7 @@ import { prisma } from "@/lib/db";
 import { getSessionUser } from "@/lib/auth";
 import { SECTORS, INSTRUMENTS, RISK_LEVELS, INVESTOR_TYPES, CO_INVEST_PREFERENCES } from "@/lib/mandateOptions";
 import { effectivePlan } from "@/lib/plans";
-import { boundedString, sanitizeStringArray } from "@/lib/request-input";
+import { boundedString, sanitizeStringArray, strictBoolean } from "@/lib/request-input";
 
 type MandateBody = {
   name?: string;
@@ -53,8 +53,8 @@ function buildMandateData(body: MandateBody) {
     horizonYears: typeof body.horizonYears === "number" && Number.isFinite(body.horizonYears) ? Math.max(0, Math.min(50, body.horizonYears)) : null,
     riskTolerance: RISK_LEVELS.includes(body.riskTolerance ?? "") ? body.riskTolerance : null,
     currency: boundedString(body.currency, 6) || "USD",
-    esgRequired: !!body.esgRequired,
-    govSupportRequired: !!body.govSupportRequired,
+    esgRequired: strictBoolean(body.esgRequired),
+    govSupportRequired: strictBoolean(body.govSupportRequired),
     excludedSectors: JSON.stringify(sanitizeStringArray(body.excludedSectors, SECTORS)),
     excludedCountries: JSON.stringify(sanitizeStringArray(body.excludedCountries)),
     coInvestPreference: CO_INVEST_PREFERENCES.includes(body.coInvestPreference ?? "")
