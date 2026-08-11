@@ -3,12 +3,9 @@ import { prisma } from "@/lib/db";
 import { getSessionUser } from "@/lib/auth";
 import { canManageSubmission } from "@/lib/authz";
 import { SECTORS, INSTRUMENTS, canSubmitForReview, missingRequiredFields, type SubmissionDraft } from "@/lib/submissions";
+import { boundedString, nonNegativeFiniteNumber } from "@/lib/request-input";
 
 type PatchBody = Partial<SubmissionDraft> & { action?: "submit" | "withdraw" };
-
-function clamp(s: string | undefined, max: number): string {
-  return (s ?? "").trim().slice(0, max);
-}
 
 export async function GET(
   _req: Request,
@@ -74,30 +71,30 @@ export async function PATCH(
   const updated = await prisma.projectSubmission.update({
     where: { id },
     data: {
-      orgName: body.orgName !== undefined ? clamp(body.orgName, 120) : undefined,
-      ownershipStatement: body.ownershipStatement !== undefined ? clamp(body.ownershipStatement, 1000) : undefined,
-      title: body.title !== undefined ? clamp(body.title, 120) : undefined,
-      country: body.country !== undefined ? clamp(body.country, 60) : undefined,
-      region: body.region !== undefined ? clamp(body.region, 60) : undefined,
+      orgName: body.orgName !== undefined ? boundedString(body.orgName, 120) : undefined,
+      ownershipStatement: body.ownershipStatement !== undefined ? boundedString(body.ownershipStatement, 1000) : undefined,
+      title: body.title !== undefined ? boundedString(body.title, 120) : undefined,
+      country: body.country !== undefined ? boundedString(body.country, 60) : undefined,
+      region: body.region !== undefined ? boundedString(body.region, 60) : undefined,
       sector: body.sector !== undefined ? (SECTORS.includes(body.sector) ? body.sector : "") : undefined,
-      stage: body.stage !== undefined ? clamp(body.stage, 60) : undefined,
-      raiseUsd: body.raiseUsd !== undefined ? (typeof body.raiseUsd === "number" ? Math.max(0, body.raiseUsd) : null) : undefined,
-      fundingSecuredUsd: body.fundingSecuredUsd !== undefined ? (typeof body.fundingSecuredUsd === "number" ? Math.max(0, body.fundingSecuredUsd) : null) : undefined,
-      sponsorContributionUsd: body.sponsorContributionUsd !== undefined ? (typeof body.sponsorContributionUsd === "number" ? Math.max(0, body.sponsorContributionUsd) : null) : undefined,
+      stage: body.stage !== undefined ? boundedString(body.stage, 60) : undefined,
+      raiseUsd: body.raiseUsd !== undefined ? nonNegativeFiniteNumber(body.raiseUsd) : undefined,
+      fundingSecuredUsd: body.fundingSecuredUsd !== undefined ? nonNegativeFiniteNumber(body.fundingSecuredUsd) : undefined,
+      sponsorContributionUsd: body.sponsorContributionUsd !== undefined ? nonNegativeFiniteNumber(body.sponsorContributionUsd) : undefined,
       instrument: body.instrument !== undefined ? (INSTRUMENTS.includes(body.instrument) ? body.instrument : "") : undefined,
-      useOfFunds: body.useOfFunds !== undefined ? clamp(body.useOfFunds, 2000) : undefined,
-      revenueModel: body.revenueModel !== undefined ? clamp(body.revenueModel, 2000) : undefined,
-      financialSummary: body.financialSummary !== undefined ? clamp(body.financialSummary, 2000) : undefined,
-      permitsStatus: body.permitsStatus !== undefined ? clamp(body.permitsStatus, 1000) : undefined,
-      landRights: body.landRights !== undefined ? clamp(body.landRights, 1000) : undefined,
-      governmentInvolvement: body.governmentInvolvement !== undefined ? clamp(body.governmentInvolvement, 1000) : undefined,
-      governmentBacked: body.governmentBacked !== undefined ? !!body.governmentBacked : undefined,
-      esgSummary: body.esgSummary !== undefined ? clamp(body.esgSummary, 2000) : undefined,
-      keyRisks: body.keyRisks !== undefined ? clamp(body.keyRisks, 2000) : undefined,
-      managementTeam: body.managementTeam !== undefined ? clamp(body.managementTeam, 2000) : undefined,
-      advisors: body.advisors !== undefined ? clamp(body.advisors, 1000) : undefined,
-      documentsNote: body.documentsNote !== undefined ? clamp(body.documentsNote, 1000) : undefined,
-      timetable: body.timetable !== undefined ? clamp(body.timetable, 1000) : undefined,
+      useOfFunds: body.useOfFunds !== undefined ? boundedString(body.useOfFunds, 2000) : undefined,
+      revenueModel: body.revenueModel !== undefined ? boundedString(body.revenueModel, 2000) : undefined,
+      financialSummary: body.financialSummary !== undefined ? boundedString(body.financialSummary, 2000) : undefined,
+      permitsStatus: body.permitsStatus !== undefined ? boundedString(body.permitsStatus, 1000) : undefined,
+      landRights: body.landRights !== undefined ? boundedString(body.landRights, 1000) : undefined,
+      governmentInvolvement: body.governmentInvolvement !== undefined ? boundedString(body.governmentInvolvement, 1000) : undefined,
+      governmentBacked: typeof body.governmentBacked === "boolean" ? body.governmentBacked : undefined,
+      esgSummary: body.esgSummary !== undefined ? boundedString(body.esgSummary, 2000) : undefined,
+      keyRisks: body.keyRisks !== undefined ? boundedString(body.keyRisks, 2000) : undefined,
+      managementTeam: body.managementTeam !== undefined ? boundedString(body.managementTeam, 2000) : undefined,
+      advisors: body.advisors !== undefined ? boundedString(body.advisors, 1000) : undefined,
+      documentsNote: body.documentsNote !== undefined ? boundedString(body.documentsNote, 1000) : undefined,
+      timetable: body.timetable !== undefined ? boundedString(body.timetable, 1000) : undefined,
     },
   });
   return NextResponse.json({ ok: true, submission: updated });

@@ -2,6 +2,10 @@ export function boundedString(input: unknown, maxLength: number): string {
   return typeof input === "string" ? input.trim().slice(0, maxLength) : "";
 }
 
+export function nonNegativeFiniteNumber(input: unknown): number | null {
+  return typeof input === "number" && Number.isFinite(input) ? Math.max(0, input) : null;
+}
+
 export function sanitizeStringArray(
   input: unknown,
   allowlist?: string[],
