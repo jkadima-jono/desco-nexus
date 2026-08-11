@@ -6,6 +6,7 @@ import { notify } from "@/lib/notifications";
 import { projectHref } from "@/lib/project-slugs";
 import { institutionalAccessDecision, validNdaExecution } from "@/lib/institutional-access";
 import { RESTRICTED_ACCESS_NOTICE_VERSION } from "@/lib/restricted-access";
+import { boundedString } from "@/lib/request-input";
 
 // Sponsor/admin view of a listing's data room: who requested access (via
 // the existing "dataroom_requested" MatchAction) cross-referenced with who
@@ -62,8 +63,9 @@ export async function POST(req: Request, { params }: { params: Promise<{ id: str
   } catch {
     return NextResponse.json({ error: "Invalid JSON body" }, { status: 400 });
   }
-  if (!body.userId) return NextResponse.json({ error: "userId required" }, { status: 400 });
-  const decision = await institutionalAccessDecision(body.userId);
+  const requestedUserId = boundedString(body.userId, 100);
+  if (!requestedUserId) return NextResponse.json({ error: "userId required" }, { status: 400 });
+  const decision = await institutionalAccessDecision(requestedUserId);
   if (!decision.eligible) {
     return NextResponse.json(
       { error: "Restricted access cannot be granted: " + decision.reason },
@@ -72,7 +74,7 @@ export async function POST(req: Request, { params }: { params: Promise<{ id: str
   }
   const acknowledgement = await prisma.accessAcknowledgement.findFirst({
     where: {
-      userId: body.userId,
+      userId: requestedUserId,
       listingId: id,
       action: "data_room_request",
       noticeVersion: RESTRICTED_ACCESS_NOTICE_VERSION,
@@ -86,7 +88,7 @@ export async function POST(req: Request, { params }: { params: Promise<{ id: str
       { status: 409 },
     );
   }
-  const nda = await validNdaExecution(body.userId, id);
+  const nda = await validNdaExecution(requestedUserId, id);
   if (!nda) {
     return NextResponse.json(
       { error: "A current project-specific NDA or restricted-access agreement is required." },
@@ -95,12 +97,12 @@ export async function POST(req: Request, { params }: { params: Promise<{ id: str
   }
 
   const grant = await prisma.dataRoomAccess.upsert({
-    where: { listingId_userId: { listingId: id, userId: body.userId } },
+    where: { listingId_userId: { listingId: id, userId: requestedUserId } },
     update: { revokedAt: null, grantedBy: user.fullName, ndaExecutionId: nda.id },
-    create: { listingId: id, userId: body.userId, grantedBy: user.fullName, ndaExecutionId: nda.id },
+    create: { listingId: id, userId: requestedUserId, grantedBy: user.fullName, ndaExecutionId: nda.id },
   });
   await notify(
-    body.userId,
+    requestedUserId,
     "dataroom_granted",
     "Data-room access granted",
     "You've been granted data-room access for \"" + listing.title + "\".",

@@ -6,6 +6,7 @@ import { projectHref } from "@/lib/project-slugs";
 import { enqueueOutbox } from "@/lib/outbox";
 import { processOutbox } from "@/lib/outbox-worker";
 import { logOperationalEvent } from "@/lib/observability";
+import { boundedString } from "@/lib/request-input";
 
 // Sponsor/admin confirm a proposed slot (or decline); the requester may
 // cancel their own request while it's still pending.
@@ -25,6 +26,8 @@ export async function PATCH(
   } catch {
     return NextResponse.json({ error: "Invalid JSON body" }, { status: 400 });
   }
+  const status = boundedString(body.status, 20);
+  const confirmedSlot = boundedString(body.confirmedSlot, 80);
   const canManage = canManageListing(user, meeting.listing) || user.role === "admin";
   const isRequester = meeting.requesterId === user.id;
   if (!canManage && !isRequester) return forbidden();
@@ -33,17 +36,17 @@ export async function PATCH(
     return NextResponse.json({ error: "Meeting already " + meeting.status }, { status: 422 });
   }
 
-  if (body.status === "cancelled") {
+  if (status === "cancelled") {
     if (!isRequester) return forbidden();
-  } else if (body.status === "confirmed" || body.status === "declined") {
+  } else if (status === "confirmed" || status === "declined") {
     if (!canManage) return forbidden();
   } else {
     return NextResponse.json({ error: "status must be confirmed|declined|cancelled" }, { status: 400 });
   }
 
   const proposedSlots = JSON.parse(meeting.proposedSlots) as string[];
-  if (body.status === "confirmed") {
-    if (!body.confirmedSlot || !proposedSlots.includes(body.confirmedSlot)) {
+  if (status === "confirmed") {
+    if (!confirmedSlot || !proposedSlots.includes(confirmedSlot)) {
       return NextResponse.json({ error: "confirmedSlot must be one of the proposed slots" }, { status: 400 });
     }
   }
@@ -53,16 +56,16 @@ export async function PATCH(
     const changed = await tx.meeting.updateMany({
       where: { id, status: "requested" },
       data: {
-        status: body.status,
-        confirmedSlot: body.status === "confirmed" ? new Date(body.confirmedSlot!) : null,
+        status,
+        confirmedSlot: status === "confirmed" ? new Date(confirmedSlot) : null,
       },
     });
     if (changed.count !== 1) return null;
     const common = { type: "", title: "", body: "", link };
-    if (body.status === "confirmed") {
+    if (status === "confirmed") {
       Object.assign(common, { type: "meeting_confirmed", title: "Meeting confirmed", body: `Your meeting request for "${meeting.listing.title}" was confirmed.` });
       await enqueueOutbox(tx, { type: "notification.user", aggregateId: id, eventKey: `meeting:${id}:confirmed`, payload: { ...common, userId: meeting.requesterId } });
-    } else if (body.status === "declined") {
+    } else if (status === "declined") {
       Object.assign(common, { type: "meeting_declined", title: "Meeting declined", body: `Your meeting request for "${meeting.listing.title}" was declined.` });
       await enqueueOutbox(tx, { type: "notification.user", aggregateId: id, eventKey: `meeting:${id}:declined`, payload: { ...common, userId: meeting.requesterId } });
     } else {

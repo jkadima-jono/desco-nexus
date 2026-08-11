@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
 import { getSessionUser } from "@/lib/auth";
 import { canManageDeal, forbidden, unauthorized } from "@/lib/authz";
+import { boundedString } from "@/lib/request-input";
 
 export async function POST(
   req: Request,
@@ -20,9 +21,9 @@ export async function POST(
   } catch {
     return NextResponse.json({ error: "Invalid JSON body" }, { status: 400 });
   }
-  const title = body.title?.trim() ?? "";
-  const text = body.body?.trim() ?? "";
-  const period = body.period?.trim() ?? "";
+  const title = boundedString(body.title, 151);
+  const text = boundedString(body.body, 4001);
+  const period = boundedString(body.period, 41);
   if (!title || title.length > 150) {
     return NextResponse.json({ error: "title required (max 150 chars)" }, { status: 400 });
   }

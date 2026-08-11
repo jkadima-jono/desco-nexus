@@ -7,6 +7,7 @@ import { projectHref } from "@/lib/project-slugs";
 import { institutionalAccessDecision } from "@/lib/institutional-access";
 import { RESTRICTED_ACCESS_NOTICE_VERSION } from "@/lib/restricted-access";
 import { isPublicOpportunityId, PUBLIC_LISTING_STATUS } from "@/lib/public-listings";
+import { boundedString, sanitizeStringArray } from "@/lib/request-input";
 
 const MAX_SLOTS = 5;
 
@@ -56,7 +57,7 @@ export async function POST(req: Request) {
   } catch {
     return NextResponse.json({ error: "Invalid JSON body" }, { status: 400 });
   }
-  const { listingId } = body;
+  const listingId = boundedString(body.listingId, 100);
   if (!listingId) return NextResponse.json({ error: "listingId required" }, { status: 400 });
   if (user.role !== "investor") {
     return NextResponse.json({ error: "Approved investor workspace access is required" }, { status: 403 });
@@ -79,8 +80,9 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: decision.reason }, { status: 403 });
   }
 
-  const slots = (body.proposedSlots ?? [])
-    .filter((s) => typeof s === "string" && !isNaN(Date.parse(s)))
+  const slots = sanitizeStringArray(body.proposedSlots, undefined, 80)
+    .filter((slot) => !Number.isNaN(Date.parse(slot)))
+    .map((slot) => new Date(slot).toISOString())
     .slice(0, MAX_SLOTS);
   if (slots.length === 0) {
     return NextResponse.json({ error: "At least one proposed time is required" }, { status: 400 });
@@ -91,7 +93,7 @@ export async function POST(req: Request) {
       listingId,
       requesterId: user.id,
       proposedSlots: JSON.stringify(slots),
-      note: (body.note ?? "").trim().slice(0, 500),
+      note: boundedString(body.note, 500),
     },
   });
   await prisma.accessAcknowledgement.create({
