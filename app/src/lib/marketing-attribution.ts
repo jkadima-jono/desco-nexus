@@ -6,17 +6,19 @@ export type CampaignAttribution = {
 
 export const CAMPAIGN_STORAGE_KEY = "desco_campaign_attribution";
 
-function bounded(value: string | null): string | null {
+const EMAIL_LIKE = /\b[^\s@]+@[^\s@]+\.[^\s@]+\b/;
+
+export function sanitizeCampaignValue(value: string | null): string | null {
   const normalized = value?.trim().slice(0, 120) ?? "";
-  return normalized || null;
+  return normalized && !EMAIL_LIKE.test(normalized) ? normalized : null;
 }
 
 export function campaignAttributionFromSearch(search: string): CampaignAttribution {
   const params = new URLSearchParams(search);
   return {
-    source: bounded(params.get("utm_source")),
-    medium: bounded(params.get("utm_medium")),
-    campaign: bounded(params.get("utm_campaign")),
+    source: sanitizeCampaignValue(params.get("utm_source")),
+    medium: sanitizeCampaignValue(params.get("utm_medium")),
+    campaign: sanitizeCampaignValue(params.get("utm_campaign")),
   };
 }
 
@@ -29,11 +31,22 @@ export function parseStoredCampaignAttribution(raw: string | null): CampaignAttr
   try {
     const parsed = JSON.parse(raw) as Partial<CampaignAttribution>;
     const value = {
-      source: bounded(typeof parsed.source === "string" ? parsed.source : null),
-      medium: bounded(typeof parsed.medium === "string" ? parsed.medium : null),
-      campaign: bounded(typeof parsed.campaign === "string" ? parsed.campaign : null),
+      source: sanitizeCampaignValue(typeof parsed.source === "string" ? parsed.source : null),
+      medium: sanitizeCampaignValue(typeof parsed.medium === "string" ? parsed.medium : null),
+      campaign: sanitizeCampaignValue(typeof parsed.campaign === "string" ? parsed.campaign : null),
     };
     return hasCampaignAttribution(value) ? value : null;
+  } catch {
+    return null;
+  }
+}
+
+export function sanitizeAttributionReferrer(value: unknown): string | null {
+  if (typeof value !== "string" || !value.trim()) return null;
+  try {
+    const url = new URL(value);
+    if (url.protocol !== "https:" && url.protocol !== "http:") return null;
+    return `${url.origin}${url.pathname}`.slice(0, 500);
   } catch {
     return null;
   }

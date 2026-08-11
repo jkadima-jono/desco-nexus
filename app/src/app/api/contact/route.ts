@@ -7,6 +7,8 @@ import {
   CONTACT_NOTICE_VERSION,
   CONTACT_RETENTION_DAYS,
 } from "@/lib/legal-consent";
+import { sanitizeAttributionReferrer, sanitizeCampaignValue } from "@/lib/marketing-attribution";
+import { sanitizeProductEventPath } from "@/lib/product-analytics";
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const TOPICS = new Set([
@@ -91,11 +93,11 @@ export async function POST(req: Request) {
   const topic = TOPICS.has(body.topic ?? "") ? body.topic! : "general";
   const message = body.message?.trim() ?? "";
   const locale = LOCALES.has(body.locale ?? "") ? body.locale! : "en";
-  const sourcePath = bounded(body.sourcePath, 240);
-  const referrer = bounded(body.referrer, 500) || null;
-  const campaignSource = bounded(body.campaignSource, 120) || null;
-  const campaignMedium = bounded(body.campaignMedium, 120) || null;
-  const campaignName = bounded(body.campaignName, 120) || null;
+  const sourcePath = sanitizeProductEventPath(body.sourcePath);
+  const referrer = sanitizeAttributionReferrer(body.referrer);
+  const campaignSource = sanitizeCampaignValue(body.campaignSource ?? null);
+  const campaignMedium = sanitizeCampaignValue(body.campaignMedium ?? null);
+  const campaignName = sanitizeCampaignValue(body.campaignName ?? null);
   const requestedProjectId = bounded(body.projectId, 100);
   const requestKey = bounded(body.requestKey, 100);
 
@@ -231,7 +233,7 @@ export async function POST(req: Request) {
         message,
         locale,
         projectId: listing?.id ?? null,
-        sourcePath: sourcePath.startsWith("/") ? sourcePath : "/contact",
+        sourcePath,
         referrer,
         campaignSource,
         campaignMedium,
