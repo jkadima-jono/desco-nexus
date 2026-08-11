@@ -148,13 +148,20 @@ export async function PATCH(req: Request) {
   } catch {
     return NextResponse.json({ error: "Invalid JSON body" }, { status: 400 });
   }
-  if (!body.id) return NextResponse.json({ error: "id required" }, { status: 400 });
-  const mandate = await prisma.standingMandate.findUnique({ where: { id: body.id } });
+  const id = boundedString(body.id, 100);
+  if (!id) return NextResponse.json({ error: "id required" }, { status: 400 });
+  if (body.active !== undefined && typeof body.active !== "boolean") {
+    return NextResponse.json({ error: "active must be true or false" }, { status: 400 });
+  }
+  if (body.duplicate !== undefined && typeof body.duplicate !== "boolean") {
+    return NextResponse.json({ error: "duplicate must be true or false" }, { status: 400 });
+  }
+  const mandate = await prisma.standingMandate.findUnique({ where: { id } });
   if (!mandate || mandate.userId !== user.id) {
     return NextResponse.json({ error: "Not found" }, { status: 404 });
   }
 
-  if (body.duplicate) {
+  if (body.duplicate === true) {
     const copy = await prisma.standingMandate.create({
       data: {
         userId: user.id,
@@ -205,9 +212,9 @@ export async function PATCH(req: Request) {
   ].some((k) => k in body);
 
   const updated = await prisma.standingMandate.update({
-    where: { id: body.id },
+    where: { id },
     data: {
-      active: body.active ?? mandate.active,
+      active: typeof body.active === "boolean" ? body.active : mandate.active,
       name: boundedString(body.name, 80) || mandate.name,
       ...(hasStructuredEdits ? buildMandateData({ ...mandate, ...body } as MandateBody) : {}),
     },
