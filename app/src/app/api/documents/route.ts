@@ -6,6 +6,8 @@ import { prisma } from "@/lib/db";
 import { getSessionUser } from "@/lib/auth";
 import { canManageListing, forbidden } from "@/lib/authz";
 import { applyRateLimit, rejectUntrustedOrigin } from "@/lib/request-security";
+import { documentMimeForExtension, safeDocumentName } from "@/lib/document-upload";
+import { boundedString } from "@/lib/request-input";
 
 const MAX_BYTES = 20 * 1024 * 1024;
 const ALLOWED_EXT = new Set([".pdf", ".xlsx", ".docx", ".pptx", ".png", ".jpg", ".jpeg", ".csv", ".txt"]);
@@ -47,8 +49,8 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "multipart/form-data required" }, { status: 400 });
   }
   const file = form.get("file");
-  const listingId = String(form.get("listingId") ?? "");
-  const folder = String(form.get("folder") ?? "5. Uploads").slice(0, 80);
+  const listingId = boundedString(form.get("listingId"), 100);
+  const folder = boundedString(form.get("folder"), 80) || "5. Uploads";
 
   if (!(file instanceof File)) {
     return NextResponse.json({ error: "file field required" }, { status: 400 });
@@ -79,7 +81,9 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "File content does not match its extension" }, { status: 400 });
   }
   const sha256 = crypto.createHash("sha256").update(bytes).digest("hex");
-  const duplicate = await prisma.document.findFirst({ where: { listingId, sha256 } });
+  const duplicate = await prisma.document.findFirst({
+    where: { listingId, sha256, blobUploadedAt: { not: null }, lifecycle: { not: "archived" } },
+  });
   if (duplicate) {
     return NextResponse.json(
       { error: "This file is already attached to the project", documentId: duplicate.id },
@@ -88,16 +92,18 @@ export async function POST(req: Request) {
   }
 
   const storageKey = `documents/${listingId}/${crypto.randomUUID()}${ext}`;
+  const name = safeDocumentName(file.name, ext);
+  const mime = documentMimeForExtension(ext);
   const doc = await prisma.document.create({
     data: {
       listingId,
       // basename strips any client-supplied path segments
-      name: path.basename(file.name).slice(0, 200),
-      originalName: path.basename(file.name).slice(0, 200),
+      name,
+      originalName: name,
       size: fmtSize(file.size),
       folder,
       storageKey,
-      mime: file.type || "application/octet-stream",
+      mime,
       visibility: "restricted",
       lifecycle: "quarantined",
       sha256,
@@ -109,7 +115,7 @@ export async function POST(req: Request) {
     const blob = await put(storageKey, bytes, {
       access: "private",
       addRandomSuffix: false,
-      contentType: file.type || "application/octet-stream",
+      contentType: mime,
     });
     const uploaded = await prisma.document.update({
       where: { id: doc.id },
