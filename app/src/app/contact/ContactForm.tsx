@@ -6,10 +6,9 @@ import { trackProductEvent } from "@/components/ProductAnalytics";
 import type { Locale } from "@/lib/i18n";
 import { CONTACT_NOTICE_VERSION } from "@/lib/legal-consent";
 import {
-  CAMPAIGN_STORAGE_KEY,
   campaignAttributionFromSearch,
   hasCampaignAttribution,
-  parseStoredCampaignAttribution,
+  readCampaignAttribution,
 } from "@/lib/marketing-attribution";
 import {
   contactCollectionPaused,
@@ -91,9 +90,7 @@ export default function ContactForm({
     setError(null);
     try {
       const currentCampaign = campaignAttributionFromSearch(window.location.search);
-      const storedCampaign = parseStoredCampaignAttribution(
-        window.sessionStorage.getItem(CAMPAIGN_STORAGE_KEY),
-      );
+      const storedCampaign = readCampaignAttribution(window.sessionStorage);
       const campaign = hasCampaignAttribution(currentCampaign) ? currentCampaign : storedCampaign;
       const res = await fetch("/api/contact", {
         method: "POST",

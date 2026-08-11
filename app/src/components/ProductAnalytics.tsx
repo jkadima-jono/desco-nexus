@@ -3,17 +3,17 @@
 import { usePathname } from "next/navigation";
 import { useEffect } from "react";
 import {
-  CAMPAIGN_STORAGE_KEY,
   campaignAttributionFromSearch,
   hasCampaignAttribution,
-  parseStoredCampaignAttribution,
+  readCampaignAttribution,
+  storeCampaignAttribution,
 } from "@/lib/marketing-attribution";
 
 export function trackProductEvent(
   event: string,
   context: Record<string, string | number | boolean> = {},
 ) {
-  const stored = parseStoredCampaignAttribution(window.sessionStorage.getItem(CAMPAIGN_STORAGE_KEY));
+  const stored = readCampaignAttribution(window.sessionStorage);
   const campaignContext = stored ? {
     campaignSource: stored.source ?? "",
     campaignMedium: stored.medium ?? "",
@@ -38,7 +38,7 @@ export default function ProductAnalytics() {
     if (hasCampaignAttribution(attribution)) {
       // Session storage keeps campaign context through the public journey
       // without creating a cross-session tracking identifier.
-      window.sessionStorage.setItem(CAMPAIGN_STORAGE_KEY, JSON.stringify(attribution));
+      storeCampaignAttribution(window.sessionStorage, attribution);
     }
     trackProductEvent("page_view");
   }, [pathname]);

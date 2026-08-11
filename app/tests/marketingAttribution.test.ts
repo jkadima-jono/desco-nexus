@@ -4,6 +4,8 @@ import {
   campaignAttributionFromSearch,
   hasCampaignAttribution,
   parseStoredCampaignAttribution,
+  readCampaignAttribution,
+  storeCampaignAttribution,
 } from "../src/lib/marketing-attribution";
 
 test("campaign attribution reads only the governed UTM fields", () => {
@@ -27,4 +29,28 @@ test("stored attribution fails closed on malformed or unrelated data", () => {
     parseStoredCampaignAttribution(JSON.stringify({ source: "conference", medium: "referral" })),
     { source: "conference", medium: "referral", campaign: null },
   );
+});
+
+test("campaign storage failures never interrupt the user journey", () => {
+  const blockedStorage = {
+    getItem: () => { throw new Error("blocked"); },
+    setItem: () => { throw new Error("blocked"); },
+  };
+  assert.equal(readCampaignAttribution(blockedStorage), null);
+  assert.equal(storeCampaignAttribution(blockedStorage, {
+    source: "newsletter",
+    medium: "email",
+    campaign: "August",
+  }), false);
+});
+
+test("campaign storage helpers preserve valid session attribution", () => {
+  let stored: string | null = null;
+  const storage = {
+    getItem: () => stored,
+    setItem: (_key: string, value: string) => { stored = value; },
+  };
+  const attribution = { source: "partner", medium: "referral", campaign: "DRC" };
+  assert.equal(storeCampaignAttribution(storage, attribution), true);
+  assert.deepEqual(readCampaignAttribution(storage), attribution);
 });

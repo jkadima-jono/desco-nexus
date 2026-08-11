@@ -38,3 +38,26 @@ export function parseStoredCampaignAttribution(raw: string | null): CampaignAttr
     return null;
   }
 }
+
+type SessionStorageLike = Pick<Storage, "getItem" | "setItem">;
+
+export function readCampaignAttribution(storage: SessionStorageLike): CampaignAttribution | null {
+  try {
+    return parseStoredCampaignAttribution(storage.getItem(CAMPAIGN_STORAGE_KEY));
+  } catch {
+    return null;
+  }
+}
+
+export function storeCampaignAttribution(
+  storage: SessionStorageLike,
+  attribution: CampaignAttribution,
+): boolean {
+  if (!hasCampaignAttribution(attribution)) return false;
+  try {
+    storage.setItem(CAMPAIGN_STORAGE_KEY, JSON.stringify(attribution));
+    return true;
+  } catch {
+    return false;
+  }
+}
