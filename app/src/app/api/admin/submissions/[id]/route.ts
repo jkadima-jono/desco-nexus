@@ -3,6 +3,7 @@ import { prisma } from "@/lib/db";
 import { getSessionUser } from "@/lib/auth";
 import { canReviewSubmissions } from "@/lib/authz";
 import { DESCO_COLORS, sectorColor } from "@/lib/theme";
+import { boundedString } from "@/lib/request-input";
 
 function slugify(title: string): string {
   return title.toLowerCase().trim().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "").slice(0, 60) || "project";
@@ -43,7 +44,7 @@ export async function PATCH(
   }
 
   if (body.action === "reject" || body.action === "request_changes") {
-    const reason = body.reason?.trim() ?? "";
+    const reason = boundedString(body.reason, 2000);
     if (!reason) return NextResponse.json({ error: "A reason is required" }, { status: 400 });
     const updated = await prisma.projectSubmission.update({
       where: { id },

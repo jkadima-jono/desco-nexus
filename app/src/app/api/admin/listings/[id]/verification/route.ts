@@ -3,6 +3,7 @@ import { prisma } from "@/lib/db";
 import { getSessionUser } from "@/lib/auth";
 import { canReviewSubmissions, unauthorized, forbidden } from "@/lib/authz";
 import { GOV_MECHANISMS } from "@/lib/verification";
+import { boundedString } from "@/lib/request-input";
 
 type HistoryEntry = {
   by: string;
@@ -60,7 +61,7 @@ export async function PATCH(
   }
 
   const history = JSON.parse(listing.verificationHistory || "[]") as HistoryEntry[];
-  const note = body.note?.trim() ?? "";
+  const note = boundedString(body.note, 2000);
   const invalidatePublication = {
     publicationStatus: "internal_review",
     designation: "candidate",
@@ -105,11 +106,15 @@ export async function PATCH(
 
   if (body.action === "set_gov_mechanism") {
     if (!note) return NextResponse.json({ error: "A note explaining this classification is required" }, { status: 400 });
-    const governmentBacked = !!body.governmentBacked;
-    if (governmentBacked && !GOV_MECHANISMS.includes(body.govMechanism as (typeof GOV_MECHANISMS)[number])) {
+    if (typeof body.governmentBacked !== "boolean") {
+      return NextResponse.json({ error: "governmentBacked must be true or false" }, { status: 400 });
+    }
+    const governmentBacked = body.governmentBacked;
+    const requestedMechanism = boundedString(body.govMechanism, 100);
+    if (governmentBacked && !GOV_MECHANISMS.includes(requestedMechanism as (typeof GOV_MECHANISMS)[number])) {
       return NextResponse.json({ error: "govMechanism must be one of: " + GOV_MECHANISMS.join(", ") }, { status: 400 });
     }
-    const govMechanism = governmentBacked ? body.govMechanism! : null;
+    const govMechanism = governmentBacked ? requestedMechanism : null;
     history.push({ by: user.fullName, action: "gov_mechanism_updated", note, governmentBacked, govMechanism, at: new Date().toISOString() });
     const updated = await prisma.listing.update({
       where: { id },

@@ -6,6 +6,11 @@ export function nonNegativeFiniteNumber(input: unknown): number | null {
   return typeof input === "number" && Number.isFinite(input) ? Math.max(0, input) : null;
 }
 
+export function boundedInteger(input: unknown, minimum: number, maximum: number): number | null {
+  if (typeof input !== "number" || !Number.isFinite(input)) return null;
+  return Math.min(maximum, Math.max(minimum, Math.round(input)));
+}
+
 export function sanitizeStringArray(
   input: unknown,
   allowlist?: string[],

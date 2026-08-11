@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { boundedString, nonNegativeFiniteNumber, sanitizeStringArray } from "../src/lib/request-input";
+import { boundedInteger, boundedString, nonNegativeFiniteNumber, sanitizeStringArray } from "../src/lib/request-input";
 
 test("mandate text fields reject non-strings and enforce their storage boundary", () => {
   assert.equal(boundedString({ unexpected: true }, 20), "");
@@ -18,6 +18,13 @@ test("financial input guards accept only finite non-negative numbers", () => {
   assert.equal(nonNegativeFiniteNumber(-50), 0);
   assert.equal(nonNegativeFiniteNumber(Number.POSITIVE_INFINITY), null);
   assert.equal(nonNegativeFiniteNumber("1250000"), null);
+});
+
+test("integer guards protect database number ranges", () => {
+  assert.equal(boundedInteger(12.6, 1, 100), 13);
+  assert.equal(boundedInteger(-5, 1, 100), 1);
+  assert.equal(boundedInteger(500, 1, 100), 100);
+  assert.equal(boundedInteger(Number.NaN, 1, 100), null);
 });
 
 test("mandate criteria accept only bounded non-empty strings", () => {

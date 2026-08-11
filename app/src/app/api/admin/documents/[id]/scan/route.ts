@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
 import { getSessionUser } from "@/lib/auth";
 import { rejectUntrustedOrigin } from "@/lib/request-security";
+import { boundedString } from "@/lib/request-input";
 
 const RESULTS = new Set(["clean", "infected", "error"]);
 
@@ -23,8 +24,8 @@ export async function PATCH(
   if (!RESULTS.has(body.result ?? "")) {
     return NextResponse.json({ error: "result must be clean|infected|error" }, { status: 400 });
   }
-  const providerRef = body.providerRef?.trim().slice(0, 200) ?? "";
-  const note = body.note?.trim().slice(0, 1000) ?? "";
+  const providerRef = boundedString(body.providerRef, 200);
+  const note = boundedString(body.note, 1000);
   if (!providerRef || !note) {
     return NextResponse.json({ error: "Scanner reference and review note are required" }, { status: 400 });
   }

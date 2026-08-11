@@ -3,6 +3,7 @@ import { prisma } from "@/lib/db";
 import { getSessionUser } from "@/lib/auth";
 import { canReviewSubmissions, forbidden, unauthorized } from "@/lib/authz";
 import { rejectUntrustedOrigin } from "@/lib/request-security";
+import { boundedInteger, boundedString } from "@/lib/request-input";
 
 const STATUSES = new Set(["draft", "approved", "active", "suspended", "expired", "cancelled"]);
 
@@ -30,29 +31,41 @@ export async function POST(req: Request) {
   } catch {
     return NextResponse.json({ error: "Invalid JSON body" }, { status: 400 });
   }
-  if (!body.orgId || !body.planId) {
+  const orgId = boundedString(body.orgId, 100);
+  const planId = boundedString(body.planId, 100);
+  if (!orgId || !planId) {
     return NextResponse.json({ error: "Organization and package are required" }, { status: 400 });
   }
   const [organization, plan] = await Promise.all([
-    prisma.organization.findUnique({ where: { id: body.orgId } }),
-    prisma.plan.findUnique({ where: { id: body.planId } }),
+    prisma.organization.findUnique({ where: { id: orgId } }),
+    prisma.plan.findUnique({ where: { id: planId } }),
   ]);
   if (!organization || !plan) {
     return NextResponse.json({ error: "Organization or package not found" }, { status: 404 });
   }
+  const startsAt = typeof body.startsAt === "string" && body.startsAt ? new Date(body.startsAt) : null;
+  const endsAt = typeof body.endsAt === "string" && body.endsAt ? new Date(body.endsAt) : null;
+  if ((startsAt && Number.isNaN(startsAt.getTime())) || (endsAt && Number.isNaN(endsAt.getTime()))) {
+    return NextResponse.json({ error: "Contract dates must be valid dates" }, { status: 400 });
+  }
+  if (startsAt && endsAt && endsAt < startsAt) {
+    return NextResponse.json({ error: "Contract end date must not precede its start date" }, { status: 400 });
+  }
+  const currencyInput = boundedString(body.currency, 3).toUpperCase();
+  const currency = /^[A-Z]{3}$/.test(currencyInput) ? currencyInput : "USD";
   const now = new Date().toISOString();
   const contract = await prisma.commercialContract.create({
     data: {
       orgId: organization.id,
       planId: plan.id,
-      currency: body.currency?.trim().toUpperCase().slice(0, 3) || "USD",
-      annualValueMinor: typeof body.annualValueMinor === "number" ? Math.max(0, Math.round(body.annualValueMinor)) : null,
-      seatLimit: typeof body.seatLimit === "number" ? Math.max(1, Math.round(body.seatLimit)) : null,
-      serviceLevel: body.serviceLevel?.trim().slice(0, 500) || "",
-      dataRetentionDays: typeof body.dataRetentionDays === "number" ? Math.max(1, Math.round(body.dataRetentionDays)) : null,
-      termsVersion: body.termsVersion?.trim().slice(0, 80) || null,
-      startsAt: body.startsAt ? new Date(body.startsAt) : null,
-      endsAt: body.endsAt ? new Date(body.endsAt) : null,
+      currency,
+      annualValueMinor: boundedInteger(body.annualValueMinor, 0, 2_147_483_647),
+      seatLimit: boundedInteger(body.seatLimit, 1, 1_000_000),
+      serviceLevel: boundedString(body.serviceLevel, 500),
+      dataRetentionDays: boundedInteger(body.dataRetentionDays, 1, 3650),
+      termsVersion: boundedString(body.termsVersion, 80) || null,
+      startsAt,
+      endsAt,
       history: JSON.stringify([{ by: admin.fullName, action: "created", note: "Draft contract created", at: now }]),
     },
   });
@@ -72,20 +85,22 @@ export async function PATCH(req: Request) {
   } catch {
     return NextResponse.json({ error: "Invalid JSON body" }, { status: 400 });
   }
-  if (!body.id || !STATUSES.has(body.status ?? "")) {
+  const id = boundedString(body.id, 100);
+  const status = boundedString(body.status, 30);
+  if (!id || !STATUSES.has(status)) {
     return NextResponse.json({ error: "Valid contract id and status are required" }, { status: 400 });
   }
-  const note = body.note?.trim().slice(0, 500) ?? "";
+  const note = boundedString(body.note, 500);
   if (!note) return NextResponse.json({ error: "A decision note is required" }, { status: 400 });
-  const current = await prisma.commercialContract.findUnique({ where: { id: body.id } });
+  const current = await prisma.commercialContract.findUnique({ where: { id } });
   if (!current) return NextResponse.json({ error: "Contract not found" }, { status: 404 });
   const history = JSON.parse(current.history || "[]") as unknown[];
-  history.push({ by: admin.fullName, action: `status:${body.status}`, note, at: new Date().toISOString() });
-  const approved = body.status === "approved" || body.status === "active";
+  history.push({ by: admin.fullName, action: `status:${status}`, note, at: new Date().toISOString() });
+  const approved = status === "approved" || status === "active";
   const contract = await prisma.commercialContract.update({
     where: { id: current.id },
     data: {
-      status: body.status,
+      status,
       approvedBy: approved ? admin.fullName : current.approvedBy,
       approvedAt: approved ? new Date() : current.approvedAt,
       history: JSON.stringify(history),
