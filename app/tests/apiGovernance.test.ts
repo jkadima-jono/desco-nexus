@@ -51,3 +51,10 @@ test("global middleware applies origin enforcement to every API route", () => {
   assert.match(middleware, /MUTATING_METHODS/);
   assert.match(middleware, /untrusted_origin/);
 });
+
+test("global middleware prevents caching of every API response", () => {
+  const middleware = readFileSync(new URL("../src/middleware.ts", import.meta.url), "utf8");
+  assert.match(middleware, /Cache-Control", "private, no-store"/);
+  assert.match(middleware, /secureApiResponse\(\s*NextResponse\.next/);
+  assert.match(middleware, /secureApiResponse\(\s*NextResponse\.json/);
+});
