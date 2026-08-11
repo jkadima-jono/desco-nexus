@@ -3,7 +3,7 @@ import { prisma } from "@/lib/db";
 import { getSessionUser } from "@/lib/auth";
 import { SECTORS, INSTRUMENTS, RISK_LEVELS, INVESTOR_TYPES, CO_INVEST_PREFERENCES } from "@/lib/mandateOptions";
 import { effectivePlan } from "@/lib/plans";
-import { boundedString, sanitizeStringArray } from "@/lib/mandate-input";
+import { boundedString, sanitizeStringArray } from "@/lib/request-input";
 
 type MandateBody = {
   name?: string;

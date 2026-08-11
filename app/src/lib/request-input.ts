@@ -1,3 +1,7 @@
+export function boundedString(input: unknown, maxLength: number): string {
+  return typeof input === "string" ? input.trim().slice(0, maxLength) : "";
+}
+
 export function sanitizeStringArray(
   input: unknown,
   allowlist?: string[],
@@ -10,8 +14,4 @@ export function sanitizeStringArray(
     .filter(Boolean)
     .slice(0, 20);
   return allowlist ? strings.filter((value) => allowlist.includes(value)) : strings;
-}
-
-export function boundedString(input: unknown, maxLength: number): string {
-  return typeof input === "string" ? input.trim().slice(0, maxLength) : "";
 }

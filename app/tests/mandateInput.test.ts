@@ -1,10 +1,16 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { boundedString, sanitizeStringArray } from "../src/lib/mandate-input";
+import { boundedString, sanitizeStringArray } from "../src/lib/request-input";
 
 test("mandate text fields reject non-strings and enforce their storage boundary", () => {
   assert.equal(boundedString({ unexpected: true }, 20), "");
   assert.equal(boundedString(`  ${"x".repeat(30)}  `, 20), "x".repeat(20));
+});
+
+test("public request text guards reject object and numeric payloads", () => {
+  assert.equal(boundedString(42, 150), "");
+  assert.equal(boundedString(["unexpected"], 150), "");
+  assert.equal(boundedString("  valid text  ", 150), "valid text");
 });
 
 test("mandate criteria accept only bounded non-empty strings", () => {

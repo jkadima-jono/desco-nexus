@@ -9,6 +9,7 @@ import {
 } from "@/lib/legal-consent";
 import { sanitizeAttributionReferrer, sanitizeCampaignValue } from "@/lib/marketing-attribution";
 import { sanitizeProductEventPath } from "@/lib/product-analytics";
+import { boundedString } from "@/lib/request-input";
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const TOPICS = new Set([
@@ -87,11 +88,11 @@ export async function POST(req: Request) {
   } catch {
     return NextResponse.json({ error: "Invalid JSON body" }, { status: 400 });
   }
-  const name = body.name?.trim() ?? "";
-  const email = body.email?.trim().toLowerCase() ?? "";
-  const organization = body.organization?.trim().slice(0, 150) || null;
+  const name = boundedString(body.name, 151);
+  const email = boundedString(body.email, 255).toLowerCase();
+  const organization = boundedString(body.organization, 150) || null;
   const topic = TOPICS.has(body.topic ?? "") ? body.topic! : "general";
-  const message = body.message?.trim() ?? "";
+  const message = boundedString(body.message, 4001);
   const locale = LOCALES.has(body.locale ?? "") ? body.locale! : "en";
   const sourcePath = sanitizeProductEventPath(body.sourcePath);
   const referrer = sanitizeAttributionReferrer(body.referrer);
