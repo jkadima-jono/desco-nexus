@@ -10,7 +10,6 @@ import { getMarketingCopy, getMarketingMetadata, type HomeMarketingCopy } from "
 import {
   DisclosureChip,
   InstitutionalCard,
-  NumberedProcess,
   QuietNotice,
   SectionHeading,
 } from "@/components/public/PublicPrimitives";
@@ -210,32 +209,26 @@ export default async function Home() {
         <>
           <section className="bg-ivory py-14 lg:py-18" id="how-it-works">
             <div className="public-container">
-              <SectionHeading
-                eyebrow={copy.processEyebrow}
-                title={copy.processTitle}
-                body={copy.processBody}
-              />
-              <div className="mt-9"><NumberedProcess items={copy.process} /></div>
-              <div className="mt-7"><Link href="/diligence" className="button-secondary">{copy.processCta}</Link></div>
-              <div className="mt-14 border-t border-ink/10 pt-12">
-                <SectionHeading eyebrow={paths.convergenceEyebrow} title={paths.convergenceTitle} body={paths.convergenceBody} />
-                <div className="convergence-grid mt-8">
-                  <article className="convergence-path convergence-investor">
-                    <p className="eyebrow text-[#9f3025]">{t(locale, "nav.forInvestors")}</p>
-                    <h3 className="mt-3 font-display text-lg font-bold text-ink">{paths.investorStep}</h3>
-                    <p className="mt-2 text-sm leading-6 text-slate">{paths.investorStepBody}</p>
-                  </article>
-                  <article className="convergence-room">
-                    <p className="eyebrow text-white/65">DESCO Compass</p>
-                    <h3 className="mt-3 font-display text-lg font-bold">{paths.room}</h3>
-                    <p className="mt-2 text-sm leading-6 text-white/72">{paths.roomBody}</p>
-                  </article>
-                  <article className="convergence-path convergence-owner">
-                    <p className="eyebrow text-[#0e6e6b]">{t(locale, "nav.forOwners")}</p>
-                    <h3 className="mt-3 font-display text-lg font-bold text-ink">{paths.ownerStep}</h3>
-                    <p className="mt-2 text-sm leading-6 text-slate">{paths.ownerStepBody}</p>
-                  </article>
-                </div>
+              <SectionHeading eyebrow={paths.convergenceEyebrow} title={paths.convergenceTitle} body={paths.convergenceBody} />
+              <div className="convergence-grid mt-8">
+                <article className="convergence-path convergence-investor">
+                  <p className="eyebrow text-[#9f3025]">{t(locale, "nav.forInvestors")}</p>
+                  <h3 className="mt-3 font-display text-lg font-bold text-ink">{paths.investorStep}</h3>
+                  <p className="mt-2 text-sm leading-6 text-slate">{paths.investorStepBody}</p>
+                  <Link href="/investors" className="mt-4 inline-flex min-h-11 items-center text-sm font-bold text-[#9f3025] underline underline-offset-4">{t(locale, "home.investorCta")} →</Link>
+                </article>
+                <article className="convergence-room">
+                  <p className="eyebrow text-white/65">DESCO Compass</p>
+                  <h3 className="mt-3 font-display text-lg font-bold">{paths.room}</h3>
+                  <p className="mt-2 text-sm leading-6 text-white/72">{paths.roomBody}</p>
+                  <Link href="/diligence" className="mt-4 inline-flex min-h-11 items-center text-sm font-bold text-white underline decoration-white/35 underline-offset-4">{copy.processCta} →</Link>
+                </article>
+                <article className="convergence-path convergence-owner">
+                  <p className="eyebrow text-[#0e6e6b]">{t(locale, "nav.forOwners")}</p>
+                  <h3 className="mt-3 font-display text-lg font-bold text-ink">{paths.ownerStep}</h3>
+                  <p className="mt-2 text-sm leading-6 text-slate">{paths.ownerStepBody}</p>
+                  <Link href="/sponsors" className="mt-4 inline-flex min-h-11 items-center text-sm font-bold text-[#0e6e6b] underline underline-offset-4">{t(locale, "home.sponsorCta")} →</Link>
+                </article>
               </div>
             </div>
           </section>

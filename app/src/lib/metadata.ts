@@ -2,10 +2,10 @@ import type { Metadata } from "next";
 
 const DEFAULT_SITE_ORIGIN = "https://compass.desco.global";
 const SOCIAL_IMAGE = {
-  url: "/brand/desco-compass-logo.jpg",
-  width: 800,
-  height: 800,
-  alt: "Official DESCO Compass logo",
+  url: "/brand/desco-coin.png",
+  width: 400,
+  height: 400,
+  alt: "DESCO Compass seal",
 };
 
 function withProtocol(host: string) {

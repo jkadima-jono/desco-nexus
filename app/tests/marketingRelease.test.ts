@@ -51,6 +51,22 @@ test("public navigation promotes preparation resources and public files do not f
   assert.match(projectPage, /filter\(\(photo\) => !photo\.isExample\)/);
 });
 
+test("public metadata uses the transparent Compass seal", () => {
+  const metadata = readFileSync("src/lib/metadata.ts", "utf8");
+  const layout = readFileSync("src/app/layout.tsx", "utf8");
+  assert.match(metadata, /desco-coin\.png/);
+  assert.match(layout, /desco-coin\.png/);
+  assert.doesNotMatch(`${metadata}\n${layout}`, /desco-compass-logo\.jpg/);
+});
+
+test("the shared homepage does not embed the investor-only six-step process", () => {
+  const home = readFileSync("src/app/page.tsx", "utf8");
+  assert.doesNotMatch(home, /NumberedProcess items=\{copy\.process\}/);
+  assert.match(home, /convergence-grid/);
+  assert.match(home, /href="\/investors"/);
+  assert.match(home, /href="\/sponsors"/);
+});
+
 test("production smoke checks cover release-critical public contracts", () => {
   const smoke = readFileSync("scripts/smoke-production.ts", "utf8");
   assert.match(smoke, /canonicalFromHtml/);
