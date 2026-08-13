@@ -68,18 +68,20 @@ export default function PublicHeader({ user, signupEnabled }: { user?: { role?: 
             {!user && signupEnabled && <Link href="/login" className="shrink-0 px-2 py-2 text-[11px] font-bold text-white underline-offset-4 hover:underline xl:text-xs">{account.signIn}</Link>}
             <Button href={workspaceHref} className="button-primary shrink-0 px-2 text-[11px] xl:px-3 xl:text-xs 2xl:px-4 2xl:text-[0.82rem]">{workspaceLabel}</Button>
           </div>
-          <Button
-            ref={menuButton}
-            variant="ghost-light"
-            type="button"
-            onClick={() => setOpen(true)}
-            aria-expanded={open}
-            aria-controls="public-mobile-navigation"
-            className="grid min-h-11 min-w-11 shrink-0 place-items-center border border-white/20 text-xl xl:hidden"
-            aria-label={t("nav.open")}
-          >
-            ☰
-          </Button>
+          <div className="xl:hidden">
+            <Button
+              ref={menuButton}
+              variant="ghost-light"
+              type="button"
+              onClick={() => setOpen(true)}
+              aria-expanded={open}
+              aria-controls="public-mobile-navigation"
+              className="grid min-h-11 min-w-11 shrink-0 place-items-center border border-white/20 text-xl"
+              aria-label={t("nav.open")}
+            >
+              ☰
+            </Button>
+          </div>
         </div>
       </header>
       {open && (
