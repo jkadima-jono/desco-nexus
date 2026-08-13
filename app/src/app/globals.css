@@ -104,10 +104,30 @@ html[lang="zh"] h4 {
 .institutional-hero {
   position: relative;
   overflow: hidden;
-  background-color: var(--desco-charcoal);
-  background-image: linear-gradient(rgb(0 0 0 / 0.45), rgb(0 0 0 / 0.45)), url("/brand/desco-globe.svg");
-  background-position: center;
-  background-size: cover;
+  isolation: isolate;
+  background-color: #171717;
+  background-image:
+    linear-gradient(90deg, rgb(0 0 0 / 0.98) 0%, rgb(0 0 0 / 0.92) 48%, rgb(0 0 0 / 0.68) 100%),
+    url("/brand/desco-globe.svg");
+  background-position: center, right -7rem center;
+  background-repeat: no-repeat;
+  background-size: cover, min(48rem, 58vw) auto;
+}
+
+@media (max-width: 767px) {
+  .institutional-hero {
+    background-image:
+      linear-gradient(90deg, rgb(0 0 0 / 0.96), rgb(0 0 0 / 0.88)),
+      url("/brand/desco-globe.svg");
+    background-position: center, center bottom;
+    background-size: cover, 35rem auto;
+  }
+
+  .institutional-hero .desco-button {
+    width: 100%;
+    padding-inline: 16px;
+    font-size: 14px;
+  }
 }
 
 .editorial-display,

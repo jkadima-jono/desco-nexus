@@ -35,7 +35,7 @@ export default function PublicHeader({ user, signupEnabled }: { user?: { role?: 
   useModalFocus({ open, container: mobileNavigation, initialFocus: closeButton, returnFocus: menuButton, onClose: closeMenu });
 
   const navigation = (desktop = false) => (
-    <nav aria-label={t("nav.public")} className={desktop ? "flex items-center gap-8" : "flex flex-col items-start gap-1"}>
+    <nav aria-label={t("nav.public")} className={desktop ? "flex items-center gap-4 2xl:gap-6" : "flex flex-col items-start gap-1"}>
       {LINKS.map(([href, labelKey], index) => {
         const active = pathname.startsWith(href);
         return (
@@ -44,7 +44,7 @@ export default function PublicHeader({ user, signupEnabled }: { user?: { role?: 
             href={href}
             onClick={() => setOpen(false)}
             aria-current={active ? "page" : undefined}
-            className={`min-h-11 whitespace-nowrap border-b-[3px] px-0 py-3 font-sans text-2xl font-semibold uppercase tracking-normal xl:min-h-0 xl:py-2 xl:text-[19px] ${
+            className={`min-h-11 whitespace-nowrap border-b-[3px] px-0 py-3 font-sans text-2xl font-semibold uppercase tracking-normal xl:min-h-0 xl:py-2 xl:text-[13px] 2xl:text-[15px] ${
               active ? "border-desco-gold text-desco-gold" : "border-transparent text-white hover:text-desco-gold"
             }`}
           >
@@ -58,11 +58,11 @@ export default function PublicHeader({ user, signupEnabled }: { user?: { role?: 
   return (
     <>
       <header className="sticky top-0 z-40 border-b border-desco-charcoal bg-black text-white">
-        <div className="flex h-16 w-full items-center justify-between gap-3 px-6 xl:h-[88px]">
+        <div className="flex h-16 w-full items-center justify-between gap-3 px-5 xl:h-[88px] xl:px-8">
           <Link href="/" className="flex shrink-0 items-center gap-3" aria-label={`DESCO Compass — ${t("common.home")}`}>
-            <BrandMark compactDesktop />
+            <BrandMark size={44} compactDesktop />
           </Link>
-          <div className="hidden min-w-0 items-center gap-8 xl:flex">
+          <div className="hidden min-w-0 items-center gap-4 xl:flex 2xl:gap-6">
             {navigation(true)}
             <div className="w-32 shrink-0"><LanguageSwitcher /></div>
             {!user && signupEnabled && <Link href="/login" className="shrink-0 px-2 py-2 text-[11px] font-bold text-white underline-offset-4 hover:underline xl:text-xs">{account.signIn}</Link>}
