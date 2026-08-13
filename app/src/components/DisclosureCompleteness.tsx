@@ -28,7 +28,7 @@ export default function DisclosureCompleteness({
         <span className="shrink-0 text-wgray">{copy.review}</span>
       </div>
       <div
-        className="mt-2 grid h-1.5 gap-0.5 overflow-hidden rounded-full"
+        className="mt-2 grid h-1.5 gap-0.5 overflow-hidden "
         style={{ gridTemplateColumns: `repeat(${Math.max(summary.total, 1)}, minmax(0, 1fr))` }}
         aria-label={`${copy.count(summary.supported, summary.total)}. ${detail}`}
       >

@@ -22,7 +22,7 @@ export default function StageWheel({ active }: { active: string }) {
             <span
               aria-current={isActive ? "step" : undefined}
               className={
-                "text-[11px] font-bold px-2.5 py-1 rounded-full whitespace-nowrap " +
+                "text-[11px] font-bold px-2.5 py-1  whitespace-nowrap " +
                 (isActive
                   ? "bg-gold text-ink"
                   : isPast

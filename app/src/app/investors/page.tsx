@@ -1,3 +1,4 @@
+import Button from "@/components/ui/Button";
 import type { Metadata } from "next";
 import Link from "next/link";
 import {
@@ -67,13 +68,13 @@ export default async function InvestorsPage() {
           <div className="mt-8"><QuietNotice>{copy.notice}</QuietNotice></div>
           <div className="mt-8 max-w-xl">
             <div className="flex flex-wrap gap-3">
-              {signupEnabled && <Link href="/signup" className="button-primary">{account.createAccount}</Link>}
-              <Link href="/contact?topic=investor-access" className={signupEnabled ? "button-secondary" : "button-primary"}>{copy.applyCta}</Link>
+              {signupEnabled && <Button href="/signup" className="button-primary">{account.createAccount}</Button>}
+              <Button href="/contact?topic=investor-access" className={signupEnabled ? "button-secondary" : "button-primary"}>{copy.applyCta}</Button>
             </div>
             <p className="mt-3 text-xs leading-5 text-slate">{t(locale, "access.investorQualifier")}</p>
           </div>
           <p className="mt-10 border-t border-ink/10 pt-7 text-sm text-slate">
-            {paths.ownerCrossLink} <Link href="/sponsors" className="font-bold text-[#0e6e6b] underline underline-offset-4">{t(locale, "home.sponsorCta")} →</Link>
+            {paths.ownerCrossLink} <Link href="/sponsors" className="font-bold text-desco-slate underline decoration-desco-emerald underline-offset-4">{t(locale, "home.sponsorCta")} →</Link>
           </p>
         </div>
       </section>

@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Open_Sans, Poppins } from "next/font/google";
 import "./globals.css";
 import AppShell from "@/components/AppShell";
 import { getSessionUser } from "@/lib/auth";
@@ -10,6 +11,20 @@ import { sharedCopy } from "@/lib/translations/shared";
 import { metadataBaseUrl } from "@/lib/metadata";
 import { openSignupConfig } from "@/lib/openSignup";
 import StructuredData from "@/components/StructuredData";
+
+const poppins = Poppins({
+  subsets: ["latin"],
+  weight: ["300", "400", "500", "600", "700"],
+  variable: "--font-poppins",
+  display: "swap",
+});
+
+const openSans = Open_Sans({
+  subsets: ["latin"],
+  weight: ["600", "700"],
+  variable: "--font-opensans",
+  display: "swap",
+});
 
 export const metadata: Metadata = {
   metadataBase: metadataBaseUrl(),
@@ -46,7 +61,7 @@ export default async function RootLayout({
   const copy = sharedCopy(locale);
   return (
     <html lang={locale}>
-      <body className="min-h-screen">
+      <body className={`${poppins.variable} ${openSans.variable} min-h-screen`}>
         <StructuredData data={[
           {
             "@context": "https://schema.org",

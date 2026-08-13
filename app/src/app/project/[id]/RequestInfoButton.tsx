@@ -1,5 +1,7 @@
 "use client";
 
+import Button from "@/components/ui/Button";
+
 import { useState } from "react";
 import { trackProductEvent } from "@/components/ProductAnalytics";
 import { RESTRICTED_ACCESS_NOTICE_VERSION } from "@/lib/restricted-access";
@@ -61,8 +63,8 @@ export default function RequestInfoButton({
   };
 
   return (
-    <button onClick={send} disabled={state !== "idle"} aria-label={ariaLabel} className={className + " disabled:opacity-60"}>
+    <Button onClick={send} disabled={state !== "idle"} aria-label={ariaLabel} className={className + " disabled:opacity-60"}>
       {state === "done" ? doneLabel : state === "busy" ? "Sending…" : label}
-    </button>
+    </Button>
   );
 }

@@ -1,5 +1,7 @@
 "use client";
 
+import Button from "@/components/ui/Button";
+
 import { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useI18n } from "@/components/I18nProvider";
@@ -46,13 +48,13 @@ export function UploadDoc({ listingId }: { listingId: string }) {
           if (f) upload(f);
         }}
       />
-      <button
+      <Button
         onClick={() => fileRef.current?.click()}
         disabled={busy}
         className="text-sm font-display font-bold text-gold hover:brightness-90 disabled:opacity-50"
       >
         {busy ? t("project.uploading") : "⇪ " + t("project.upload")}
-      </button>
+      </Button>
       {msg && <span className="ml-3 text-xs text-wgray">{msg}</span>}
     </div>
   );
@@ -89,23 +91,23 @@ export function TeaserGenerator({ listingId }: { listingId: string }) {
   };
 
   return (
-    <section className="bg-white rounded-2xl p-6 shadow-[0_1px_3px_rgb(44_62_80/0.08)]">
+    <section className="bg-white  p-6 ">
       <div className="flex items-center justify-between mb-3">
         <h2 className="font-display font-bold text-lg">
           <span className="text-gold">✦</span> {t("project.teaser")}
         </h2>
-        <button
+        <Button
           onClick={generate}
           disabled={busy}
-          className="bg-charcoal text-white font-display font-bold text-xs px-4 py-2 rounded-xl hover:bg-ink disabled:opacity-50"
+          className="bg-charcoal text-white font-display font-bold text-xs px-4 py-2  hover:bg-ink disabled:opacity-50"
         >
           {busy ? t("project.generating") : teaser ? t("project.regenerate") : t("project.generate")}
-        </button>
+        </Button>
       </div>
       {error && <div className="text-xs text-brandred mb-2">{error}</div>}
       {teaser ? (
         <>
-          <pre className="whitespace-pre-wrap font-body text-xs leading-relaxed bg-mist rounded-xl p-4 max-h-72 overflow-y-auto">
+          <pre className="whitespace-pre-wrap font-body text-xs leading-relaxed bg-mist  p-4 max-h-72 overflow-y-auto">
             {teaser}
           </pre>
           <div className="text-[10px] text-wgray mt-2">

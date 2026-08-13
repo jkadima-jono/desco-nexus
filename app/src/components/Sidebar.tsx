@@ -1,5 +1,7 @@
 "use client";
 
+import Button from "@/components/ui/Button";
+
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useCallback, useRef, useState } from "react";
@@ -102,7 +104,7 @@ export default function Sidebar({ user }: { user: SidebarUser }) {
       <div className="px-6 pt-7 pb-6">
         <div className="flex items-center gap-3">
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/brand/desco-coin.png" alt="" className="h-11 w-11 object-contain drop-shadow-[0_2px_8px_rgb(184_149_61/0.45)]" />
+          <img src="/brand/desco-coin.png" alt="" className="h-11 w-11 object-contain " />
           <div>
             <div className="font-display font-extrabold text-lg tracking-tight leading-tight">DESCO <span className="text-gold">Compass</span></div>
             <div className="text-[10px] text-white/50 font-body">{t("brand.tagline")}</div>
@@ -112,14 +114,14 @@ export default function Sidebar({ user }: { user: SidebarUser }) {
       <nav aria-label={copy.workspaceNavigation} className="min-h-0 flex-1 overflow-y-auto px-3 pb-3">
         {navGroups.map((group, groupIndex) => (
           <div key={group.labelKey} className={groupIndex > 0 ? "mt-5 border-t border-white/8 pt-4" : ""}>
-            <p className="mb-1 px-3 text-xs font-bold uppercase tracking-[0.14em] text-white/65">
+            <div className="mb-1 px-3 text-xs font-bold uppercase tracking-[0.14em] text-white/65">
               {t(group.labelKey)}
-            </p>
+            </div>
             <div className="space-y-1">
               {group.items.map((item) => {
                 const active = isActiveRoute(pathname, item.href);
                 return (
-                  <Link key={item.key} href={item.href} onClick={() => setMobileOpen(false)} aria-current={active ? "page" : undefined} className={"flex items-center gap-3 rounded-lg border-l-2 px-3 py-2 text-sm font-semibold transition-colors " + (active ? "border-gold bg-gold/14 text-white" : "border-transparent text-white/68 hover:bg-white/8 hover:text-white")}>
+                  <Link key={item.key} href={item.href} onClick={() => setMobileOpen(false)} aria-current={active ? "page" : undefined} className={"flex items-center gap-3  border-l-2 px-3 py-2 text-sm font-semibold transition-colors " + (active ? "border-gold bg-gold/14 text-white" : "border-transparent text-white/68 hover:bg-white/8 hover:text-white")}>
                     <span aria-hidden="true" className={active ? "w-5 text-center text-gold" : "w-5 text-center"}>{item.icon}</span>{t(item.key)}
                   </Link>
                 );
@@ -132,17 +134,17 @@ export default function Sidebar({ user }: { user: SidebarUser }) {
       <div className="px-4 py-4 border-t border-white/10">
         {user ? (
           <div className="flex items-center gap-3">
-            <Link href="/account" onClick={() => setMobileOpen(false)} aria-label={account.settingsTitle} className="flex min-w-0 flex-1 items-center gap-3 rounded-lg focus-visible:outline-offset-2">
+            <Link href="/account" onClick={() => setMobileOpen(false)} aria-label={account.settingsTitle} className="flex min-w-0 flex-1 items-center gap-3  focus-visible:outline-offset-2">
             <div className="w-9 h-9 rounded-full bg-gold text-ink font-display font-bold flex items-center justify-center">{user.fullName.charAt(0)}</div>
             <div className="min-w-0 flex-1"><div className="text-sm font-semibold truncate">{user.fullName}</div><div className="text-[11px] text-gold truncate">✓ {user.title ?? t("nav.member")}</div></div>
             </Link>
             <NotificationBell />
-            <button onClick={logout} className="grid min-h-11 min-w-11 place-items-center rounded-lg text-sm text-white/70 hover:bg-white/10 hover:text-white" aria-label={copy.signOut}>⎋</button>
+            <Button onClick={logout} className="grid min-h-11 min-w-11 place-items-center  text-sm text-white/70 hover:bg-white/10 hover:text-white" aria-label={copy.signOut}>⎋</Button>
           </div>
         ) : (
           <div className="space-y-2">
-            <Link href="/login" className="block text-center bg-gold text-ink font-display font-bold text-sm py-2.5 rounded-xl hover:brightness-110">{t("nav.signIn")}</Link>
-            <Link href="/contact" className="block text-center border border-white/20 text-white font-display font-semibold text-xs py-2 rounded-xl hover:bg-white/10">{t("nav.apply")}</Link>
+            <Button href="/login" variant="solid-light" className="w-full">{t("nav.signIn")}</Button>
+            <Button href="/contact" variant="ghost-light" className="w-full">{t("nav.apply")}</Button>
           </div>
         )}
       </div>
@@ -154,14 +156,14 @@ export default function Sidebar({ user }: { user: SidebarUser }) {
       <aside className="hidden lg:flex w-60 shrink-0 bg-ink text-white flex-col min-h-screen sticky top-0 h-screen overflow-hidden">
         {navigation}
       </aside>
-      <header className="lg:hidden fixed inset-x-0 top-0 z-40 h-16 bg-ink text-white flex items-center justify-between px-4 shadow-lg">
+      <header className="lg:hidden fixed inset-x-0 top-0 z-40 h-16 bg-ink text-white flex items-center justify-between px-4 ">
         <Link href="/" className="font-display font-extrabold">DESCO <span className="text-gold">Compass</span></Link>
-        <button ref={menuButtonRef} type="button" onClick={() => setMobileOpen(true)} aria-expanded={mobileOpen} aria-controls="mobile-navigation" className="min-w-11 min-h-11 rounded-xl border border-white/20 text-xl" aria-label={t("nav.open")}>☰</button>
+        <Button ref={menuButtonRef} type="button" onClick={() => setMobileOpen(true)} aria-expanded={mobileOpen} aria-controls="mobile-navigation" className="min-w-11 min-h-11  border border-white/20 text-xl" aria-label={t("nav.open")}>☰</Button>
       </header>
       {mobileOpen && (
         <div className="lg:hidden fixed inset-0 z-50 bg-black/50" role="presentation" onClick={() => setMobileOpen(false)}>
-          <aside ref={mobileNavigationRef} id="mobile-navigation" role="dialog" aria-modal="true" aria-label={copy.workspaceNavigation} tabIndex={-1} className="relative h-full w-full overflow-hidden bg-ink text-white flex flex-col shadow-2xl sm:w-80" onClick={(e) => e.stopPropagation()}>
-            <button ref={closeButtonRef} type="button" onClick={() => setMobileOpen(false)} className="absolute z-10 top-3 right-3 min-w-11 min-h-11 rounded-xl text-2xl text-white hover:bg-white/10" aria-label={t("nav.close")}>×</button>
+          <aside ref={mobileNavigationRef} id="mobile-navigation" role="dialog" aria-modal="true" aria-label={copy.workspaceNavigation} tabIndex={-1} className="relative h-full w-full overflow-hidden bg-ink text-white flex flex-col  sm:w-80" onClick={(e) => e.stopPropagation()}>
+            <Button ref={closeButtonRef} type="button" onClick={() => setMobileOpen(false)} className="absolute z-10 top-3 right-3 min-w-11 min-h-11  text-2xl text-white hover:bg-white/10" aria-label={t("nav.close")}>×</Button>
             {navigation}
           </aside>
         </div>

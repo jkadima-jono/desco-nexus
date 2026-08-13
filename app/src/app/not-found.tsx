@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Button from "@/components/ui/Button";
 import { getLocale } from "@/lib/i18n-server";
 import { t } from "@/lib/i18n";
 import type { Metadata } from "next";
@@ -27,12 +28,12 @@ export default async function NotFound() {
           {t(locale, "notFound.title")}
         </h1>
         <p className="text-sm text-wgray mb-6">{t(locale, "notFound.body")}</p>
-        <Link
+        <Button
           href="/"
-          className="inline-block bg-gold text-ink font-display font-bold text-sm px-6 py-3 rounded-xl hover:brightness-110"
+          variant="solid-brand"
         >
           {t(locale, "notFound.cta")}
-        </Link>
+        </Button>
       </div>
     </div>
   );

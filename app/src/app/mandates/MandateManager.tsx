@@ -1,5 +1,7 @@
 "use client";
 
+import Button from "@/components/ui/Button";
+
 import { useEffect, useState } from "react";
 import { trackProductEvent } from "@/components/ProductAnalytics";
 import {
@@ -206,12 +208,12 @@ export default function MandateManager() {
           {mandates.length > 0 && (
             <div className="space-y-3">
               {mandates.map((m) => (
-                <div key={m.id} className="bg-white rounded-2xl p-5 shadow-[0_1px_3px_rgb(44_62_80/0.08)]">
+                <div key={m.id} className="bg-white  p-5 ">
                   <div className="flex items-start justify-between gap-3">
                     <div>
                       <div className="font-display font-bold flex items-center gap-2">
                         {m.name}
-                        <span className={"text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full " + (m.active ? "bg-emerald-p/15 text-emerald-p" : "bg-wgray/15 text-wgray")}>
+                        <span className={"text-[10px] font-bold uppercase tracking-wider px-2 py-0.5  " + (m.active ? "bg-emerald-p/15 text-emerald-p" : "bg-wgray/15 text-wgray")}>
                           {m.active ? "Active" : "Paused"}
                         </span>
                       </div>
@@ -223,12 +225,12 @@ export default function MandateManager() {
                     </div>
                   </div>
                   <div className="flex flex-wrap gap-2 mt-3 text-xs font-semibold">
-                    <button onClick={() => startEdit(m)} className="px-3 py-1.5 rounded-lg bg-mist hover:bg-gold-soft">Edit</button>
-                    <button onClick={() => act(m.id, { active: !m.active })} className="px-3 py-1.5 rounded-lg bg-mist hover:bg-gold-soft">
+                    <Button onClick={() => startEdit(m)} className="px-3 py-1.5  bg-mist hover:bg-gold-soft">Edit</Button>
+                    <Button onClick={() => act(m.id, { active: !m.active })} className="px-3 py-1.5  bg-mist hover:bg-gold-soft">
                       {m.active ? "Pause" : "Resume"}
-                    </button>
-                    <button onClick={() => act(m.id, { duplicate: true })} className="px-3 py-1.5 rounded-lg bg-mist hover:bg-gold-soft">Duplicate</button>
-                    <button onClick={() => remove(m.id)} className="px-3 py-1.5 rounded-lg bg-brandred/10 text-brandred hover:bg-brandred/20">Delete</button>
+                    </Button>
+                    <Button onClick={() => act(m.id, { duplicate: true })} className="px-3 py-1.5  bg-mist hover:bg-gold-soft">Duplicate</Button>
+                    <Button onClick={() => remove(m.id)} className="px-3 py-1.5  bg-brandred/10 text-brandred hover:bg-brandred/20">Delete</Button>
                   </div>
                 </div>
               ))}
@@ -236,33 +238,33 @@ export default function MandateManager() {
           )}
 
           {!showForm && (
-            <button onClick={() => setShowForm(true)} className="bg-gold text-ink font-display font-bold text-sm px-5 py-2.5 rounded-xl hover:brightness-110">
+            <Button onClick={() => setShowForm(true)} className="bg-gold text-ink font-display font-bold text-sm px-5 py-2.5  hover:brightness-110">
               + New mandate
-            </button>
+            </Button>
           )}
 
           {showForm && (
-            <form onSubmit={submit} className="bg-white rounded-2xl p-6 shadow-[0_1px_3px_rgb(44_62_80/0.08)] space-y-4">
+            <form onSubmit={submit} className="bg-white  p-6  space-y-4">
               <div>
                 <div className="flex items-center justify-between mb-1.5">
                   <h2 className="font-display font-bold text-lg">{editingId ? "Edit mandate" : "New mandate"}</h2>
                   <span className="text-xs font-bold text-wgray">{mandateCompleteness}% complete</span>
                 </div>
-                <div className="h-1.5 rounded-full bg-mist overflow-hidden">
-                  <div className="h-full bg-gold rounded-full transition-all" style={{ width: mandateCompleteness + "%" }} />
+                <div className="h-1.5  bg-mist overflow-hidden">
+                  <div className="h-full bg-gold  transition-all" style={{ width: mandateCompleteness + "%" }} />
                 </div>
               </div>
 
               <div>
                 <label htmlFor="m-name" className="block text-[11px] font-bold uppercase tracking-wider text-wgray mb-1.5">Mandate name</label>
                 <input id="m-name" required value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })}
-                  className="w-full bg-mist rounded-xl px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-gold" />
+                  className="w-full bg-mist  px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-gold" />
               </div>
 
               <div>
                 <label htmlFor="m-type" className="block text-[11px] font-bold uppercase tracking-wider text-wgray mb-1.5">Investor type</label>
                 <select id="m-type" value={form.investorType} onChange={(e) => setForm({ ...form, investorType: e.target.value })}
-                  className="w-full bg-mist rounded-xl px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-gold">
+                  className="w-full bg-mist  px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-gold">
                   <option value="">Not specified</option>
                   {INVESTOR_TYPES.map((v) => <option key={v} value={v}>{INVESTOR_TYPE_LABELS[v]}</option>)}
                 </select>
@@ -272,7 +274,7 @@ export default function MandateManager() {
                 <legend className="block text-[11px] font-bold uppercase tracking-wider text-wgray mb-1.5">Target sectors</legend>
                 <div className="flex flex-wrap gap-2">
                   {SECTORS.map((s) => (
-                    <label key={s} className="flex items-center gap-1.5 text-sm bg-mist px-3 py-1.5 rounded-lg cursor-pointer">
+                    <label key={s} className="flex items-center gap-1.5 text-sm bg-mist px-3 py-1.5  cursor-pointer">
                       <input type="checkbox" checked={form.sectors.includes(s)} onChange={() => setForm({ ...form, sectors: toggleIn(form.sectors, s) })} />
                       {s}
                     </label>
@@ -285,19 +287,19 @@ export default function MandateManager() {
                   Target countries/regions <span className="normal-case font-normal text-wgray/70">(comma-separated, e.g. "DR Congo")</span>
                 </label>
                 <input id="m-countries" value={form.countries} onChange={(e) => setForm({ ...form, countries: e.target.value })}
-                  className="w-full bg-mist rounded-xl px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-gold" />
+                  className="w-full bg-mist  px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-gold" />
               </div>
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <label htmlFor="m-min" className="block text-[11px] font-bold uppercase tracking-wider text-wgray mb-1.5">Min ticket ($M)</label>
                   <input id="m-min" type="number" min="0" value={form.ticketMinM} onChange={(e) => setForm({ ...form, ticketMinM: e.target.value })}
-                    className="w-full bg-mist rounded-xl px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-gold" />
+                    className="w-full bg-mist  px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-gold" />
                 </div>
                 <div>
                   <label htmlFor="m-max" className="block text-[11px] font-bold uppercase tracking-wider text-wgray mb-1.5">Max ticket ($M)</label>
                   <input id="m-max" type="number" min="0" value={form.ticketMaxM} onChange={(e) => setForm({ ...form, ticketMaxM: e.target.value })}
-                    className="w-full bg-mist rounded-xl px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-gold" />
+                    className="w-full bg-mist  px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-gold" />
                 </div>
               </div>
 
@@ -305,7 +307,7 @@ export default function MandateManager() {
                 <legend className="block text-[11px] font-bold uppercase tracking-wider text-wgray mb-1.5">Preferred instruments</legend>
                 <div className="flex flex-wrap gap-2">
                   {INSTRUMENTS.map((i) => (
-                    <label key={i} className="flex items-center gap-1.5 text-sm bg-mist px-3 py-1.5 rounded-lg cursor-pointer capitalize">
+                    <label key={i} className="flex items-center gap-1.5 text-sm bg-mist px-3 py-1.5  cursor-pointer capitalize">
                       <input type="checkbox" checked={form.instruments.includes(i)} onChange={() => setForm({ ...form, instruments: toggleIn(form.instruments, i) })} />
                       {i}
                     </label>
@@ -317,12 +319,12 @@ export default function MandateManager() {
                 <div>
                   <label htmlFor="m-return" className="block text-[11px] font-bold uppercase tracking-wider text-wgray mb-1.5">Target return</label>
                   <input id="m-return" placeholder="e.g. 15-20% IRR" value={form.targetReturn} onChange={(e) => setForm({ ...form, targetReturn: e.target.value })}
-                    className="w-full bg-mist rounded-xl px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-gold" />
+                    className="w-full bg-mist  px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-gold" />
                 </div>
                 <div>
                   <label htmlFor="m-horizon" className="block text-[11px] font-bold uppercase tracking-wider text-wgray mb-1.5">Horizon (years)</label>
                   <input id="m-horizon" type="number" min="0" max="50" value={form.horizonYears} onChange={(e) => setForm({ ...form, horizonYears: e.target.value })}
-                    className="w-full bg-mist rounded-xl px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-gold" />
+                    className="w-full bg-mist  px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-gold" />
                 </div>
               </div>
 
@@ -330,7 +332,7 @@ export default function MandateManager() {
                 <div>
                   <label htmlFor="m-risk" className="block text-[11px] font-bold uppercase tracking-wider text-wgray mb-1.5">Risk tolerance</label>
                   <select id="m-risk" value={form.riskTolerance} onChange={(e) => setForm({ ...form, riskTolerance: e.target.value })}
-                    className="w-full bg-mist rounded-xl px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-gold">
+                    className="w-full bg-mist  px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-gold">
                     <option value="">Not specified</option>
                     {RISK_LEVELS.map((r) => <option key={r} value={r} className="capitalize">{r}</option>)}
                   </select>
@@ -338,7 +340,7 @@ export default function MandateManager() {
                 <div>
                   <label htmlFor="m-freq" className="block text-[11px] font-bold uppercase tracking-wider text-wgray mb-1.5">Alert frequency</label>
                   <select id="m-freq" value={form.frequency} onChange={(e) => setForm({ ...form, frequency: e.target.value })}
-                    className="w-full bg-mist rounded-xl px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-gold">
+                    className="w-full bg-mist  px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-gold">
                     <option value="daily">Daily</option>
                     <option value="weekly">Weekly</option>
                   </select>
@@ -360,7 +362,7 @@ export default function MandateManager() {
                 <legend className="block text-[11px] font-bold uppercase tracking-wider text-wgray mb-1.5">Excluded sectors</legend>
                 <div className="flex flex-wrap gap-2">
                   {SECTORS.map((s) => (
-                    <label key={s} className="flex items-center gap-1.5 text-sm bg-mist px-3 py-1.5 rounded-lg cursor-pointer">
+                    <label key={s} className="flex items-center gap-1.5 text-sm bg-mist px-3 py-1.5  cursor-pointer">
                       <input type="checkbox" checked={form.excludedSectors.includes(s)} onChange={() => setForm({ ...form, excludedSectors: toggleIn(form.excludedSectors, s) })} />
                       {s}
                     </label>
@@ -373,7 +375,7 @@ export default function MandateManager() {
                   Excluded jurisdictions <span className="normal-case font-normal text-wgray/70">(comma-separated)</span>
                 </label>
                 <input id="m-excl-countries" value={form.excludedCountries} onChange={(e) => setForm({ ...form, excludedCountries: e.target.value })}
-                  className="w-full bg-mist rounded-xl px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-gold" />
+                  className="w-full bg-mist  px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-gold" />
               </div>
 
               <div>
@@ -381,16 +383,16 @@ export default function MandateManager() {
                   Notes <span className="normal-case font-normal text-wgray/70">(optional, freeform)</span>
                 </label>
                 <textarea id="m-note" rows={2} value={form.query} onChange={(e) => setForm({ ...form, query: e.target.value })}
-                  className="w-full bg-mist rounded-xl px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-gold resize-none" />
+                  className="w-full bg-mist  px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-gold resize-none" />
               </div>
 
-              {error && <div role="alert" className="text-xs text-brandred bg-brandred/10 rounded-lg px-3 py-2">{error}</div>}
+              {error && <div role="alert" className="text-xs text-brandred bg-brandred/10  px-3 py-2">{error}</div>}
 
               <div className="flex gap-3">
-                <button disabled={busy} className="bg-gold text-ink font-display font-bold text-sm px-5 py-2.5 rounded-xl hover:brightness-110 disabled:opacity-60">
+                <Button disabled={busy} className="bg-gold text-ink font-display font-bold text-sm px-5 py-2.5  hover:brightness-110 disabled:opacity-60">
                   {busy ? "Saving…" : editingId ? "Save changes" : "Save mandate"}
-                </button>
-                <button type="button" onClick={cancelEdit} className="text-sm font-semibold text-wgray hover:text-charcoal">Cancel</button>
+                </Button>
+                <Button type="button" onClick={cancelEdit} className="text-sm font-semibold text-wgray hover:text-charcoal">Cancel</Button>
               </div>
             </form>
           )}

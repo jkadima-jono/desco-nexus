@@ -1,5 +1,7 @@
 "use client";
 
+import Button from "@/components/ui/Button";
+
 import { useState } from "react";
 import type { Listing } from "@/lib/data";
 import ProjectCard from "@/components/ProjectCard";
@@ -62,11 +64,11 @@ export default function Search() {
           value={q}
           onChange={(e) => setQ(e.target.value)}
           placeholder={t("search.placeholder")}
-          className="flex-1 bg-white rounded-2xl px-5 py-4 text-sm shadow-[0_1px_3px_rgb(44_62_80/0.08)] outline-none focus:ring-2 focus:ring-gold"
+          className="flex-1 bg-white  px-5 py-4 text-sm  outline-none focus:ring-2 focus:ring-gold"
         />
-        <button disabled={!q.trim() || loading} className="min-h-12 bg-charcoal text-white font-display font-bold text-sm px-6 rounded-2xl hover:bg-ink disabled:opacity-40 disabled:cursor-not-allowed">
+        <Button disabled={!q.trim() || loading} className="min-h-12 bg-charcoal text-white font-display font-bold text-sm px-6  hover:bg-ink disabled:opacity-40 disabled:cursor-not-allowed">
           {t("search.button")}
-        </button>
+        </Button>
       </form>
 
       {!submitted && (
@@ -74,13 +76,13 @@ export default function Search() {
           {SUGGESTION_KEYS.map((key) => {
             const suggestion = t(key);
             return (
-              <button
+              <Button
                 key={key}
                 onClick={() => { setQ(suggestion); run(suggestion); }}
-                className="text-xs bg-white px-3.5 py-2 rounded-full shadow-[0_1px_3px_rgb(44_62_80/0.08)] hover:ring-2 hover:ring-gold text-charcoal/80"
+                className="text-xs bg-white px-3.5 py-2   hover:ring-2 hover:ring-gold text-charcoal/80"
               >
                 {suggestion}
-              </button>
+              </Button>
             );
           })}
         </div>
@@ -90,11 +92,11 @@ export default function Search() {
         <div role="status" aria-live="polite" className="mt-6 text-sm text-wgray">{t("search.loading")}</div>
       )}
       {error && (
-        <div role="alert" className="mt-6 bg-brandred/10 border-l-4 border-brandred rounded-xl px-4 py-3 text-sm text-brandred">{error}</div>
+        <div role="alert" className="mt-6 bg-brandred/10 border-l-4 border-brandred  px-4 py-3 text-sm text-brandred">{error}</div>
       )}
       {out && !loading && (
         <div className="mt-6">
-          <div className="bg-gold-soft border-l-4 border-gold rounded-xl px-4 py-3 text-sm mb-5">
+          <div className="bg-gold-soft border-l-4 border-gold  px-4 py-3 text-sm mb-5">
             <span className="font-bold text-gold">{t("search.parsed")}</span>{" "}
             {out.interpretation} — {out.results.length}{" "}
             {out.results.length === 1 ? t("search.match") : t("search.matches")}
@@ -104,9 +106,9 @@ export default function Search() {
               <ProjectCard key={l.id} listing={l} index={i} locale={locale} />
             ))}
             {out.results.length === 0 && (
-              <div className="bg-white rounded-2xl p-10 text-center text-sm text-wgray">
+              <div className="bg-white  p-10 text-center text-sm text-wgray">
                 <p>{t("search.none")}</p>
-                {submitted && <button type="button" onClick={async () => {
+                {submitted && <Button type="button" onClick={async () => {
                   const res = await fetch("/api/mandates", {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
@@ -114,7 +116,7 @@ export default function Search() {
                   });
                   if (res.status === 401) { window.location.href = "/login"; return; }
                   if (res.ok) setSaved(true);
-                }} className="mt-4 bg-charcoal text-white font-display font-bold px-4 py-2.5 rounded-xl hover:bg-ink focus-visible:ring-2 focus-visible:ring-gold">{saved ? t("mandates.saved") : t("mandates.save")}</button>}
+                }} className="mt-4 bg-charcoal text-white font-display font-bold px-4 py-2.5  hover:bg-ink focus-visible:ring-2 focus-visible:ring-gold">{saved ? t("mandates.saved") : t("mandates.save")}</Button>}
               </div>
             )}
           </div>

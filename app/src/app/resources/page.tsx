@@ -1,3 +1,4 @@
+import Button from "@/components/ui/Button";
 import type { Metadata } from "next";
 import Link from "next/link";
 import StructuredData from "@/components/StructuredData";
@@ -15,11 +16,11 @@ export async function generateMetadata(): Promise<Metadata> {
 
 function Checklist({ title, body, items }: { title: string; body: string; items: string[] }) {
   return (
-    <article className="rounded-xl border border-ink/10 bg-white p-6 shadow-[0_8px_30px_rgb(13_21_28/0.045)]">
+    <article className=" border border-ink/10 bg-white p-6 ">
       <h2 className="editorial-heading text-2xl text-ink">{title}</h2>
       <p className="mt-3 text-sm leading-6 text-slate">{body}</p>
       <ul className="mt-5 space-y-3">
-        {items.map((item) => <li key={item} className="flex gap-3 text-sm leading-6 text-ink"><span aria-hidden="true" className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-gold" />{item}</li>)}
+        {items.map((item) => <li key={item} className="flex gap-3 text-sm leading-6 text-ink"><span aria-hidden="true" className="mt-2 h-1.5 w-1.5 shrink-0 bg-gold" />{item}</li>)}
       </ul>
     </article>
   );
@@ -49,7 +50,7 @@ export default async function ResourcesPage() {
             <Checklist title={copy.controlledTitle} body={copy.controlledBody} items={copy.controlledItems} />
           </div>
           <div className="mt-8"><QuietNotice>{copy.caution}</QuietNotice></div>
-          <div className="mt-8 flex flex-wrap gap-3 print:hidden"><Link href="/opportunities" className="button-primary">{copy.review}</Link><Link href="/contact?topic=project-submission" className="button-secondary">{copy.discuss}</Link></div>
+          <div className="mt-8 flex flex-wrap gap-3 print:hidden"><Button href="/opportunities" className="button-primary">{copy.review}</Button><Button href="/contact?topic=project-submission" className="button-secondary">{copy.discuss}</Button></div>
         </div>
       </section>
     </>

@@ -40,7 +40,7 @@ export default async function ContactPage({
           locale={locale}
           collectionEnabled={collectionEnabled}
         />
-        <div className="mt-6 rounded-xl border border-white/15 p-5 text-xs leading-6 text-white/65">
+        <div className="mt-6  border border-white/15 p-5 text-xs leading-6 text-white/65">
           {collectionEnabled ? ui.notice : paused.notice}
         </div>
       </div>

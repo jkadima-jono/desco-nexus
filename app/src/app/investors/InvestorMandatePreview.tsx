@@ -56,7 +56,7 @@ export default function InvestorMandatePreview({ opportunities, copy }: { opport
             <select
               value={String(value)}
               onChange={(event) => (setter as (value: string) => void)(event.target.value)}
-              className="mt-2 min-h-11 w-full rounded-lg border border-ink/15 bg-white px-3 text-sm font-medium text-ink"
+              className="mt-2 min-h-11 w-full  border border-ink/15 bg-white px-3 text-sm font-medium text-ink"
             >
               <option value="">{copy.all}</option>
               {(options as string[]).map((option) => <option key={option} value={option}>{option}</option>)}

@@ -16,7 +16,7 @@ export default function SectorBadge({
       alt=""
       width={size}
       height={size}
-      className="rounded-full shadow-[0_1px_4px_rgb(16_22_29/0.35)] shrink-0 object-cover bg-white/10"
+      className="rounded-full shrink-0 object-cover bg-white/10"
       style={{ width: size, height: size }}
     />
   );

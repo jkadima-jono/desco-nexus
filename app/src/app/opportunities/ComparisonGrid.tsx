@@ -1,5 +1,7 @@
 "use client";
 
+import Button from "@/components/ui/Button";
+
 import { useState } from "react";
 import ProjectCard from "@/components/ProjectCard";
 import type { Listing } from "@/lib/data";
@@ -32,15 +34,15 @@ export default function ComparisonGrid({ listings, locale, showReviewStatus = tr
             {ui.count(selected.length)}{atLimit ? ui.limit : ""}
           </p>
         </div>
-        <button type="submit" disabled={selected.length === 0} className="button-secondary disabled:cursor-not-allowed disabled:opacity-50">
+        <Button type="submit" disabled={selected.length === 0} className="button-secondary disabled:cursor-not-allowed disabled:opacity-50">
           {ui.button}
-        </button>
+        </Button>
       </div>
       <div className="grid gap-5 lg:grid-cols-2">
         {listings.map((listing, index) => {
           const checked = selected.includes(listing.id);
           return (
-            <div key={listing.id} className="overflow-hidden rounded-xl border border-charcoal/10 bg-white">
+            <div key={listing.id} className="overflow-hidden  border border-charcoal/10 bg-white">
               <label className="flex min-h-11 cursor-pointer items-center justify-end gap-2 border-b border-charcoal/10 bg-mist px-4 text-sm font-bold text-ink">
                 <input
                   type="checkbox"
@@ -53,7 +55,7 @@ export default function ComparisonGrid({ listings, locale, showReviewStatus = tr
                 />
                 {ui.checkbox}
               </label>
-              <div className="[&>article]:rounded-none [&>article]:border-0">
+              <div className="[&> [&>article]:border-0">
                 <ProjectCard listing={listing} index={index} locale={locale} showReviewStatus={showReviewStatus} />
               </div>
             </div>

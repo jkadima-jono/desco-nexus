@@ -1,3 +1,4 @@
+import Button from "@/components/ui/Button";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { InstitutionalCard, PageHero, QuietNotice, SectionHeading } from "@/components/public/PublicPrimitives";
@@ -31,15 +32,15 @@ export default async function AboutPage() {
             {copy.cards.map((card) => <InstitutionalCard key={card.title} {...card} />)}
           </div>
           <div className="mt-10 flex flex-wrap gap-3">
-            <Link href="/partners" className="button-secondary">{copy.partnersCta}</Link>
-            <Link href="/contact?topic=institutional-partnership" className="button-primary">{copy.inquiryCta}</Link>
+            <Button href="/partners" className="button-secondary">{copy.partnersCta}</Button>
+            <Button href="/contact?topic=institutional-partnership" className="button-primary">{copy.inquiryCta}</Button>
           </div>
         </div>
       </section>
       <section className="border-t border-ink/10 bg-white py-14 lg:py-18">
         <div className="public-container">
           <SectionHeading eyebrow={disclosure.eyebrow} title={disclosure.title} body={disclosure.body} />
-          <dl className="mt-8 grid gap-px overflow-hidden rounded-xl border border-ink/10 bg-ink/10 md:grid-cols-2 lg:grid-cols-3">
+          <dl className="mt-8 grid gap-px overflow-hidden  border border-ink/10 bg-ink/10 md:grid-cols-2 lg:grid-cols-3">
             {disclosure.fields.map((field) => (
               <div key={field.label} className="bg-white p-5">
                 <dt className="text-xs font-bold uppercase tracking-wider text-slate">{field.label}</dt>

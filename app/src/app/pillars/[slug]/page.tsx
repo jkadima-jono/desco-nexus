@@ -1,5 +1,6 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
+import Button from "@/components/ui/Button";
 import type { Metadata } from "next";
 import { PILLARS } from "@/lib/pillars";
 import { pillarIcon } from "@/lib/theme";
@@ -52,17 +53,14 @@ export default async function PillarPage({
       <section className="relative overflow-hidden mt-4">
         <div
           className="absolute inset-0"
-          style={{
-            background:
-              "linear-gradient(135deg, " + pillar.color + " 0%, #10161D 100%)",
-          }}
+          style={{ background: pillar.color }}
           aria-hidden="true"
         />
         <div className="absolute inset-0 bg-black/40" aria-hidden="true" />
         <div className="relative max-w-5xl mx-auto px-6 lg:px-8 py-16 lg:py-24 text-white">
           <Reveal>
             <div className="flex items-center gap-3 mb-4">
-              <div className="w-14 h-14 rounded-full bg-white p-1.5 shadow-[0_4px_16px_rgb(0_0_0/0.25)]">
+              <div className="w-14 h-14 rounded-full bg-white p-1.5">
                 <Image
                   src={pillarIcon(pillar.slug)}
                   alt=""
@@ -72,9 +70,9 @@ export default async function PillarPage({
                   className="h-full w-full rounded-full object-cover"
                 />
               </div>
-              <p className="font-bold text-xs uppercase tracking-[0.2em] text-white/80">
+              <div className="font-bold text-xs uppercase tracking-[0.2em] text-white/80">
                 {pillar.shortName}
-              </p>
+              </div>
             </div>
           </Reveal>
           <Reveal delay={80}>
@@ -100,7 +98,7 @@ export default async function PillarPage({
           </Reveal>
 
           <Reveal>
-            <section className="bg-gold-soft border-l-4 border-gold rounded-2xl p-6">
+            <section className="bg-gold-soft border-l-4 border-gold  p-6">
               <h2 className="font-display font-bold text-lg mb-2 text-gold">{copy.detail.thesis}</h2>
               <p className="text-sm leading-relaxed">{pillar.thesis}</p>
             </section>
@@ -121,7 +119,7 @@ export default async function PillarPage({
                 {pillar.objectives.map((o) => (
                   <li key={o} className="flex items-start gap-3 text-sm">
                     <span
-                      className="w-6 h-6 rounded-full flex items-center justify-center text-white text-xs shrink-0 mt-0.5"
+                      className="w-6 h-6  flex items-center justify-center text-white text-xs shrink-0 mt-0.5"
                       style={{ background: pillar.color }}
                     >
                       ◦
@@ -144,7 +142,7 @@ export default async function PillarPage({
         <div className="space-y-6">
           {pillar.impact.length > 0 && (
             <Reveal>
-              <section className="bg-white rounded-2xl p-6 shadow-[0_1px_3px_rgb(44_62_80/0.08)]">
+              <section className="bg-white  p-6 ">
                 <h2 className="font-display font-bold text-sm uppercase tracking-wider text-wgray mb-4">
                   {copy.detail.impact}
                 </h2>
@@ -161,7 +159,7 @@ export default async function PillarPage({
           )}
 
           <Reveal>
-            <section className="bg-white rounded-2xl p-6 shadow-[0_1px_3px_rgb(44_62_80/0.08)]">
+            <section className="bg-white  p-6 ">
               <h2 className="font-display font-bold text-sm uppercase tracking-wider text-wgray mb-3">
                 {copy.detail.geography}
               </h2>
@@ -179,19 +177,20 @@ export default async function PillarPage({
           </Reveal>
 
           <Reveal>
-            <section className="bg-ink text-white rounded-2xl p-6">
+            <section className="bg-ink text-white  p-6">
               <h2 className="font-display font-bold text-lg mb-2">
                 {copy.detail.engage} {pillar.shortName}
               </h2>
               <p className="text-white/70 text-sm leading-relaxed mb-4">
                 {copy.detail.engageBody}
               </p>
-              <Link
+              <Button
                 href="/contact?topic=institutional-partnership"
-                className="block text-center bg-gold text-ink font-display font-bold text-sm py-3 rounded-xl hover:brightness-110"
+                variant="solid-brand"
+                className="w-full"
               >
                 {copy.detail.signIn}
-              </Link>
+              </Button>
             </section>
           </Reveal>
         </div>
@@ -205,7 +204,7 @@ export default async function PillarPage({
               <Link
                 key={p.slug}
                 href={"/pillars/" + p.slug}
-                className="bg-white rounded-xl p-4 shadow-[0_1px_3px_rgb(44_62_80/0.08)] hover:shadow-[0_4px_16px_rgb(44_62_80/0.10)] transition-shadow focus-visible:ring-2 focus-visible:ring-gold"
+                className="bg-white  p-4    focus-visible:ring-2 focus-visible:ring-gold"
               >
                 <div className="font-display font-bold text-sm">{p.name}</div>
                 <div className="text-xs text-wgray mt-1">{p.tagline}</div>

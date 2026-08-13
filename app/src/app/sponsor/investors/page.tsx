@@ -45,14 +45,14 @@ export default async function SponsorInvestors() {
       </p>
 
       {rows.length === 0 ? (
-        <div className="bg-white rounded-2xl p-10 text-center shadow-[0_1px_3px_rgb(44_62_80/0.08)]">
+        <div className="bg-white  p-10 text-center ">
           <p className="text-sm text-wgray">
             No investor engagement recorded yet — this fills in as investors
             view, save, or express interest in your listings.
           </p>
         </div>
       ) : (
-        <div className="bg-white rounded-2xl shadow-[0_1px_3px_rgb(44_62_80/0.08)] overflow-hidden">
+        <div className="bg-white   overflow-hidden">
           <table className="w-full text-sm">
             <thead className="bg-mist text-[11px] text-wgray uppercase tracking-wider">
               <tr>

@@ -39,7 +39,7 @@ export default function InquiryRow({ inquiry }: { inquiry: Inquiry }) {
   };
 
   return (
-    <div className="bg-white rounded-2xl p-5 shadow-[0_1px_3px_rgb(44_62_80/0.08)]">
+    <div className="bg-white  p-5 ">
       <div className="flex items-start justify-between gap-4">
         <div>
           <div className="flex items-center gap-2">
@@ -62,7 +62,7 @@ export default function InquiryRow({ inquiry }: { inquiry: Inquiry }) {
             onChange={(event) => void setStatus(event.target.value)}
             disabled={busy}
             aria-label={`Status for ${inquiry.name}`}
-            className="mt-1 rounded-lg border border-charcoal/10 bg-mist px-2 py-1 text-xs font-bold"
+            className="mt-1  border border-charcoal/10 bg-mist px-2 py-1 text-xs font-bold"
           >
             {STATUSES.map((status) => <option key={status} value={status}>{status}</option>)}
           </select>

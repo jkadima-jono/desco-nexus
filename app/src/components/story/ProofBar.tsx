@@ -13,7 +13,7 @@ export default async function ProofBar() {
   const totalRaiseM = Math.round((totalRaise._sum?.currentCapitalAskUsd ?? 0) / 1_000_000);
 
   return (
-    <div className="text-white py-8" style={{ background: "linear-gradient(90deg, var(--color-ink-2) 0%, var(--color-navy) 100%)" }}>
+    <div className="bg-desco-charcoal py-8 text-white">
       <div className="max-w-4xl mx-auto px-6 grid grid-cols-2 gap-6 text-center">
         <div>
           <div className="font-display font-extrabold text-4xl lg:text-5xl tracking-tight text-white">{listingCount}</div>

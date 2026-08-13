@@ -9,6 +9,7 @@ import { investmentUi, materialFactCopy, screeningReadinessCopy } from "@/lib/tr
 import DisclosureCompleteness from "./DisclosureCompleteness";
 import { localizeInvestmentEvidence, localizeListing, organizationPresentation } from "@/lib/translations/listing-content";
 import { projectHref } from "@/lib/project-slugs";
+import Button from "./ui/Button";
 
 export default function ProjectCard({
   listing,
@@ -48,37 +49,22 @@ export default function ProjectCard({
     `${factCopy.label}: ${fact.value}`,
   ].filter(Boolean).join(", ");
   return (
-    <Link
-      href={projectHref(listing.id)}
-      aria-label={accessibleName}
-      className="card-rise group block overflow-hidden rounded-xl border border-charcoal/10 bg-white shadow-[0_1px_3px_rgb(44_62_80/0.06)] transition-all hover:border-gold/50 hover:shadow-[0_8px_24px_rgb(44_62_80/0.10)]"
+    <article
+      className="card-rise group overflow-hidden border border-desco-hairline bg-white transition-colors hover:border-desco-red"
       style={{ animationDelay: index * 40 + "ms" }}
     >
       <HeroVisual listing={listing} className="h-32 sm:h-40" locale={locale} contextLabelClassName="right-4 top-12 max-w-[calc(100%-5rem)]" />
-      <div className="relative h-32 -mt-32 sm:h-40 sm:-mt-40 pointer-events-none">
-        <div className="absolute inset-x-0 top-0 p-4 flex items-start justify-between">
-          <div className="flex items-center gap-2 text-[11px] font-bold uppercase tracking-wider">
-            <span
-              className="px-2 py-0.5 rounded-full shadow-[0_1px_4px_rgb(16_22_29/0.3)]"
-              style={{ background: listing.sectorColor, color: sectorForeground(sectorKey) }}
-            >
-              {listing.sector}
-            </span>
-            <span className="rounded bg-ink/90 px-2 py-1 text-white shadow-sm">
-              {listing.flag} {listing.country}
-            </span>
-          </div>
-        </div>
-        <div className="absolute inset-x-0 bottom-0 p-4">
-          <h3 className="max-w-md font-display text-lg font-bold leading-snug text-white">
-            <span className="box-decoration-clone rounded bg-ink/90 px-2 py-1 shadow-sm">
-              {listing.title}
-            </span>
-          </h3>
-        </div>
-      </div>
 
-      <div className="p-4 sm:p-5 sm:pt-4">
+      <div className="p-5 sm:p-6">
+        <div className="mb-3 flex flex-wrap items-center gap-2 font-display text-sm font-bold uppercase tracking-[0.12em]">
+          <span style={{ color: listing.sectorColor }}>{listing.sector}</span>
+          <span className="text-slate">· {listing.flag} {listing.country}</span>
+        </div>
+        <h3 className="font-sans text-[27px] font-semibold uppercase leading-[1.05] text-black">
+          <Link href={projectHref(listing.id)} aria-label={accessibleName} className="focus-visible:outline focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-desco-gold">
+            {listing.title}
+          </Link>
+        </h3>
         <div className="mb-3 flex flex-wrap items-center gap-2">
           <span className={`disclosure-chip ${readiness.ready ? "disclosure-reviewed" : "disclosure-pending"}`}>
             {readiness.ready ? readinessUi.ready : readinessUi.preparation}
@@ -93,14 +79,14 @@ export default function ProjectCard({
           <span className="break-words">{listing.stage}</span>
         </div>
 
-        <p className="line-clamp-2 text-sm leading-relaxed text-wgray">{listing.summary}</p>
+        <p className="mt-4 line-clamp-3 font-sans text-[17px] leading-[1.7] text-desco-slate">{listing.summary}</p>
 
         <div className="mt-4 grid gap-4 sm:grid-cols-[minmax(0,1fr)_minmax(8rem,auto)] sm:items-end">
           <div className="min-w-0">
-            <div className={fact.kind === "not_disclosed" ? "text-sm font-semibold leading-5 text-slate" : "break-words font-display text-2xl font-extrabold leading-tight"}>
+            <div className={fact.kind === "not_disclosed" ? "text-sm font-semibold leading-5 text-slate" : "break-words font-sans text-5xl font-bold leading-none text-desco-red"}>
               {fact.value}
             </div>
-            {fact.kind !== "not_disclosed" && <div className="mt-1 text-xs font-semibold text-slate">{factCopy.label}</div>}
+            {fact.kind !== "not_disclosed" && <div className="mt-2 font-display text-sm font-bold uppercase tracking-[0.12em] text-desco-slate">{factCopy.label}</div>}
             {fact.kind === "estimated_cost" && <div className="mt-1 text-xs text-wgray">{factCopy.capitalGap}</div>}
             <div className="mt-1 line-clamp-1 text-xs text-wgray">{listing.instrument}</div>
           </div>
@@ -132,11 +118,11 @@ export default function ProjectCard({
 
         <div className="mt-3 flex flex-col items-stretch justify-between gap-3 border-t border-charcoal/10 pt-3 sm:flex-row sm:items-end">
           <DisclosureCompleteness evidence={investmentEvidence} locale={locale} compact />
-          <span className="flex items-center gap-1.5 text-sm font-bold text-charcoal group-hover:text-gold">
+          <Button href={projectHref(listing.id)} variant="small" aria-label={accessibleName}>
             {ui.review} <span aria-hidden="true">→</span>
-          </span>
+          </Button>
         </div>
       </div>
-    </Link>
+    </article>
   );
 }

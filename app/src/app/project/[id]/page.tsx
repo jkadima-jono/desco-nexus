@@ -1,3 +1,4 @@
+import Button from "@/components/ui/Button";
 import { notFound, redirect } from "next/navigation";
 import { capitalPresentation, fmtUsd, materialFactPresentation } from "@/lib/data";
 import { prisma, toListing } from "@/lib/db";
@@ -153,14 +154,14 @@ export default async function ProjectDetail({
       <OpportunityViewTracker listingId={l.id} sector={sectorKey} />
       <div className="relative bg-ink text-white overflow-hidden">
         <HeroVisual listing={l} className="absolute inset-0 opacity-40" overlay={false} locale={locale} priority />
-        <div className="absolute inset-0 bg-gradient-to-r from-ink via-ink/80 to-ink/40" />
+        <div className="absolute inset-0 bg-black/45" />
         <div className="relative max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8 lg:py-10">
           <Link href="/opportunities" className="mb-5 inline-flex min-h-11 items-center text-sm font-semibold text-white/75 underline decoration-white/30 underline-offset-4 hover:text-gold">
             ← {shared.backToOpportunities}
           </Link>
           <div className="flex flex-wrap items-center gap-2 text-xs font-bold uppercase tracking-wider mb-3">
             <span
-              className="px-2 py-0.5 rounded-full"
+              className="px-2 py-0.5 "
               style={{ background: l.sectorColor, color: sectorForeground(sectorKey) }}
             >
               {l.sector}
@@ -219,7 +220,7 @@ export default async function ProjectDetail({
             [ui.projectRoom, approvedRestrictedDocs.length > 0 ? ui.restrictedDocs : ui.readinessNotPublic],
           ].map(([label, value]) => (
             <div key={String(label)} className="bg-white px-4 py-4">
-              <p className="text-xs font-bold uppercase tracking-wider text-wgray">{label}</p>
+              <div className="text-xs font-bold uppercase tracking-wider text-wgray">{label}</div>
               <div className="mt-1 text-xs font-semibold leading-5 text-charcoal">{value}</div>
             </div>
           ))}
@@ -233,7 +234,7 @@ export default async function ProjectDetail({
               {inaccurateInformationLabel(locale)}
             </Link>
           </div>
-          <section id="investment-evidence" className="scroll-mt-6 bg-white rounded-2xl p-6 shadow-[0_1px_3px_rgb(44_62_80/0.08)]">
+          <section id="investment-evidence" className="scroll-mt-6 bg-white  p-6 ">
             <div className="mb-5 border-l-2 border-gold pl-4">
               <div className="text-xs font-bold uppercase tracking-[0.16em] text-gold">{ui.thesis}</div>
               <p className="mt-2 text-sm leading-6 text-charcoal">{evidence.thesis}</p>
@@ -244,7 +245,7 @@ export default async function ProjectDetail({
               {l.highlights.map((h) => (
                 <li key={h} className="flex items-center gap-3 text-sm">
                   <span
-                    className="w-6 h-6 rounded-full flex items-center justify-center text-xs shrink-0"
+                    className="w-6 h-6  flex items-center justify-center text-xs shrink-0"
                     style={{ background: l.sectorColor, color: sectorForeground(sectorKey) }}
                   >
                     ▸
@@ -255,7 +256,7 @@ export default async function ProjectDetail({
             </ul>
           </section>
 
-          <section className="bg-white rounded-2xl p-6 shadow-[0_1px_3px_rgb(44_62_80/0.08)]">
+          <section className="bg-white  p-6 ">
             <h2 className="font-display font-bold text-lg">{ui.publicInvestmentEvidence}</h2>
             <p className="mt-1 text-xs leading-5 text-wgray">
               {ui.missingVisible}
@@ -273,14 +274,14 @@ export default async function ProjectDetail({
             </dl>
           </section>
 
-          <section className="bg-white rounded-2xl p-6 shadow-[0_1px_3px_rgb(44_62_80/0.08)]">
+          <section className="bg-white  p-6 ">
             <h2 className="font-display font-bold text-lg">{ui.riskDisclosure}</h2>
             <p className="mt-1 text-xs leading-5 text-wgray">
               {ui.riskNote}
             </p>
             <dl className="mt-5 grid gap-3 sm:grid-cols-2">
               {evidence.risks.map((risk) => (
-                <div key={risk.label} className="rounded-lg border border-charcoal/10 bg-mist p-4">
+                <div key={risk.label} className=" border border-charcoal/10 bg-mist p-4">
                   <dt className="text-xs font-bold uppercase tracking-wider text-charcoal">{risk.label}</dt>
                   <dd className="mt-2 text-sm italic text-wgray">{risk.value}</dd>
                 </div>
@@ -289,7 +290,7 @@ export default async function ProjectDetail({
           </section>
 
           {canManageListing && (l.useOfFunds || l.fundingSecuredUsd != null || l.sponsorContributionUsd != null) && (
-            <section className="bg-white rounded-2xl p-6 shadow-[0_1px_3px_rgb(44_62_80/0.08)]">
+            <section className="bg-white  p-6 ">
               <h2 className="font-display font-bold text-lg mb-1">{ui.financialStructure}</h2>
               <p className="text-xs text-wgray mb-4">{ui.figuresNote}</p>
               <dl className="space-y-3 text-sm">
@@ -323,7 +324,7 @@ export default async function ProjectDetail({
             />
           </div>
 
-          <section id="data-room" className="scroll-mt-6 bg-white rounded-2xl p-6 shadow-[0_1px_3px_rgb(44_62_80/0.08)]">
+          <section id="data-room" className="scroll-mt-6 bg-white  p-6 ">
             <div className="flex items-center justify-between mb-4">
               <h2 className="font-display font-bold text-lg">{t(locale, "project.dataRoom")}</h2>
               <span className="text-[11px] font-bold text-wgray uppercase tracking-wider">
@@ -338,7 +339,7 @@ export default async function ProjectDetail({
                 {docs
                   .filter((d) => d.folder === f)
                   .map((d) => (
-                    <div key={d.id} className="rounded-lg hover:bg-mist">
+                    <div key={d.id} className=" hover:bg-mist">
                       <a
                         href={"/api/documents/" + d.id}
                         className="flex items-center justify-between px-3 py-2 text-sm"
@@ -360,18 +361,18 @@ export default async function ProjectDetail({
                   ))}
               </div>
             )) : roomAccess ? (
-              <div className="rounded-xl bg-mist p-5 text-sm text-wgray">
+              <div className=" bg-mist p-5 text-sm text-wgray">
                 {ui.roomEmpty}
               </div>
             ) : user ? (
-              <div className="rounded-xl bg-mist p-5 text-sm text-wgray">
+              <div className=" bg-mist p-5 text-sm text-wgray">
                 {ui.roomLocked}
                 <ul className="mt-3 space-y-1 text-xs">
                   {ui.roomBullets.map((item) => <li key={item}>• {item}</li>)}
                 </ul>
               </div>
             ) : (
-              <div className="rounded-xl bg-mist p-5 text-sm text-wgray">
+              <div className=" bg-mist p-5 text-sm text-wgray">
                 {ui.roomLockedPublic}
                 <ul className="mt-3 space-y-1 text-xs">
                   {ui.roomBullets.map((item) => <li key={item}>• {item}</li>)}
@@ -382,7 +383,7 @@ export default async function ProjectDetail({
             {canManageListing && <DataRoomAccessPanel listingId={l.id} />}
           </section>
 
-          <section id="meetings" className="bg-white rounded-2xl p-6 shadow-[0_1px_3px_rgb(44_62_80/0.08)]">
+          <section id="meetings" className="bg-white  p-6 ">
             <h2 className="font-display font-bold text-lg mb-2">{t(locale, "project.schedule")}</h2>
             {user ? (
               <MeetingsPanel listingId={l.id} canManage={canManageListing} />
@@ -395,25 +396,25 @@ export default async function ProjectDetail({
         </div>
 
         <div className="min-w-0 space-y-6">
-          <section className="hidden lg:block sticky top-4 bg-white rounded-2xl p-5 shadow-[0_1px_3px_rgb(44_62_80/0.08)]">
+          <section className="hidden lg:block sticky top-4 bg-white  p-5 ">
             <h2 className="font-display font-bold text-sm uppercase tracking-wider text-wgray mb-3">{ui.actions}</h2>
             {canManageListing ? (
               <div className="space-y-2">
-                <a href="#investment-evidence" className="block w-full rounded-xl bg-gold py-2.5 text-center font-display text-sm font-bold text-ink hover:brightness-110">{ui.reviewEvidence}</a>
-                <a href="#data-room" className="block w-full rounded-xl border border-charcoal/15 py-2.5 text-center font-display text-sm font-semibold text-charcoal hover:bg-mist">{ui.manageRoom}</a>
-                <a href="#meetings" className="block w-full rounded-xl border border-charcoal/15 py-2.5 text-center font-display text-sm font-semibold text-charcoal hover:bg-mist">{ui.reviewMeetings}</a>
+                <Button href="#investment-evidence" variant="small" className="w-full">{ui.reviewEvidence}</Button>
+                <Button href="#data-room" variant="small" className="w-full">{ui.manageRoom}</Button>
+                <Button href="#meetings" variant="small" className="w-full">{ui.reviewMeetings}</Button>
               </div>
             ) : user ? (
               <div className="space-y-2">
-                <RequestInfoButton listingId={l.id} action="dataroom_requested" className="w-full bg-gold text-ink font-display font-bold text-sm py-2.5 rounded-xl hover:brightness-110" label={t(locale, "project.requestRoom")} doneLabel={"✓ " + ui.requested} />
-                <RequestInfoButton listingId={l.id} className="w-full border border-charcoal/15 text-charcoal font-display font-semibold text-sm py-2.5 rounded-xl hover:bg-mist" label={ui.requestInformation} />
-                <a href="#meetings" className="block w-full text-center border border-charcoal/15 text-charcoal font-display font-semibold text-sm py-2.5 rounded-xl hover:bg-mist">{t(locale, "project.schedule")}</a>
-                <RequestInfoButton listingId={l.id} action="saved" className="w-full border border-charcoal/15 text-charcoal font-display font-semibold text-sm py-2.5 rounded-xl hover:bg-mist" label={"⌁ " + t(locale, "project.save")} doneLabel={"✓ " + ui.saved} />
+                <RequestInfoButton listingId={l.id} action="dataroom_requested" className="w-full bg-gold text-ink font-display font-bold text-sm py-2.5  hover:brightness-110" label={t(locale, "project.requestRoom")} doneLabel={"✓ " + ui.requested} />
+                <RequestInfoButton listingId={l.id} className="w-full border border-charcoal/15 text-charcoal font-display font-semibold text-sm py-2.5  hover:bg-mist" label={ui.requestInformation} />
+                <Button href="#meetings" variant="small" className="w-full">{t(locale, "project.schedule")}</Button>
+                <RequestInfoButton listingId={l.id} action="saved" className="w-full border border-charcoal/15 text-charcoal font-display font-semibold text-sm py-2.5  hover:bg-mist" label={"⌁ " + t(locale, "project.save")} doneLabel={"✓ " + ui.saved} />
               </div>
             ) : (
               <div className="space-y-3">
                 <p className="text-sm leading-6 text-wgray">{ui.workspaceAccess}</p>
-                <Link href={`/contact?topic=investor-access&project=${l.id}`} className="block text-center bg-gold text-ink font-display font-bold text-sm py-2.5 rounded-xl">{ui.applyAccess}</Link>
+                <Button href={`/contact?topic=investor-access&project=${l.id}`} variant="solid-brand" className="w-full">{ui.applyAccess}</Button>
                 <p className="text-xs leading-5 text-wgray">{t(locale, "access.investorQualifier")}</p>
               </div>
             )}
@@ -421,7 +422,7 @@ export default async function ProjectDetail({
 
           {canManageListing && <TeaserGenerator listingId={l.id} />}
           {user && matchExplanation && (
-            <section className={"rounded-2xl p-5 border-l-4 " + (matchExplanation.confidence === "excluded" ? "bg-brandred/5 border-brandred" : "bg-gold-soft border-gold")}>
+            <section className={" p-5 border-l-4 " + (matchExplanation.confidence === "excluded" ? "bg-brandred/5 border-brandred" : "bg-gold-soft border-gold")}>
               <div className="flex items-center justify-between text-[11px] font-bold uppercase tracking-wider mb-2">
                 <span className={matchExplanation.confidence === "excluded" ? "text-brandred" : "text-gold"}>
                   ✦ {matchUi.match} &ldquo;{activeMandate!.name}&rdquo;
@@ -465,14 +466,14 @@ export default async function ProjectDetail({
             </section>
           )}
           {user && !matchExplanation && (
-            <section className="rounded-2xl border-l-4 border-gold bg-gold-soft p-5">
+            <section className=" border-l-4 border-gold bg-gold-soft p-5">
               <div className="text-xs font-bold uppercase tracking-wider text-gold">{matchUi.unavailable}</div>
               <p className="mt-2 text-sm leading-relaxed">{matchUi.unavailableBody}</p>
-              <Link href="/mandates" className="button-secondary mt-4">{matchUi.create}</Link>
+              <Button href="/mandates" className="button-secondary mt-4">{matchUi.create}</Button>
             </section>
           )}
 
-          <section className="bg-white rounded-2xl p-6 shadow-[0_1px_3px_rgb(44_62_80/0.08)] text-sm">
+          <section className="bg-white  p-6  text-sm">
             <h2 className="font-display font-bold text-lg mb-3">{t(locale, "project.sponsor")}</h2>
             <div className="font-semibold">{l.org}</div>
             {user && <div className="text-wgray text-xs mt-1">
@@ -480,7 +481,7 @@ export default async function ProjectDetail({
             </div>}
           </section>
 
-          <section className="bg-white rounded-2xl p-6 shadow-[0_1px_3px_rgb(44_62_80/0.08)] text-sm">
+          <section className="bg-white  p-6  text-sm">
             <h2 className="font-display font-bold text-lg mb-3">{ui.provenance}</h2>
             <dl className="space-y-3 text-xs">
               <div><dt className="font-bold uppercase tracking-wider text-wgray">{ui.classification}</dt><dd className="mt-1">{evidence.provenance.classification}</dd></div>
@@ -496,18 +497,18 @@ export default async function ProjectDetail({
       <div className="fixed inset-x-0 bottom-0 z-30 grid grid-cols-2 gap-2 border-t border-charcoal/10 bg-white px-3 py-2.5 pb-[calc(0.625rem+env(safe-area-inset-bottom))] lg:hidden">
         {canManageListing ? (
           <>
-            <a href="#investment-evidence" className="flex min-h-11 flex-1 items-center justify-center rounded-xl bg-gold px-2 text-center font-display text-xs font-bold text-ink">{ui.reviewEvidenceShort}</a>
-            <a href="#data-room" className="flex min-h-11 flex-1 items-center justify-center rounded-xl border border-charcoal/15 px-2 text-center font-display text-xs font-semibold text-charcoal">{ui.manageRoomShort}</a>
-            <a href="#meetings" className="col-span-2 flex min-h-11 items-center justify-center rounded-xl border border-charcoal/15 px-2 text-center font-display text-xs font-semibold text-charcoal">{ui.meetings}</a>
+            <Button href="#investment-evidence" variant="small" className="flex-1">{ui.reviewEvidenceShort}</Button>
+            <a href="#data-room" className="flex min-h-11 flex-1 items-center justify-center  border border-charcoal/15 px-2 text-center font-display text-xs font-semibold text-charcoal">{ui.manageRoomShort}</a>
+            <a href="#meetings" className="col-span-2 flex min-h-11 items-center justify-center  border border-charcoal/15 px-2 text-center font-display text-xs font-semibold text-charcoal">{ui.meetings}</a>
           </>
         ) : user ? (
           <>
-            <RequestInfoButton listingId={l.id} action="dataroom_requested" className="min-h-11 rounded-xl bg-gold px-2 font-display text-xs font-bold leading-4 text-ink" label={t(locale, "project.requestRoom")} doneLabel={"✓ " + ui.requested} />
-            <RequestInfoButton listingId={l.id} className="min-h-11 rounded-xl border border-charcoal/15 px-2 font-display text-xs font-semibold leading-4 text-charcoal" label={ui.requestInfo} />
-            <RequestInfoButton listingId={l.id} action="saved" className="col-span-2 min-h-11 rounded-xl border border-charcoal/15" label={"⌁ " + t(locale, "project.save")} doneLabel={"✓ " + ui.saved} ariaLabel={t(locale, "project.save")} />
+            <RequestInfoButton listingId={l.id} action="dataroom_requested" className="min-h-11  bg-gold px-2 font-display text-xs font-bold leading-4 text-ink" label={t(locale, "project.requestRoom")} doneLabel={"✓ " + ui.requested} />
+            <RequestInfoButton listingId={l.id} className="min-h-11  border border-charcoal/15 px-2 font-display text-xs font-semibold leading-4 text-charcoal" label={ui.requestInfo} />
+            <RequestInfoButton listingId={l.id} action="saved" className="col-span-2 min-h-11  border border-charcoal/15" label={"⌁ " + t(locale, "project.save")} doneLabel={"✓ " + ui.saved} ariaLabel={t(locale, "project.save")} />
           </>
         ) : (
-          <Link href={`/contact?topic=investor-access&project=${l.id}`} className="col-span-2 flex min-h-11 items-center justify-center rounded-xl bg-gold px-3 text-center font-display text-xs font-bold text-ink">{ui.applyAccess}</Link>
+          <Button href={`/contact?topic=investor-access&project=${l.id}`} variant="solid-brand" className="col-span-2 w-full">{ui.applyAccess}</Button>
         )}
       </div>
       <div className="h-[calc(7.5rem+env(safe-area-inset-bottom))] lg:hidden" aria-hidden="true" />

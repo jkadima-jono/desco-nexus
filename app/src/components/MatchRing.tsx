@@ -15,7 +15,7 @@ export default function MatchRing({
       <svg width={size} height={size} className="-rotate-90">
         <circle
           cx={size / 2} cy={size / 2} r={r}
-          fill="none" stroke="#EDEFF2" strokeWidth="5"
+          fill="none" stroke="#F2F3F3" strokeWidth="5"
         />
         <circle
           cx={size / 2} cy={size / 2} r={r}

@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Button from "@/components/ui/Button";
 import { prisma } from "@/lib/db";
 import { capitalPresentation, returnPresentation } from "@/lib/data";
 import CompareExportButton from "./CompareExportButton";
@@ -106,18 +107,18 @@ export default async function ComparePage({
         </div>
         <div className="flex gap-2">
           <CompareExportButton titles={listings.map((listing) => listing.title)} rows={comparisonRows} label={ui.exportCsv} />
-          <Link href="/saved" className="text-xs font-bold bg-mist px-4 py-2 rounded-lg self-start">{ui.back}</Link>
+          <Button href="/saved" variant="small" className="self-start">{ui.back}</Button>
         </div>
       </div>
 
       {listings.length === 0 ? (
-        <div className="bg-white rounded-2xl p-10 text-center border border-charcoal/10 mt-6">
+        <div className="bg-white  p-10 text-center border border-charcoal/10 mt-6">
           <p className="text-sm text-wgray">{ui.none}</p>
         </div>
       ) : (
         <>
         {truncated && (
-          <p role="status" className="mt-5 rounded-lg border border-gold/30 bg-gold-soft px-4 py-3 text-sm text-charcoal">
+          <p role="status" className="mt-5  border border-gold/30 bg-gold-soft px-4 py-3 text-sm text-charcoal">
             {ui.truncated}
           </p>
         )}
@@ -125,7 +126,7 @@ export default async function ComparePage({
           {comparisonScrollHint(locale)}
         </p>
         <div
-          className="mt-2 overflow-x-auto rounded-lg focus-visible:outline focus-visible:outline-2 focus-visible:outline-gold sm:mt-6"
+          className="mt-2 overflow-x-auto  focus-visible:outline focus-visible:outline-2 focus-visible:outline-gold sm:mt-6"
           role="region"
           aria-label={comparisonRegionLabel(locale)}
           aria-describedby="comparison-scroll-hint"

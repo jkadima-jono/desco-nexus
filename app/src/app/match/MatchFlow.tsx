@@ -1,5 +1,7 @@
 "use client";
 
+import Button from "@/components/ui/Button";
+
 import { useState } from "react";
 import { capitalPresentation, type Listing } from "@/lib/data";
 import { useI18n } from "@/components/I18nProvider";
@@ -67,7 +69,7 @@ export default function MatchFlow({ queue }: { queue: Listing[] }) {
       <p className="text-wgray text-sm mt-1 mb-6">{t("match.subtitle")}</p>
 
       {error && (
-        <div className="mb-4 bg-brandred/10 border-l-4 border-brandred rounded-xl px-4 py-3 text-sm text-brandred">
+        <div className="mb-4 bg-brandred/10 border-l-4 border-brandred  px-4 py-3 text-sm text-brandred">
           {error}
         </div>
       )}
@@ -75,7 +77,7 @@ export default function MatchFlow({ queue }: { queue: Listing[] }) {
       {current ? (
         <div
           className={
-            "bg-white rounded-3xl shadow-[0_12px_32px_rgb(44_62_80/0.14)] overflow-hidden transition-all duration-200 " +
+            "bg-white   overflow-hidden transition-all duration-200 " +
             leaveClass
           }
         >
@@ -84,7 +86,7 @@ export default function MatchFlow({ queue }: { queue: Listing[] }) {
             <div className="absolute top-4 right-4">
               <SectorBadge sector={current.sector} size={36} />
             </div>
-            <div className="absolute inset-x-0 bottom-0 p-6 text-white drop-shadow">
+            <div className="absolute inset-x-0 bottom-0 p-6 text-white ">
               <div className="text-[11px] font-bold uppercase tracking-wider opacity-90">
                 {current.sector} · {current.flag} {current.country}
               </div>
@@ -96,7 +98,7 @@ export default function MatchFlow({ queue }: { queue: Listing[] }) {
           <div className="p-6">
             <p className="text-sm text-charcoal/80 leading-relaxed">{current.summary}</p>
             <div className="mt-4 flex flex-wrap gap-2 text-[10px] font-bold uppercase tracking-wider text-slate">
-              <span className="rounded-full border border-charcoal/15 bg-mist px-2.5 py-1">
+              <span className=" border border-charcoal/15 bg-mist px-2.5 py-1">
                 {disclosureStatus}
               </span>
             </div>
@@ -114,29 +116,29 @@ export default function MatchFlow({ queue }: { queue: Listing[] }) {
             </div>
 
             <div className="flex justify-center gap-4 mt-7">
-              <button
+              <Button
                 onClick={() => act("pass")}
-                className="w-32 py-3 rounded-2xl border-2 border-brandred/30 text-brandred font-display font-bold hover:bg-brandred hover:text-white transition-colors"
+                className="w-32 py-3  border-2 border-brandred/30 text-brandred font-display font-bold hover:bg-brandred hover:text-white transition-colors"
               >
                 ✕ {t("match.pass")}
-              </button>
-              <button
+              </Button>
+              <Button
                 onClick={() => act("saved")}
-                className="w-32 py-3 rounded-2xl border-2 border-charcoal/20 text-charcoal font-display font-bold hover:bg-charcoal hover:text-white transition-colors"
+                className="w-32 py-3  border-2 border-charcoal/20 text-charcoal font-display font-bold hover:bg-charcoal hover:text-white transition-colors"
               >
                 ⌁ {t("match.save")}
-              </button>
-              <button
+              </Button>
+              <Button
                 onClick={() => act("interested")}
-                className="w-40 py-3 rounded-2xl bg-gold text-ink font-display font-bold hover:brightness-110 shadow-[0_4px_16px_rgb(184_149_61/0.4)]"
+                className="w-40 py-3  bg-gold text-ink font-display font-bold hover:brightness-110 "
               >
                 ★ {t("match.interested")}
-              </button>
+              </Button>
             </div>
           </div>
         </div>
       ) : (
-        <div className="bg-white rounded-3xl p-12 text-center shadow-[0_1px_3px_rgb(44_62_80/0.08)]">
+        <div className="bg-white  p-12 text-center ">
           <div className="font-display font-extrabold text-2xl mb-2">
             {t("match.done")}
           </div>
@@ -153,7 +155,7 @@ export default function MatchFlow({ queue }: { queue: Listing[] }) {
             {log.map((e, i) => (
               <div
                 key={i}
-                className="flex justify-between bg-white rounded-xl px-4 py-2.5 text-sm shadow-[0_1px_3px_rgb(44_62_80/0.08)]"
+                className="flex justify-between bg-white  px-4 py-2.5 text-sm "
               >
                 <span className="truncate">
                   {e.title}

@@ -1,3 +1,4 @@
+import Button from "@/components/ui/Button";
 import type { Metadata } from "next";
 import Link from "next/link";
 import ProjectCard from "@/components/ProjectCard";
@@ -34,8 +35,8 @@ function FeaturedBrief({ listing, copy, locale }: { listing: Listing; copy: Home
   const fact = materialFactPresentation(listing, evidence.provenance.sourceDate);
   const factCopy = materialFactCopy(locale, fact.kind, fact.sourceDate);
   return (
-    <div className="overflow-hidden rounded-xl border border-white/14 bg-white text-ink shadow-2xl shadow-black/25">
-      <div className="bg-gradient-to-br from-ink to-navy p-5 text-white">
+    <div className="overflow-hidden  border border-white/14 bg-white text-ink  ">
+      <div className="bg-desco-charcoal p-5 text-white">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <p className="eyebrow text-gold">{copy.featured}</p>
           <span className="text-xs font-semibold text-white/70">{listing.flag} {listing.country}</span>
@@ -50,7 +51,7 @@ function FeaturedBrief({ listing, copy, locale }: { listing: Listing; copy: Home
           {fact.kind === "estimated_cost" && <p className="mt-1 text-xs text-wgray">{factCopy.capitalGap}</p>}
         </div>
         <div className="p-4">
-          <p className="text-[10px] font-bold uppercase tracking-wider text-slate">{copy.projectStage}</p>
+          <div className="text-[10px] font-bold uppercase tracking-wider text-slate">{copy.projectStage}</div>
           <p className="mt-2 text-sm font-semibold">{listing.stage}</p>
         </div>
       </div>
@@ -111,18 +112,18 @@ export default async function Home() {
       {!user && (
         <>
           <section className="institutional-hero text-white">
-            <div className="public-container grid gap-12 py-14 lg:grid-cols-[minmax(0,1.08fr)_minmax(22rem,.92fr)] lg:items-center lg:py-20">
+            <div className="public-container grid min-h-[32rem] gap-12 py-12 lg:grid-cols-[minmax(0,1.08fr)_minmax(22rem,.92fr)] lg:items-end lg:py-20">
               <div>
                 <p className="eyebrow text-gold">{t(locale, "home.platform")}</p>
-                <h1 className="editorial-display mt-5 max-w-3xl text-4xl sm:text-5xl lg:text-6xl">
+                <h1 className="editorial-display mt-5 max-w-3xl text-[30px] lg:text-[50px]">
                   {t(locale, "home.heroTitle")}
                 </h1>
-                <p className="mt-6 max-w-2xl text-base leading-7 text-white/70 lg:text-lg">
+                <p className="mt-6 max-w-[70ch] text-[21px] leading-[1.5] text-white">
                   {t(locale, "home.heroBody")}
                 </p>
                 <div className="mt-8 flex flex-wrap gap-3">
-                  <Link href="/opportunities" className="button-primary">{t(locale, "home.review")}</Link>
-                  <Link href="/contact?topic=project-submission" className="button-on-dark">{t(locale, "nav.submitProject")}</Link>
+                  <Button href="/opportunities" variant="ghost-light">{t(locale, "home.review")}</Button>
+                  <Button href="/contact?topic=project-submission" className="button-on-dark">{t(locale, "nav.submitProject")}</Button>
                 </div>
                 <Link href="/diligence" className="mt-4 inline-flex min-h-11 items-center text-sm font-semibold text-white/70 underline decoration-white/25 underline-offset-4 hover:text-gold">
                   {t(locale, "home.diligence")}
@@ -145,7 +146,7 @@ export default async function Home() {
                   <ul className="mt-5 space-y-2 text-sm text-slate">
                     {copy.investorBenefits.map((item) => <li key={item}>{item}</li>)}
                   </ul>
-                  <Link href="/investors" className="button-secondary path-card-cta mt-7">{t(locale, "home.investorCta")}</Link>
+                  <Button href="/investors" className="button-secondary path-card-cta mt-7">{t(locale, "home.investorCta")}</Button>
                 </article>
                 <article className="path-card path-card-owner group mt-7 p-7">
                   <p className="path-label eyebrow">{t(locale, "nav.forOwners")}</p>
@@ -155,7 +156,7 @@ export default async function Home() {
                   <ul className="mt-5 space-y-2 text-sm text-slate">
                     {copy.sponsorBenefits.map((item) => <li key={item}>{item}</li>)}
                   </ul>
-                  <Link href="/sponsors" className="button-secondary path-card-cta mt-7">{t(locale, "home.sponsorCta")}</Link>
+                  <Button href="/sponsors" className="button-secondary path-card-cta mt-7">{t(locale, "home.sponsorCta")}</Button>
                 </article>
               </div>
             </div>
@@ -200,7 +201,7 @@ export default async function Home() {
           </div>
 
           <div className="mt-8 flex justify-center">
-            <Link href="/opportunities" className="button-secondary">{t(locale, "home.opportunitiesCta")}</Link>
+            <Button href="/opportunities" className="button-secondary">{t(locale, "home.opportunitiesCta")}</Button>
           </div>
         </div>
       </section>
@@ -212,10 +213,10 @@ export default async function Home() {
               <SectionHeading eyebrow={paths.convergenceEyebrow} title={paths.convergenceTitle} body={paths.convergenceBody} />
               <div className="convergence-grid mt-8">
                 <article className="convergence-path convergence-investor">
-                  <p className="eyebrow text-[#9f3025]">{t(locale, "nav.forInvestors")}</p>
+                  <p className="eyebrow text-[#C41E3A]">{t(locale, "nav.forInvestors")}</p>
                   <h3 className="mt-3 font-display text-lg font-bold text-ink">{paths.investorStep}</h3>
                   <p className="mt-2 text-sm leading-6 text-slate">{paths.investorStepBody}</p>
-                  <Link href="/investors" className="mt-4 inline-flex min-h-11 items-center text-sm font-bold text-[#9f3025] underline underline-offset-4">{t(locale, "home.investorCta")} →</Link>
+                  <Link href="/investors" className="mt-4 inline-flex min-h-11 items-center text-sm font-bold text-[#C41E3A] underline underline-offset-4">{t(locale, "home.investorCta")} →</Link>
                 </article>
                 <article className="convergence-room">
                   <p className="eyebrow text-white/65">DESCO Compass</p>
@@ -224,10 +225,10 @@ export default async function Home() {
                   <Link href="/diligence" className="mt-4 inline-flex min-h-11 items-center text-sm font-bold text-white underline decoration-white/35 underline-offset-4">{copy.processCta} →</Link>
                 </article>
                 <article className="convergence-path convergence-owner">
-                  <p className="eyebrow text-[#0e6e6b]">{t(locale, "nav.forOwners")}</p>
+                  <div className="eyebrow text-desco-slate">{t(locale, "nav.forOwners")}</div>
                   <h3 className="mt-3 font-display text-lg font-bold text-ink">{paths.ownerStep}</h3>
                   <p className="mt-2 text-sm leading-6 text-slate">{paths.ownerStepBody}</p>
-                  <Link href="/sponsors" className="mt-4 inline-flex min-h-11 items-center text-sm font-bold text-[#0e6e6b] underline underline-offset-4">{t(locale, "home.sponsorCta")} →</Link>
+                  <Link href="/sponsors" className="mt-4 inline-flex min-h-11 items-center text-sm font-bold text-desco-slate underline decoration-desco-emerald underline-offset-4">{t(locale, "home.sponsorCta")} →</Link>
                 </article>
               </div>
             </div>
@@ -250,7 +251,7 @@ export default async function Home() {
                   {copy.trustNotice}
                 </QuietNotice>
               </div>
-              <Link href="/trust" className="button-secondary mt-7">{copy.trustCta}</Link>
+              <Button href="/trust" className="button-secondary mt-7">{copy.trustCta}</Button>
             </div>
           </section>
 
@@ -266,8 +267,8 @@ export default async function Home() {
                 </p>
               </div>
               <div className="flex flex-wrap gap-3">
-                <Link href="/opportunities" className="button-primary">{copy.reviewCta}</Link>
-                <Link href="/sponsors" className="button-on-dark">{copy.prepareCta}</Link>
+                <Button href="/opportunities" className="button-primary">{copy.reviewCta}</Button>
+                <Button href="/sponsors" className="button-on-dark">{copy.prepareCta}</Button>
               </div>
             </div>
           </section>

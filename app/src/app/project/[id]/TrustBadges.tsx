@@ -1,5 +1,7 @@
 "use client";
 
+import Button from "@/components/ui/Button";
+
 import { useEffect, useRef, useState } from "react";
 import { MECHANISM_LABELS } from "@/lib/verification";
 import type { Locale } from "@/lib/i18n";
@@ -158,18 +160,18 @@ export default function TrustBadges({
   return (
     <>
       {claims.map((c) => (
-        <button
+        <Button
           key={c.label}
           onClick={(event) => {
             triggerRef.current = event.currentTarget;
             setOpen(c);
           }}
-          className="text-gold underline decoration-dotted underline-offset-2 hover:text-white focus-visible:ring-2 focus-visible:ring-gold rounded"
+          className="text-gold underline decoration-dotted underline-offset-2 hover:text-white focus-visible:ring-2 focus-visible:ring-gold "
           aria-haspopup="dialog"
           title={copy.view}
         >
           {c.label}
-        </button>
+        </Button>
       ))}
       {open && (
         <div
@@ -181,12 +183,12 @@ export default function TrustBadges({
         >
           <div
             ref={dialogRef}
-            className="bg-white text-charcoal rounded-2xl p-6 max-w-md w-full shadow-2xl"
+            className="bg-white text-charcoal  p-6 max-w-md w-full "
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex items-start justify-between mb-3">
               <h2 className="font-display font-bold text-lg">{open.label}</h2>
-              <button ref={closeRef} onClick={() => setOpen(null)} aria-label={copy.close} className="min-h-11 min-w-11 rounded-full text-wgray hover:bg-mist hover:text-charcoal text-xl leading-none">×</button>
+              <Button ref={closeRef} onClick={() => setOpen(null)} aria-label={copy.close} className="min-h-11 min-w-11  text-wgray hover:bg-mist hover:text-charcoal text-xl leading-none">×</Button>
             </div>
             <dl className="space-y-2 text-sm font-normal normal-case">
               {[

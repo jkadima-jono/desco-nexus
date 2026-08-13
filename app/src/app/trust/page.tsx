@@ -33,9 +33,9 @@ export default async function TrustPage() {
         <div className="public-container">
           <SectionHeading eyebrow={copy.sectionEyebrow} title={copy.sectionTitle} />
           <div className="mt-8 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
-            {copy.statuses.map(({ title, body, tone }) => (
+            {copy.statuses.map(({ title, body, tone }, index) => (
               <InstitutionalCard key={title} title={title} body={body}>
-                <div className="mt-5"><DisclosureChip tone={tone}>{title}</DisclosureChip></div>
+                <div className="mt-5"><DisclosureChip tone={(["sponsor", "reviewed", "pending", "verified", "restricted", "public"] as const)[index] ?? tone}>{title}</DisclosureChip></div>
               </InstitutionalCard>
             ))}
           </div>

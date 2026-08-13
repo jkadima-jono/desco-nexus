@@ -1,5 +1,7 @@
 "use client";
 
+import Button from "@/components/ui/Button";
+
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { GOV_MECHANISMS, MECHANISM_LABELS } from "@/lib/verification";
@@ -101,13 +103,13 @@ export default function VerificationReviewRow({ listing }: { listing: Listing })
   };
 
   return (
-    <div className="bg-white rounded-2xl p-5 shadow-[0_1px_3px_rgb(44_62_80/0.08)]">
+    <div className="bg-white  p-5 ">
       <div className="flex items-start justify-between gap-4">
         <div>
           <div className="font-display font-bold">{listing.title}</div>
           <div className="text-xs text-wgray mt-1">{listing.orgName}</div>
         </div>
-        <span className={"text-[11px] font-bold uppercase tracking-wider px-2 py-1 rounded-full shrink-0 " + (listing.verified ? "bg-emerald-p/10 text-emerald-p" : "bg-mist text-wgray")}>
+        <span className={"text-[11px] font-bold uppercase tracking-wider px-2 py-1  shrink-0 " + (listing.verified ? "bg-emerald-p/10 text-emerald-p" : "bg-mist text-wgray")}>
           {listing.verified ? "Review recorded" : "Review not recorded"}
         </span>
       </div>
@@ -134,7 +136,7 @@ export default function VerificationReviewRow({ listing }: { listing: Listing })
               {listing.publishedAt ? " · published " + new Date(listing.publishedAt).toLocaleDateString() : ""}
             </div>
           </div>
-          <span className={"text-[11px] font-bold uppercase tracking-wider px-2 py-1 rounded-full " +
+          <span className={"text-[11px] font-bold uppercase tracking-wider px-2 py-1  " +
             (listing.publicationStatus === "public_teaser" ? "bg-emerald-p/10 text-emerald-p" : "bg-amber-50 text-amber-800")}>
             {listing.publicationStatus === "public_teaser" ? "Public" : "Not public"}
           </span>
@@ -142,33 +144,33 @@ export default function VerificationReviewRow({ listing }: { listing: Listing })
         {listing.publicationStatus !== "public_teaser" ? (
           <div className="mt-3 space-y-3">
             {!listing.governanceReady && (
-              <div className="space-y-2 rounded-xl bg-mist p-3">
+              <div className="space-y-2  bg-mist p-3">
                 <div className="text-[11px] font-bold uppercase tracking-wider text-wgray">Sponsor consent</div>
-                <input value={sponsorSignatoryName} onChange={(event) => setSponsorSignatoryName(event.target.value)} placeholder="Sponsor signatory name" className="w-full rounded-lg border border-charcoal/10 bg-white px-3 py-2 text-xs" />
-                <input value={sponsorSignatoryCapacity} onChange={(event) => setSponsorSignatoryCapacity(event.target.value)} placeholder="Signatory capacity or authority" className="w-full rounded-lg border border-charcoal/10 bg-white px-3 py-2 text-xs" />
-                <input value={sponsorApprovalEvidenceRef} onChange={(event) => setSponsorApprovalEvidenceRef(event.target.value)} placeholder="Approval evidence reference" className="w-full rounded-lg border border-charcoal/10 bg-white px-3 py-2 text-xs" />
-                <textarea rows={2} value={sponsorApprovalNote} onChange={(event) => setSponsorApprovalNote(event.target.value)} placeholder="Sponsor approval evidence and approved content version" className="w-full rounded-lg border border-charcoal/10 bg-white px-3 py-2 text-xs" />
+                <input value={sponsorSignatoryName} onChange={(event) => setSponsorSignatoryName(event.target.value)} placeholder="Sponsor signatory name" className="w-full  border border-charcoal/10 bg-white px-3 py-2 text-xs" />
+                <input value={sponsorSignatoryCapacity} onChange={(event) => setSponsorSignatoryCapacity(event.target.value)} placeholder="Signatory capacity or authority" className="w-full  border border-charcoal/10 bg-white px-3 py-2 text-xs" />
+                <input value={sponsorApprovalEvidenceRef} onChange={(event) => setSponsorApprovalEvidenceRef(event.target.value)} placeholder="Approval evidence reference" className="w-full  border border-charcoal/10 bg-white px-3 py-2 text-xs" />
+                <textarea rows={2} value={sponsorApprovalNote} onChange={(event) => setSponsorApprovalNote(event.target.value)} placeholder="Sponsor approval evidence and approved content version" className="w-full  border border-charcoal/10 bg-white px-3 py-2 text-xs" />
                 <div className="text-[11px] font-bold uppercase tracking-wider text-wgray">Legal clearance</div>
-                <input value={legalCounselName} onChange={(event) => setLegalCounselName(event.target.value)} placeholder="Reviewing counsel name" className="w-full rounded-lg border border-charcoal/10 bg-white px-3 py-2 text-xs" />
-                <input value={legalJurisdiction} onChange={(event) => setLegalJurisdiction(event.target.value)} placeholder="Jurisdiction reviewed" className="w-full rounded-lg border border-charcoal/10 bg-white px-3 py-2 text-xs" />
-                <input value={legalApprovalEvidenceRef} onChange={(event) => setLegalApprovalEvidenceRef(event.target.value)} placeholder="Legal opinion or approval reference" className="w-full rounded-lg border border-charcoal/10 bg-white px-3 py-2 text-xs" />
-                <textarea rows={2} value={legalClearanceScope} onChange={(event) => setLegalClearanceScope(event.target.value)} placeholder="Legal clearance scope and jurisdictions reviewed" className="w-full rounded-lg border border-charcoal/10 bg-white px-3 py-2 text-xs" />
+                <input value={legalCounselName} onChange={(event) => setLegalCounselName(event.target.value)} placeholder="Reviewing counsel name" className="w-full  border border-charcoal/10 bg-white px-3 py-2 text-xs" />
+                <input value={legalJurisdiction} onChange={(event) => setLegalJurisdiction(event.target.value)} placeholder="Jurisdiction reviewed" className="w-full  border border-charcoal/10 bg-white px-3 py-2 text-xs" />
+                <input value={legalApprovalEvidenceRef} onChange={(event) => setLegalApprovalEvidenceRef(event.target.value)} placeholder="Legal opinion or approval reference" className="w-full  border border-charcoal/10 bg-white px-3 py-2 text-xs" />
+                <textarea rows={2} value={legalClearanceScope} onChange={(event) => setLegalClearanceScope(event.target.value)} placeholder="Legal clearance scope and jurisdictions reviewed" className="w-full  border border-charcoal/10 bg-white px-3 py-2 text-xs" />
                 <div className="text-[11px] font-bold uppercase tracking-wider text-wgray">Related-party review</div>
-                <input value={relatedPartyReviewerName} onChange={(event) => setRelatedPartyReviewerName(event.target.value)} placeholder="Related-party reviewer name" className="w-full rounded-lg border border-charcoal/10 bg-white px-3 py-2 text-xs" />
-                <input value={relatedPartyReviewerIndependence} onChange={(event) => setRelatedPartyReviewerIndependence(event.target.value)} placeholder="Reviewer independence and conflicts statement" className="w-full rounded-lg border border-charcoal/10 bg-white px-3 py-2 text-xs" />
+                <input value={relatedPartyReviewerName} onChange={(event) => setRelatedPartyReviewerName(event.target.value)} placeholder="Related-party reviewer name" className="w-full  border border-charcoal/10 bg-white px-3 py-2 text-xs" />
+                <input value={relatedPartyReviewerIndependence} onChange={(event) => setRelatedPartyReviewerIndependence(event.target.value)} placeholder="Reviewer independence and conflicts statement" className="w-full  border border-charcoal/10 bg-white px-3 py-2 text-xs" />
                 <label className="flex items-center gap-2 text-xs"><input type="checkbox" checked={relatedParty} onChange={(event) => setRelatedParty(event.target.checked)} />DESCO related party, mandate or advisory relationship</label>
-                {relatedParty && <input value={relatedPartyType} onChange={(event) => setRelatedPartyType(event.target.value)} placeholder="Relationship type" className="w-full rounded-lg border border-charcoal/10 bg-white px-3 py-2 text-xs" />}
-                <textarea rows={2} value={relatedPartyDisclosure} onChange={(event) => setRelatedPartyDisclosure(event.target.value)} placeholder="Concluded public related-party disclosure, or explicit no-relationship conclusion" className="w-full rounded-lg border border-charcoal/10 bg-white px-3 py-2 text-xs" />
-                <button disabled={busy} onClick={() => patchPublication("record_clearance")} className="px-3 py-1.5 rounded-lg border border-charcoal/20 bg-white text-xs font-semibold disabled:opacity-40">Record release clearances</button>
+                {relatedParty && <input value={relatedPartyType} onChange={(event) => setRelatedPartyType(event.target.value)} placeholder="Relationship type" className="w-full  border border-charcoal/10 bg-white px-3 py-2 text-xs" />}
+                <textarea rows={2} value={relatedPartyDisclosure} onChange={(event) => setRelatedPartyDisclosure(event.target.value)} placeholder="Concluded public related-party disclosure, or explicit no-relationship conclusion" className="w-full  border border-charcoal/10 bg-white px-3 py-2 text-xs" />
+                <Button disabled={busy} onClick={() => patchPublication("record_clearance")} className="px-3 py-1.5  border border-charcoal/20 bg-white text-xs font-semibold disabled:opacity-40">Record release clearances</Button>
               </div>
             )}
-            <button
+            <Button
               disabled={busy || listing.sourceCount === 0 || !listing.governanceReady}
               onClick={() => patchPublication("publish")}
-              className="px-3 py-1.5 rounded-lg bg-charcoal text-white text-xs font-semibold disabled:opacity-40"
+              className="px-3 py-1.5  bg-charcoal text-white text-xs font-semibold disabled:opacity-40"
             >
               Publish reviewed teaser
-            </button>
+            </Button>
           </div>
         ) : (
           <div className="mt-3 space-y-2">
@@ -177,12 +179,12 @@ export default function VerificationReviewRow({ listing }: { listing: Listing })
               value={publicationReason}
               onChange={(e) => setPublicationReason(e.target.value)}
               placeholder="Reason for changing public availability (required)"
-              className="w-full bg-mist rounded-xl px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-gold resize-none"
+              className="w-full bg-mist  px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-gold resize-none"
             />
             <div className="flex flex-wrap gap-2">
-              <button disabled={busy} onClick={() => patchPublication("pause")} className="px-3 py-1.5 rounded-lg bg-amber-50 text-amber-900 text-xs font-semibold disabled:opacity-50">Pause</button>
-              <button disabled={busy} onClick={() => patchPublication("withdraw")} className="px-3 py-1.5 rounded-lg bg-brandred/10 text-brandred text-xs font-semibold disabled:opacity-50">Withdraw</button>
-              <button disabled={busy} onClick={() => patchPublication("archive")} className="px-3 py-1.5 rounded-lg bg-mist text-charcoal text-xs font-semibold disabled:opacity-50">Archive</button>
+              <Button disabled={busy} onClick={() => patchPublication("pause")} className="px-3 py-1.5  bg-amber-50 text-amber-900 text-xs font-semibold disabled:opacity-50">Pause</Button>
+              <Button disabled={busy} onClick={() => patchPublication("withdraw")} className="px-3 py-1.5  bg-brandred/10 text-brandred text-xs font-semibold disabled:opacity-50">Withdraw</Button>
+              <Button disabled={busy} onClick={() => patchPublication("archive")} className="px-3 py-1.5  bg-mist text-charcoal text-xs font-semibold disabled:opacity-50">Archive</Button>
             </div>
           </div>
         )}
@@ -193,7 +195,7 @@ export default function VerificationReviewRow({ listing }: { listing: Listing })
         )}
       </div>
 
-      {error && <div role="alert" className="text-xs text-brandred bg-brandred/10 rounded-lg px-3 py-2 mt-3">{error}</div>}
+      {error && <div role="alert" className="text-xs text-brandred bg-brandred/10  px-3 py-2 mt-3">{error}</div>}
 
       {pendingAction && (
         <div className="mt-3">
@@ -204,32 +206,32 @@ export default function VerificationReviewRow({ listing }: { listing: Listing })
             rows={2}
             value={noteDraft}
             onChange={(e) => setNoteDraft(e.target.value)}
-            className="w-full bg-mist rounded-xl px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-gold resize-none"
+            className="w-full bg-mist  px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-gold resize-none"
           />
         </div>
       )}
 
       <div className="flex flex-wrap gap-2 mt-3 text-xs font-semibold">
         {!listing.verified ? (
-          <button
+          <Button
             disabled={busy}
             onClick={() => (pendingAction === "verify" ? patch({ action: "verify", note: noteDraft }) : setPendingAction("verify"))}
-            className="px-3 py-1.5 rounded-lg bg-gold text-ink disabled:opacity-50"
+            className="px-3 py-1.5  bg-gold text-ink disabled:opacity-50"
           >
             {pendingAction === "verify" ? "Record evidence review" : "Review evidence"}
-          </button>
+          </Button>
         ) : (
-          <button
+          <Button
             disabled={busy}
             onClick={() => (pendingAction === "unverify" ? patch({ action: "unverify", note: noteDraft }) : setPendingAction("unverify"))}
-            className="px-3 py-1.5 rounded-lg bg-brandred/10 text-brandred hover:bg-brandred/20 disabled:opacity-50"
+            className="px-3 py-1.5  bg-brandred/10 text-brandred hover:bg-brandred/20 disabled:opacity-50"
           >
             {pendingAction === "unverify" ? "Remove review record" : "Remove review"}
-          </button>
+          </Button>
         )}
-        <button disabled={busy} onClick={() => setGovOpen((o) => !o)} className="px-3 py-1.5 rounded-lg bg-mist hover:bg-gold-soft disabled:opacity-50">
+        <Button disabled={busy} onClick={() => setGovOpen((o) => !o)} className="px-3 py-1.5  bg-mist hover:bg-gold-soft disabled:opacity-50">
           {govOpen ? "Hide" : "Government involvement classification"}
-        </button>
+        </Button>
       </div>
 
       {govOpen && (
@@ -242,7 +244,7 @@ export default function VerificationReviewRow({ listing }: { listing: Listing })
             <select
               value={govMechanism}
               onChange={(e) => setGovMechanism(e.target.value)}
-              className="w-full bg-mist rounded-lg px-2.5 py-1.5 text-xs outline-none focus:ring-2 focus:ring-gold"
+              className="w-full bg-mist  px-2.5 py-1.5 text-xs outline-none focus:ring-2 focus:ring-gold"
             >
               {GOV_MECHANISMS.map((m) => <option key={m} value={m}>{MECHANISM_LABELS[m]}</option>)}
             </select>
@@ -252,15 +254,15 @@ export default function VerificationReviewRow({ listing }: { listing: Listing })
             value={govNote}
             onChange={(e) => setGovNote(e.target.value)}
             placeholder="Note explaining this classification (required)"
-            className="w-full bg-mist rounded-xl px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-gold resize-none"
+            className="w-full bg-mist  px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-gold resize-none"
           />
-          <button
+          <Button
             disabled={busy}
             onClick={() => patch({ action: "set_gov_mechanism", governmentBacked: govBacked, govMechanism: govBacked ? govMechanism : null, note: govNote })}
-            className="px-3 py-1.5 rounded-lg bg-charcoal text-white text-xs font-semibold disabled:opacity-50"
+            className="px-3 py-1.5  bg-charcoal text-white text-xs font-semibold disabled:opacity-50"
           >
             Save classification
-          </button>
+          </Button>
         </div>
       )}
     </div>

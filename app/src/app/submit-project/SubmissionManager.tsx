@@ -1,5 +1,7 @@
 "use client";
 
+import Button from "@/components/ui/Button";
+
 import { useEffect, useState } from "react";
 import { SECTORS, INSTRUMENTS, computeCompleteness, missingRequiredFields, type SubmissionDraft } from "@/lib/submissions";
 import { trackProductEvent } from "@/components/ProductAnalytics";
@@ -114,15 +116,15 @@ export default function SubmissionManager() {
 
   const completeness = computeCompleteness(form);
   const missing = missingRequiredFields(form);
-  const input = "w-full bg-mist rounded-xl px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-gold";
+  const input = "w-full bg-mist  px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-gold";
   const label = "block text-xs font-bold uppercase tracking-wider text-wgray mb-1.5";
 
   return (
     <div className="mt-8 space-y-6">
-      {success && <div role="status" aria-live="polite" className="rounded-xl bg-emerald-p/10 px-4 py-3 text-sm font-semibold text-emerald-p">{success}</div>}
+      {success && <div role="status" aria-live="polite" className=" bg-emerald-p/10 px-4 py-3 text-sm font-semibold text-emerald-p">{success}</div>}
       {loadFailed ? (
-        <div role="alert" className="rounded-xl bg-brandred/10 p-4 text-sm text-brandred">
-          {ui.loadError} <button type="button" onClick={load} className="ml-2 font-bold underline">{ui.retry}</button>
+        <div role="alert" className=" bg-brandred/10 p-4 text-sm text-brandred">
+          {ui.loadError} <Button type="button" onClick={load} className="ml-2 font-bold underline">{ui.retry}</Button>
         </div>
       ) : submissions === null ? (
         <div role="status" aria-live="polite" className="text-sm text-wgray">{ui.loading}</div>
@@ -131,7 +133,7 @@ export default function SubmissionManager() {
           {submissions.length > 0 && (
             <div className="space-y-3">
               {submissions.map((s) => (
-                <div key={s.id} className="bg-white rounded-2xl p-5 shadow-[0_1px_3px_rgb(44_62_80/0.08)]">
+                <div key={s.id} className="bg-white  p-5 ">
                   <div className="flex items-start justify-between gap-3">
                     <div>
                       <div className="font-display font-bold">{s.title || ui.untitled}</div>
@@ -139,7 +141,7 @@ export default function SubmissionManager() {
                         {ui.statuses[s.status] ?? s.status} · {ui.complete(computeCompleteness(s))}
                       </div>
                       {s.reviewNotes && (
-                        <div className="text-xs text-brandred mt-1.5 bg-brandred/5 rounded-lg px-2.5 py-1.5 max-w-md">
+                        <div className="text-xs text-brandred mt-1.5 bg-brandred/5  px-2.5 py-1.5 max-w-md">
                           {ui.reviewerNote}: {s.reviewNotes}
                         </div>
                       )}
@@ -153,15 +155,15 @@ export default function SubmissionManager() {
                   <div className="flex flex-wrap gap-2 mt-3 text-xs font-semibold">
                     {(s.status === "draft" || s.status === "changes_requested") && (
                       <>
-                        <button onClick={() => startEdit(s)} className="px-3 py-1.5 rounded-lg bg-mist hover:bg-gold-soft">{ui.edit}</button>
-                        <button onClick={() => submitForReview(s.id)} className="px-3 py-1.5 rounded-lg bg-gold text-ink">{ui.submit}</button>
+                        <Button onClick={() => startEdit(s)} className="px-3 py-1.5  bg-mist hover:bg-gold-soft">{ui.edit}</Button>
+                        <Button onClick={() => submitForReview(s.id)} className="px-3 py-1.5  bg-gold text-ink">{ui.submit}</Button>
                       </>
                     )}
                     {(s.status === "submitted" || s.status === "under_review") && (
-                      <button onClick={() => withdraw(s.id)} className="px-3 py-1.5 rounded-lg bg-mist hover:bg-gold-soft">{ui.withdraw}</button>
+                      <Button onClick={() => withdraw(s.id)} className="px-3 py-1.5  bg-mist hover:bg-gold-soft">{ui.withdraw}</Button>
                     )}
                     {s.status === "draft" && (
-                      <button onClick={() => remove(s.id)} className="px-3 py-1.5 rounded-lg bg-brandred/10 text-brandred hover:bg-brandred/20">{ui.delete}</button>
+                      <Button onClick={() => remove(s.id)} className="px-3 py-1.5  bg-brandred/10 text-brandred hover:bg-brandred/20">{ui.delete}</Button>
                     )}
                   </div>
                 </div>
@@ -170,20 +172,20 @@ export default function SubmissionManager() {
           )}
 
           {!showForm && (
-            <button onClick={startNew} className="bg-gold text-ink font-display font-bold text-sm px-5 py-2.5 rounded-xl hover:brightness-110">
+            <Button onClick={startNew} className="bg-gold text-ink font-display font-bold text-sm px-5 py-2.5  hover:brightness-110">
               + {ui.newProject}
-            </button>
+            </Button>
           )}
 
           {showForm && (
-            <div className="bg-white rounded-2xl p-6 shadow-[0_1px_3px_rgb(44_62_80/0.08)] space-y-4">
+            <div className="bg-white  p-6  space-y-4">
               <div>
                 <div className="flex items-center justify-between mb-1.5">
                   <h2 className="font-display font-bold text-lg">{editingId ? ui.editTitle : ui.newTitle}</h2>
                   <span className="text-xs font-bold text-wgray">{ui.complete(completeness)}</span>
                 </div>
-                <div className="h-1.5 rounded-full bg-mist overflow-hidden">
-                  <div className="h-full bg-gold rounded-full transition-all" style={{ width: completeness + "%" }} />
+                <div className="h-1.5  bg-mist overflow-hidden">
+                  <div className="h-full bg-gold  transition-all" style={{ width: completeness + "%" }} />
                 </div>
               </div>
 
@@ -243,13 +245,13 @@ export default function SubmissionManager() {
               {missing.length > 0 && (
                 <p className="text-xs text-wgray">{ui.required}: {missing.map((f) => ui.labels[f as keyof typeof ui.labels] ?? f).join(", ")}</p>
               )}
-              {error && <div role="alert" className="text-xs text-brandred bg-brandred/10 rounded-lg px-3 py-2">{error}</div>}
+              {error && <div role="alert" className="text-xs text-brandred bg-brandred/10  px-3 py-2">{error}</div>}
 
               <div className="flex gap-3">
-                <button disabled={busy} onClick={save} className="bg-gold text-ink font-display font-bold text-sm px-5 py-2.5 rounded-xl hover:brightness-110 disabled:opacity-60">
+                <Button disabled={busy} onClick={save} className="bg-gold text-ink font-display font-bold text-sm px-5 py-2.5  hover:brightness-110 disabled:opacity-60">
                   {busy ? ui.saving : ui.save}
-                </button>
-                <button type="button" onClick={cancel} className="text-sm font-semibold text-wgray hover:text-charcoal">{ui.cancel}</button>
+                </Button>
+                <Button type="button" onClick={cancel} className="text-sm font-semibold text-wgray hover:text-charcoal">{ui.cancel}</Button>
               </div>
             </div>
           )}

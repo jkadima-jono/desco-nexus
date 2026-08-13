@@ -25,11 +25,11 @@ export default async function AdminAiUsage() {
       </p>
 
       {logs.length === 0 ? (
-        <div className="bg-white rounded-2xl p-10 text-center shadow-[0_1px_3px_rgb(44_62_80/0.08)]">
+        <div className="bg-white  p-10 text-center ">
           <p className="text-sm text-wgray">No AI-assisted generations yet.</p>
         </div>
       ) : (
-        <div className="bg-white rounded-2xl shadow-[0_1px_3px_rgb(44_62_80/0.08)] overflow-hidden">
+        <div className="bg-white   overflow-hidden">
           <table className="w-full text-sm">
             <thead>
               <tr className="text-left text-[11px] font-bold uppercase tracking-wider text-wgray border-b border-charcoal/10">
@@ -46,7 +46,7 @@ export default async function AdminAiUsage() {
                   <td className="px-4 py-2.5">{l.user.fullName}<div className="text-[11px] text-wgray">{l.user.email}</div></td>
                   <td className="px-4 py-2.5">{l.kind === "teaser" ? "Investment teaser" : "Message draft"}</td>
                   <td className="px-4 py-2.5">
-                    <span className={"text-[11px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full " + (l.source === "claude" ? "bg-emerald-p/10 text-emerald-p" : "bg-mist text-wgray")}>
+                    <span className={"text-[11px] font-bold uppercase tracking-wider px-2 py-0.5  " + (l.source === "claude" ? "bg-emerald-p/10 text-emerald-p" : "bg-mist text-wgray")}>
                       {l.source === "claude" ? "Claude API" : "Template"}
                     </span>
                   </td>

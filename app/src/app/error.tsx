@@ -1,5 +1,7 @@
 "use client";
 
+import Button from "@/components/ui/Button";
+
 import { useEffect } from "react";
 import { useI18n } from "@/components/I18nProvider";
 
@@ -23,13 +25,13 @@ export default function ErrorBoundary({
   }, [error]);
   return (
     <div className="public-container flex min-h-[55vh] items-center justify-center py-16">
-      <div role="alert" className="max-w-xl rounded-2xl border border-charcoal/10 bg-white p-8 text-center shadow-[0_8px_30px_rgb(13_21_28/0.06)]">
+      <div role="alert" className="max-w-xl  border border-charcoal/10 bg-white p-8 text-center ">
         <p className="eyebrow text-brandred">{copy[0]}</p>
         <h1 className="mt-3 font-display text-2xl font-bold text-ink">{copy[1]}</h1>
         <p className="mt-3 text-sm leading-6 text-slate">{copy[2]}</p>
         <div className="mt-6 flex flex-wrap justify-center gap-3">
-          <button type="button" onClick={reset} className="button-primary">{copy[3]}</button>
-          <a href="/opportunities" className="button-secondary">{copy[4]}</a>
+          <Button type="button" onClick={reset} className="button-primary">{copy[3]}</Button>
+          <Button href="/opportunities" className="button-secondary">{copy[4]}</Button>
         </div>
       </div>
     </div>

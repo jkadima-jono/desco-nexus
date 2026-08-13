@@ -92,10 +92,10 @@ export default function HeroVisual({
           className="object-cover"
         />
         {overlay && (
-          <div className="absolute inset-0 bg-gradient-to-t from-ink/70 via-ink/10 to-transparent" />
+          <div className="absolute inset-0 bg-black/30" />
         )}
         {photo.isExample && (
-          <span className={`absolute max-w-[calc(100%-1.5rem)] whitespace-normal rounded-md bg-ink/90 px-2.5 py-1 text-right text-[10px] font-bold uppercase leading-4 tracking-[0.06em] text-white shadow-sm ${contextLabelClassName}`} title={photo.caption ?? (photo.kind === "regional" ? ui.regional : ui.example)}>
+          <span className={`absolute max-w-[calc(100%-1.5rem)] whitespace-normal  bg-ink/90 px-2.5 py-1 text-right text-[10px] font-bold uppercase leading-4 tracking-[0.06em] text-white  ${contextLabelClassName}`} title={photo.caption ?? (photo.kind === "regional" ? ui.regional : ui.example)}>
             {photo.kind === "regional" ? ui.regional : ui.example}
           </span>
         )}
@@ -111,14 +111,7 @@ export default function HeroVisual({
         className="absolute inset-0 w-full h-full"
         aria-hidden
       >
-        <defs>
-          <linearGradient id={"g-" + listing.id} x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0%" stopColor={listing.sectorColor} />
-            {/* matches --color-navy in globals.css */}
-            <stop offset="100%" stopColor="#18334A" />
-          </linearGradient>
-        </defs>
-        <rect width="400" height="200" fill={"url(#g-" + listing.id + ")"} />
+        <rect width="400" height="200" fill={listing.sectorColor} />
         <Pattern variant={v} color={listing.sectorColor} />
       </svg>
     </div>

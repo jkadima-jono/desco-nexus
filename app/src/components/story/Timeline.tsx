@@ -9,7 +9,7 @@ export default function Timeline({ milestones, pendingLabel = "In progress" }: {
           <li className="ml-6 relative">
             <span
               className={
-                "absolute -left-[31px] top-0.5 w-3.5 h-3.5 rounded-full border-2 " +
+                "absolute -left-[31px] top-0.5 w-3.5 h-3.5 border-2 " +
                 (m.done ? "bg-gold border-gold" : "bg-white border-charcoal/30")
               }
               aria-hidden="true"

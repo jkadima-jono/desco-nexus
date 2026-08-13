@@ -1,3 +1,4 @@
+import Button from "@/components/ui/Button";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { PageHero, QuietNotice, SectionHeading } from "@/components/public/PublicPrimitives";
@@ -155,7 +156,7 @@ export default async function Opportunities({ searchParams }: { searchParams: Pr
     return localized.org;
   }
 
-  const selectClass = "min-h-11 w-full rounded-md border border-ink/15 bg-white px-3 py-2 text-sm text-ink focus:border-gold";
+  const selectClass = "min-h-11 w-full  border border-ink/15 bg-white px-3 py-2 text-sm text-ink focus:border-gold";
   const labelClass = "mb-1 block text-xs font-bold uppercase tracking-wide text-slate";
 
   return (
@@ -197,7 +198,7 @@ export default async function Opportunities({ searchParams }: { searchParams: Pr
           </p>
 
           {allListings.some(isDescoRelatedOpportunity) && (
-            <aside className="mt-5 max-w-4xl rounded-xl border border-rust/25 bg-rust/5 p-5" aria-labelledby="related-party-disclosure">
+            <aside className="mt-5 max-w-4xl  border border-rust/25 bg-rust/5 p-5" aria-labelledby="related-party-disclosure">
               <h2 id="related-party-disclosure" className="font-display text-base font-bold text-ink">{readiness.relatedTitle}</h2>
               <p className="mt-2 text-sm leading-6 text-slate">{readiness.relatedBody}</p>
               <Link href="/trust" className="mt-3 inline-flex min-h-11 items-center text-sm font-bold text-ink underline underline-offset-4">
@@ -206,7 +207,7 @@ export default async function Opportunities({ searchParams }: { searchParams: Pr
             </aside>
           )}
 
-          {allListings.length >= 6 && <form method="get" className="mt-8 rounded-lg border border-ink/10 bg-white p-4" aria-label={ui.filterLabel}>
+          {allListings.length >= 6 && <form method="get" className="mt-8  border border-ink/10 bg-white p-4" aria-label={ui.filterLabel}>
             <div className={`grid gap-3 ${hasDisclosedCapitalAsk ? "sm:grid-cols-3" : "sm:grid-cols-2"}`}>
               {[["sector", ui.sector, sector, sectors]].map(([name, label, value, options]) => (
                 <label key={name as string}>
@@ -241,7 +242,7 @@ export default async function Opportunities({ searchParams }: { searchParams: Pr
                 </select>
               </label>
             </div>
-            <details open={advancedFiltersActive} className="group mt-4 rounded-lg border border-ink/10 bg-mist/60">
+            <details open={advancedFiltersActive} className="group mt-4  border border-ink/10 bg-mist/60">
               <summary className="flex min-h-12 cursor-pointer list-none items-center justify-between gap-3 px-4 py-3 marker:content-none">
                 <span>
                   <span className="block font-display text-sm font-bold text-ink">{readiness.advancedFilters}</span>
@@ -294,8 +295,8 @@ export default async function Opportunities({ searchParams }: { searchParams: Pr
               </div>
             </details>
             <div className="mt-4 flex flex-wrap gap-3">
-              <button className="button-primary" type="submit">{ui.apply}</button>
-              <Link href="/opportunities" className="button-secondary">{ui.clear}</Link>
+              <Button className="button-primary" type="submit">{ui.apply}</Button>
+              <Button href="/opportunities" className="button-secondary">{ui.clear}</Button>
             </div>
           </form>}
 

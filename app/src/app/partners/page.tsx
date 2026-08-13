@@ -1,3 +1,4 @@
+import Button from "@/components/ui/Button";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { InstitutionalCard, PageHero, QuietNotice, SectionHeading } from "@/components/public/PublicPrimitives";
@@ -27,7 +28,7 @@ export default async function PartnersPage() {
             {copy.cards.map((card) => <InstitutionalCard key={card.title} {...card} />)}
           </div>
           <div className="mt-8"><QuietNotice>{copy.notice}</QuietNotice></div>
-          <Link href="/contact?topic=institutional-partnership" className="button-primary mt-8">{copy.startCta}</Link>
+          <Button href="/contact?topic=institutional-partnership" className="button-primary mt-8">{copy.startCta}</Button>
         </div>
       </section>
     </>

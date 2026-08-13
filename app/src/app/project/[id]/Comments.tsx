@@ -1,5 +1,7 @@
 "use client";
 
+import Button from "@/components/ui/Button";
+
 import { useCallback, useEffect, useState } from "react";
 import { useI18n } from "@/components/I18nProvider";
 
@@ -118,16 +120,16 @@ export default function Comments({
             {c.body}
           </p>
           <div className="flex items-center gap-4 mt-1.5 text-[11px] font-bold">
-            <button
+            <Button
               onClick={() => toggleLike(c.id)}
               className={
                 (c.likedByMe ? "text-brandred" : "text-wgray") + " hover:text-brandred"
               }
             >
               {c.likedByMe ? "♥" : "♡"} {c.likeCount > 0 ? c.likeCount : t("comments.like")}
-            </button>
+            </Button>
             {!isReply && (
-              <button
+              <Button
                 onClick={() => {
                   setReplyTo(replyTo === c.id ? null : c.id);
                   setReplyDraft("");
@@ -135,7 +137,7 @@ export default function Comments({
                 className="text-wgray hover:text-charcoal"
               >
                 {t("comments.reply")}
-              </button>
+              </Button>
             )}
           </div>
           {replyTo === c.id && (
@@ -146,15 +148,15 @@ export default function Comments({
                 onKeyDown={(e) => e.key === "Enter" && post(replyDraft, c.id)}
                 placeholder={"Reply to " + c.author.fullName + "…"}
                 autoFocus
-                className="flex-1 bg-mist rounded-lg px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-gold"
+                className="flex-1 bg-mist  px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-gold"
               />
-              <button
+              <Button
                 onClick={() => post(replyDraft, c.id)}
                 disabled={busy}
-                className="bg-charcoal text-white font-display font-bold text-xs px-4 rounded-lg hover:bg-ink disabled:opacity-50"
+                className="bg-charcoal text-white font-display font-bold text-xs px-4  hover:bg-ink disabled:opacity-50"
               >
                 {t("comments.reply")}
-              </button>
+              </Button>
             </div>
           )}
         </div>
@@ -168,7 +170,7 @@ export default function Comments({
   const total = comments.reduce((a, c) => a + 1 + (c.replies?.length ?? 0), 0);
 
   return (
-    <section className="bg-white rounded-2xl p-6 shadow-[0_1px_3px_rgb(44_62_80/0.08)]">
+    <section className="bg-white  p-6 ">
       <div className="flex items-center justify-between mb-4">
         <h2 className="font-display font-bold text-lg">{t("comments.title")}</h2>
         <span className="text-[11px] font-bold text-wgray uppercase tracking-wider">
@@ -184,18 +186,18 @@ export default function Comments({
             onChange={(e) => setDraft(e.target.value)}
             onKeyDown={(e) => e.key === "Enter" && post(draft)}
             placeholder={t("comments.placeholder")}
-            className="flex-1 bg-mist rounded-xl px-4 py-2.5 text-sm outline-none focus:ring-2 focus:ring-gold"
+            className="flex-1 bg-mist  px-4 py-2.5 text-sm outline-none focus:ring-2 focus:ring-gold"
           />
-          <button
+          <Button
             onClick={() => post(draft)}
             disabled={busy}
-            className="bg-gold text-ink font-display font-bold text-sm px-5 rounded-xl hover:brightness-110 disabled:opacity-50"
+            className="bg-gold text-ink font-display font-bold text-sm px-5  hover:brightness-110 disabled:opacity-50"
           >
             {t("comments.post")}
-          </button>
+          </Button>
         </div>
       ) : (
-        <div className="bg-mist rounded-xl px-4 py-3 text-sm text-wgray mb-2">
+        <div className="bg-mist  px-4 py-3 text-sm text-wgray mb-2">
           <a href="/login" className="text-gold font-bold">{t("comments.signIn")}</a>{" "}
           {t("comments.signInSuffix")}
         </div>

@@ -1,3 +1,4 @@
+import Button from "@/components/ui/Button";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { DisclosureChip, InstitutionalCard, PageHero, QuietNotice, SectionHeading } from "@/components/public/PublicPrimitives";
@@ -23,8 +24,8 @@ export default async function ModelFilePage() {
       <SectionHeading title={copy.risksTitle} />
       <div className="mt-8 grid gap-4 md:grid-cols-2 lg:grid-cols-3">{copy.risks.map((item) => <InstitutionalCard key={item.title} title={item.title} body={item.body} />)}</div>
       <div className="mt-10"><SectionHeading title={copy.sourcesTitle} /></div>
-      <ul className="mt-6 space-y-3">{copy.sources.map((source) => <li key={source} className="rounded-lg border border-ink/10 bg-mist p-4 text-sm text-slate">{source}</li>)}</ul>
-      <div className="mt-8 flex flex-wrap gap-3"><Link href="/sponsors" className="button-secondary">{copy.back}</Link><Link href="/contact?topic=project-submission" className="button-primary">{copy.email}</Link></div>
+      <ul className="mt-6 space-y-3">{copy.sources.map((source) => <li key={source} className=" border border-ink/10 bg-mist p-4 text-sm text-slate">{source}</li>)}</ul>
+      <div className="mt-8 flex flex-wrap gap-3"><Button href="/sponsors" className="button-secondary">{copy.back}</Button><Button href="/contact?topic=project-submission" className="button-primary">{copy.email}</Button></div>
     </div></section>
   </>;
 }

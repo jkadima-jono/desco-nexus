@@ -1,5 +1,7 @@
 "use client";
 
+import Button from "@/components/ui/Button";
+
 import { useEffect, useState } from "react";
 
 type Requester = {
@@ -56,15 +58,15 @@ export default function DataRoomAccessPanel({ listingId }: { listingId: string }
 
   return (
     <div className="mt-4 pt-4 border-t border-charcoal/10">
-      <button onClick={() => setOpen((o) => !o)} className="text-xs font-bold text-gold">
+      <Button onClick={() => setOpen((o) => !o)} className="text-xs font-bold text-gold">
         {open ? "Hide" : "Manage"} data-room access
-      </button>
+      </Button>
       {open && (
         <div className="mt-3 space-y-4">
           {error && (
-            <div role="alert" className="flex items-center justify-between gap-3 rounded-lg bg-brandred/10 px-3 py-2 text-xs text-brandred">
+            <div role="alert" className="flex items-center justify-between gap-3  bg-brandred/10 px-3 py-2 text-xs text-brandred">
               <span>{error}</span>
-              <button type="button" onClick={load} className="min-h-11 font-bold underline">Retry</button>
+              <Button type="button" onClick={load} className="min-h-11 font-bold underline">Retry</Button>
             </div>
           )}
           <div>
@@ -76,15 +78,15 @@ export default function DataRoomAccessPanel({ listingId }: { listingId: string }
             ) : (
               <ul className="space-y-1.5">
                 {requesters.map((r) => (
-                  <li key={r.userId} className="flex items-center justify-between text-sm py-1.5 px-2 rounded-lg bg-mist">
+                  <li key={r.userId} className="flex items-center justify-between text-sm py-1.5 px-2  bg-mist">
                     <span>
                       <span className="font-semibold">{r.fullName}</span>
                       <span className="text-wgray text-xs ml-2">{r.email}</span>
                     </span>
                     {r.granted ? (
-                      <button onClick={() => revoke(r.userId)} className="text-[11px] font-bold text-brandred">Revoke</button>
+                      <Button onClick={() => revoke(r.userId)} className="text-[11px] font-bold text-brandred">Revoke</Button>
                     ) : (
-                      <button onClick={() => grant(r.userId)} className="text-[11px] font-bold text-emerald-p">Grant access</button>
+                      <Button onClick={() => grant(r.userId)} className="text-[11px] font-bold text-emerald-p">Grant access</Button>
                     )}
                   </li>
                 ))}

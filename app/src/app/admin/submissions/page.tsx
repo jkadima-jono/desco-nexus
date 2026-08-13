@@ -22,7 +22,7 @@ export default async function AdminSubmissions() {
       <p className="text-wgray text-sm mt-1 mb-6">{submissions.length} awaiting review</p>
 
       {submissions.length === 0 ? (
-        <div className="bg-white rounded-2xl p-10 text-center shadow-[0_1px_3px_rgb(44_62_80/0.08)]">
+        <div className="bg-white  p-10 text-center ">
           <p className="text-sm text-wgray">Nothing in the review queue.</p>
         </div>
       ) : (

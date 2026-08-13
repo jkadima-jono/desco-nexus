@@ -31,7 +31,7 @@ export default async function Portfolio() {
       </p>
 
       {deals.length === 0 ? (
-        <div className="bg-white rounded-2xl p-10 text-center shadow-[0_1px_3px_rgb(44_62_80/0.08)]">
+        <div className="bg-white  p-10 text-center ">
           <p className="text-sm text-wgray">
             No monitored opportunities yet. Mark an opportunity as interested
             to follow its review stage here.
@@ -47,7 +47,7 @@ export default async function Portfolio() {
               <Link
                 key={d.id}
                 href={"/project/" + d.listing.id}
-                className="flex items-center justify-between bg-white rounded-xl p-5 shadow-[0_1px_3px_rgb(44_62_80/0.08)] hover:shadow-[0_4px_16px_rgb(44_62_80/0.10)] transition-shadow focus-visible:ring-2 focus-visible:ring-gold"
+                className="flex items-center justify-between bg-white  p-5    focus-visible:ring-2 focus-visible:ring-gold"
               >
                 <div>
                   <div className="font-display font-bold">{d.flag} {d.title}</div>

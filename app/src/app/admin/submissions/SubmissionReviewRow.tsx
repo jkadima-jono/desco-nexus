@@ -1,5 +1,7 @@
 "use client";
 
+import Button from "@/components/ui/Button";
+
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { computeCompleteness } from "@/lib/submissions";
@@ -54,7 +56,7 @@ export default function SubmissionReviewRow({ submission }: { submission: Submis
   const completeness = computeCompleteness(submission as never);
 
   return (
-    <div className="bg-white rounded-2xl p-5 shadow-[0_1px_3px_rgb(44_62_80/0.08)]">
+    <div className="bg-white  p-5 ">
       <div className="flex items-start justify-between gap-4">
         <div>
           <div className="font-display font-bold">{submission.title}</div>
@@ -77,7 +79,7 @@ export default function SubmissionReviewRow({ submission }: { submission: Submis
         <div><dt className="font-bold text-wgray uppercase tracking-wider mb-1">Management</dt><dd className="text-charcoal/80">{submission.managementTeam || "Not provided"}</dd></div>
       </dl>
 
-      {error && <div role="alert" className="text-xs text-brandred bg-brandred/10 rounded-lg px-3 py-2 mt-3">{error}</div>}
+      {error && <div role="alert" className="text-xs text-brandred bg-brandred/10  px-3 py-2 mt-3">{error}</div>}
 
       {showReason && (
         <div className="mt-3">
@@ -88,19 +90,19 @@ export default function SubmissionReviewRow({ submission }: { submission: Submis
             rows={2}
             value={reason}
             onChange={(e) => setReason(e.target.value)}
-            className="w-full bg-mist rounded-xl px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-gold resize-none"
+            className="w-full bg-mist  px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-gold resize-none"
           />
         </div>
       )}
 
       <div className="flex flex-wrap gap-2 mt-3 text-xs font-semibold">
-        <button disabled={busy} onClick={() => act("approve")} className="px-3 py-1.5 rounded-lg bg-gold text-ink disabled:opacity-50">Approve & publish</button>
-        <button disabled={busy} onClick={() => act("request_changes")} className="px-3 py-1.5 rounded-lg bg-mist hover:bg-gold-soft disabled:opacity-50">
+        <Button disabled={busy} onClick={() => act("approve")} className="px-3 py-1.5  bg-gold text-ink disabled:opacity-50">Approve & publish</Button>
+        <Button disabled={busy} onClick={() => act("request_changes")} className="px-3 py-1.5  bg-mist hover:bg-gold-soft disabled:opacity-50">
           {showReason === "request_changes" ? "Confirm request" : "Request changes"}
-        </button>
-        <button disabled={busy} onClick={() => act("reject")} className="px-3 py-1.5 rounded-lg bg-brandred/10 text-brandred hover:bg-brandred/20 disabled:opacity-50">
+        </Button>
+        <Button disabled={busy} onClick={() => act("reject")} className="px-3 py-1.5  bg-brandred/10 text-brandred hover:bg-brandred/20 disabled:opacity-50">
           {showReason === "reject" ? "Confirm rejection" : "Reject"}
-        </button>
+        </Button>
       </div>
     </div>
   );

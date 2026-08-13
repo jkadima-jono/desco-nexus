@@ -64,7 +64,7 @@ export default async function DealWorkspace({
           </h1>
           <p className="text-sm text-wgray mt-1">
             {deal.kind !== "opportunity" && (
-              <span className="mr-2 px-2 py-0.5 rounded-full bg-gold-soft text-gold text-[11px] font-bold uppercase tracking-wider">{deal.kind}</span>
+              <span className="mr-2 px-2 py-0.5  bg-gold-soft text-gold text-[11px] font-bold uppercase tracking-wider">{deal.kind}</span>
             )}
             <Link href={projectHref(deal.listingId)} className="text-gold font-bold hover:underline">
               {deal.listing.title}
@@ -82,12 +82,12 @@ export default async function DealWorkspace({
 
       <div className="grid gap-6 lg:grid-cols-3">
         <div className="lg:col-span-2 space-y-6">
-          <section className="bg-white rounded-2xl p-6 shadow-[0_1px_3px_rgb(44_62_80/0.08)]">
+          <section className="bg-white  p-6 ">
             <h2 className="font-display font-bold text-lg mb-4">Stage</h2>
             <StageControl dealId={deal.id} current={deal.stage} />
           </section>
 
-          <section className="bg-white rounded-2xl p-6 shadow-[0_1px_3px_rgb(44_62_80/0.08)]">
+          <section className="bg-white  p-6 ">
             <h2 className="font-display font-bold text-lg mb-3">Decision history</h2>
             {history.length === 0 ? (
               <p className="text-sm text-wgray">No stage changes recorded yet. Every transition is logged here with actor and reason.</p>
@@ -105,11 +105,11 @@ export default async function DealWorkspace({
           </section>
 
           {related.length > 0 && (
-            <section className="bg-white rounded-2xl p-6 shadow-[0_1px_3px_rgb(44_62_80/0.08)]">
+            <section className="bg-white  p-6 ">
               <h2 className="font-display font-bold text-lg mb-3">Related tranches & workstreams</h2>
               <div className="space-y-2">
                 {related.map((r) => (
-                  <Link key={r.id} href={"/deals/" + r.id} className="flex justify-between items-center py-2 px-3 rounded-lg hover:bg-mist text-sm">
+                  <Link key={r.id} href={"/deals/" + r.id} className="flex justify-between items-center py-2 px-3  hover:bg-mist text-sm">
                     <span>
                       <span className="font-bold">{r.title}</span>
                       <span className="ml-2 text-[11px] text-wgray uppercase">{r.kind}</span>
@@ -123,7 +123,7 @@ export default async function DealWorkspace({
         </div>
 
         <div className="space-y-6">
-          <section className="bg-white rounded-2xl p-6 shadow-[0_1px_3px_rgb(44_62_80/0.08)] text-sm space-y-2">
+          <section className="bg-white  p-6  text-sm space-y-2">
             <h2 className="font-display font-bold text-lg mb-2">Details</h2>
             {[
               ["Owner", deal.owner],
@@ -138,7 +138,7 @@ export default async function DealWorkspace({
             ))}
           </section>
 
-          <section className="bg-white rounded-2xl p-6 shadow-[0_1px_3px_rgb(44_62_80/0.08)]">
+          <section className="bg-white  p-6 ">
             <h2 className="font-display font-bold text-lg mb-3">Due date &amp; decision notes</h2>
             <DealMeta
               dealId={deal.id}
@@ -147,7 +147,7 @@ export default async function DealWorkspace({
             />
           </section>
 
-          <section className="bg-gold-soft border-l-4 border-gold rounded-2xl p-5 text-xs leading-relaxed">
+          <section className="bg-gold-soft border-l-4 border-gold  p-5 text-xs leading-relaxed">
             <div className="text-[11px] font-bold uppercase tracking-wider text-gold mb-1.5">Forecast method</div>
             Weighted value = amount × stage probability. Stage probabilities
             climb through Discovered (2%) → Saved → Interested → Information
@@ -156,7 +156,7 @@ export default async function DealWorkspace({
             Deal-specific overrides require a recorded reason.
           </section>
 
-          <section className="bg-white rounded-2xl p-6 shadow-[0_1px_3px_rgb(44_62_80/0.08)] text-xs leading-relaxed">
+          <section className="bg-white  p-6  text-xs leading-relaxed">
             <h2 className="font-display font-bold text-sm mb-2">Stage entry requirements</h2>
             {Object.entries(STAGE_REQUIREMENTS).map(([s, r]) => (
               <p key={s} className={s === deal.stage ? "font-bold" : "text-wgray"}>

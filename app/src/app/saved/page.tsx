@@ -30,7 +30,7 @@ export default async function SavedPage() {
         select any to compare side by side. Saving here does not imply Compass
         recommends an investment.
       </p>
-      <div className={"mt-4 rounded-xl px-4 py-2.5 text-xs font-semibold flex items-center justify-between gap-3 " + (atLimit ? "bg-brandred/10 text-brandred" : "bg-mist text-wgray")}>
+      <div className={"mt-4  px-4 py-2.5 text-xs font-semibold flex items-center justify-between gap-3 " + (atLimit ? "bg-brandred/10 text-brandred" : "bg-mist text-wgray")}>
         <span>
           {plan.maxCollections === null
             ? "Current organization access — unlimited collections"

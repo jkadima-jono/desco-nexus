@@ -24,7 +24,7 @@ export default function ApproachSteps({ steps = DEFAULT_STEPS.map(({ title, body
     <div className="grid gap-6 md:grid-cols-3">
       {items.map((s, i) => (
         <Reveal key={s.n} delay={i * 120}>
-          <div className="bg-white rounded-2xl p-7 h-full shadow-[0_1px_3px_rgb(44_62_80/0.08)]">
+          <div className="bg-white  p-7 h-full ">
             <div className="font-display font-extrabold text-3xl text-gold mb-3">{s.n}</div>
             <h3 className="font-display font-bold text-lg mb-2">{s.title}</h3>
             <p className="text-sm text-wgray leading-relaxed">{s.body}</p>

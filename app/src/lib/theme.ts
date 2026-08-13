@@ -6,7 +6,7 @@ export const DESCO_COLORS = {
   brandred: "#C41E3A",
   gold: "#B8953D",
   emerald: "#00A550",
-  skyblue: "#0EA5E9",
+  skyblue: "#0066CC",
   blue: "#0066CC",
   deepblue: "#0047AB",
   orange: "#FF8C00",
@@ -67,7 +67,7 @@ export function sectorColor(sector: string): string {
 // Gold, green, and sky blue need dark text to meet contrast requirements.
 // Investdesco red is dark enough to retain white text.
 export function pillarForeground(pillarSlug: string): string {
-  return pillarSlug === "investdesco" ? "#FFFFFF" : "#10161D";
+  return pillarSlug === "investdesco" ? "#FFFFFF" : "#353535";
 }
 
 export function sectorForeground(sector: string): string {

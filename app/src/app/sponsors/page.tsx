@@ -1,3 +1,4 @@
+import Button from "@/components/ui/Button";
 import type { Metadata } from "next";
 import Link from "next/link";
 import {
@@ -63,7 +64,7 @@ export default async function SponsorsPage() {
           <div className="mt-10"><NumberedProcess items={copy.process} pathTone="owner" /></div>
           <div className="mt-8"><QuietNotice>{copy.notice}</QuietNotice></div>
           <p className="mt-10 border-t border-ink/10 pt-7 text-sm text-slate">
-            {paths.investorCrossLink} <Link href="/investors" className="font-bold text-[#9f3025] underline underline-offset-4">{t(locale, "home.investorCta")} →</Link>
+            {paths.investorCrossLink} <Link href="/investors" className="font-bold text-[#C41E3A] underline underline-offset-4">{t(locale, "home.investorCta")} →</Link>
           </p>
         </div>
       </section>
@@ -74,9 +75,9 @@ export default async function SponsorsPage() {
             {readiness.engagement.map((item) => <InstitutionalCard key={item.title} title={item.title} body={item.body} />)}
           </div>
           <div className="mt-8 flex flex-wrap gap-3">
-            <Link href="/resources" className="button-secondary">{readiness.standardCta}</Link>
-            <Link href="/resources/model-file" className="button-secondary">{readiness.modelCta}</Link>
-            <Link href="/contact?topic=project-submission" className="button-primary">{readiness.emailCta}</Link>
+            <Button href="/resources" className="button-secondary">{readiness.standardCta}</Button>
+            <Button href="/resources/model-file" className="button-secondary">{readiness.modelCta}</Button>
+            <Button href="/contact?topic=project-submission" className="button-primary">{readiness.emailCta}</Button>
           </div>
         </div>
       </section>

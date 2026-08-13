@@ -1,5 +1,7 @@
 "use client";
 
+import Button from "@/components/ui/Button";
+
 import { Suspense, useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -42,7 +44,7 @@ function Verify({ enabled }: { enabled: boolean }) {
     } catch { setError(copy.verifyError); } finally { setBusy(false); }
   };
 
-  return <div className="min-h-screen bg-ink px-6 py-16 text-white"><div className="mx-auto w-full max-w-md rounded-3xl bg-white p-6 text-charcoal shadow-2xl sm:p-8">
-    {verified ? <div role="status" aria-live="polite" className="text-center"><div aria-hidden="true" className="mx-auto mb-4 grid h-12 w-12 place-items-center rounded-full bg-gold-soft">✓</div><h1 className="font-display text-xl font-bold">{copy.verifiedTitle}</h1><p className="mt-3 text-sm text-wgray">{copy.verifiedBody}</p><Link href={destination} className="button-primary mt-6 w-full">{copy.continue}</Link></div> : <><h1 className="font-display text-xl font-bold">{copy.verifyTitle}</h1><p className="mt-3 text-sm leading-6 text-wgray">{copy.verifyIntro}</p>{error && <div role="alert" className="mt-4 rounded-lg bg-brandred/10 px-3 py-2 text-sm text-brandred">{error}</div>}<button type="button" onClick={confirm} disabled={busy || !token || !enabled} className="button-primary mt-6 w-full disabled:opacity-60">{busy ? copy.verifying : copy.verifyButton}</button><Link href="/login" className="mt-4 block min-h-11 py-3 text-center text-sm font-bold underline underline-offset-4">{copy.signIn}</Link></>}
+  return <div className="min-h-screen bg-ink px-6 py-16 text-white"><div className="mx-auto w-full max-w-md  bg-white p-6 text-charcoal  sm:p-8">
+    {verified ? <div role="status" aria-live="polite" className="text-center"><div aria-hidden="true" className="mx-auto mb-4 grid h-12 w-12 place-items-center  bg-gold-soft">✓</div><h1 className="font-display text-xl font-bold">{copy.verifiedTitle}</h1><p className="mt-3 text-sm text-wgray">{copy.verifiedBody}</p><Button href={destination} className="button-primary mt-6 w-full">{copy.continue}</Button></div> : <><h1 className="font-display text-xl font-bold">{copy.verifyTitle}</h1><p className="mt-3 text-sm leading-6 text-wgray">{copy.verifyIntro}</p>{error && <div role="alert" className="mt-4  bg-brandred/10 px-3 py-2 text-sm text-brandred">{error}</div>}<Button type="button" onClick={confirm} disabled={busy || !token || !enabled} className="button-primary mt-6 w-full disabled:opacity-60">{busy ? copy.verifying : copy.verifyButton}</Button><Link href="/login" className="mt-4 block min-h-11 py-3 text-center text-sm font-bold underline underline-offset-4">{copy.signIn}</Link></>}
   </div></div>;
 }

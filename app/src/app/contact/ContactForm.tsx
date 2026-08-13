@@ -1,5 +1,7 @@
 "use client";
 
+import Button from "@/components/ui/Button";
+
 import { useState } from "react";
 import Link from "next/link";
 import { trackProductEvent } from "@/components/ProductAnalytics";
@@ -66,20 +68,20 @@ export default function ContactForm({
 
   if (!collectionEnabled) {
     return (
-      <div className="rounded-3xl border border-gold/30 bg-white p-8 text-charcoal shadow-[0_12px_32px_rgb(0_0_0/0.35)]">
+      <div className=" border border-gold/30 bg-white p-8 text-charcoal ">
         <p className="text-sm leading-7">{contactCollectionPaused(locale)}</p>
-        <p className="mt-4 rounded-xl border border-charcoal/10 bg-mist p-4 text-xs leading-5 text-slate">
+        <p className="mt-4  border border-charcoal/10 bg-mist p-4 text-xs leading-5 text-slate">
           {paused.process}
         </p>
-        <a
+        <Button
           href={`mailto:support@desco.global?subject=${encodeURIComponent(ui.topics[topic] ?? ui.topics.general)}${projectId ? `&body=${encodeURIComponent(`Project: ${projectId}`)}` : ""}`}
           className="button-primary mt-6"
         >
           {contactEmailFallback(locale)}
-        </a>
-        <Link href="/legal" className="button-secondary mt-6">
+        </Button>
+        <Button href="/legal" className="button-secondary mt-6">
           {legalUi.legalStatus}
-        </Link>
+        </Button>
       </div>
     );
   }
@@ -134,8 +136,8 @@ export default function ContactForm({
 
   if (sent) {
     return (
-      <div className="bg-white rounded-3xl p-8 text-center shadow-[0_12px_32px_rgb(0_0_0/0.35)]">
-        <div className="w-12 h-12 rounded-full bg-gold-soft text-gold flex items-center justify-center mx-auto mb-4 text-xl">
+      <div className="bg-white  p-8 text-center ">
+        <div className="w-12 h-12  bg-gold-soft text-gold flex items-center justify-center mx-auto mb-4 text-xl">
           ✓
         </div>
         <h2 className="font-display font-bold text-xl text-charcoal">{ui.received}</h2>
@@ -147,8 +149,8 @@ export default function ContactForm({
   }
 
   return (
-    <form onSubmit={submit} onFocus={markStarted} className="bg-white rounded-3xl p-8 shadow-[0_12px_32px_rgb(0_0_0/0.35)] space-y-4">
-      <p className="rounded-xl border border-charcoal/10 bg-mist p-4 text-xs leading-5 text-slate">
+    <form onSubmit={submit} onFocus={markStarted} className="bg-white  p-8  space-y-4">
+      <p className=" border border-charcoal/10 bg-mist p-4 text-xs leading-5 text-slate">
         {readiness.contactProcess}
       </p>
       <div className="grid sm:grid-cols-2 gap-4">
@@ -163,7 +165,7 @@ export default function ContactForm({
             required
             value={name}
             onChange={(e) => setName(e.target.value)}
-            className="w-full bg-mist rounded-xl px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-gold"
+            className="w-full bg-mist  px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-gold"
           />
         </div>
         <div>
@@ -178,7 +180,7 @@ export default function ContactForm({
             required
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className="w-full bg-mist rounded-xl px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-gold"
+            className="w-full bg-mist  px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-gold"
           />
         </div>
       </div>
@@ -192,7 +194,7 @@ export default function ContactForm({
           autoComplete="organization"
           value={organization}
           onChange={(e) => setOrganization(e.target.value)}
-          className="w-full bg-mist rounded-xl px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-gold"
+          className="w-full bg-mist  px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-gold"
         />
       </div>
       <div>
@@ -203,7 +205,7 @@ export default function ContactForm({
           id="topic"
           value={topic}
           onChange={(e) => setTopic(e.target.value)}
-          className="w-full bg-mist rounded-xl px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-gold"
+          className="w-full bg-mist  px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-gold"
         >
           {TOPICS.map((topicOption) => (
             <option key={topicOption.value} value={topicOption.value}>{ui.topics[topicOption.value]}</option>
@@ -220,15 +222,15 @@ export default function ContactForm({
           rows={5}
           value={message}
           onChange={(e) => setMessage(e.target.value)}
-          className="w-full bg-mist rounded-xl px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-gold resize-none"
+          className="w-full bg-mist  px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-gold resize-none"
         />
       </div>
       {error && (
-        <div role="alert" className="text-xs text-brandred bg-brandred/10 rounded-lg px-3 py-2">
+        <div role="alert" className="text-xs text-brandred bg-brandred/10  px-3 py-2">
           {error}
         </div>
       )}
-      <label className="flex items-start gap-3 rounded-xl border border-charcoal/10 bg-mist p-3 text-xs leading-5 text-slate">
+      <label className="flex items-start gap-3  border border-charcoal/10 bg-mist p-3 text-xs leading-5 text-slate">
         <input
           type="checkbox"
           required
@@ -241,12 +243,12 @@ export default function ContactForm({
           <Link href="/legal" className="font-bold text-ink underline underline-offset-2">{legalUi.legalStatus}</Link>.
         </span>
       </label>
-      <button
+      <Button
         disabled={busy || !acknowledged}
-        className="w-full bg-gold text-ink font-display font-bold py-3.5 rounded-xl hover:brightness-110 disabled:opacity-60"
+        className="w-full bg-gold text-ink font-display font-bold py-3.5  hover:brightness-110 disabled:opacity-60"
       >
         {busy ? ui.sending : ui.send}
-      </button>
+      </Button>
     </form>
   );
 }

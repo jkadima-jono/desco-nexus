@@ -1,5 +1,7 @@
 "use client";
 
+import Button from "@/components/ui/Button";
+
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { fmtUsd } from "@/lib/data";
@@ -79,24 +81,24 @@ export default function SavedManager() {
           onChange={(e) => setNewCollectionName(e.target.value)}
           placeholder="New collection name"
           aria-label="New collection name"
-          className="bg-mist rounded-lg px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-gold"
+          className="bg-mist  px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-gold"
         />
-        <button onClick={createCollection} className="text-xs font-bold bg-charcoal text-white px-3 py-2 rounded-lg">Create collection</button>
+        <Button onClick={createCollection} className="text-xs font-bold bg-charcoal text-white px-3 py-2 ">Create collection</Button>
         {selected.size > 0 && (
-          <button onClick={compare} className="ml-auto text-xs font-bold bg-gold text-ink px-4 py-2 rounded-lg">
+          <Button onClick={compare} className="ml-auto text-xs font-bold bg-gold text-ink px-4 py-2 ">
             Compare selected ({selected.size})
-          </button>
+          </Button>
         )}
       </div>
 
       {saved.length === 0 ? (
-        <div className="bg-white rounded-2xl p-10 text-center border border-charcoal/10">
+        <div className="bg-white  p-10 text-center border border-charcoal/10">
           <p className="text-sm text-wgray">Nothing saved yet. Save an opportunity from any project page or card.</p>
         </div>
       ) : (
         <div className="space-y-3">
           {saved.map((s) => (
-            <div key={s.id} className="bg-white rounded-2xl p-5 border border-charcoal/10">
+            <div key={s.id} className="bg-white  p-5 border border-charcoal/10">
               <div className="flex items-start gap-3">
                 <input
                   type="checkbox"
@@ -119,7 +121,7 @@ export default function SavedManager() {
                         rows={2}
                         defaultValue={s.notes}
                         onBlur={(e) => patch(s.id, { notes: e.target.value })}
-                        className="w-full bg-mist rounded-lg px-2.5 py-1.5 text-xs outline-none focus:ring-2 focus:ring-gold resize-none"
+                        className="w-full bg-mist  px-2.5 py-1.5 text-xs outline-none focus:ring-2 focus:ring-gold resize-none"
                       />
                     </div>
                     <div>
@@ -128,14 +130,14 @@ export default function SavedManager() {
                         id={"tags-" + s.id}
                         defaultValue={parseTags(s.tags).join(", ")}
                         onBlur={(e) => patch(s.id, { tags: e.target.value.split(",").map((t) => t.trim()).filter(Boolean) })}
-                        className="w-full bg-mist rounded-lg px-2.5 py-1.5 text-xs outline-none focus:ring-2 focus:ring-gold"
+                        className="w-full bg-mist  px-2.5 py-1.5 text-xs outline-none focus:ring-2 focus:ring-gold"
                       />
                       <label htmlFor={"col-" + s.id} className="sr-only">Collection</label>
                       <select
                         id={"col-" + s.id}
                         defaultValue={s.collectionId ?? ""}
                         onChange={(e) => patch(s.id, { collectionId: e.target.value || null })}
-                        className="w-full bg-mist rounded-lg px-2.5 py-1.5 text-xs outline-none focus:ring-2 focus:ring-gold mt-1.5"
+                        className="w-full bg-mist  px-2.5 py-1.5 text-xs outline-none focus:ring-2 focus:ring-gold mt-1.5"
                       >
                         <option value="">No collection</option>
                         {collections.map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}
@@ -143,7 +145,7 @@ export default function SavedManager() {
                     </div>
                   </div>
                 </div>
-                <button onClick={() => unsave(s.id)} className="text-[11px] font-bold text-brandred shrink-0">Unsave</button>
+                <Button onClick={() => unsave(s.id)} className="text-[11px] font-bold text-brandred shrink-0">Unsave</Button>
               </div>
             </div>
           ))}

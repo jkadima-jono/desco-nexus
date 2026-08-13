@@ -22,7 +22,7 @@ export default function UserPlanRow({ userRow, plans }: { userRow: UserRow; plan
   };
 
   return (
-    <div className="bg-white rounded-2xl p-4 shadow-[0_1px_3px_rgb(44_62_80/0.08)] flex items-center justify-between gap-4">
+    <div className="bg-white  p-4  flex items-center justify-between gap-4">
       <div>
         <div className="font-display font-bold text-sm">{userRow.fullName}</div>
         <div className="text-xs text-wgray">{userRow.email} · {userRow.role}</div>
@@ -31,7 +31,7 @@ export default function UserPlanRow({ userRow, plans }: { userRow: UserRow; plan
         value={userRow.planId ?? ""}
         disabled={busy}
         onChange={(e) => assign(e.target.value)}
-        className="bg-mist rounded-lg px-2.5 py-1.5 text-xs outline-none focus:ring-2 focus:ring-gold disabled:opacity-50"
+        className="bg-mist  px-2.5 py-1.5 text-xs outline-none focus:ring-2 focus:ring-gold disabled:opacity-50"
         aria-label={"Demo entitlement configuration for " + userRow.fullName}
       >
         <option value="">Free demo configuration</option>

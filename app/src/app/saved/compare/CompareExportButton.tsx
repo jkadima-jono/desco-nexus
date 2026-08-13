@@ -1,5 +1,7 @@
 "use client";
 
+import Button from "@/components/ui/Button";
+
 const csvCell = (v: string): string => '"' + v.replace(/"/g, '""') + '"';
 
 export default function CompareExportButton({ titles, rows, label }: { titles: string[]; rows: { label: string; values: string[] }[]; label: string }) {
@@ -19,8 +21,8 @@ export default function CompareExportButton({ titles, rows, label }: { titles: s
   if (titles.length === 0) return null;
 
   return (
-    <button onClick={download} className="text-xs font-bold bg-charcoal text-white px-4 py-2 rounded-lg self-start">
+    <Button onClick={download} className="text-xs font-bold bg-charcoal text-white px-4 py-2  self-start">
       {label}
-    </button>
+    </Button>
   );
 }

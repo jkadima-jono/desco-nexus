@@ -1,5 +1,7 @@
 "use client";
 
+import Button from "@/components/ui/Button";
+
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useI18n } from "@/components/I18nProvider";
@@ -117,19 +119,19 @@ export default function PhotoGallery({
   };
 
   return (
-    <section className="bg-white rounded-2xl p-6 shadow-[0_1px_3px_rgb(44_62_80/0.08)]">
+    <section className="bg-white  p-6 ">
       <div className="flex items-center justify-between mb-4">
         <h2 className="font-display font-bold text-lg">{t("photos.title")}</h2>
-        {canUpload && <button
+        {canUpload && <Button
           onClick={() => fileRef.current?.click()}
           disabled={busy}
           className="text-sm font-display font-bold text-gold hover:brightness-90 disabled:opacity-50"
         >
             {busy ? t("photos.uploading") : "⇪ " + (photos.some((photo) => photo.isExample) ? imageUi.replaceVisual : t("photos.add"))}
-        </button>}
+        </Button>}
       </div>
       {canUpload && (
-        <div className="mb-4 rounded-xl border border-charcoal/10 bg-mist p-3">
+        <div className="mb-4  border border-charcoal/10 bg-mist p-3">
           <label htmlFor="project-image-caption" className="block text-xs font-bold uppercase tracking-wide text-slate">
             {imageUi.captionSource}
           </label>
@@ -139,7 +141,7 @@ export default function PhotoGallery({
             onChange={(event) => setCaption(event.target.value)}
             maxLength={200}
             placeholder={imageUi.captionPlaceholder}
-            className="mt-2 min-h-11 w-full rounded-lg border border-charcoal/15 bg-white px-3 text-sm"
+            className="mt-2 min-h-11 w-full  border border-charcoal/15 bg-white px-3 text-sm"
           />
           <p className="mt-2 text-xs text-slate">
             {imageUi.uploadHelp}
@@ -166,9 +168,9 @@ export default function PhotoGallery({
       ) : (
         <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
           {photos.map((p, i) => (
-            <figure key={p.id} className="relative overflow-hidden rounded-xl border border-charcoal/10">
+            <figure key={p.id} className="relative overflow-hidden  border border-charcoal/10">
               <div className="relative aspect-[4/3] overflow-hidden group">
-              <button
+              <Button
                 onClick={(event) => {
                   triggerRef.current = event.currentTarget;
                   setLightbox(p);
@@ -182,38 +184,38 @@ export default function PhotoGallery({
                   fill
                   sizes="(min-width: 640px) 14rem, 50vw"
                   unoptimized={/^https?:\/\//.test(p.url)}
-                  className="object-cover transition-transform duration-300 group-hover:scale-105"
+                  className="object-cover"
                 />
-              </button>
+              </Button>
               {i === 0 && (
-                <span className="pointer-events-none absolute left-1.5 top-1.5 rounded-full bg-ink/80 px-2 py-0.5 text-xs font-bold uppercase tracking-wide text-white">
+                <span className="pointer-events-none absolute left-1.5 top-1.5  bg-ink/80 px-2 py-0.5 text-xs font-bold uppercase tracking-wide text-white">
                   {t("photos.cover")}
                 </span>
               )}
               {p.isExample && (
-                <span className="pointer-events-none absolute bottom-1.5 left-1.5 rounded-full bg-ink/85 px-2 py-1 text-xs font-bold uppercase tracking-wide text-white">
+                <span className="pointer-events-none absolute bottom-1.5 left-1.5  bg-ink/85 px-2 py-1 text-xs font-bold uppercase tracking-wide text-white">
                   {p.kind === "regional" ? imageUi.regional : imageUi.example}
                 </span>
               )}
               {canUpload && !p.isExample && (
-                <div className="absolute inset-x-0 bottom-0 flex justify-between bg-gradient-to-t from-ink/80 to-transparent p-1.5 opacity-100 transition-opacity sm:opacity-0 sm:group-hover:opacity-100 sm:group-focus-within:opacity-100">
+                <div className="absolute inset-x-0 bottom-0 flex justify-between bg-black/70 p-1.5 opacity-100 transition-opacity sm:opacity-0 sm:group-hover:opacity-100 sm:group-focus-within:opacity-100">
                   {i !== 0 ? (
-                    <button
+                    <Button
                       disabled={busy}
                       onClick={() => setCover(p.id)}
                       className="min-h-11 px-1 text-[10px] font-bold text-white hover:text-gold disabled:opacity-50"
                     >
                       {t("photos.setCover")}
-                    </button>
+                    </Button>
                   ) : <span />}
-                  <button
+                  <Button
                     disabled={busy}
                     onClick={() => removePhoto(p.id)}
                     aria-label={t("photos.remove") + " " + (p.caption ?? imageUi.sponsorImage)}
                     className="min-h-11 px-1 text-[10px] font-bold text-white hover:text-brandred disabled:opacity-50"
                   >
                     {t("photos.remove")}
-                  </button>
+                  </Button>
                 </div>
               )}
               </div>
@@ -233,14 +235,14 @@ export default function PhotoGallery({
           className="fixed inset-0 z-50 bg-ink/90 flex items-center justify-center p-8 cursor-zoom-out"
           onClick={() => setLightbox(null)}
         >
-          <button
+          <Button
             ref={closeRef}
             onClick={() => setLightbox(null)}
-            className="absolute right-4 top-4 min-h-11 min-w-11 rounded-full bg-white text-ink text-xl"
+            className="absolute right-4 top-4 min-h-11 min-w-11  bg-white text-ink text-xl"
             aria-label={imageUi.closePreview}
           >
             ×
-          </button>
+          </Button>
           <div className="relative h-[min(78vh,48rem)] w-[min(90vw,72rem)]">
             <Image
               src={lightbox.url}
@@ -248,11 +250,11 @@ export default function PhotoGallery({
               fill
               sizes="90vw"
               unoptimized={/^https?:\/\//.test(lightbox.url)}
-              className="rounded-2xl object-contain shadow-2xl"
+              className=" object-contain "
             />
           </div>
           {lightbox.caption && (
-            <p className="absolute inset-x-8 bottom-4 rounded-lg bg-ink/85 px-4 py-2 text-center text-xs text-white">
+            <p className="absolute inset-x-8 bottom-4  bg-ink/85 px-4 py-2 text-center text-xs text-white">
               {lightbox.caption}
             </p>
           )}

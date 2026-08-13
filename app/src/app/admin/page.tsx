@@ -8,12 +8,12 @@ export const dynamic = "force-dynamic";
 
 function Tile({ value, label, href }: { value: string | number; label: string; href?: string }) {
   const content = (
-    <div className="bg-white rounded-2xl p-5 shadow-[0_1px_3px_rgb(44_62_80/0.08)] h-full">
+    <div className="bg-white  p-5  h-full">
       <div className="font-display font-extrabold text-2xl">{value}</div>
       <div className="text-[11px] text-wgray uppercase tracking-wider font-bold mt-1">{label}</div>
     </div>
   );
-  return href ? <Link href={href} className="block hover:shadow-[0_4px_16px_rgb(44_62_80/0.10)] rounded-2xl transition-shadow">{content}</Link> : content;
+  return href ? <Link href={href} className="block   ">{content}</Link> : content;
 }
 
 export default async function AdminDashboard() {
@@ -96,11 +96,11 @@ export default async function AdminDashboard() {
       </div>
 
       {dealsByStage.length > 0 && (
-        <div className="bg-white rounded-2xl p-5 shadow-[0_1px_3px_rgb(44_62_80/0.08)] mb-6">
+        <div className="bg-white  p-5  mb-6">
           <div className="text-[11px] font-bold uppercase tracking-wider text-wgray mb-3">Deals by stage</div>
           <div className="flex flex-wrap gap-2 text-xs">
             {dealsByStage.map((s) => (
-              <span key={s.stage} className="bg-mist rounded-full px-3 py-1.5">{s.stage}: <strong>{s.count}</strong></span>
+              <span key={s.stage} className="bg-mist  px-3 py-1.5">{s.stage}: <strong>{s.count}</strong></span>
             ))}
           </div>
         </div>
@@ -129,11 +129,11 @@ export default async function AdminDashboard() {
         <Tile value={"$" + mrr.toLocaleString()} label="Assigned monthly scenario value" href="/admin/users" />
       </div>
 
-      <div className="bg-white rounded-2xl p-5 shadow-[0_1px_3px_rgb(44_62_80/0.08)]">
+      <div className="bg-white  p-5 ">
         <div className="text-[11px] font-bold uppercase tracking-wider text-wgray mb-3">Users by role</div>
         <div className="flex flex-wrap gap-2 text-xs">
           {usersByRole.map((r) => (
-            <span key={r.role} className="bg-mist rounded-full px-3 py-1.5">{r.role}: <strong>{r._count}</strong></span>
+            <span key={r.role} className="bg-mist  px-3 py-1.5">{r.role}: <strong>{r._count}</strong></span>
           ))}
         </div>
       </div>

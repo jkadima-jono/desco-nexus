@@ -17,10 +17,10 @@ export default async function Legal() {
       <p className="text-sm text-wgray leading-relaxed mb-8">{legal.intro}</p>
       <div className="space-y-6">
         {legal.sections.map(([title, body, pending], index) => (
-          <section key={title} id={sectionIds[index]} className="bg-white rounded-2xl p-5 shadow-[0_1px_3px_rgb(44_62_80/0.08)] scroll-mt-20">
+          <section key={title} id={sectionIds[index]} className="bg-white  p-5  scroll-mt-20">
             <h2 className="font-display font-bold text-base mb-2 flex items-center gap-2">
               {title}
-              {pending && <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-wgray/15 text-wgray">{legal.pending}</span>}
+              {pending && <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5  bg-wgray/15 text-wgray">{legal.pending}</span>}
             </h2>
             <p className="text-sm text-wgray leading-relaxed">{body}</p>
           </section>

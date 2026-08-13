@@ -30,7 +30,7 @@ export default async function AdminVerification() {
       </p>
 
       {listings.length === 0 ? (
-        <div className="bg-white rounded-2xl p-10 text-center shadow-[0_1px_3px_rgb(44_62_80/0.08)]">
+        <div className="bg-white  p-10 text-center ">
           <p className="text-sm text-wgray">No listings yet.</p>
         </div>
       ) : (

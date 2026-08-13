@@ -1,5 +1,7 @@
 "use client";
 
+import Button from "@/components/ui/Button";
+
 import { useEffect, useState } from "react";
 import { RESTRICTED_ACCESS_NOTICE_VERSION } from "@/lib/restricted-access";
 
@@ -89,9 +91,9 @@ export default function MeetingsPanel({ listingId, canManage }: { listingId: str
   return (
     <div className="space-y-4">
           {error && (
-            <div role="alert" className="flex items-center justify-between gap-3 rounded-lg bg-brandred/10 px-3 py-2 text-xs text-brandred">
+            <div role="alert" className="flex items-center justify-between gap-3  bg-brandred/10 px-3 py-2 text-xs text-brandred">
               <span>{error}</span>
-              <button type="button" onClick={load} className="min-h-11 font-bold underline">Retry</button>
+              <Button type="button" onClick={load} className="min-h-11 font-bold underline">Retry</Button>
             </div>
           )}
           {!canManage && (
@@ -104,7 +106,7 @@ export default function MeetingsPanel({ listingId, canManage }: { listingId: str
                   value={s}
                   onChange={(e) => setSlots((arr) => arr.map((v, j) => (j === i ? e.target.value : v)))}
                   aria-label={"Proposed time " + (i + 1)}
-                  className="w-full bg-mist rounded-lg px-2.5 py-1.5 text-xs outline-none focus:ring-2 focus:ring-gold"
+                  className="w-full bg-mist  px-2.5 py-1.5 text-xs outline-none focus:ring-2 focus:ring-gold"
                 />
               ))}
               <textarea
@@ -112,15 +114,15 @@ export default function MeetingsPanel({ listingId, canManage }: { listingId: str
                 onChange={(e) => setNote(e.target.value)}
                 placeholder="Optional note (agenda, attendees…)"
                 rows={2}
-                className="w-full bg-mist rounded-lg px-2.5 py-1.5 text-xs outline-none focus:ring-2 focus:ring-gold resize-none"
+                className="w-full bg-mist  px-2.5 py-1.5 text-xs outline-none focus:ring-2 focus:ring-gold resize-none"
               />
-              <button
+              <Button
                 onClick={submit}
                 disabled={submitting || slots.every((s) => !s.trim())}
-                className="text-xs font-bold bg-gold text-ink px-4 py-2 rounded-lg disabled:opacity-50"
+                className="text-xs font-bold bg-gold text-ink px-4 py-2  disabled:opacity-50"
               >
                 {submitting ? "Sending…" : "Send request"}
-              </button>
+              </Button>
             </div>
           )}
 
@@ -135,7 +137,7 @@ export default function MeetingsPanel({ listingId, canManage }: { listingId: str
             ) : (
               <ul className="space-y-2">
                 {meetings.map((m) => (
-                  <li key={m.id} className="text-sm py-2 px-3 rounded-lg bg-mist">
+                  <li key={m.id} className="text-sm py-2 px-3  bg-mist">
                     {canManage && <div className="font-semibold text-xs">{m.requesterName} <span className="text-wgray">{m.requesterEmail}</span></div>}
                     {m.note && <div className="text-xs text-wgray mt-0.5">{m.note}</div>}
                     <div className="text-[11px] font-bold uppercase tracking-wider mt-1.5 mb-1">
@@ -146,19 +148,19 @@ export default function MeetingsPanel({ listingId, canManage }: { listingId: str
                     {m.status === "requested" && canManage && (
                       <div className="flex flex-wrap gap-1.5">
                         {m.proposedSlots.map((s) => (
-                          <button
+                          <Button
                             key={s}
                             onClick={() => respond(m.id, "confirmed", s)}
-                            className="text-[11px] font-bold bg-emerald-p/10 text-emerald-p px-2 py-1 rounded"
+                            className="text-[11px] font-bold bg-emerald-p/10 text-emerald-p px-2 py-1 "
                           >
                             Confirm {fmt(s)}
-                          </button>
+                          </Button>
                         ))}
-                        <button onClick={() => respond(m.id, "declined")} className="text-[11px] font-bold text-brandred px-2 py-1">Decline</button>
+                        <Button onClick={() => respond(m.id, "declined")} className="text-[11px] font-bold text-brandred px-2 py-1">Decline</Button>
                       </div>
                     )}
                     {m.status === "requested" && !canManage && (
-                      <button onClick={() => respond(m.id, "cancelled")} className="text-[11px] font-bold text-brandred">Cancel request</button>
+                      <Button onClick={() => respond(m.id, "cancelled")} className="text-[11px] font-bold text-brandred">Cancel request</Button>
                     )}
                   </li>
                 ))}

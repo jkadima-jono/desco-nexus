@@ -1,5 +1,7 @@
 "use client";
 
+import Button from "@/components/ui/Button";
+
 import { useState } from "react";
 
 export default function MatchFeedback({ listingId, mandateId }: { listingId: string; mandateId: string }) {
@@ -18,12 +20,12 @@ export default function MatchFeedback({ listingId, mandateId }: { listingId: str
 
   if (!open) {
     return (
-      <button
+      <Button
         onClick={() => setOpen(true)}
         className="text-[11px] text-wgray underline decoration-dotted mt-3 pt-3 border-t border-charcoal/10 hover:text-charcoal"
       >
         Not a good fit? Tell us why
-      </button>
+      </Button>
     );
   }
 
@@ -52,13 +54,13 @@ export default function MatchFeedback({ listingId, mandateId }: { listingId: str
         rows={2}
         value={reason}
         onChange={(e) => setReason(e.target.value)}
-        className="w-full bg-mist rounded-lg px-3 py-2 text-xs outline-none focus:ring-2 focus:ring-gold resize-none"
+        className="w-full bg-mist  px-3 py-2 text-xs outline-none focus:ring-2 focus:ring-gold resize-none"
       />
       <div className="flex gap-2 mt-2">
-        <button disabled={busy || !reason.trim()} onClick={submit} className="text-[11px] font-bold bg-charcoal text-white px-3 py-1.5 rounded-lg disabled:opacity-50">
+        <Button disabled={busy || !reason.trim()} onClick={submit} className="text-[11px] font-bold bg-charcoal text-white px-3 py-1.5  disabled:opacity-50">
           {busy ? "Sending…" : "Send feedback"}
-        </button>
-        <button onClick={() => setOpen(false)} className="text-[11px] font-semibold text-wgray hover:text-charcoal">Cancel</button>
+        </Button>
+        <Button onClick={() => setOpen(false)} className="text-[11px] font-semibold text-wgray hover:text-charcoal">Cancel</Button>
       </div>
     </div>
   );

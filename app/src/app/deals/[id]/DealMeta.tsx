@@ -1,5 +1,7 @@
 "use client";
 
+import Button from "@/components/ui/Button";
+
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
@@ -59,9 +61,9 @@ export default function DealMeta({
             type="date"
             value={dueDateInput}
             onChange={(e) => setDueDateInput(e.target.value)}
-            className="flex-1 bg-mist rounded-lg px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-gold"
+            className="flex-1 bg-mist  px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-gold"
           />
-          <button disabled={busy} onClick={saveDueDate} className="text-xs font-bold bg-charcoal text-white px-3 py-2 rounded-lg disabled:opacity-50">Save</button>
+          <Button disabled={busy} onClick={saveDueDate} className="text-xs font-bold bg-charcoal text-white px-3 py-2  disabled:opacity-50">Save</Button>
         </div>
       </div>
 
@@ -72,7 +74,7 @@ export default function DealMeta({
         ) : (
           <ul className="space-y-2 mb-3">
             {[...notes].reverse().map((n, i) => (
-              <li key={i} className="text-xs bg-mist rounded-lg px-3 py-2">
+              <li key={i} className="text-xs bg-mist  px-3 py-2">
                 <div>{n.note}</div>
                 <div className="text-wgray mt-1">{n.by} · {new Date(n.at).toLocaleDateString()}</div>
               </li>
@@ -85,9 +87,9 @@ export default function DealMeta({
             value={note}
             onChange={(e) => setNote(e.target.value)}
             placeholder="Add a decision note…"
-            className="flex-1 bg-mist rounded-lg px-3 py-2 text-xs outline-none focus:ring-2 focus:ring-gold resize-none"
+            className="flex-1 bg-mist  px-3 py-2 text-xs outline-none focus:ring-2 focus:ring-gold resize-none"
           />
-          <button disabled={busy || !note.trim()} onClick={addNote} className="text-xs font-bold bg-charcoal text-white px-3 py-2 rounded-lg disabled:opacity-50 self-start">Add</button>
+          <Button disabled={busy || !note.trim()} onClick={addNote} className="text-xs font-bold bg-charcoal text-white px-3 py-2  disabled:opacity-50 self-start">Add</Button>
         </div>
       </div>
     </div>

@@ -1,5 +1,7 @@
 "use client";
 
+import Button from "@/components/ui/Button";
+
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { STAGES } from "@/lib/deals";
@@ -53,7 +55,7 @@ export default function StageControl({
             key={s}
             aria-current={s === current ? "step" : undefined}
             className={
-              "px-2.5 py-1 rounded-full text-[11px] font-bold " +
+              "px-2.5 py-1  text-[11px] font-bold " +
               (s === current
                 ? "bg-charcoal text-white"
                 : i < ci
@@ -71,7 +73,7 @@ export default function StageControl({
           id="stage-select"
           value={target}
           onChange={(e) => setTarget(e.target.value)}
-          className="bg-mist rounded-xl px-3 py-2.5 text-sm outline-none focus:ring-2 focus:ring-gold"
+          className="bg-mist  px-3 py-2.5 text-sm outline-none focus:ring-2 focus:ring-gold"
         >
           <option value="">Move to…</option>
           {STAGES.filter((s) => s !== current).map((s) => (
@@ -83,15 +85,15 @@ export default function StageControl({
           onChange={(e) => setReason(e.target.value)}
           placeholder={backward ? "Reason (required for rollback)" : "Reason (optional)"}
           aria-label="Transition reason"
-          className="flex-1 bg-mist rounded-xl px-3 py-2.5 text-sm outline-none focus:ring-2 focus:ring-gold"
+          className="flex-1 bg-mist  px-3 py-2.5 text-sm outline-none focus:ring-2 focus:ring-gold"
         />
-        <button
+        <Button
           onClick={apply}
           disabled={!target || busy || (Boolean(backward) && !reason.trim())}
-          className="bg-gold text-ink font-display font-bold text-sm px-5 py-2.5 rounded-xl hover:brightness-110 disabled:opacity-50"
+          className="bg-gold text-ink font-display font-bold text-sm px-5 py-2.5  hover:brightness-110 disabled:opacity-50"
         >
           {busy ? "Applying…" : "Apply"}
-        </button>
+        </Button>
       </div>
       {error && <div role="alert" className="text-xs text-brandred mt-2">{error}</div>}
       <p className="text-[11px] text-wgray mt-2">

@@ -9,7 +9,7 @@ export default function PillarCard({ pillar, index = 0, learnMore = "Learn more"
     <Reveal delay={index * 60}>
       <Link
         href={"/pillars/" + pillar.slug}
-        className="group block bg-white rounded-2xl p-6 h-full shadow-[0_1px_3px_rgb(44_62_80/0.08)] hover:shadow-[0_12px_32px_rgb(44_62_80/0.14)] transition-shadow focus-visible:ring-2 focus-visible:ring-gold"
+        className="group block bg-white  p-6 h-full    focus-visible:ring-2 focus-visible:ring-gold"
       >
         <div
           className="relative mb-4 flex h-12 w-12 items-center justify-center overflow-hidden rounded-full p-1.5"

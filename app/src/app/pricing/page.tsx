@@ -1,3 +1,4 @@
+import Button from "@/components/ui/Button";
 import Link from "next/link";
 import type { Metadata } from "next";
 import {
@@ -41,16 +42,16 @@ export default async function PricingPage() {
           />
           <div className="mt-8 grid gap-5 lg:grid-cols-3">
             {copy.paths.map((path) => (
-              <article key={path.title} className="flex flex-col rounded-xl border border-charcoal/10 bg-white p-6 shadow-[0_8px_24px_rgb(13_21_28/0.05)]">
+              <article key={path.title} className="flex flex-col  border border-charcoal/10 bg-white p-6 ">
                 <div><DisclosureChip tone="pending">{path.audience}</DisclosureChip></div>
                 <h2 className="mt-4 font-display text-xl font-bold text-ink">{path.title}</h2>
                 <p className="mt-2 text-sm font-semibold text-teal">{path.model}</p>
                 <ul className="mt-5 flex-1 space-y-3 text-sm leading-6 text-slate">
                   {path.includes.map((item) => <li key={item}>• {item}</li>)}
                 </ul>
-                <Link href="/contact?topic=commercial-model" className="button-secondary mt-6">
+                <Button href="/contact?topic=commercial-model" className="button-secondary mt-6">
                   {copy.defineScope}
-                </Link>
+                </Button>
               </article>
             ))}
           </div>
@@ -81,9 +82,9 @@ export default async function PricingPage() {
               {copy.beforeNotice}
             </QuietNotice>
           </div>
-          <Link href="/contact?topic=commercial-model" className="button-primary mt-6">
+          <Button href="/contact?topic=commercial-model" className="button-primary mt-6">
             {copy.discussCta}
-          </Link>
+          </Button>
         </div>
       </section>
     </>
