@@ -44,7 +44,7 @@ export default function PublicHeader({ user, signupEnabled }: { user?: { role?: 
             href={href}
             onClick={() => setOpen(false)}
             aria-current={active ? "page" : undefined}
-            className={`min-h-11 whitespace-nowrap border-b-[3px] px-0 py-3 font-sans text-2xl font-semibold uppercase tracking-normal 2xl:min-h-0 2xl:py-2 2xl:text-[19px] ${
+            className={`min-h-11 whitespace-nowrap border-b-[3px] px-0 py-3 font-sans text-2xl font-semibold uppercase tracking-normal xl:min-h-0 xl:py-2 xl:text-[19px] ${
               active ? "border-desco-gold text-desco-gold" : "border-transparent text-white hover:text-desco-gold"
             }`}
           >
@@ -58,11 +58,11 @@ export default function PublicHeader({ user, signupEnabled }: { user?: { role?: 
   return (
     <>
       <header className="sticky top-0 z-40 border-b border-desco-charcoal bg-black text-white">
-        <div className="flex h-16 w-full items-center justify-between gap-3 px-6 2xl:h-[88px]">
+        <div className="flex h-16 w-full items-center justify-between gap-3 px-6 xl:h-[88px]">
           <Link href="/" className="flex shrink-0 items-center gap-3" aria-label={`DESCO Compass — ${t("common.home")}`}>
             <BrandMark compactDesktop />
           </Link>
-          <div className="hidden min-w-0 items-center gap-8 2xl:flex">
+          <div className="hidden min-w-0 items-center gap-8 xl:flex">
             {navigation(true)}
             <div className="w-32 shrink-0"><LanguageSwitcher /></div>
             {!user && signupEnabled && <Link href="/login" className="shrink-0 px-2 py-2 text-[11px] font-bold text-white underline-offset-4 hover:underline xl:text-xs">{account.signIn}</Link>}
@@ -75,7 +75,7 @@ export default function PublicHeader({ user, signupEnabled }: { user?: { role?: 
             onClick={() => setOpen(true)}
             aria-expanded={open}
             aria-controls="public-mobile-navigation"
-            className="grid min-h-11 min-w-11 shrink-0 place-items-center  border border-white/20 text-xl 2xl:hidden"
+            className="grid min-h-11 min-w-11 shrink-0 place-items-center border border-white/20 text-xl xl:hidden"
             aria-label={t("nav.open")}
           >
             ☰
@@ -83,7 +83,7 @@ export default function PublicHeader({ user, signupEnabled }: { user?: { role?: 
         </div>
       </header>
       {open && (
-        <div className="fixed inset-0 z-50 bg-black 2xl:hidden" onClick={() => setOpen(false)}>
+        <div className="fixed inset-0 z-50 bg-black xl:hidden" onClick={() => setOpen(false)}>
           <aside
             ref={mobileNavigation}
             id="public-mobile-navigation"
